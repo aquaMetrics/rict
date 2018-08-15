@@ -1,0 +1,27 @@
+Package: rict
+Type: Package
+Title: Calculates River Invertebrate Classification Tool (RICT) predictions
+Version: 0.1.0
+Author: Who wrote it
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports:
+ tidyverse,
+ httr,
+ xml2, 
+ xts, 
+ rjson, 
+ ggmap, 
+ ggplot2,
+ sp, 
+ rgdal
+Suggests: testthat,
+    knitr,
+    rmarkdown,
+    devtools
+RoxygenNote: 6.0.1
+VignetteBuilder: knitr

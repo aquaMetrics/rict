@@ -22,6 +22,7 @@ Imports:
 Suggests: testthat,
     knitr,
     rmarkdown,
-    devtools
+    devtools,
+    covr
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr

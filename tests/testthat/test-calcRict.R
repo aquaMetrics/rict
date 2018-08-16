@@ -1,7 +1,6 @@
 context("test calcRict")
 
 test_that("calcRict outputs dataframe", {
-
   # Load some test data
   environmentalVariables <- read.csv(system.file("extdat",
                                                  "fba-test-WHPT.csv",

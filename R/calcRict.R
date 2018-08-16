@@ -27,7 +27,7 @@ calcRict <- function(environmentalVariables, endPointMeans) {
 
   #library(rnrfa)
   #library(tidyverse)
-   library(dplyr)
+  #library(dplyr)
 
   #source("src/Predictionfunctions.R")
   #source("src/Helperfunctionsv1.R")

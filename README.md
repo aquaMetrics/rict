@@ -5,11 +5,11 @@
 
 # Work In Progress
 
+This R package is in development. Please don't use in production. 
+
 ## rict package
 
 An R package for calculating River Invertebrate Classificaiton Tool (rict) predictions
-
-phytobenthosMetrics package
 
 In R: Install the development version from GitHub:
 ```

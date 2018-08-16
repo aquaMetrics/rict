@@ -8,7 +8,8 @@ Maintainer: Nick Irvine <Nick.Irvine@defra.gov.uk>
 Description: Calculates River Invertebrate Classification Tool (RICT) predictions.
     The model uses environmental variables to make predictions based on
     invertebrate reference data.
-License: MIT
+License: MIT + file LICENSE
+URL: https://github.com/aquaMetrics/rict
 Encoding: UTF-8
 LazyData: true
 Depends:

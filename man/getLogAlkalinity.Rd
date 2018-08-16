@@ -2,10 +2,32 @@
 % Please edit documentation in R/helperFunctions.R
 \name{getLogAlkalinity}
 \alias{getLogAlkalinity}
-\title{dont use is.na()}
+\title{getLogAlkalinity}
 \usage{
 getLogAlkalinity(hardness, calcium, conduct, alkal, lower_b, upper_b)
 }
+\arguments{
+\item{hardness}{hardness}
+
+\item{calcium}{calium}
+
+\item{conduct}{conduct}
+
+\item{alkal}{alkal}
+
+\item{lower_b}{lower_b}
+
+\item{upper_b}{upper_b}
+}
+\value{
+Dataframe
+}
 \description{
+getLogAlkalinity
+}
+\examples{
+\dontrun{
+getLogAlkalinity <- function(hardness, calcium, conduct, alkal, lower_b, upper_b)
+}
 dont use is.na()
 }

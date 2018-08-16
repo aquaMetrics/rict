@@ -11,9 +11,10 @@ Description: Calculates River Invertebrate Classification Tool (RICT) prediction
 License: MIT
 Encoding: UTF-8
 LazyData: true
+Depends:
+ dplyr
 Imports:
  stringr,
- dplyr,
  magrittr,
  rgdal,
  plyr,

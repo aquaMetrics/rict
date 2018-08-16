@@ -1,6 +1,6 @@
 #' Calculate River Invertebrate Classification Tool(RICT) predictions
 #'
-#' @param environmentalValues
+#' @param environmentalVariables
 #' Dataframe of observed environmental values
 #' @param endPointMeans
 #' Dataframe of endPointMeans
@@ -27,10 +27,7 @@ calcRict <- function(environmentalVariables, endPointMeans) {
 
   #library(rnrfa)
   #library(tidyverse)
-
-  # not sure why dplyr needs to be loaded (as it will be loaded as part of package)
-  # but possibly to do with masking functions from other packages/base
-  library(dplyr)
+   library(dplyr)
 
   #source("src/Predictionfunctions.R")
   #source("src/Helperfunctionsv1.R")

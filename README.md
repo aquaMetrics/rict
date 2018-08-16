@@ -1,5 +1,5 @@
 [![Travis-CI Build Status](https://travis-ci.org/aquaMetrics/rict.svg?branch=master)](https://travis-ci.org/aquaMetrics/rict)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/aquaMetrics/rict?branch=master&svg=true)](https://ci.appveyor.com/project/aquaMetrics/rict)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/aquaMetrics/rict?branch=master&svg=true)](https://ci.appveyor.com/project/ecodata1/rict/branch/master)
 [![codecov](https://codecov.io/gh/aquaMetrics/rict/branch/master/graph/badge.svg)](https://codecov.io/gh/aquaMetrics/rict)
 
 

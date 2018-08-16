@@ -27,7 +27,7 @@ getLogAlkalinity
 }
 \examples{
 \dontrun{
-getLogAlkalinity <- function(hardness, calcium, conduct, alkal, lower_b, upper_b)
+logAlk <- getLogAlkalinity()
 }
 dont use is.na()
 }

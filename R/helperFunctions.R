@@ -19,7 +19,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' getLogAlkalinity <- function(hardness, calcium, conduct, alkal, lower_b, upper_b)
+#' logAlk <- getLogAlkalinity()
 #' }
 getLogAlkalinity <- function(hardness, calcium, conduct, alkal, lower_b, upper_b) {
   # Begin Exclude Linting

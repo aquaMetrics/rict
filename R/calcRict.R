@@ -27,6 +27,9 @@ calcRict <- function(environmentalVariables, endPointMeans) {
 
   #library(rnrfa)
   #library(tidyverse)
+
+  # not sure why dplyr needs to be loaded (as it will be loaded as part of package)
+  # but possibly to do with masking functions from other packages/base
   library(dplyr)
 
   #source("src/Predictionfunctions.R")

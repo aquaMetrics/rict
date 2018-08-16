@@ -1,8 +1,6 @@
 
 # Begin Exclude Linting
 
-require(rnrfa)
-
 # Helper functions for RIVPACS III+ for GB
 # This function gets Alkalinity from hardness, calcium, conduct when supplied, else return the alkalinity rovided as log10
 # Returns log10 of the raw value. Use mapply as a "m"ultivariate version of sapply, applies to each element

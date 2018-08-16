@@ -1,36 +1,13 @@
-#' getLogAlkalinity
-#'
-#' @param hardness
-#' hardness
-#' @param calcium
-#' calium
-#' @param conduct
-#' conduct
-#' @param alkal
-#' alkal
-#' @param lower_b
-#' lower_b
-#' @param upper_b
-#' upper_b
-#'
-#' @return
-#' Dataframe
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' logAlk <- getLogAlkalinity()
-#' }
+# Begin Exclude Linting
+
+# Helper functions for RIVPACS III+ for GB
+# This function gets Alkalinity from hardness, calcium, conduct when supplied, else return the alkalinity rovided as log10
+# Returns log10 of the raw value. Use mapply as a "m"ultivariate version of sapply, applies to each element
+# Can use "switch"" for better readability.
+# Produce dataframe with value of alkalinity in bounds [1.2, 366] as warning, and a message "Succ" or "Fail" to remove record from dataset for prediction
+#lower_b = 1.2, upper_b = 366, i.e. the log10 boundary values
 getLogAlkalinity <- function(hardness, calcium, conduct, alkal, lower_b, upper_b) {
-  # Begin Exclude Linting
 
-  # Helper functions for RIVPACS III+ for GB
-  # This function gets Alkalinity from hardness, calcium, conduct when supplied, else return the alkalinity rovided as log10
-  # Returns log10 of the raw value. Use mapply as a "m"ultivariate version of sapply, applies to each element
-  # Can use "switch"" for better readability.
-  # Produce dataframe with value of alkalinity in bounds [1.2, 366] as warning, and a message "Succ" or "Fail" to remove record from dataset for prediction
-
-  #lower_b = 1.2, upper_b = 366, i.e. the log10 boundary values
     msg <- "Succ"
     ALK <- alkal
     # Case none provided
@@ -43,7 +20,7 @@ getLogAlkalinity <- function(hardness, calcium, conduct, alkal, lower_b, upper_b
     }#
     #Case provided, start with calculations
     if (!is.null(hardness) & (!is.na(hardness))) {
-      #' dont use is.na()
+      # dont use is.na()
       ALK = 4.677 + 0.6393*hardness
       print(!is.na(hardness))
       print("hardness not null")

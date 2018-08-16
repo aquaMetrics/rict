@@ -1,7 +1,8 @@
 context("test calcRict")
 
 test_that("calcRict outputs dataframe", {
-  skip_on_travis('fails on travis for some reason maybe related: https://github.com/r-lib/testthat/issues/364')
+  # fails on travis for some reason maybe related: https://github.com/r-lib/testthat/issues/364
+  skip_on_travis()
   # Load some test data
   environmentalVariables <- read.csv(system.file("extdat",
                                                  "fba-test-WHPT.csv",

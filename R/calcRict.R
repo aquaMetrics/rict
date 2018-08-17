@@ -509,7 +509,7 @@ calcRict <- function(observed_values, expected_biotic_scores) {
   # Combine with final data to see probabilities of each site wrt endGroups (43 of them, so 43 probabilites), per row
   # final.predictors <- cbind(final.predictors, PDist_g[,-ncol(PDist_g)]) # This is the line we need
   final.predictors_try <-
-    cbind(final.predictors, PDistTot[,-ncol(PDistTot)]) # sum(final.predictors_try[1,-c(1:14)]) should give 1
+    cbind(final.predictors, PDistTot[, -ncol(PDistTot)]) # sum(final.predictors_try[1,-c(1:14)]) should give 1
 
   # 3.Use chisquare to find suitability codes. Start for Britain GB, Could use a file for these chisquare values
   # 1 = GB 21.02606 24.05393 26.21696 32.90923
@@ -544,15 +544,15 @@ calcRict <- function(observed_values, expected_biotic_scores) {
   # Choose season 7, index_id==1
   season_7 <-
     endroup_IndexDFrame[endroup_IndexDFrame$season_id == 7 &
-                          endroup_IndexDFrame$index_id == 1,]
+                          endroup_IndexDFrame$index_id == 1, ]
 
   # Group by end_group, value
-  season_7_grp <- season_7[,-c(1, 3)] %>%
+  season_7_grp <- season_7[, -c(1, 3)] %>%
     group_by(end_group, value) %>%
     arrange(end_group)
   # Remove duplicates
   season_7_pred <-
-    season_7_grp[!duplicated(season_7_grp$end_group),]
+    season_7_grp[!duplicated(season_7_grp$end_group), ]
 
   # Filter out values for 43 sites, multiply with probabilities for prediction 4,8,9
   idx_mean <-

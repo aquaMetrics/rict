@@ -2,25 +2,28 @@
 % Please edit documentation in R/calcRict.R
 \name{calcRict}
 \alias{calcRict}
-\title{Calculate River Invertebrate Classification Tool(RICT) predictions}
+\title{Calculate River Invertebrate Classification Tool (RICT) predictions}
 \usage{
-calcRict(environmentalVariables, endPointMeans)
+calcRict(observed_values, expected_biotic_scores)
 }
 \arguments{
-\item{environmentalVariables}{Dataframe of observed environmental values}
+\item{observed_values}{Dataframe of observed environmental values}
 
-\item{endPointMeans}{Dataframe of endPointMeans}
+\item{expected_biotic_scores}{Dataframe of expected biotic scores for each
+statistical grouping of rivers (referred to as 'end groups means').}
 }
 \value{
-Dataframe of predicted values
+Dataframe of predicted biotic scores and probility of observed values
+falling into each statistical grouping of rivers.
 }
 \description{
-Calculate River Invertebrate Classification Tool(RICT) predictions
+Calculate River Invertebrate Classification Tool (RICT) predictions
 }
 \examples{
 \dontrun{
-environmentalVariables <- read.csv(file="inst/extdat/fba-test-WHPT.csv")
-endPointMeans <- read.csv(file="inst/extdat/End_Group_Means.csv")
-output <- calcRict(environmentalVariables=environmentalVariables, endPointMeans=endPointMeans)
+observed_values <- read.csv(file="inst/extdat/fba-test-whpt.csv")
+expected_biotic_scores <- read.csv(file="inst/extdat/expected_biotic_scores.csv")
+output <- calcRict(observed_values = observed_values,
+                   expected_biotic_scores = expected_biotic_scores)
 }
 }

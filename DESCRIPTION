@@ -2,12 +2,14 @@ Package: rict
 Type: Package
 Title: Calculates River Invertebrate Classification Tool (RICT) predictions
 Version: 0.1.0
-Authors@R: c(person("Irvine", "Nick", email = "Nick.Irvine@defra.gov.uk", role=c("aut","cre")),
+Authors@R: c(person("Maybin", "Muyeba", email = "Maybin.Muyeba@environment-agency.gov.uk", role=c("aut","cre")),
              person("Tim", "Foster", email = "tim.foster@sepa.org.uk", role="ctb")) 
-Maintainer: Nick Irvine <Nick.Irvine@defra.gov.uk>
-Description: Calculates River Invertebrate Classification Tool (RICT) predictions.
-    The model uses environmental variables to make predictions based on
-    invertebrate reference data.
+Maintainer: Maybin Muyeba <Nick.Irvine@defra.gov.uk>
+Description: This is an R implementation of the River Invertebrate
+    Classification Tool (RICT) system. This system is currently
+    written in oracle SQL procedures. The model uses environmental variables
+    to make predictions based on invertebrate reference data. It is based on
+    the work of many other authors. See Freshwater Biological Association http://www.fba.org.uk/river-invertebrate-classification-tool-rict-and-rivpacs for details
 License: MIT + file LICENSE
 URL: https://github.com/aquaMetrics/rict
 Encoding: UTF-8

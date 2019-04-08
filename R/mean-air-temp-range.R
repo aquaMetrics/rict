@@ -115,7 +115,7 @@ calcTemps <- function(coordinates, air_temp_grid){
       ME2 <- ME1
       MN1 <- KSQN
       MN2 <- MN1
-      avcall <- rict:::AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
+      avcall <- AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
       if(NP==1){#2
         #print("if 2")
         TMEAN<-SMEAN
@@ -126,7 +126,7 @@ calcTemps <- function(coordinates, air_temp_grid){
         ME2<-ME2+1
         MN1<-MN1-1
         MN2<-MN2+1
-        avcall<- rict:::AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
+        avcall<- AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
         if(NP>3){#3
           #print("if 3")
           TMEAN<-SMEAN
@@ -148,7 +148,7 @@ calcTemps <- function(coordinates, air_temp_grid){
         ME2<-ME1
         MN1<-KSQN
         MN2<-MN1+1
-        avcall<- rict:::AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
+        avcall<- AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
         if(NP==2){#6
           #print("if 6")
           TMEAN<-SMEAN
@@ -166,7 +166,7 @@ calcTemps <- function(coordinates, air_temp_grid){
             #print("else 7")
             MN1<-MN1-1
             MN2<-MN2+1
-            avcall<- rict:::AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
+            avcall<- AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
             if(NP<4){
               #print("if 8");
               TMEAN<-0.0;TRANGE<-0.0} else {
@@ -182,7 +182,7 @@ calcTemps <- function(coordinates, air_temp_grid){
           ME2<-ME1+1
           MN1<-KSQN
           MN2<-MN1
-          avcall<- rict:::AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
+          avcall<- AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
           if(NP==2){#10
             #print("if 10")
             TMEAN<-SMEAN
@@ -191,7 +191,7 @@ calcTemps <- function(coordinates, air_temp_grid){
             #print("else 10")
             MN1<-MN1-1
             MN2<-MN2+1
-            avcall<- rict:::AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
+            avcall<- AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
             if(NP>3){#11
               #print("if 11")
               TMEAN<-SMEAN
@@ -200,7 +200,7 @@ calcTemps <- function(coordinates, air_temp_grid){
               #print("else 11")
               ME1<-ME1-1
               ME2<-ME2+1
-              avcall<- rict:::AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
+              avcall<- AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
               if(NP<4){
                 #print("if 12");
                 TMEAN<-0.0;TRANGE<-0.0} else {
@@ -216,7 +216,7 @@ calcTemps <- function(coordinates, air_temp_grid){
           ME2<-ME1+1
           MN1<-KSQN
           MN2<-MN1+1
-          avcall<- rict:::AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
+          avcall<- AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
           if(NP>2) {#13
             #print("if 13")
             TMEAN<-SMEAN
@@ -227,7 +227,7 @@ calcTemps <- function(coordinates, air_temp_grid){
             ME2<-ME2+1
             MN1<-MN1-1
             MN2<-MN2+1
-            avcall<- rict:::AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
+            avcall<- AVCALL(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE);NP<-avcall[1];SMEAN<-avcall[2];SRANGE<-avcall[3]
             if(NP<4){
               #print("if 14");
               TMEAN<-0.0;TRANGE<-0.0} else {

@@ -1,6 +1,5 @@
 # Begin Exclude Linting
 # Classification functions for RIVPACS III+ for GB
-set.seed(1234)
 
 #1. Compute the proportions of table with sumofRows divide by each element in the row
 computeScoreProportions  <- function (ScoreDFrame) {
@@ -26,7 +25,7 @@ compute_RjAj <- function (Rj, Aj) {
 
 # 3.1 Write a function to simulate N values from a given list, where is the N??? multiply by N*length(DFrameValues[,j])
 # This function is not used
-simulateN_Values_new <- function (DFrameValues, N) {
+simulateN_Values_new <- function (DFrameValues, N, Exp_ref_ntaxa) {
     result <- list()
     dframeFinal <- DFrameValues
     for(j in 1:ncol(DFrameValues)) {
@@ -67,9 +66,9 @@ writeToFile <- function (toWriteFrame, pathname, filename) {
 
   if( file.exists(paste0(file =pathname,filename))) {
     file.remove(file = paste0(pathname,filename))
-    write.csv(toWriteFrame, file = paste0(pathname,filename))
+    utils::write.csv(toWriteFrame, file = paste0(pathname,filename))
   } else {
-    write.csv(toWriteFrame, file = paste0(pathname,filename))
+    utils::write.csv(toWriteFrame, file = paste0(pathname,filename))
   }
 }
 
@@ -89,7 +88,7 @@ getUbias_8_r_equals_1 <- function (index_data, ubs_mean){
   Ubias8r_whpt <- matrix(0, ncol = ncol(index_data), nrow = nrow(index_data))
   for(j in 1:ncol(Ubias8r_whpt)) {
 
-    Ubias8r_whpt[,j] <- rpois(length(index_data[,j]), ubs_mean) # With a mean of "ubs_mean" and in simulation r
+    Ubias8r_whpt[,j] <- stats::rpois(length(index_data[,j]), ubs_mean) # With a mean of "ubs_mean" and in simulation r
     Ubias8r_whpt[,j] [Ubias8r_whpt[,j] ==0] <- 1 # Replace all ZEROS with ones or use gsub below
     #
     # Ubias8r_whpt[,j] <- as.numeric(gsub("0","1", as.character(Ubias8r_whpt[,j]), ignore.case=T)) # Replace all ZEROS with ones
@@ -119,7 +118,7 @@ getUbias_8r <- function (index_data, ubs_mean, N){
 
 getZObs_r_new <- function (sdobs, N_sim){ # N_sim = no. of simulations
   #set.seed(1234)
-  dframe <- as.data.frame(sdobs *rnorm(N_sim, 0, 1)) ## With a mean of 0.0 and SD of 1.0 for index i in simulation r
+  dframe <- as.data.frame(sdobs * stats::rnorm(N_sim, 0, 1)) ## With a mean of 0.0 and SD of 1.0 for index i in simulation r
   return (dframe)
 }
 
@@ -145,25 +144,24 @@ getObsIDX8r <- function (ObsIDX8, znorm_ir) {# needs 10,000 simulations, and sto
 }
 
 # for aspt, we compute 9r
-getObsIDX9r <- function (ObsIDX9, znorm_ir) {# needs 10,000 simulations, and store these for each index(ntaxa, aspt) for each season (autumn, spring)
+getObsIDX9r <- function (ObsIDX9, znorm_ir) {
+  # needs 10,000 simulations, and store these for each index(ntaxa, aspt) for each season (autumn, spring)
   # Do this and store these 10,000 times. Have a matrix array to store them
   # ZObs8r <- getZObs_ir(znorm_ir, SDObs_ir)
-  return (ObsIDX9+znorm_ir)
+  return (ObsIDX9 + znorm_ir)
 }
 
-
 # Next Bias correction foir Ubias8
-
 getUbias8r_new <- function (N_sim, Ubias8){ # N_sim = no. of simulations, and  Ubias8 = 1.62
   #set.seed(1234)
-  dframe <- as.data.frame(rpois(N_sim, Ubias8)) ## With a mean of 0.0 and SD of 1.0 for index i in simulation r
+  dframe <- as.data.frame(stats::rpois(N_sim, Ubias8)) ## With a mean of 0.0 and SD of 1.0 for index i in simulation r
   return (dframe)
 }
 
 # Bias corrected observed = Obs_rb, range/distribution of values we could have observed
-getObsIDX8rB_new <- function (ObsIDX8r_new_array, Ubias8r_array){
-    return (Ubias8r_array+ObsIDX8r_new_array)
-}
+# getObsIDX8rB_new <- function (ObsIDX8r_new_array, Ubias8r_array){
+#    return (Ubias8r_array+ObsIDX8r_new_array)
+# }
 
 
 # Step 2. Now let us do the uncertainty in the reference Adjusted Expected values = Exp_ref
@@ -287,7 +285,7 @@ getAvgEQR_SprAut <- function (EQR_spr,EQR_aut, k) {
 
 getZbias_9r <- function (N_sims, zbias_mean, zbias_sd){
     #set.seed(1234)
-    ZNorm_ir_whpt <- as.data.frame( rnorm(N_sims, 0, 1))
+    ZNorm_ir_whpt <- as.data.frame( stats::rnorm(N_sims, 0, 1))
     return (ZNorm_ir_whpt)
 }
 
@@ -339,7 +337,7 @@ getZNorm_ir <- function (index_data, zmean, zstd){
   #set.seed(1234)
   ZNorm_ir_whpt <- matrix(0, ncol = ncol(index_data), nrow = nrow(index_data))
   for(j in 1:ncol(ZNorm_ir_whpt)) {
-    ZNorm_ir_whpt[,j] <- rnorm(index_data[,j], zmean, zstd) # With a mean of 0.0 and SD of 1.0 for index i in simulation r
+    ZNorm_ir_whpt[,j] <- stats::rnorm(index_data[,j], zmean, zstd) # With a mean of 0.0 and SD of 1.0 for index i in simulation r
   }
   return (ZNorm_ir_whpt)
 }
@@ -470,7 +468,7 @@ calculate_Estimatedbias_whpt_aspt <- function (M, Obs_WHPT_ASPT){
   set.seed(1234)
   SDev_denom <- 2/sqrt(M)
   mean_of_whpt_aspt_missed <-  4.35  +  (0.271*Obs_WHPT_ASPT) # the mean
-  return (rnorm(Obs_WHPT_ASPT,mean_of_whpt_aspt_missed,SDev_denom)) # normal distribution, mean of "mean_of_whpt_aspt_missed",and SD of "SDev_denom"
+  return (stats::rnorm(Obs_WHPT_ASPT,mean_of_whpt_aspt_missed,SDev_denom)) # normal distribution, mean of "mean_of_whpt_aspt_missed",and SD of "SDev_denom"
 }
 
 

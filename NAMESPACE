@@ -2,3 +2,4 @@
 
 export(calcClassification)
 export(calcPredictions)
+importFrom(rlang,.data)

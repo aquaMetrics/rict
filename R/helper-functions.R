@@ -336,9 +336,9 @@ writeToFile <- function (toWriteFrame, pathname, filename) {
 
   if( file.exists(paste0(file =pathname,filename))) {
     file.remove(file = paste0(pathname,filename))
-    write.csv(toWriteFrame, file = paste0(pathname,filename))
+    utils::write.csv(toWriteFrame, file = paste0(pathname,filename))
   } else {
-    write.csv(toWriteFrame, file = paste0(pathname,filename))
+    utils::write.csv(toWriteFrame, file = paste0(pathname,filename))
   }
 }
 

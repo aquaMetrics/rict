@@ -1,9 +1,15 @@
 #' Calculate River Invertebrate Classification Tool (RICT) predictions
 #'
 #' @param observed_values Dataframe of observed environmental values
+#' \describe{
+#'   \item{SITE}{Site identifier}
+#'   \item{Waterbody}{Water body identifier}
+#'   ...
+#' }
 #' @return Dataframe of predicted biotic scores and probility of observed values
 #' falling into each statistical grouping of rivers.
 #' @export
+#' @importFrom rlang .data
 #'
 #' @examples
 #' \dontrun{
@@ -16,11 +22,15 @@ calcPredictions <- function(observed_values) {
   # repos = NULL, verbose = TRUE, dependencies = TRUE)
   # library(rnrfa, lib.loc=".", verbose=TRUE)
 
+  # source("R\\prediction-functions.R")
+  # source("R\\helper-functions.R")
+  # source("R\\mean-air-temp-range.R")
+
   taxa_average_abundance <-
-    read.csv(system.file("extdat", "taxxaab.csv", package = "rict"))
+    utils::read.csv(system.file("extdat", "taxxaab.csv", package = "rict"))
 
   df_mean_gb685 <-
-    read.delim(
+    utils::read.delim(
       system.file("extdat", "df-mean-gb-685.DAT", package = "rict"),
       header = FALSE,
       sep = "",
@@ -28,7 +38,7 @@ calcPredictions <- function(observed_values) {
     )
 
   df_coeff_gb685 <-
-    read.delim(
+    utils::read.delim(
       system.file("extdat", "df-coeff-gb-685.DAT", package = "rict"),
       header = FALSE,
       sep = "",
@@ -39,10 +49,10 @@ calcPredictions <- function(observed_values) {
   # source("src/Helperfunctionsv1.R")
   # source("src/MeanAirTempAirTempRangeASFunction.R")
 
-  end_points <- read.csv(system.file("extdat", "test-data-end-point-means.csv", package = "rict"))
-  air_temp_grid <- read.csv(system.file("extdat", "air-temp-grid.csv", package = "rict"))
-  end_group_index <- read.csv(system.file("extdat", "x-103-end-group-means.csv", package = "rict"))
-  nr_efg_groups <- read.csv(system.file("extdat", "end-grp-assess-scores.csv", package = "rict"))
+  end_points <- utils::read.csv(system.file("extdat", "test-data-end-point-means.csv", package = "rict"))
+  air_temp_grid <- utils::read.csv(system.file("extdat", "air-temp-grid.csv", package = "rict"))
+  end_group_index <- utils::read.csv(system.file("extdat", "x-103-end-group-means.csv", package = "rict"))
+  nr_efg_groups <- utils::read.csv(system.file("extdat", "end-grp-assess-scores.csv", package = "rict"))
 
   #air_temp_grid <- read.csv("src/air-temp-grid.csv")
   #endroup_IndexDFrame <- read.csv("src/x103EndGroupMeans(FORMATTED).csv") # replaces END_GROUP_INDEX.csv
@@ -248,12 +258,12 @@ calcPredictions <- function(observed_values) {
   #
   # Deal with all warnings, save them in a file
   # Same as above, but using pipes, and using all the variables
-  msg_columns <- names(dplyr::select(observed_values, ends_with("_msg")))
-  this_warning <- observed_values %>%
-    dplyr::filter(substr(vld_alt_src_msg, 1, 5) == "Warn:"    | substr(mn_width_msg, 1, 5) == "Warn:"
-           | substr(mn_depth_msg, 1, 5) == "Warn:"     | substr(vld_alkal_msg, 1, 5) == "Warn:"
-           | substr(disch_msg, 1, 5) == "Warn:"        | substr(vld_substr_msg, 1, 5) == "Warn:"
-           | substr(vld_dist_src_msg, 1, 5) == "Warn:" | substr(vld_slope_msg, 1, 5) == "Warn:")
+  msg_columns <- names(dplyr::select(observed_values, dplyr::ends_with("_msg")))
+  this_warning <- observed_values
+  this_warning <- dplyr::filter(this_warning, substr(.data$vld_alt_src_msg, 1, 5) == "Warn:"    | substr(.data$mn_width_msg, 1, 5) == "Warn:"
+           | substr(.data$mn_depth_msg, 1, 5) == "Warn:"     | substr(.data$vld_alkal_msg, 1, 5) == "Warn:"
+           | substr(.data$disch_msg, 1, 5) == "Warn:"        | substr(.data$vld_substr_msg, 1, 5) == "Warn:"
+           | substr(.data$vld_dist_src_msg, 1, 5) == "Warn:" | substr(.data$vld_slope_msg, 1, 5) == "Warn:")
   #  select("SITE","YEAR",msg_columns) # Select some columns
   # write.csv(this_warning, file = paste0(path,"/Warnings_file_data.csv"))
   # which rows are these
@@ -261,11 +271,11 @@ calcPredictions <- function(observed_values) {
 
   # 2. Failings to log file
   # Deal with all failings, save them in a file
-  this_failing <- observed_values %>%
-    dplyr:: filter(substr(vld_alt_src_msg, 1, 5) == "Fail:"    | substr(mn_width_msg, 1, 5) == "Fail:"
-           | substr(mn_depth_msg, 1, 5) == "Fail:"     | substr(vld_alkal_msg, 1, 5) == "Fail:"
-           | substr(disch_msg, 1, 5) == "Fail:"        | substr(vld_substr_msg, 1, 5) == "Fail:"
-           | substr(vld_dist_src_msg, 1, 5) == "Fail:" | substr(vld_slope_msg, 1, 5) == "Fail:")
+  this_failing <- observed_values
+  this_failing <- dplyr::filter(this_failing, substr(.data$vld_alt_src_msg, 1, 5) == "Fail:"    | substr(.data$mn_width_msg, 1, 5) == "Fail:"
+           | substr(.data$mn_depth_msg, 1, 5) == "Fail:"     | substr(.data$vld_alkal_msg, 1, 5) == "Fail:"
+           | substr(.data$disch_msg, 1, 5) == "Fail:"        | substr(.data$vld_substr_msg, 1, 5) == "Fail:"
+           | substr(.data$vld_dist_src_msg, 1, 5) == "Fail:" | substr(.data$vld_slope_msg, 1, 5) == "Fail:")
   # select("SITE","YEAR",msg_columns) # Select some columns
   # # write.csv(this_failing, file = paste0(path,"/Failings_file_data.csv"))
   # Put warnings and failures in a file of warnings_failings
@@ -275,9 +285,9 @@ calcPredictions <- function(observed_values) {
   # Check if dataframe of warnings is empty, if not write to file
   if (nrow(warnings_failings) > 0){
     newdf <- data.frame(warnings_failings)
-    pdf("Fails_Warnings2.pdf", height = 11, width = 18.5)
+    grDevices::pdf("Fails_Warnings2.pdf", height = 11, width = 18.5)
     # Output the pdf file
-    data.frame(grid.table(newdf))
+    data.frame(gridExtra::grid.table(newdf))
     print(newdf)
   }
 
@@ -406,11 +416,14 @@ calcPredictions <- function(observed_values) {
   # We predict WHPT NTAXA, and WHPT ASP
 
   getEndGroupMeansColsNeeded <- function(dframe) {
-    dframe %>%
       # Don't select RIVAPCSMODEL since we know model what we are processing
-      dplyr::filter(RIVPACS.Model == "RIVPACS IV GB") %>%
-      dplyr::select(`End.Group`, `Season.Code`, `Season`, `TL2.WHPT.NTAXA..AbW.DistFam.`,
-             `TL2.WHPT.ASPT..AbW.DistFam.`, `TL2.WHPT.NTAXA..AbW.CompFam.`, `TL2.WHPT.ASPT..AbW.CompFam.`)
+     filtered_dframe <-  dplyr::filter(dframe, .data$RIVPACS.Model == "RIVPACS IV GB")
+      dplyr::select(filtered_dframe, .data$`End.Group`, .data$`Season.Code`,
+                    .data$`Season`,
+                    .data$`TL2.WHPT.NTAXA..AbW.DistFam.`,
+                    .data$`TL2.WHPT.ASPT..AbW.DistFam.`,
+                    .data$`TL2.WHPT.NTAXA..AbW.CompFam.`,
+                    .data$`TL2.WHPT.ASPT..AbW.CompFam.`)
   }
 
   endgroup_index_frame <- getEndGroupMeansColsNeeded(end_group_index)
@@ -418,13 +431,13 @@ calcPredictions <- function(observed_values) {
                                       "TL2_WHPT_NTAXA_AbW_DistFam", "TL2_WHPT_ASPT_AbW_DistFam",
                                       "TL2_WHPT_NTAXA_AbW_CompFam", "TL2_WHPT_ASPT_AbW_CompFam")
   # Sort by the columns "EndGrp", "SeasonCode"
-  endgroup_index_frame <- arrange(endgroup_index_frame, EndGrp, SeasonCode)
+  endgroup_index_frame <- dplyr::arrange(endgroup_index_frame, .data$EndGrp, .data$SeasonCode)
 
   # Prepare what you want to run - seasons, indices, and subset the data with the seasonCodes
   # seasons_to_run <- c(1,3) # add more seasons, :: USER INPUT
   # indices_to_run_old <- c(111,112,114, 115) # add more indices., TL2 WHPT NTAXA (AbW,DistFam),
   # index id = 111, TL2 WHPT ASPT (AbW,DistFam), index id = 112
-  endgroup_index_frame <- dplyr::filter(endgroup_index_frame, SeasonCode %in% seasons_to_run)
+  endgroup_index_frame <- dplyr::filter(endgroup_index_frame, .data$SeasonCode %in% seasons_to_run)
 
   # Write a function that extracts user input columns and converts them to the values in c("") below :: USER INPUT
   indices_to_run <- c("TL2_WHPT_NTAXA_AbW_DistFam", "TL2_WHPT_ASPT_AbW_DistFam",

@@ -6,18 +6,18 @@ Authors@R: c(person("Maybin", "Muyeba", email = "Maybin.Muyeba@environment-agenc
              person("Tim", "Foster", email = "tim.foster@sepa.org.uk", role="ctb")) 
 Maintainer: Maybin Muyeba <Nick.Irvine@defra.gov.uk>
 Description: This is an R implementation of the River Invertebrate
-    Classification Tool (RICT) system. This system is currently
-    written in oracle SQL procedures. The model uses environmental variables
-    to make predictions based on invertebrate reference data. It is based on
-    the work of many other authors. See Freshwater Biological Association http://www.fba.org.uk/river-invertebrate-classification-tool-rict-and-rivpacs for details
+  Classification Tool (RICT) system. This system is currently
+  written in oracle SQL procedures. The model uses environmental variables
+  to make predictions based on invertebrate reference data. It is based on
+  the work of many other authors. See Freshwater Biological Association http://www.fba.org.uk/river-invertebrate-classification-tool-rict-and-rivpacs for details.
 License: MIT + file LICENSE
 URL: https://github.com/aquaMetrics/rict
 Encoding: UTF-8
 LazyData: true
 Depends: 
- dplyr
+ R (>= 3.2.0)
 Imports: 
- stringr, 
+ dplyr, 
  magrittr, 
  rgdal, 
  plyr, 
@@ -28,7 +28,10 @@ Imports:
  ggmap, 
  ggplot2, 
  sp,
- rnrfa
+ rnrfa,
+ readxl,
+ rlang,
+ gridExtra
 Suggests: testthat,
     knitr,
     rmarkdown,

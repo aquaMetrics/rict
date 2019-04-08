@@ -7,7 +7,12 @@
 calcPredictions(observed_values)
 }
 \arguments{
-\item{observed_values}{Dataframe of observed environmental values}
+\item{observed_values}{Dataframe of observed environmental values
+\describe{
+  \item{SITE}{Site identifier}
+  \item{Waterbody}{Water body identifier}
+  ...
+}}
 }
 \value{
 Dataframe of predicted biotic scores and probility of observed values

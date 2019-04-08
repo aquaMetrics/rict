@@ -3,6 +3,7 @@
 #' @param predictions Dataframe of predicted endgroups values from calcPredictions function
 #' @return Dataframe of MultiYear classifications
 #' @export
+#' @importFrom rlang .data
 #'
 #' @examples
 #' \dontrun{
@@ -12,10 +13,12 @@
 
 calcClassification <- function(predictions) {
 
+# set global random seed for rnorm functions etc
+set.seed(1234)
 # Part 1: This Script reads all prediction indices for classification
 
-gb685_assess_score <- read.csv(system.file("extdat", "end-grp-assess-scores.csv", package = "rict"))
-adjusted_params <- read.csv(system.file("extdat", "adjust-params-ntaxa-aspt.csv", package = "rict"))
+gb685_assess_score <- utils::read.csv(system.file("extdat", "end-grp-assess-scores.csv", package = "rict"))
+adjusted_params <- utils::read.csv(system.file("extdat", "adjust-params-ntaxa-aspt.csv", package = "rict"))
 
 # Enter source files
 # Use the column header as site names in the final output
@@ -94,9 +97,9 @@ one_over_rjaj <- 1 / rjaj
 
 # Write a function that computes aspt, ntaxa adjusted (1 = "NTAXA", 2="ASPT")
 # or select them by name as declared in the classification functions
-ntaxa_adjusted <- select(predictions, contains("_NTAXA_")) / rjaj[, "NTAXA"]
+ntaxa_adjusted <- dplyr::select(predictions, dplyr::contains("_NTAXA_")) / rjaj[, "NTAXA"]
 #Compute AdjExpected as E=predictions/Sum(rj*adjusted_params)
-aspt_adjusted <- select(predictions, contains("_ASPT_")) / rjaj[, "ASPT"]
+aspt_adjusted <- dplyr::select(predictions, dplyr::contains("_ASPT_")) / rjaj[, "ASPT"]
 
 adjusted_expected <- cbind(ntaxa_adjusted, aspt_adjusted)
 adjusted_expected_new <- cbind(as.data.frame(all_sites), adjusted_expected) # Include site names from predictions
@@ -114,8 +117,8 @@ Exp_ref_aspt  <- aspt_adjusted / 0.9921
 Ubias8 <- ubias_main
 
 # find the non-bias corrected  EQR = obs/ExpRef
-nonBiasCorrected_WHPT_aspt_spr <- obs_aspt_spr / select(Exp_ref_aspt, contains("_spr"))
-nonBiasCorrected_WHPT_aspt_aut <- obs_aspt_aut / select(Exp_ref_aspt, contains("_aut"))
+nonBiasCorrected_WHPT_aspt_spr <- obs_aspt_spr / dplyr::select(Exp_ref_aspt, dplyr::contains("_spr"))
+nonBiasCorrected_WHPT_aspt_aut <- obs_aspt_aut / dplyr::select(Exp_ref_aspt, dplyr::contains("_aut"))
 
 # Now do the obs_rb with ONE SITE obs_aspt_spr[1]
 sdobs_aspt <- sdobs_one_year_new(0.269, 0.279, 1)
@@ -129,8 +132,8 @@ Exp_ref_ntaxa <- ntaxa_adjusted / 1.0049 # select(adjusted_expected_new, contain
 
 # Find the non-bias corrected  EQR = obs/ExpRef, from the raw inputs,
 # not used but useful for output checking purposes only
-nonBiasCorrected_WHPT_ntaxa_spr <- obs_ntaxa_spr / select(Exp_ref_ntaxa, contains("_spr"))
-nonBiasCorrected_WHPT_ntaxa_aut <- obs_ntaxa_aut / select(Exp_ref_ntaxa, contains("_aut"))
+nonBiasCorrected_WHPT_ntaxa_spr <- obs_ntaxa_spr / dplyr::select(Exp_ref_ntaxa, dplyr::contains("_spr"))
+nonBiasCorrected_WHPT_ntaxa_aut <- obs_ntaxa_aut / dplyr::select(Exp_ref_ntaxa, dplyr::contains("_aut"))
 
 # Now do the obs_rb with ONE SITE obs_ntaxa_spr[1]
 sdobs_ntaxa <- sdobs_one_year_new(0.247, 0.211, 1)

@@ -16,7 +16,7 @@
   \item{Slope}{Slope in metres per km}
   \item{Discharge}{Discharge categories}
   \item{Velocity}{Velocity in metres per second}
-  \item{Dist_from_Source}{Dist_from_Source in km}
+  \item{Dist_from_Source}{Distance from Source in km}
   \item{Mean_Width}{Mean Width in metres}
   \item{Mean_Depth}{Mean Width in metres}
   \item{Alkalinity}{Hardness, Calcium concentration or Electrical conductivity can be provided
@@ -29,16 +29,16 @@
   \item{Calcium}{Can be provided instead of Alkalinity and follows the same validation rules (spreadsheet validation)}
   \item{Conductivity}{Can be provided instead of Alkalinity and follows the same validation rules (spreadsheet validation)}
   \item{Spr_Season_ID}{season ID}
-  \item{Spr_TL2_WHPT_ASPT [AbW,DistFam]}{ASPT}
-  \item{Spr_TL2_WHPT_NTaxa \(AbW,DistFam\)}{NTAXA}
+  \item{\code{Spr_TL2_WHPT_ASPT (AbW,DistFam)}}{ASPT}
+  \item{\code{Spr_TL2_WHPT_NTaxa (AbW,DistFam)}}{NTAXA}
   \item{Spr_Ntaxa_Bias}{bias}
   \item{Sum_Season_ID}{season ID}
-  \item{Sum_TL2_WHPT_ASPT \(AbW,DistFam\)}{ASPT}
-  \item{Sum_TL2_WHPT_NTaxa \(AbW,DistFam\)}{NTAXA}
+  \item{\code{Sum_TL2_WHPT_ASPT (AbW,DistFam)}}{ASPT}
+  \item{\code{Sum_TL2_WHPT_NTaxa (AbW,DistFam)}}{NTAXA}
   \item{Sum_Ntaxa_Bias}{bias}
   \item{Aut_Season_ID}{season ID}
-  \item{Aut_TL2_WHPT_ASPT \(AbW,DistFam\)}{ASPT}
-  \item{Aut_TL2_WHPT_NTaxa \(AbW,DistFam\)}{NTAXA}
+  \item{\code{Aut_TL2_WHPT_ASPT (AbW,DistFam)}}{ASPT}
+  \item{\code{Aut_TL2_WHPT_NTaxa (AbW,DistFam)}}{NTAXA}
   \item{Aut_Ntaxa_Bias}{bias}
 }}
 \usage{

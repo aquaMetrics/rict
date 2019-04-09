@@ -242,7 +242,7 @@ getRawAlkalinity <- function (alkalinity){
 getLatLong <- function(nat_grid_ref, easting, northing, coordsys_latlon){
   lat_long <- NA
   concat_bng  <- paste(nat_grid_ref, substr(easting, 1, 3), substr(northing, 1, 3), sep = "")
-  lat_long  <- rnrfa::osg_parse(concat_bng, CoordSystem = coordsys_latlon)
+  lat_long  <- osg_parse(grid_refs = concat_bng, coord_system = coordsys_latlon)
   return(lat_long)
 }
 
@@ -261,7 +261,7 @@ getLatLong <- function(nat_grid_ref, easting, northing, coordsys_latlon){
 getBNG <- function(nat_grid_ref, easting, northing, coordsys_bng) {
   lat_long <- NA
   concat_bng  <- paste(nat_grid_ref, substr(easting, 1, 3), substr(northing, 1, 3), sep = "")
-  new_bng <- rnrfa::osg_parse(concat_bng, CoordSystem = coordsys_bng)
+  new_bng <- osg_parse(grid_refs = concat_bng, coord_system = coordsys_bng)
   return(new_bng)
 }
 

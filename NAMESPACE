@@ -2,4 +2,5 @@
 
 export(calcClassification)
 export(calcPredictions)
+export(osg_parse)
 importFrom(rlang,.data)

@@ -212,7 +212,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
   autumn_whpt_aspt_Abw_CompFam <- NULL
 
   if (3 %in% end_group_IndexDFrame$SeasonCode ) {
-    autumn_whpt_all <- dplyr::filter(end_group_IndexDFrame, SeasonCode == 3)
+    autumn_whpt_all <- dplyr::filter(end_group_IndexDFrame, .data$SeasonCode == 3)
     # Check what index iit is you want , and getProbScores
     if("TL2_WHPT_NTAXA_AbW_DistFam" %in% colnames(end_group_IndexDFrame) ){ # column exists
       autumn_whpt_ntaxa_Abw_Dist <- as.data.frame(getProbScores(data_to_bindTo[,15:57],
@@ -312,68 +312,69 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
   bind_all <- cbind(bind_all, autumn_whpt_aspt_Abw_CompFam)
 
   # Summer Dist
+  if(!is.null(summer_whpt_ntaxa_Abw_Dist)) {
   bind_all <- cbind(bind_all, summer_whpt_ntaxa_Abw_Dist)
   bind_all <- cbind(bind_all, summer_whpt_aspt_Abw_Dist)
   # Summer CompFam
   bind_all <- cbind(bind_all, summer_whpt_ntaxa_Abw_CompFam)
   bind_all <- cbind(bind_all, summer_whpt_aspt_Abw_CompFam)
-
+  }
   return(bind_all)
 }
 
-getSeasonIndexScores_old <- function (data_to_bindTo, season_to_run, index_id,
-                                      end_group_IndexDFrame, final.predictors_try){
-  #index_Score <- matrix(0, nrow=nrow(end_group_IndexDFrame), ncol = nrow(end_group_IndexDFrame) )
-  # Declare a matrix of zeros, with nrow, ncol dimensions
-  mainDFrame <- data_to_bindTo
-
-  # for each index you get, and for each season, produce a probability  score and add to the main dataset
-  for (i in 1:length(index_id)) {
-    # Choose all seasons, index_id==1
-    season_run <- endroup_IndexDFrame[(endroup_IndexDFrame$season_id %in% season_to_run)
-                                      & endroup_IndexDFrame$index_id == index_id[i], ]
-    #Group by end_group, season_id, value
-    season_all_grp <- season_run[, -c(1)] # Remove the index_id, leave "end_group", "season_id"", and "value"
-      season_grp <- dplyr::group_by(season_all_grp, .data$end_group, .data$season_id, .data$value)
-      dplyr::arrange(season_grp, .data$end_group)
-    #Remove any values with NA, if any occur
-    season_all_grp <- season_all_grp[stats::complete.cases(season_all_grp), ]
-
-    for(j in 1:length(season_to_run)) {
-      season_1 <- season_all_grp[season_all_grp$season_id == season_to_run[j], ]
-      season_1_pred <- season_1[!duplicated(season_1$end_group), ]
-      idx_mean_1 <- getProbScores(final.predictors_try[, 15:57], season_1_pred[, 3])
-      # 15:57 are probability columns * season_value
-      # Name columns according to the index_id and seasons here
-
-      if(index_id[i]==111 & season_to_run[j]==1)
-        colnames(idx_mean_1) <- c("TL2_WHPT_NTAXA_Abw_DistFam_Spring")
-      if(index_id[i]==111 & season_to_run[j]==3)
-        colnames(idx_mean_1) <- c("TL2_WHPT_NTAXA_Abw_DistFam_Autumn")
-      if(index_id[i]==112 & season_to_run[j]==1)
-        colnames(idx_mean_1) <- c("TL2_WHPT_ASPT_Abw_DistFam_Spring")
-      if(index_id[i]==112 & season_to_run[j]==3)
-        colnames(idx_mean_1) <- c("TL2_WHPT_ASPT_Abw_DistFam_Autumn")
-      ###
-      if(index_id[i]==114 & season_to_run[j]==1)
-        colnames(idx_mean_1) <- c("TL2_WHPT_NTAXA_Abw_CompFam_Spring") # Current uses 115 index - wrong use!!
-      if(index_id[i]==114 & season_to_run[j]==3)
-        colnames(idx_mean_1) <- c("TL2_WHPT_NTAXA_Abw_CompFam_Autumn")
-      ###
-      if(index_id[i]==115 & season_to_run[j]==1)
-        colnames(idx_mean_1) <- c("TL2_WHPT_ASPT_Abw_CompFam_Spring") # Current uses 115 index - wrong use!!
-      if(index_id[i]==115 & season_to_run[j]==3)
-        colnames(idx_mean_1) <- c("TL2_WHPT_ASPT_Abw_CompFam_Autumn")
-
-
-      # bind to the maindataframe
-      mainDFrame <- cbind(mainDFrame, idx_mean_1)
-
-    }
-  }
-
-  return (mainDFrame)
-}
+# getSeasonIndexScores_old <- function (data_to_bindTo, season_to_run, index_id,
+#                                       end_group_IndexDFrame, final.predictors_try){
+#   #index_Score <- matrix(0, nrow=nrow(end_group_IndexDFrame), ncol = nrow(end_group_IndexDFrame) )
+#   # Declare a matrix of zeros, with nrow, ncol dimensions
+#   mainDFrame <- data_to_bindTo
+#
+#   # for each index you get, and for each season, produce a probability  score and add to the main dataset
+#   for (i in 1:length(index_id)) {
+#     # Choose all seasons, index_id==1
+#     season_run <- end_group_IndexDFrame[(end_group_IndexDFrame$season_id %in% season_to_run)
+#                                       & end_group_IndexDFrame$index_id == index_id[i], ]
+#     #Group by end_group, season_id, value
+#     season_all_grp <- season_run[, -c(1)] # Remove the index_id, leave "end_group", "season_id"", and "value"
+#       season_grp <- dplyr::group_by(season_all_grp, .data$end_group, .data$season_id, .data$value)
+#       dplyr::arrange(season_grp, .data$end_group)
+#     #Remove any values with NA, if any occur
+#     season_all_grp <- season_all_grp[stats::complete.cases(season_all_grp), ]
+#
+#     for(j in 1:length(season_to_run)) {
+#       season_1 <- season_all_grp[season_all_grp$season_id == season_to_run[j], ]
+#       season_1_pred <- season_1[!duplicated(season_1$end_group), ]
+#       idx_mean_1 <- getProbScores(final.predictors_try[, 15:57], season_1_pred[, 3])
+#       # 15:57 are probability columns * season_value
+#       # Name columns according to the index_id and seasons here
+#
+#       if(index_id[i]==111 & season_to_run[j]==1)
+#         colnames(idx_mean_1) <- c("TL2_WHPT_NTAXA_Abw_DistFam_Spring")
+#       if(index_id[i]==111 & season_to_run[j]==3)
+#         colnames(idx_mean_1) <- c("TL2_WHPT_NTAXA_Abw_DistFam_Autumn")
+#       if(index_id[i]==112 & season_to_run[j]==1)
+#         colnames(idx_mean_1) <- c("TL2_WHPT_ASPT_Abw_DistFam_Spring")
+#       if(index_id[i]==112 & season_to_run[j]==3)
+#         colnames(idx_mean_1) <- c("TL2_WHPT_ASPT_Abw_DistFam_Autumn")
+#       ###
+#       if(index_id[i]==114 & season_to_run[j]==1)
+#         colnames(idx_mean_1) <- c("TL2_WHPT_NTAXA_Abw_CompFam_Spring") # Current uses 115 index - wrong use!!
+#       if(index_id[i]==114 & season_to_run[j]==3)
+#         colnames(idx_mean_1) <- c("TL2_WHPT_NTAXA_Abw_CompFam_Autumn")
+#       ###
+#       if(index_id[i]==115 & season_to_run[j]==1)
+#         colnames(idx_mean_1) <- c("TL2_WHPT_ASPT_Abw_CompFam_Spring") # Current uses 115 index - wrong use!!
+#       if(index_id[i]==115 & season_to_run[j]==3)
+#         colnames(idx_mean_1) <- c("TL2_WHPT_ASPT_Abw_CompFam_Autumn")
+#
+#
+#       # bind to the maindataframe
+#       mainDFrame <- cbind(mainDFrame, idx_mean_1)
+#
+#     }
+#   }
+#
+#   return (mainDFrame)
+# }
 
 ##-------------------------------------------- old functions --------------
 
@@ -395,22 +396,22 @@ getDFScore_old <- function (DFCoeff, EnvValues) {
 } # Done, cbind this to original dataset
 
 #Calculate Probabilities of Endgroup
-getProbEndGroup_old <- function (DFCoeff, EnvValues, DFMean, NRef_g) {
-  DFScore_d <- data.frame(matrix(0, nrow=nrow(DFCoeff) )) # make a dataframe
-  MahDist_g <- data.frame(matrix(0, nrow=nrow(DFCoeff) ))
-  PDist_g   <- data.frame(matrix(0, nrow=nrow(DFCoeff) ))
-  Prob_g    <-  data.frame(matrix(0, nrow=nrow(DFCoeff) ))
-  for(j in 2:nrow(DFCoeff)) {
-    DFScore_d [j-1,] <- sum(DFCoeff[,i] * EnvValues[i,-1])
-    MahDist_g [j-1,] <- sum((DFScore_d[,i]-DFMean[i,])^2)
-  }
-  #All should be in loop of end group = g
-  MahDist_min <- min(MahDist_g)
-  PDist_g     <- NRef_g*exp(-MahDist_g/2)
-  PDist_total <-  sum(PDist_g)
-  Prob_g      <- PDist_g/PDist_total
-  return (0)
-}
+# getProbEndGroup_old <- function (DFCoeff, EnvValues, DFMean, NRef_g) {
+#   DFScore_d <- data.frame(matrix(0, nrow=nrow(DFCoeff) )) # make a dataframe
+#   MahDist_g <- data.frame(matrix(0, nrow=nrow(DFCoeff) ))
+#   PDist_g   <- data.frame(matrix(0, nrow=nrow(DFCoeff) ))
+#   Prob_g    <-  data.frame(matrix(0, nrow=nrow(DFCoeff) ))
+#   for(j in 2:nrow(DFCoeff)) {
+#     DFScore_d [j-1,] <- sum(DFCoeff[,i] * EnvValues[i,-1])
+#     MahDist_g [j-1,] <- sum((DFScore_d[,i]-DFMean[i,])^2)
+#   }
+#   #All should be in loop of end group = g
+#   MahDist_min <- min(MahDist_g)
+#   PDist_g     <- NRef_g*exp(-MahDist_g/2)
+#   PDist_total <-  sum(PDist_g)
+#   Prob_g      <- PDist_g/PDist_total
+#   return (0)
+# }
 
 # Calculate the minimum Mahanalobis distance of point x from site g
 
@@ -425,13 +426,13 @@ getMahDist_min_old <- function (DFscore, meanvalues) {
 }
 
 #Calculate Mahalabois distance
-getMahDist_old <- function (meansA, valuesB) {
-  l_mah_dist <- 0
-  for (i in 1: ncol(meansA)) {
-    l_mah_dist <- l_mah_dist + (valuesB - meansA)^2;
-    l_pDist    <- l_NRef * exp( (-1*l_mah_dist) /2);
-  }
-  return (l_mah_dist)
-}
+# getMahDist_old <- function (meansA, valuesB) {
+#   l_mah_dist <- 0
+#   for (i in 1: ncol(meansA)) {
+#     l_mah_dist <- l_mah_dist + (valuesB - meansA)^2;
+#     l_pDist    <- l_NRef * exp( (-1*l_mah_dist) /2);
+#   }
+#   return (l_mah_dist)
+# }
 
 # End Exclude Linting

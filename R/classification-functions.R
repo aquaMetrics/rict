@@ -136,15 +136,15 @@ sdobs_one_year_new <- function (SDRep_i, SDTSeas_i, NObs_seas) { # NObs_seas = 1
 }
 
 # for ntaxa
-getObsIDX8r <- function (ObsIDX8, znorm_ir) {# needs 10,000 simulations, and store these for each index(ntaxa, aspt) for each season (autumn, spring)
-  # Do this and store these 10,000 times. Have a matrix array to store them
-  # ZObs8r <- getZObs_ir(znorm_ir, SDObs_ir)
-  return (
-    (sqrt(ObsIDX8)+znorm_ir)^2)
-}
+# getObsIDX8r <- function (ObsIDX8, znorm_ir) {# needs 10,000 simulations, and store these for each index(ntaxa, aspt) for each season (autumn, spring)
+#   # Do this and store these 10,000 times. Have a matrix array to store them
+#   # ZObs8r <- getZObs_ir(znorm_ir, SDObs_ir)
+#   return (
+#     (sqrt(ObsIDX8)+znorm_ir)^2)
+# }
 
 # for aspt, we compute 9r
-getObsIDX9r <- function (ObsIDX9, znorm_ir) {
+getObsIDXniner <- function (ObsIDX9, znorm_ir) {
   # needs 10,000 simulations, and store these for each index(ntaxa, aspt) for each season (autumn, spring)
   # Do this and store these 10,000 times. Have a matrix array to store them
   # ZObs8r <- getZObs_ir(znorm_ir, SDObs_ir)
@@ -405,11 +405,11 @@ getObsIDX8rB <- function (ObsIDX8, znorm_ir) {# needs 10,000 simulations, and st
 }
 
 # 6.2. Get ObsIDX9r = ObsIDX9 + ZObs9r, the rth simulated  for observed weighted WHPT ASPT, ObsIDX9 is user-supplied value
-getObsIDX9rB <- function (ObsIDX9, znorm_ir) {# needs 10,000 simulations, and store these for each index(ntaxa, aspt) for each season (autumn, spring)
-  #Do this and store these 10,000 times. Have a matrix array to store them
-  #ZObs9r <- getZObs_ir(znorm_ir, SDObs_ir)
-  return ((ObsIDX9+znorm_ir))
-}
+# getObsIDX9rB <- function (ObsIDX9, znorm_ir) {# needs 10,000 simulations, and store these for each index(ntaxa, aspt) for each season (autumn, spring)
+#   #Do this and store these 10,000 times. Have a matrix array to store them
+#   #ZObs9r <- getZObs_ir(znorm_ir, SDObs_ir)
+#   return ((ObsIDX9+znorm_ir))
+# }
 
 # 6.3. Get ObsIDX7r = ObsIDX7r + Ubias7r , the rth simulated  for observed weighted WHPT Score
 getObsIDX7rB <- function (ObsIDX7r, Ubias7r) {# needs 10,000 simulations, and store these for each index(ntaxa, aspt) for each season (autumn, spring)

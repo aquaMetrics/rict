@@ -247,8 +247,8 @@ while (k <= nrow(predictions) | (lastSiteProcessed == FALSE)) {
     Ubias9r_aut <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_aut[j], n_runs, Ubias8r_aut)
     Ubias7r_spr <- Ubias8r_spr * Ubias9r_spr
     Ubias7r_aut <- Ubias8r_aut * Ubias9r_aut
-    obsIDX9r_spr  <- getObsIDX9r(obs_aspt_spr[j], getZObs_r_new(sdobs_aspt, n_runs))
-    obsIDX9r_aut  <- getObsIDX9r(obs_aspt_aut[j], getZObs_r_new(sdobs_aspt, n_runs))
+    obsIDX9r_spr  <- getObsIDXniner(obs_aspt_spr[j], getZObs_r_new(sdobs_aspt, n_runs))
+    obsIDX9r_aut  <- getObsIDXniner(obs_aspt_aut[j], getZObs_r_new(sdobs_aspt, n_runs))
     obsIDX7r_spr <-  obsIDX8r_spr * obsIDX9r_spr
     obsIDX7r_aut <-  obsIDX8r_aut * obsIDX9r_aut
     obsIDX7rb_spr <- obsIDX7r_spr + Ubias7r_spr
@@ -297,8 +297,8 @@ while (k <= nrow(predictions) | (lastSiteProcessed == FALSE)) {
     Ubias9r_aut <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_aut[k], n_runs, Ubias8r_aut)
     Ubias7r_spr <- Ubias8r_spr * Ubias9r_spr
     Ubias7r_aut <- Ubias8r_aut * Ubias9r_aut
-    obsIDX9r_spr  <- getobsIDX9r(obs_aspt_spr[k], getZObs_r_new(sdobs_aspt, n_runs))
-    obsIDX9r_aut  <- getobsIDX9r(obs_aspt_aut[k], getZObs_r_new(sdobs_aspt, n_runs))
+    obsIDX9r_spr  <- getObsIDXniner(obs_aspt_spr[k], getZObs_r_new(sdobs_aspt, n_runs))
+    obsIDX9r_aut  <- getObsIDXniner(obs_aspt_aut[k], getZObs_r_new(sdobs_aspt, n_runs))
     obsIDX7r_spr <-  obsIDX8r_spr * obsIDX9r_spr
     obsIDX7r_aut <-  obsIDX8r_aut * obsIDX9r_aut
     obsIDX7rb_spr <- obsIDX7r_spr + Ubias7r_spr

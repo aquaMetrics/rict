@@ -4,10 +4,12 @@
 \alias{calcClassification}
 \title{This experiment is a multi-year classification Monte-Carlo simulation of predictions}
 \usage{
-calcClassification(predictions)
+calcClassification(predictions, year_type = "multi")
 }
 \arguments{
 \item{predictions}{Dataframe of predicted endgroups values from calcPredictions function}
+
+\item{year_type}{"single" or "multi" depending if multi-year classification required - default is "multi"}
 }
 \value{
 Dataframe of MultiYear classifications
@@ -17,7 +19,7 @@ This experiment is a multi-year classification Monte-Carlo simulation of predict
 }
 \examples{
 \dontrun{
-predictions <- calcPredictions(observed_values = rict::demo_observed_values)
+predictions <- calcPrediction(observed_values = rict::demo_observed_values)
 classifications <- calcClassification(predictions)
 }
 }

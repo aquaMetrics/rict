@@ -136,12 +136,12 @@ sdobs_one_year_new <- function (SDRep_i, SDTSeas_i, NObs_seas) { # NObs_seas = 1
 }
 
 # for ntaxa
-# getObsIDX8r <- function (ObsIDX8, znorm_ir) {# needs 10,000 simulations, and store these for each index(ntaxa, aspt) for each season (autumn, spring)
-#   # Do this and store these 10,000 times. Have a matrix array to store them
-#   # ZObs8r <- getZObs_ir(znorm_ir, SDObs_ir)
-#   return (
-#     (sqrt(ObsIDX8)+znorm_ir)^2)
-# }
+getObsIDX8r <- function (ObsIDX8, znorm_ir) {# needs 10,000 simulations, and store these for each index(ntaxa, aspt) for each season (autumn, spring)
+  # Do this and store these 10,000 times. Have a matrix array to store them
+  # ZObs8r <- getZObs_ir(znorm_ir, SDObs_ir)
+  return (
+    (sqrt(ObsIDX8)+znorm_ir)^2)
+}
 
 # for aspt, we compute 9r
 getObsIDXniner <- function (ObsIDX9, znorm_ir) {
@@ -271,12 +271,13 @@ getClassarray_aspt <- function (EQR_aspt) {
   return (as.data.frame(classArray_siteOne))
 }
 #Find the averages of both spr and autum, declare a function to compute this
-getAvgEQR_SprAut <- function (EQR_spr,EQR_aut, k) {
+getAvgEQR_SprAut <- function (EQR_spr, EQR_aut, k, row_name = F) {
     eqr_av_spr <- colMeans(EQR_spr)
     eqr_av_aut <- colMeans(EQR_aut)
     eqr_av <- cbind(eqr_av_spr,eqr_av_aut)
-    #print(eqr_av)
-    rownames(eqr_av) <- c(paste0("TST-", k))
+    if (row_name == T) {
+     rownames(eqr_av) <- c(paste0("TST-", k))
+    }
     return (eqr_av)
 }
 
@@ -405,11 +406,11 @@ getObsIDX8rB <- function (ObsIDX8, znorm_ir) {# needs 10,000 simulations, and st
 }
 
 # 6.2. Get ObsIDX9r = ObsIDX9 + ZObs9r, the rth simulated  for observed weighted WHPT ASPT, ObsIDX9 is user-supplied value
-# getObsIDX9rB <- function (ObsIDX9, znorm_ir) {# needs 10,000 simulations, and store these for each index(ntaxa, aspt) for each season (autumn, spring)
-#   #Do this and store these 10,000 times. Have a matrix array to store them
-#   #ZObs9r <- getZObs_ir(znorm_ir, SDObs_ir)
-#   return ((ObsIDX9+znorm_ir))
-# }
+getObsIDX9r <- function (ObsIDX9, znorm_ir) {# needs 10,000 simulations, and store these for each index(ntaxa, aspt) for each season (autumn, spring)
+  #Do this and store these 10,000 times. Have a matrix array to store them
+  #ZObs9r <- getZObs_ir(znorm_ir, SDObs_ir)
+  return ((ObsIDX9+znorm_ir))
+}
 
 # 6.3. Get ObsIDX7r = ObsIDX7r + Ubias7r , the rth simulated  for observed weighted WHPT Score
 getObsIDX7rB <- function (ObsIDX7r, Ubias7r) {# needs 10,000 simulations, and store these for each index(ntaxa, aspt) for each season (autumn, spring)

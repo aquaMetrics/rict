@@ -1,18 +1,23 @@
 #' This experiment is a multi-year classification Monte-Carlo simulation of predictions
 #'
 #' @param predictions Dataframe of predicted endgroups values from calcPredictions function
+#' @param year_type "single" or "multi" depending if multi-year classification required - default is "multi"
 #' @return Dataframe of MultiYear classifications
 #' @export
 #' @importFrom rlang .data
 #'
 #' @examples
 #' \dontrun{
-#' predictions <- calcPredictions(observed_values = rict::demo_observed_values)
+#' predictions <- calcPrediction(observed_values = rict::demo_observed_values)
 #' classifications <- calcClassification(predictions)
 #' }
 
-calcClassification <- function(predictions) {
+calcClassification <- function(predictions, year_type = "multi") {
 
+if (year_type == "single"){
+  classification_results <- singleYearClassification(predictions)
+  return(classification_results)
+} else {
 # set global random seed for rnorm functions etc
 set.seed(1234)
 # Part 1: This Script reads all prediction indices for classification
@@ -123,6 +128,9 @@ nonBiasCorrected_WHPT_aspt_aut <- obs_aspt_aut / dplyr::select(Exp_ref_aspt, dpl
 # Now do the obs_rb with ONE SITE obs_aspt_spr[1]
 sdobs_aspt <- sdobs_one_year_new(0.269, 0.279, 1)
 
+SiteProbabilityclasses_spr_aspt <- data.frame() # Store site probabilities in a dataframe
+SiteProbabilityclasses_aut_aspt <- data.frame() # Store site probabilities in a dataframe
+SiteProbabilityclasses_spr_aut_comb_aspt <- data.frame()
 EQRAverages_aspt_spr <- data.frame() # Store average EQRs for spr in a dataframe
 EQRAverages_aspt_aut <- data.frame() # Store average EQRs for spr in a dataframe
 
@@ -339,8 +347,8 @@ while (k <= nrow(predictions) | (lastSiteProcessed == FALSE)) {
   }
 
   # Calculate EQRs here, i.e. rowSums if multipleTrue else just getAvgEQR() for single season
-  eqr_av_spr <- data.frame(rowMeans(getAvgEQR_SprAut(EQR_ntaxa_spr, EQR_ntaxa_aut, k)))
-  eqr_av_spr_aspt <- data.frame(rowMeans(getAvgEQR_SprAut(EQR_aspt_spr, EQR_aspt_aut, k)))
+  eqr_av_spr <- data.frame(rowMeans(getAvgEQR_SprAut(EQR_ntaxa_spr, EQR_ntaxa_aut, k, row_name = T)))
+  eqr_av_spr_aspt <- data.frame(rowMeans(getAvgEQR_SprAut(EQR_aspt_spr, EQR_aspt_aut, k, row_name = T)))
 
   # START TO CALCULATE probability of class
   # Part 2: Start calculating for NTAXA probability of CLASS
@@ -477,4 +485,5 @@ classification_results <- cbind(allResults, SiteMINTA_whpt_spr_aut)
 
 return(classification_results)
 
+ }
 }

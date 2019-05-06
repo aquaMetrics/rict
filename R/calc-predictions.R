@@ -13,9 +13,9 @@
 #'
 #' @examples
 #' \dontrun{
-#' predictions <- calcPredictions(observed_values = rict::demo_observed_values)
+#' predictions <- calcPrediction(observed_values = rict::demo_observed_values)
 #' }
-calcPredictions <- function(observed_values) {
+calcPrediction <- function(observed_values) {
 
   # install.packages("src/rnrfa_1.4.0.zip", lib = ".", repos = NULL, verbose = TRUE, dependencies = TRUE)
   # install.packages("src/validationpredictor_functions.zip", lib = ".",
@@ -260,7 +260,8 @@ calcPredictions <- function(observed_values) {
   # Same as above, but using pipes, and using all the variables
   msg_columns <- names(dplyr::select(observed_values, dplyr::ends_with("_msg")))
   this_warning <- observed_values
-  this_warning <- dplyr::filter(this_warning, substr(.data$vld_alt_src_msg, 1, 5) == "Warn:"    | substr(.data$mn_width_msg, 1, 5) == "Warn:"
+  this_warning <- dplyr::filter(this_warning,
+             substr(.data$vld_alt_src_msg, 1, 5) == "Warn:"  | substr(.data$mn_width_msg, 1, 5) == "Warn:"
            | substr(.data$mn_depth_msg, 1, 5) == "Warn:"     | substr(.data$vld_alkal_msg, 1, 5) == "Warn:"
            | substr(.data$disch_msg, 1, 5) == "Warn:"        | substr(.data$vld_substr_msg, 1, 5) == "Warn:"
            | substr(.data$vld_dist_src_msg, 1, 5) == "Warn:" | substr(.data$vld_slope_msg, 1, 5) == "Warn:")
@@ -272,7 +273,8 @@ calcPredictions <- function(observed_values) {
   # 2. Failings to log file
   # Deal with all failings, save them in a file
   this_failing <- observed_values
-  this_failing <- dplyr::filter(this_failing, substr(.data$vld_alt_src_msg, 1, 5) == "Fail:"    | substr(.data$mn_width_msg, 1, 5) == "Fail:"
+  this_failing <- dplyr::filter(this_failing,
+             substr(.data$vld_alt_src_msg, 1, 5) == "Fail:"  | substr(.data$mn_width_msg, 1, 5) == "Fail:"
            | substr(.data$mn_depth_msg, 1, 5) == "Fail:"     | substr(.data$vld_alkal_msg, 1, 5) == "Fail:"
            | substr(.data$disch_msg, 1, 5) == "Fail:"        | substr(.data$vld_substr_msg, 1, 5) == "Fail:"
            | substr(.data$vld_dist_src_msg, 1, 5) == "Fail:" | substr(.data$vld_slope_msg, 1, 5) == "Fail:")

@@ -5,7 +5,7 @@
 
 # Work in progress
 
-This R package is in development. Please don't use in production. Test 
+This R package is in development. Please don't use in production.
 
 ## rict package
 

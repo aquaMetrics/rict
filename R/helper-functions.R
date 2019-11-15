@@ -89,7 +89,7 @@ getValidEnvInput <- function(env_var, lower_b, upper_b, envName) {
 
   #First check Fail conditions  Case 2
   if( (0<env_var & env_var<lower_b)| (env_var>upper_b) ) { # Completely out of bounds, should fail
-    msg <- paste("Fail: ",envName," bounds exceeded")
+    msg <- paste("Warn: ",envName," bounds exceeded")
     env_frame <- data.frame(log10(env_var), msg) # A null value means nothing or zero
     colnames(env_frame) <- c("log","msg")
     return (env_frame)

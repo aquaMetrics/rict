@@ -19,15 +19,18 @@
   \item{Dist_from_Source}{Distance from Source in km}
   \item{Mean_Width}{Mean Width in metres}
   \item{Mean_Depth}{Mean Width in metres}
-  \item{Alkalinity}{Hardness, Calcium concentration or Electrical conductivity can be provided
-  if unable to provide Alkalinity – One of the values must be present (spreadsheet validation)}
+  \item{Alkalinity}{Hardness, Calcium concentration or Electrical
+  conductivity can be provided if unable to provide Alkalinity – One of the
+  values must be present (spreadsheet validation)}
   \item{Boulder_Cobbles}{Substrate}
   \item{Pebbles_Gravel}{Substrate}
   \item{Sand}{Substrate}
   \item{Silt_Clay}{Substrate}
-  \item{Hardness}{Can be provided instead of Alkalinity and follows the same validation rules (spreadsheet validation)}
-  \item{Calcium}{Can be provided instead of Alkalinity and follows the same validation rules (spreadsheet validation)}
-  \item{Conductivity}{Can be provided instead of Alkalinity and follows the same validation rules (spreadsheet validation)}
+  \item{Hardness}{Can be provided instead of Alkalinity and follows the same
+  validation rules (spreadsheet validation)} \item{Calcium}{Can be provided
+  instead of Alkalinity and follows the same validation rules (spreadsheet
+  validation)} \item{Conductivity}{Can be provided instead of Alkalinity and
+  follows the same validation rules (spreadsheet validation)}
   \item{Spr_Season_ID}{season ID}
   \item{\code{Spr_TL2_WHPT_ASPT (AbW,DistFam)}}{ASPT}
   \item{\code{Spr_TL2_WHPT_NTaxa (AbW,DistFam)}}{NTAXA}

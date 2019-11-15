@@ -2,29 +2,33 @@ context("test calcClassifcation")
 
 
 test_that("calcClassifcation outputs match azure single-year outputs", {
-
   observed_values <- utils::read.csv(system.file("extdat",
-                                                 "validation-input-single-year.csv",
-                                                 package = "rict"),check.names = F)
-
-
-  predictions <- calcPrediction(observed_values = observed_values[1,])
+    "validation-input-single-year.csv",
+    package = "rict"
+  ),
+  check.names = F, stringsAsFactors = F
+  )
+  observed_values <- observed_values[1, ] # only one year required
+  test_validation_func <- rict:::validate_observed(observed_values)
+  predictions <- calcPrediction(observed_values = observed_values)
   classification <- calcClassification(predictions, year_type = "single")
   expect_equal(class(classification), "data.frame")
 
   validation_classification <- utils::read.csv(system.file("extdat",
-                                                           "validation-class-single-year.csv",
-                                                           package = "rict"))
+    "validation-class-single-year.csv",
+    package = "rict"
+  ))
 
   classification$mintawhpt_spr_aut_mostProb <-
-                                    as.character(classification$mintawhpt_spr_aut_mostProb)
+    as.character(classification$mintawhpt_spr_aut_mostProb)
   validation_classification$mintawhpt_spr_aut_mostProb <-
-                                    as.character(validation_classification$mintawhpt_spr_aut_mostProb)
+    as.character(validation_classification$mintawhpt_spr_aut_mostProb)
 
-  equal <- all.equal(classification$mintawhpt_spr_aut_mostProb,
-                     validation_classification$mintawhpt_spr_aut_mostProb[1])
+  equal <- all.equal(
+    classification$mintawhpt_spr_aut_mostProb,
+    validation_classification$mintawhpt_spr_aut_mostProb[1]
+  )
   expect_true(equal == T)
-
 })
 
 
@@ -35,9 +39,10 @@ test_that("calcClassifcation outputs match azure multi-year outputs", {
 
   # compare results downloaded from azure with package (Results on azure were manually user tested).
   validation_classification <- utils::read.csv(system.file("extdat",
-                                                           "validation-class-multi-year.csv",
-                                                           package = "rict"))
-  classification <- classification[,names(classification) %in%  names(validation_classification)]
+    "validation-class-multi-year.csv",
+    package = "rict"
+  ))
+  classification <- classification[, names(classification) %in% names(validation_classification)]
 
   # match up class between azure results and package:
   classification$WATERBODY <- as.character(classification$WATERBODY)
@@ -81,16 +86,31 @@ test_that("calcClassifcation outputs match azure multi-year outputs", {
   classification$mintawhpt_spr_aut_B_MINTA_ <- as.numeric(classification$mintawhpt_spr_aut_B_MINTA_)
   classification$mintawhpt_spr_aut_mostProb_MINTA_ <- as.character(classification$mintawhpt_spr_aut_mostProb_MINTA_)
   validation_classification$mintawhpt_spr_aut_mostProb_MINTA_ <- as.character(
-                                                         validation_classification$mintawhpt_spr_aut_mostProb_MINTA_)
+    validation_classification$mintawhpt_spr_aut_mostProb_MINTA_
+  )
 
   # remove row.names - not required for comparison
   row.names(classification) <- NULL
   row.names(validation_classification) <- NULL
 
   # test azure and package results match:
-  equal <- all.equal(classification[, 1:23],
-                       validation_classification[, 1:23])
+  equal <- all.equal(
+    classification[, 1:23],
+    validation_classification[, 1:23]
+  )
   expect_true(equal == T)
+})
 
+test_that("calcClassifcation outputs on SEPA system", {
+  skip("internal sepa test only")
+  library(sepaTools)
+  ecology_results <- getEcologyResults(
+    locations = 122480,
+    startDate = "01-JAN-2013",
+    endDate = "17-NOV-2017"
+  )
 
+  observed_values <- transformRict(ecology_results)
+
+  predictions <- rict::calcPrediction(observed_values)
 })

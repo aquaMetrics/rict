@@ -10,7 +10,7 @@ Description: This is an R implementation of the River Invertebrate
   written in oracle SQL procedures. The model uses environmental variables
   to make predictions based on invertebrate reference data. It is based on
   the work of many other authors. See Freshwater Biological Association http://www.fba.org.uk/river-invertebrate-classification-tool-rict-and-rivpacs for details.
-License: LGPL (>= 2.1) + file LICENSE
+License: GPL-3
 URL: https://github.com/aquaMetrics/rict
 Encoding: UTF-8
 LazyData: true

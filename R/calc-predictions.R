@@ -78,7 +78,6 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
             call. = FALSE)  # or run all seasons if not provided
     seasons_to_run <- 1:3
   }
-  browser()
   # extract fails, warnings and values from list of dataframes returned from rict_validate function:
   warning_failings <- all_validation[[1]]
   this_failing <- all_validation[[2]]

@@ -367,7 +367,6 @@ rict_validate <- function(data = NULL, model = "physical", area = "gb") {
     colnames(valid_discharge) <- paste0("disch_", noquote(colnames(valid_discharge)))
     data <- cbind(data, valid_discharge)
   }
-  browser()
     # Data validation and conversion
     # 9. Calculation of Lat/Long, and validation of LAT, LONG
     # Calculation of Lat/Long using bng (British National Grids)

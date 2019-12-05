@@ -1,4 +1,4 @@
-#' Demo observed values
+#' Demo observed values for physical model
 #'
 #' A dataset containing demo observed values
 #'

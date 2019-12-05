@@ -1,26 +1,25 @@
-#' This experiment is a multi-year classification Monte-Carlo simulation of
-#' predictions
+#' Calculate classification
 #'
-#' @param predictions Dataframe of predicted endgroups values from
-#'   calcPredictions function
+#' @param data Dataframe of predicted endgroups values from
+#'   'rict__predict' function
 #' @param year_type "single" or "multi" depending if multi-year classification
 #'   required - default is "multi"
-#' @return Dataframe of MultiYear classifications
+#' @return Dataframe of classification results
 #' @export
 #' @importFrom rlang .data
 #'
 #' @examples
 #' \dontrun{
-#' predictions <- calcPrediction(observed_values = rict::demo_observed_values)
-#' classifications <- calcClassification(predictions)
+#' predictions <- rict_predict(rict_observed = rict::demo_rict_observed)
+#' classifications <- rict_classify(predictions)
 #' }
 #'
-calcClassification <- function(predictions, year_type = "multi") {
-  # This is a hack - need to combine single year and multiple year into single
-  # function. For speed I've just stuck the single year into a different
+rict_classify <- function(data = NULL, year_type = "multi") {
+  # This is a hack - best to combine single year and multiple year into single
+  # function? For now, I've just stuck the single year into a different
   # function until these can be merged
   if (year_type == "single") {
-    classification_results <- singleYearClassification(predictions)
+    classification_results <- singleYearClassification(data)
     return(classification_results)
   } else {
     # set global random seed for rnorm functions etc
@@ -36,22 +35,24 @@ calcClassification <- function(predictions, year_type = "multi") {
       package = "rict"
     ))
 
+
     # Enter source files
     # Use the column header as site names in the final output
-    all_sites <- predictions[, 1]
+    all_sites <- data[, 1]
     # Keep YEAR, WATERBODY
-    year_waterBody <- predictions[, c("YEAR", "WATERBODY")]
+
+    year_waterBody <- data[, c("YEAR", "WATERBODY")]
 
     # Combine all_sites with more information  - e.g. YEAR, WATERBODY
     all_sites <- cbind(all_sites, year_waterBody)
 
-    # predictions <- predictions[,-1] Create a routine that checks column names
-    # and puts them in the "predictions" dataframe
-    # predictions <- predictions[,-c(1,3:15)] Change all names to upper case
-    names(predictions) <- toupper(names(predictions))
+    # data <- data[,-1] Create a routine that checks column names
+    # and puts them in the "data" dataframe
+    # data <- data[,-c(1,3:15)] Change all names to upper case
+    names(data) <- toupper(names(data))
 
     # Remove the "_CompFarm_" columns
-    predictions$`_COMPFAM_` <- NULL
+    data$`_COMPFAM_` <- NULL
     # Get the biological data TL2_WHPT_NTAXA_AbW_DistFam_spr
     names_biological <- c(
       "SPR_SEASON_ID", "SPR_TL2_WHPT_ASPT (ABW,DISTFAM)",
@@ -62,22 +63,17 @@ calcClassification <- function(predictions, year_type = "multi") {
       "AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)", "AUT_NTAXA_BIAS"
     )
 
-    biological_data <- predictions[, names_biological]
+    biological_data <- data[, names_biological]
     # head(biological_data,9) # works now
     # head(names(biological_data),9) # works now
-    # Remove biological_data from predictions
-    predictions <- predictions[, !names(predictions) %in% names_biological]
+    # Remove biological_data from data
+    data <- data[, !names(data) %in% names_biological]
 
     # Store all_probabilities in one dataframe.
     # Use p1,p2,... etc in case data column positions change in future
-    prob_names <- c(
-      "p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", "p11", "p12", "p13",
-      "p14", "p15", "p16", "p17", "p18", "p19", "p20", "p21", "p22", "p23", "p24", "p25",
-      "p26", "p27", "p28", "p29", "p30", "p31", "p32", "p33", "p34", "p35", "p36", "p37",
-      "p38", "p39", "p40", "p41", "p42", "p43"
-    )
+    prob_names <- paste0("p", 1:43)
     # Needs to change when not uppercase
-    all_probabilities <- predictions[, toupper(prob_names)]
+    all_probabilities <- data[, toupper(prob_names)]
     # Input Adjustment factors for reference site quality scores (Q1, Q2, Q3, Q4, Q5)
     # Extract Ubias8 from Biological data
     ubias_main <- biological_data[, "SPR_NTAXA_BIAS"][1] # Put new AZURE
@@ -120,12 +116,12 @@ calcClassification <- function(predictions, year_type = "multi") {
 
     # Write a function that computes aspt, ntaxa adjusted (1 = "NTAXA", 2="ASPT")
     # or select them by name as declared in the classification functions
-    ntaxa_adjusted <- dplyr::select(predictions, dplyr::contains("_NTAXA_")) / rjaj[, "NTAXA"]
-    # Compute AdjExpected as E=predictions/Sum(rj*adjusted_params)
-    aspt_adjusted <- dplyr::select(predictions, dplyr::contains("_ASPT_")) / rjaj[, "ASPT"]
+    ntaxa_adjusted <- dplyr::select(data, dplyr::contains("_NTAXA_")) / rjaj[, "NTAXA"]
+    # Compute AdjExpected as E=data/Sum(rj*adjusted_params)
+    aspt_adjusted <- dplyr::select(data, dplyr::contains("_ASPT_")) / rjaj[, "ASPT"]
 
     adjusted_expected <- cbind(ntaxa_adjusted, aspt_adjusted)
-    # Include site names from predictions
+    # Include site names from data
     adjusted_expected_new <- cbind(as.data.frame(all_sites), adjusted_expected)
     # head(adjusted_expected_new,12)
     # tail(adjusted_expected_new,12)
@@ -224,7 +220,7 @@ calcClassification <- function(predictions, year_type = "multi") {
     indicesDistinct <- data.frame()
     k <- 1
 
-    while (k <= nrow(predictions) | (lastSiteProcessed == FALSE)) {
+    while (k <= nrow(data) | (lastSiteProcessed == FALSE)) {
       # initalise all MultiYear AGAIN for each site
       multiYear_EQRAverages_ntaxa_spr <- data.frame(n = n_runs)
       multiYear_EQRAverages_ntaxa_aut <- data.frame(n = n_runs)
@@ -243,15 +239,15 @@ calcClassification <- function(predictions, year_type = "multi") {
       print(c(" j = ", j))
       indicesDistinct <- rbind(indicesDistinct, j)
 
-      if (j < nrow(predictions) && (predictions[j, "SITE"] == predictions[j + 1, "SITE"])) {
+      if (j < nrow(data) && (data[j, "SITE"] == data[j + 1, "SITE"])) {
         multipleSite_encoutered <- TRUE
       }
 
       # Get site out
-      siteToProcess <- predictions[j, "SITE"]
-      while ((predictions[j, "SITE"] == siteToProcess && j <= nrow(predictions))) {
-        # print(c("Processing site j= ",j, " as ", as.character(predictions[j,"SITE"]), " and site j= ",j+1," as ",
-        # as.character(predictions[j+1,"SITE"])))
+      siteToProcess <- data[j, "SITE"]
+      while ((data[j, "SITE"] == siteToProcess && j <= nrow(data))) {
+        # print(c("Processing site j= ",j, " as ", as.character(data[j,"SITE"]), " and site j= ",j+1," as ",
+        # as.character(data[j+1,"SITE"])))
 
         # Part 1: Deal with NTAXA: observed and Expected Calculations
         obsIDX8r_spr <- getObsIDX8rB(obs_ntaxa_spr[j], getZObs_r_new(sdobs_ntaxa, n_runs))
@@ -306,7 +302,7 @@ calcClassification <- function(predictions, year_type = "multi") {
       }
 
       if (multipleSite_encoutered == FALSE) {
-        if (k == nrow(predictions)) {
+        if (k == nrow(data)) {
           lastSiteProcessed <- TRUE
         }
         # Part 1: Deal with NTAXA: observed and Expected Calculations
@@ -349,7 +345,7 @@ calcClassification <- function(predictions, year_type = "multi") {
       }
 
       if (multipleSite_encoutered == TRUE) {
-        if ((j == nrow(predictions)) | (j - 1 == nrow(predictions))) {
+        if ((j == nrow(data)) | (j - 1 == nrow(data))) {
           # Means last site was a duplicate, and so is processed
           lastSiteProcessed <- TRUE
         }
@@ -404,7 +400,7 @@ calcClassification <- function(predictions, year_type = "multi") {
       probabilityClass <- getProbClassLabelFromEQR()
       a_ntaxa_spr_aut <- t(probClass_spr) # spr, need a_ntaxa_spr
       colnames(a_ntaxa_spr_aut) <- getProbClassLabelFromEQR()[, 1]
-      rownames(a_ntaxa_spr_aut) <- as.character(predictions[j, "SITE"]) # c(paste0("TST-",j))
+      rownames(a_ntaxa_spr_aut) <- as.character(data[j, "SITE"]) # c(paste0("TST-",j))
 
       # Find most probable class, i.e the maximum, and add it to the site
       mostProb <- getMostProbableClass(a_ntaxa_spr_aut)
@@ -433,8 +429,8 @@ calcClassification <- function(predictions, year_type = "multi") {
       # probabilityClass <- getProbClassLabelFromEQR()
       a_aspt_spr_aut <- t(probClass_spr) # spr
       colnames(a_aspt_spr_aut) <- getProbClassLabelFromEQR()[, 1]
-      # print(c(" j =",j," site = ",as.character(predictions[j,"SITE"]), "pated TST = ",paste0("TST-",j)))
-      rownames(a_aspt_spr_aut) <- as.character(predictions[j, "SITE"]) # c(paste0("TST-",j))
+      # print(c(" j =",j," site = ",as.character(data[j,"SITE"]), "pated TST = ",paste0("TST-",j)))
+      rownames(a_aspt_spr_aut) <- as.character(data[j, "SITE"]) # c(paste0("TST-",j))
 
       # Find most probable class, i.e the maximum, and add it to the site
       mostProb <- getMostProbableClass(a_aspt_spr_aut)
@@ -463,7 +459,7 @@ calcClassification <- function(predictions, year_type = "multi") {
       # probabilityClass <- getProbClassLabelFromEQR()
       aa <- t(minta_probClass_spr_aut) # spr
       colnames(aa) <- getProbClassLabelFromEQR()[, 1]
-      rownames(aa) <- as.character(predictions[j, "SITE"]) # c(paste0("TST-",j))
+      rownames(aa) <- as.character(data[j, "SITE"]) # c(paste0("TST-",j))
       # Find most probable MINTA class, i.e the maximum, and add it to the site
       mostProb <- getMostProbableClass(aa)
       aa <- data.frame(cbind(aa, mostProb))
@@ -508,7 +504,7 @@ calcClassification <- function(predictions, year_type = "multi") {
     # Bind the ASPT
     allResults <- cbind(allResults, cbind(SiteProbabilityclasses_spr_aut_comb_aspt, whpt_aspt_spr_aut_averages))
     # Change names of Sites
-    namesOfSites <- data.frame(SITE = predictions[unlist(indicesDistinct), "SITE"])
+    namesOfSites <- data.frame(SITE = data[unlist(indicesDistinct), "SITE"])
     # Change waterbody to correct number of sites left after removing duplicate sites, do a collection of indices
     year_waterBody <- year_waterBody[unlist(indicesDistinct), ]
 

@@ -3,7 +3,7 @@
 \docType{data}
 \name{demo_observed_values}
 \alias{demo_observed_values}
-\title{Demo observed values}
+\title{Demo observed values for physical model}
 \format{A data frame with 24 rows and 33 variables:
 \describe{
   \item{SITE}{Site identifier}

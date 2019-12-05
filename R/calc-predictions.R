@@ -1,11 +1,17 @@
 #' Calculate River Invertebrate Classification Tool (RICT) predictions
 #'
-#' @param observed_values Dataframe of observed environmental values
+#' @param data Dataframe of predictive environmental values
 #' \describe{
 #'   \item{SITE}{Site identifier}
 #'   \item{Waterbody}{Water body identifier}
-#'   ...
+#'   \item{SPR_SEASON_ID}{Spring ID}
+#'   \item{SUM_SEASON_ID}{Summary ID}
+#'   \item{AUT_SEASON_ID}{Aut ID}
+#'   \item{...}{etc}
 #' }
+#' @param model Validate observed values based on rules required for model selected.
+#' @param area Area of UK, either 'ni' (Northern Ireland) or 'gb' (Great Britain)
+#'
 #' @return Dataframe of predicted biotic scores and probability of observed values
 #' falling into each statistical grouping of rivers.
 #' @export
@@ -13,22 +19,17 @@
 #'
 #' @examples
 #' \dontrun{
-#' predictions <- calcPrediction(observed_values = rict::demo_observed_values)
+#' predictions <- rict_predict(data = rict::demo_observed_values)
 #' }
-calcPrediction <- function(observed_values) {
-
-  # install.packages("src/rnrfa_1.4.0.zip", lib = ".", repos = NULL, verbose = TRUE, dependencies = TRUE)
-  # install.packages("src/validationpredictor_functions.zip", lib = ".",
-  # repos = NULL, verbose = TRUE, dependencies = TRUE)
-  # library(rnrfa, lib.loc=".", verbose=TRUE)
-
-  # source("R\\prediction-functions.R")
-  # source("R\\helper-functions.R")
-  # source("R\\mean-air-temp-range.R")
-
+rict_predict <- function(data = NULL, model = "physical", area = "gb") {
+  # Validate predictive input data
+  all_validation <- rict_validate(data, model = model, area = area)
+  # Change all column names to uppercase
+  names(data) <- toupper(names(data))
+  # load supporting tables
   taxa_average_abundance <-
     utils::read.csv(system.file("extdat", "taxxaab.csv", package = "rict"))
-
+  if (model == "physical") {
   df_mean_gb685 <-
     utils::read.delim(
       system.file("extdat", "df-mean-gb-685.DAT", package = "rict"),
@@ -36,151 +37,127 @@ calcPrediction <- function(observed_values) {
       sep = "",
       as.is = TRUE
     )
-
   df_coeff_gb685 <-
     utils::read.delim(
       system.file("extdat", "df-coeff-gb-685.DAT", package = "rict"),
       header = FALSE,
       sep = "",
       as.is = TRUE
-    )
-
-  # source("inst/extdat/prediction-functions-v1.R")
-  # source("src/Helperfunctionsv1.R")
-  # source("src/MeanAirTempAirTempRangeASFunction.R")
+    ) }
+  if (model == "gis") {
+      df_mean_gb685 <-
+      utils::read.csv(
+        system.file("extdat", "end-group-means-discriminant-scores-model-44.csv",
+                    package = "rict")
+      )
+    df_mean_gb685 <- df_mean_gb685[,3:19]
+    df_coeff_gb685 <-
+      utils::read.csv(
+        system.file("extdat", "discriminant-function-coefficients-model-44.csv",
+                    package = "rict")
+      )
+  }
 
   end_points <- utils::read.csv(system.file("extdat", "test-data-end-point-means.csv", package = "rict"))
   end_group_index <- utils::read.csv(system.file("extdat", "x-103-end-group-means.csv", package = "rict"))
   nr_efg_groups <- utils::read.csv(system.file("extdat", "end-grp-assess-scores.csv", package = "rict"))
+  # end_group_means_discriminant_scores_model_44 <-
+  #   utils::read.csv(system.file("extdat", "end-group-means-discriminant-scores-model-44.csv",
+  #                               package = "rict"))
 
-  #air_temp_grid <- read.csv("src/air-temp-grid.csv")
-  #endroup_IndexDFrame <- read.csv("src/x103EndGroupMeans(FORMATTED).csv") # replaces END_GROUP_INDEX.csv
-  #nr_efg_groups <- read.csv("src/EndGrp_AssessScores.csv")
+  # check season provided
+  if (all(!is.null(data$SPR_SEASON_ID[1]),
+         !is.null(data$AUT_SEASON_ID[1]),
+         !is.null(data$SUM_SEASON_ID[1]))) {
+  seasons_to_run <- c(data$SPR_SEASON_ID[1],
+                      data$AUT_SEASON_ID[1],
+                      data$SUM_SEASON_ID[1])  # Choose the seasons to run e.g. spring and autumn
+  } else {
 
-  # Change all column names to uppercase
-  names(observed_values) <- toupper(names(observed_values))
-  # "SITE" convert to character as required by specification
-  observed_values$SITE <- as.character(observed_values$SITE)
-
-  # Change to character
-  observed_values$EASTING  <- as.character(observed_values$EASTING)
-  observed_values$NORTHING <- as.character(observed_values$NORTHING)
-
-  # check for length <5, add a "0" to get proper Easting/Northing 5 digit codes
-  observed_values$EASTING <- getCorrectCodes(observed_values$EASTING)
-  observed_values$NORTHING <- getCorrectCodes(observed_values$NORTHING)
-
-  # Get all the bioligical data
-  names_biological <- c(colnames(observed_values)[1],
-                       colnames(observed_values)[2],
-                       colnames(observed_values)[3],
-                       "SPR_SEASON_ID",
-                       "SPR_TL2_WHPT_ASPT (ABW,DISTFAM)",
-                       "SPR_TL2_WHPT_NTAXA (ABW,DISTFAM)",
-                       "SPR_NTAXA_BIAS",
-                       "SUM_SEASON_ID",
-                       "SUM_TL2_WHPT_ASPT (ABW,DISTFAM)",
-                       "SUM_TL2_WHPT_NTAXA (ABW,DISTFAM)",
-                       "SUM_NTAXA_BIAS",
-                       "AUT_SEASON_ID",
-                       "AUT_TL2_WHPT_ASPT (ABW,DISTFAM)",
-                       "AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)",
-                       "AUT_NTAXA_BIAS")
-
-  biological_data <- observed_values[, names_biological]
-
-  # Choose the seasons to run i.e. spring and autumn
-  seasons_to_run <- c(observed_values$SPR_SEASON_ID[1],
-                      observed_values$AUT_SEASON_ID[1],
-                      observed_values$SUM_SEASON_ID[1])
-
-  # Data validation
-  all_validation <- validate_observed(observed_values = observed_values)
-  # extract fails, warnings and values from list of dataframes returned from validate_observed function:
+    warning("No '...SEASON_ID' provided, predicting all seasons",
+            call. = FALSE)  # or run all seasons if not provided
+    seasons_to_run <- 1:3
+  }
+  browser()
+  # extract fails, warnings and values from list of dataframes returned from rict_validate function:
   warning_failings <- all_validation[[1]]
   this_failing <- all_validation[[2]]
-  observed_values <- all_validation[[3]]
+  data <- all_validation[[3]]
 
-  # Add all fails and warnings
-  # Check if dataframe of warnings is empty, if not write to file
-  # if (nrow(warnings_failings) > 0){
-  #   newdf <- data.frame(warnings_failings)
-  #   grDevices::pdf("Fails_Warnings2.pdf", height = 11, width = 18.5)
-  #   # Output the pdf file
-  #   data.frame(gridExtra::grid.table(newdf))
-  #   print(newdf)
-  # }
-
+ if (model =="gis") {
+     data$`TEST SITECODE`  <- NULL
+   } # remove TEST-SITE_CODE column - not required and causes issues later on?!
   # Data validation and conversion
   # 13.2 subset the instances to run in prediction by removing "this_failing", use anti-join
   # i.e."Return all rows from x where there are no matching values in y, keeping just columns from x.
   # This is a filtering join"
 
-  # final_predictors_one <- anti_join(observed_values, this_failing, by="SITE") # This works in R Studio,
+  # final_predictors_one <- anti_join(data, this_failing, by="SITE") # This works in R Studio,
   # but not in ML AZURE
-  final_predictors_one <- observed_values[is.na(match(observed_values$SITE, this_failing$SITE)), ]
+  final_predictors_one <- data[is.na(match(data$SITE, this_failing$SITE)), ]
+
   # DONT SORT, if you do, don't use the SORTED array for prediction. it duplicates the results ******
   # final_predictors_one <- final_predictors_one[order(final_predictors_one$SITE),]
-  # Print to see where the sorting is taking place
-  #
+  # Print to see where the sorting is taking place  #
   # Generate data for classification
   # Final Data for classification e.g. Linear discriminant Analysis (LDA) classifier/predictor
-  #
-  final_predictors <- data.frame(
-    SITE                     <-  final_predictors_one$SITE,
-    LATITUDE                 <-  final_predictors_one$LATITUDE,
-    LONGITUDE                <-  final_predictors_one$LONGITUDE,
-    LOG.ALTITUDE             <-  final_predictors_one$vld_alt_src_log,
-    LOG.DISTANCE.FROM.SOURCE <-  final_predictors_one$vld_dist_src_log,
-    LOG.WIDTH                <-  final_predictors_one$mn_width_log,
-    LOG.DEPTH                <-  final_predictors_one$mn_depth_log,
-    MEAN.SUBSTRATUM          <-  final_predictors_one$vld_substr_log,
-    DISCHARGE.CATEGORY       <-  final_predictors_one$DISCHARGE,    #observed_values$disch_log,
-    ALKALINITY               <-  final_predictors_one$ALKALINITY,
-    LOG.ALKALINITY           <-  final_predictors_one$vld_alkal_log,
-    LOG.SLOPE                <-  final_predictors_one$vld_slope_log,
-    MEAN.AIR.TEMP            <-  final_predictors_one$TMEAN,
-    AIR.TEMP.RANGE           <-  final_predictors_one$TRANGE
-  )
-  colnames(final_predictors) <- c("SITE",
-                                  "LATITUDE",
-                                  "LONGITUDE",
-                                  "LOG.ALTITUDE",
-                                  "LOG.DISTANCE.FROM.SOURCE",
-                                  "LOG.WIDTH",
-                                  "LOG.DEPTH",
-                                  "MEAN.SUBSTRATUM",
-                                  "DISCHARGE.CATEGORY",
-                                  "ALKALINITY",
-                                  "LOG.ALKALINITY",
-                                  "LOG.SLOPE",
-                                  "MEAN.AIR.TEMP",
-                                  "AIR.TEMP.RANGE")
+  if (model == "physical") {
+    final_predictors <- data.frame(
+     "SITE"                      =  final_predictors_one$SITE,
+     "LATITUDE"                  =  final_predictors_one$LATITUDE,
+     "LONGITUDE"                 =  final_predictors_one$LONGITUDE,
+     "LOG.ALTITUDE"              =  final_predictors_one$vld_alt_src_log,
+     "LOG.DISTANCE.FROM.SOURCE"  =  final_predictors_one$vld_dist_src_log,
+     "LOG.WIDTH"                 =  final_predictors_one$mn_width_log,
+     "LOG.DEPTH"                 =  final_predictors_one$mn_depth_log,
+     "MEAN.SUBSTRATUM"           =  final_predictors_one$vld_substr_log,
+     "DISCHARGE.CATEGORY"        =  final_predictors_one$DISCHARGE,    #data$disch_log,
+     "ALKALINITY"                =  final_predictors_one$ALKALINITY,
+     "LOG.ALKALINITY"            =  final_predictors_one$vld_alkal_log,
+     "LOG.SLOPE"                 =  final_predictors_one$vld_slope_log,
+     "MEAN.AIR.TEMP"             =  final_predictors_one$TMEAN,
+     "AIR.TEMP.RANGE"            =  final_predictors_one$TRANGE
+    )
+  }
 
-  #
-  # #  Prediction Settings
-  # 1. Enter
-  # ## Uncomment: end_points <- read.csv(paste0(path,"/Test_Data_End_Point_Means_Copy.csv"))
-  # ## Uncoment: DFMean_gd <- read.delim(paste0(path,"/df_mean_gb685.DAT"), header = FALSE, sep="", as.is=TRUE)
-  # ## Uncoment::df_coeff_gb685 <- read.delim(paste0(path,"/df_coeff_gb685.DAT"), header = FALSE, sep="", as.is=TRUE)
-  #
+  if (model == "gis") {
+    final_predictors <- data.frame(
+      "SITE"                     =  final_predictors_one$SITE,
+      "LATITUDE"                 =  final_predictors_one$LATITUDE,
+      "LONGITUDE"                =  final_predictors_one$LONGITUDE,
+      "TEMPM"                    =  final_predictors_one$TEMPM,
+      "TEMPR"                    =  final_predictors_one$TEMPR,
+      "ALKALINITY"               =  final_predictors_one$ALKALINITY,
+      "LgAlk"                    =  final_predictors_one$LgAlk,
+      "LgArea_CEH"               =  final_predictors_one$LgArea_CEH,
+      "LgAltBar_CEH"             =  final_predictors_one$LgAltBar_CEH,
+      "LgAlt_CEH"                =  final_predictors_one$LgAlt_CEH,
+      "LgDFS_CEH"                =  final_predictors_one$LgDFS_CEH,
+      "LgSlope_CEH"              =  final_predictors_one$LgSlope_CEH,
+      "QCat_CEH"                 =  final_predictors_one$QCAT_CEH,
+      "Peat_CEH"                 =  final_predictors_one$`%PEAT_CEH`,
+      "Chalk_O1_CEH"             =  final_predictors_one$CHALK_O1_CEH,
+      "Clay_O1_CEH"              =  final_predictors_one$CLAY_O1_CEH,
+      "Hardrock_O1_CEH"          =  final_predictors_one$HARDROCK_O1_CEH,
+      "Limestone_O1_CEH"         =  final_predictors_one$LIMESTONE_O1_CEH
+    )
+  }
+
   # Prediction Settings
-  # 2. Find the df_scores of each row using one line of coefficients df_coeff_gb685[1,-1] # removes the first column
-  #
+  # 1. Enter
+  # Prediction Settings
+  # 2. Find the df_scores of each row using one line of coefficients
+  # Note: df_coeff_gb685[1,-1] # removes the first column
   # NRefg equals number of reference sites in end group g , for GB = 685, for NI = 11
   NRefg_all <- rowSums(nr_efg_groups[, -1])
-  #
   # #DFScore_g <- DFCoef1 * Env1 + ... + DFCoefn * Envn ; remove "SITE" col=1 from final_predictors,
   # and  remove col=1 from df_coeff_gb685
-  df_scores <- as.data.frame(getDFScores(final_predictors, df_coeff_gb685))
-  #
+
+  df_scores <- as.data.frame(getDFScores(EnvValues = final_predictors,
+                                         DFCoeff = df_coeff_gb685))
   # Calculate the Mahanalobis disance of point x from site g for all reference sites
   MahDist_g <- getMahDist(DFscore = df_scores, meanvalues = df_mean_gb685)
-  MahDistNames <- c("p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", "p11",
-                    "p12", "p13", "p14", "p15", "p16", "p17", "p18", "p19", "p20", "p21",
-                    "p22", "p23", "p24", "p25", "p26", "p27", "p28","p29", "p30", "p31",
-                    "p32", "p33", "p34", "p35", "p36", "p37", "p38", "p39", "p40", "p41",
-                    "p42", "p43")
+  MahDistNames <- paste0("p", 1:43)
   MahDistNames <- gsub("p", "Mah", MahDistNames)
   colnames(MahDist_g) <- MahDistNames
 
@@ -193,10 +170,7 @@ calcPrediction <- function(observed_values) {
   PDistTot <- as.data.frame(PDistTotal(PDist_g)) ## ALL probabilities p1..pn,  rowsums() add to 1,
   # except when last row which it "total" is removed i.e. rowSums(PDistTot[,-ncol(PDistTot)])=1
   # Rename the columns to probabilities p1,p2,...,p43
-  colnames(PDistTot) <- c("p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", "p11", "p12", "p13", "p14",
-                          "p15", "p16", "p17", "p18", "p19", "p20", "p21", "p22", "p23", "p24", "p25", "p26", "p27",
-                          "p28", "p29", "p30", "p31", "p32", "p33", "p34", "p35", "p36", "p37", "p38", "p39", "p40",
-                          "p41", "p42", "p43", "Total")
+  colnames(PDistTot) <- c(paste0("p", 1:43), "Total")
 
   # #  final_predictors <- cbind(final_predictors, PDist_g[,-ncol(PDist_g)]) # This is the line we need
   # sum(final_predictors_try[1,-c(1:14)]) should give 1
@@ -207,27 +181,23 @@ calcPrediction <- function(observed_values) {
   # #3.Use chisquare to find suitability codes. Start for Britain GB, # # Could use a file for these chisquare values
   # # 1 = GB 21.02606 24.05393 26.21696 32.90923
   # # 2 = NI 18.30700 21.16080 23.20930 29.58830
-
-  #
-  chiSquare_vals <- data.frame(CQ1 = c(21.02606, 18.30700), CQ2 = c(24.05393, 21.16080), CQ3 = c(26.21696, 23.20930),
+  chiSquare_vals <- data.frame(CQ1 = c(21.02606, 18.30700),
+                               CQ2 = c(24.05393, 21.16080),
+                               CQ3 = c(26.21696, 23.20930),
                                CQ4 = c(32.90923, 29.58830))
   suit_codes <- getSuitabilityCode(MahDist_min, chiSquare_vals)
   # # add suitab ility codes to the final data, using cbind
   final_predictors_try2 <- cbind(final_predictors_try1, suit_codes)
-  # head(final_predictors_try2,7)
-  #
-  # #Write to csv :: # # write.csv(final_predictors_try, file = "finalPredictors_suitability.csv")
-  #
   # Find max class group belongs to by getting the column name: use
   # belongs_to_end_grp <- colnames(final_predictors_try2[,15:57])[apply(final_predictors_try2[,15:57], 1, which.max)]
   # This sometimes returns a list, use unlist below to repair this
-  belongs_to_end_grp <- colnames(final_predictors_try2[, 15:57])[apply(
-    data.frame(matrix(unlist(final_predictors_try2[, 15:57]),
-                      nrow = nrow(final_predictors_try2[, 15:57]),
+  belongs_to_end_grp <- colnames(final_predictors_try2[, paste0("p",1:43)])[apply(
+    data.frame(matrix(unlist(final_predictors_try2[, paste0("p",1:43)]),
+                      nrow = nrow(final_predictors_try2[, paste0("p",1:43)]),
                       byrow = T),
                 stringsAsFactors = FALSE), 1, which.max)]
 
-  #Relace p with EndGr
+  # Replace p with EndGr
   belongs_to_end_grp <- gsub("p", "EndGr", belongs_to_end_grp)
   final_predictors_try3 <- cbind(final_predictors_try2, belongs_to_end_grp)
 
@@ -272,12 +242,31 @@ calcPrediction <- function(observed_values) {
                                           index_id = indices_to_run,
                                           end_group_IndexDFrame = endgroup_index_frame)
 
-  #Remove failing sites from biological_data
-  biological_data <- biological_data[!(biological_data$SITE %in% this_failing$SITE), ]
-  #remove column "SITE", the first one of columns
-  biological_data <- biological_data[, -1]
-
-  #Append the biological data to the main output dataframe
-  output <- cbind(mainData, biological_data)
-  return(output)
+  # Append the biological data to the main output dataframe
+  # Get all the bioligical data
+  names_biological <- c(colnames(data)[1],
+                        colnames(data)[2],
+                        colnames(data)[3],
+                        "SPR_SEASON_ID",
+                        "SPR_TL2_WHPT_ASPT (ABW,DISTFAM)",
+                        "SPR_TL2_WHPT_NTAXA (ABW,DISTFAM)",
+                        "SPR_NTAXA_BIAS",
+                        "SUM_SEASON_ID",
+                        "SUM_TL2_WHPT_ASPT (ABW,DISTFAM)",
+                        "SUM_TL2_WHPT_NTAXA (ABW,DISTFAM)",
+                        "SUM_NTAXA_BIAS",
+                        "AUT_SEASON_ID",
+                        "AUT_TL2_WHPT_ASPT (ABW,DISTFAM)",
+                        "AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)",
+                        "AUT_NTAXA_BIAS")
+  # Check predictions data contains biological values
+  if (all(names_biological %in% names(data))) {
+    biological_data <- data[, names_biological]
+    # Remove failing sites from biological_data
+    biological_data <- biological_data[!(biological_data$SITE %in% this_failing$SITE), ]
+    # remove column "SITE", the first one of columns
+    biological_data <- biological_data[, -1]
+    mainData <- cbind(mainData, biological_data)
+  }
+  return(mainData)
 }

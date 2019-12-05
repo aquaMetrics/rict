@@ -168,8 +168,8 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
     spring_whpt_all <- dplyr::filter(end_group_IndexDFrame, .data$SeasonCode == 1)
     # Check what index iit is you want , and getProbScores
     if ("TL2_WHPT_NTAXA_AbW_DistFam" %in% colnames(end_group_IndexDFrame)){ # column exists
-      spring_whpt_ntaxa_Abw_Dist <- as.data.frame(getProbScores(data_to_bindTo[,15:57],
-                                                                dplyr::select(spring_whpt_all,
+      spring_whpt_ntaxa_Abw_Dist <- as.data.frame(getProbScores(Proball = data_to_bindTo[, paste0("p", 1:43)],
+                                                                IDXMean = dplyr::select(spring_whpt_all,
                                                                        .data$TL2_WHPT_NTAXA_AbW_DistFam)))
       colnames(spring_whpt_ntaxa_Abw_Dist) <- c("TL2_WHPT_NTAXA_AbW_DistFam_spr")
       #print(nrow(spring_whpt_ntaxa_Abw_Dist))
@@ -177,7 +177,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
     }
 
     if ("TL2_WHPT_ASPT_AbW_DistFam" %in% colnames(end_group_IndexDFrame)){ # column exists
-      spring_whpt_aspt_Abw_Dist <- as.data.frame(getProbScores(data_to_bindTo[,15:57],
+      spring_whpt_aspt_Abw_Dist <- as.data.frame(getProbScores(data_to_bindTo[, paste0("p", 1:43)],
                                                                dplyr::select(spring_whpt_all,
                                                                       .data$TL2_WHPT_ASPT_AbW_DistFam)))
       colnames(spring_whpt_aspt_Abw_Dist) <- c("TL2_WHPT_ASPT_AbW_DistFam_spr")
@@ -186,7 +186,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
     }
 
     if ("TL2_WHPT_NTAXA_AbW_CompFam" %in% colnames(end_group_IndexDFrame)){ # column exists
-      spring_whpt_ntaxa_Abw_CompFam <- as.data.frame(getProbScores(data_to_bindTo[, 15:57],
+      spring_whpt_ntaxa_Abw_CompFam <- as.data.frame(getProbScores(data_to_bindTo[, paste0("p", 1:43)],
                                                                    dplyr::select(spring_whpt_all,
                                                                           .data$TL2_WHPT_NTAXA_AbW_CompFam)))
       colnames(spring_whpt_ntaxa_Abw_CompFam) <- c("TL2_WHPT_NTAXA_AbW_CompFam_spr")
@@ -195,7 +195,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
     }
 
     if ("TL2_WHPT_ASPT_AbW_CompFam" %in% colnames(end_group_IndexDFrame)){ # column exists
-      spring_whpt_aspt_Abw_CompFam <- as.data.frame(getProbScores(data_to_bindTo[,15:57],
+      spring_whpt_aspt_Abw_CompFam <- as.data.frame(getProbScores(data_to_bindTo[, paste0("p", 1:43)],
                                                                   dplyr::select(spring_whpt_all,
                                                                          .data$TL2_WHPT_ASPT_AbW_CompFam)))
       colnames(spring_whpt_aspt_Abw_CompFam) <- c("TL2_WHPT_NTAXA_ASPT_CompFam_spr")
@@ -215,7 +215,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
     autumn_whpt_all <- dplyr::filter(end_group_IndexDFrame, .data$SeasonCode == 3)
     # Check what index iit is you want , and getProbScores
     if("TL2_WHPT_NTAXA_AbW_DistFam" %in% colnames(end_group_IndexDFrame) ){ # column exists
-      autumn_whpt_ntaxa_Abw_Dist <- as.data.frame(getProbScores(data_to_bindTo[,15:57],
+      autumn_whpt_ntaxa_Abw_Dist <- as.data.frame(getProbScores(data_to_bindTo[, paste0("p", 1:43)],
                                                                 dplyr::select(autumn_whpt_all,
                                                                        .data$TL2_WHPT_NTAXA_AbW_DistFam)))
       colnames(autumn_whpt_ntaxa_Abw_Dist) <- c("TL2_WHPT_NTAXA_AbW_DistFam_aut")
@@ -224,7 +224,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
     }
 
     if ("TL2_WHPT_ASPT_AbW_DistFam" %in% colnames(end_group_IndexDFrame) ){ # column exists
-      autumn_whpt_aspt_Abw_Dist <- as.data.frame(getProbScores(data_to_bindTo[,15:57],
+      autumn_whpt_aspt_Abw_Dist <- as.data.frame(getProbScores(data_to_bindTo[, paste0("p", 1:43)],
                                                                dplyr::select(autumn_whpt_all,
                                                                       .data$TL2_WHPT_ASPT_AbW_DistFam)))
       colnames(autumn_whpt_aspt_Abw_Dist) <- c("TL2_WHPT_ASPT_AbW_DistFam_aut")
@@ -233,7 +233,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
     }
 
     if("TL2_WHPT_NTAXA_AbW_CompFam" %in% colnames(end_group_IndexDFrame) ){ # column exists
-      autumn_whpt_ntaxa_Abw_CompFam <- as.data.frame(getProbScores(data_to_bindTo[,15:57],
+      autumn_whpt_ntaxa_Abw_CompFam <- as.data.frame(getProbScores(data_to_bindTo[, paste0("p", 1:43)],
                                                                    dplyr::select(autumn_whpt_all,
                                                                           .data$TL2_WHPT_NTAXA_AbW_CompFam)))
       colnames(autumn_whpt_ntaxa_Abw_CompFam) <- c("TL2_WHPT_NTAXA_AbW_CompFam_aut")
@@ -242,7 +242,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
     }
 
     if("TL2_WHPT_ASPT_AbW_CompFam" %in% colnames(end_group_IndexDFrame) ){ # column exists
-      autumn_whpt_aspt_Abw_CompFam <- as.data.frame(getProbScores(data_to_bindTo[,15:57],
+      autumn_whpt_aspt_Abw_CompFam <- as.data.frame(getProbScores(data_to_bindTo[, paste0("p", 1:43)],
                                                                   dplyr::select(autumn_whpt_all,
                                                                                 .data$TL2_WHPT_ASPT_AbW_CompFam)))
       colnames(autumn_whpt_aspt_Abw_CompFam) <- c("TL2_WHPT_ASPT_AbW_CompFam_aut")
@@ -261,7 +261,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
     summer_whpt_all <- dplyr::filter(end_group_IndexDFrame, .data$SeasonCode == 2)
     # Check what index iit is you want , and getProbScores
     if("TL2_WHPT_NTAXA_AbW_DistFam" %in% colnames(end_group_IndexDFrame) ){ # column exists
-      summer_whpt_ntaxa_Abw_Dist <- as.data.frame(getProbScores(data_to_bindTo[, 15:57],
+      summer_whpt_ntaxa_Abw_Dist <- as.data.frame(getProbScores(data_to_bindTo[, paste0("p", 1:43)],
                                                                 dplyr::select(summer_whpt_all,
                                                                        .data$TL2_WHPT_NTAXA_AbW_DistFam)))
       colnames(summer_whpt_ntaxa_Abw_Dist) <- c("TL2_WHPT_NTAXA_AbW_DistFam_sum")
@@ -270,7 +270,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
     }
 
     if ("TL2_WHPT_ASPT_AbW_DistFam" %in% colnames(end_group_IndexDFrame)){ # column exists
-      summer_whpt_aspt_Abw_Dist <- as.data.frame(getProbScores(data_to_bindTo[, 15:57],
+      summer_whpt_aspt_Abw_Dist <- as.data.frame(getProbScores(data_to_bindTo[, paste0("p", 1:43)],
                                                                dplyr::select(summer_whpt_all,
                                                                              .data$TL2_WHPT_ASPT_AbW_DistFam)))
       colnames(summer_whpt_aspt_Abw_Dist) <- c("TL2_WHPT_ASPT_AbW_DistFam_sum")
@@ -279,7 +279,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
     }
 
     if("TL2_WHPT_NTAXA_AbW_CompFam" %in% colnames(end_group_IndexDFrame)){ # column exists
-      summer_whpt_ntaxa_Abw_CompFam <- as.data.frame(getProbScores(data_to_bindTo[, 15:57],
+      summer_whpt_ntaxa_Abw_CompFam <- as.data.frame(getProbScores(data_to_bindTo[, paste0("p", 1:43)],
                                                                    dplyr::select(summer_whpt_all,
                                                                                  .data$TL2_WHPT_NTAXA_AbW_CompFam)))
       colnames(summer_whpt_ntaxa_Abw_CompFam) <- c("TL2_WHPT_NTAXA_AbW_CompFam_sum")
@@ -288,7 +288,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
     }
 
     if("TL2_WHPT_ASPT_AbW_CompFam" %in% colnames(end_group_IndexDFrame)){ # column exists
-      summer_whpt_aspt_Abw_CompFam <- as.data.frame(getProbScores(data_to_bindTo[, 15:57],
+      summer_whpt_aspt_Abw_CompFam <- as.data.frame(getProbScores(data_to_bindTo[, paste0("p", 1:43)],
                                                                   dplyr::select(summer_whpt_all,
                                                                          .data$TL2_WHPT_ASPT_AbW_CompFam)))
       colnames(summer_whpt_aspt_Abw_CompFam) <- c("TL2_WHPT_ASPT_AbW_CompFam_sum")
@@ -300,7 +300,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
   # Spring Dist
   bind_all <- cbind(data_to_bindTo, spring_whpt_ntaxa_Abw_Dist)
   bind_all <- cbind(bind_all, spring_whpt_aspt_Abw_Dist)
-  # Autumn Dit
+  # Autumn Dist
   bind_all <- cbind(bind_all, autumn_whpt_ntaxa_Abw_Dist)
   bind_all <- cbind(bind_all, autumn_whpt_aspt_Abw_Dist)
 

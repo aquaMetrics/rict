@@ -1,20 +1,43 @@
-context("test calcPredictions")
+context("test rict_predict")
 
-test_that("calcRict outputs dataframe", {
-  predictions <- calcPrediction(observed_values = demo_observed_values)
-  expect_equal(class(predictions), "data.frame")
+test_that("rict_predict for physical variables", {
+  predictions <- rict_predict(data = demo_observed_values)
+
+  expected_predictions <- utils::read.csv(system.file("extdat",
+    "validation-prediction-multi-year.csv",
+    package = "rict"
+  ))
+
+  expected_predictions$SuitCode <- as.factor(expected_predictions$SuitCode)
+  names(expected_predictions)[17] <- "belongs_to_end_grp"
+
+  equal <- all.equal(
+    predictions[, names(predictions) %in% names(expected_predictions)],
+    expected_predictions
+  )
+
+  expect_true(equal == T)
+})
+
+test_that("rict_predict for GIS variables", {
+  skip("not passing - Work in progress")
+  predictions <- rict_predict(data = demo_gis_values, model="gis")
+
+  expected_predictions <- utils::read.csv(system.file("extdat",
+    "expected-biotic-scores-model-44.csv",
+    package = "rict"
+  ), check.names = F)
 
 
-  validation_predictions <- utils::read.csv(system.file("extdat",
-                                                        "validation-prediction-multi-year.csv",
-                                                        package = "rict"))
 
+  # ISSUE: lat/lon calculation converts NGR slightly different to values on
+  # RICT(E and Azure) software - Independent code Testing Results v2
+  # Also slight difference in log values.
 
-  validation_predictions$SuitCode <- as.factor(validation_predictions$SuitCode)
-  names(validation_predictions)[17] <- "belongs_to_end_grp"
+  equal <- all.equal(
+    predictions[, names(predictions) %in% names(expected_predictions)],
+    expected_predictions[, names(expected_predictions) %in% names(predictions)]
+  )
 
-
-  equal <- all.equal(predictions[, names(predictions) %in% names(validation_predictions)],
-                     validation_predictions)
   expect_true(equal == T)
 })

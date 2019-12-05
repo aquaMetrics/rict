@@ -1,0 +1,80 @@
+---
+title: "technical-specification"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{technical-specification}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = FALSE
+)
+```
+
+```{r setup}
+library(rict)
+library(knitr)
+```
+
+## Input variables
+
+### Need to define all input variables. Should we use a meta-data standard - e.g. Darwin core or Ecological Data? Let's use a standard input format?
+
+All input files require:
+```{r}
+ validation_rules <-
+    utils::read.csv(system.file("extdat", "validation-rules.csv", package = "rict"),
+      stringsAsFactors = F
+    )
+
+kable(validation_rules[validation_rules$models == "all" &
+                       validation_rules$source == "input",
+                       c("variable","optional")])
+```
+
+Physical model requires:
+```{r}
+
+kable(unique(validation_rules[validation_rules$models == "physical" &
+                        validation_rules$source == "input",
+                       c("variable","optional","optional_notes")]))
+```
+
+GIS model requires:
+```{r}
+
+kable(validation_rules[validation_rules$models == "all" &
+                          validation_rules$source == "input",
+                          c("variable","optional")])
+```
+
+Classification additionally requires:
+```{r}
+kable(validation_rules[validation_rules$models == "biological" &
+                          validation_rules$source == "input",
+                         c("variable","optional")])
+```
+
+## Validate observed values
+
+Low level function to validate input `data`. Returns list of dataframes
+containing fails, warnings and passing observed values. The validation rules
+adjust based on the `model` and `area` arguments. Here is a summary of
+checks:
+  
+* Input 'data' exists
+* Input is dataframe
+* Required columns are present
+* Columns have correct class
+* Conditional columns if present are correct class
+* Where multiple classes are allowed, convert columns to
+* standardised class for example integer to numeric.
+* Suspected input errors are corrected for example `0` slope.
+* Additional columns/variables calculated for example mean temperate.
+* Logs failures and warnings applied using `validation_rules` table.
+* Replacements made to very low values for example
+* Returns dataframe with passing values, warnings, fails

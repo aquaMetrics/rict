@@ -1,11 +1,8 @@
-
-
 singleYearClassification <- function(predictions) {
 
   # set global random seed for rnorm functions etc
   set.seed(1234)
   # Part 1: This Script reads all prediction indices for classification
-
   gb685_assess_score <- utils::read.csv(system.file("extdat", "end-grp-assess-scores.csv", package = "rict"))
   adjusted_params <- utils::read.csv(system.file("extdat", "adjust-params-ntaxa-aspt.csv", package = "rict"))
 
@@ -37,19 +34,11 @@ singleYearClassification <- function(predictions) {
   )
 
   biological_data <- predictions[, names_biological]
-  # head(biological_data,9) # works now
-  # head(names(biological_data),9) # works now
   # Remove biological_data from predictions
   predictions <- predictions[, !names(predictions) %in% names_biological]
 
   # Store all_probabilities in one dataframe. Use p1,p2,... etc in case data column positions change in future
-  prob_names <- c(
-    "p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", "p11", "p12", "p13", "p14", "p15", "p16",
-    "p17", "p18", "p19", "p20", "p21", "p22", "p23", "p24", "p25", "p26", "p27", "p28", "p29", "p30",
-    "p31", "p32", "p33", "p34", "p35", "p36", "p37", "p38", "p39", "p40", "p41", "p42", "p43"
-  )
-
-
+  prob_names <- paste0("p", 1:43)
   all_probabilities <- predictions[, toupper(prob_names)] # Needs to change when not uppercase
   # Input Adjustment factors for reference site quality scores (Q1, Q2, Q3, Q4, Q5)
 
@@ -64,7 +53,6 @@ singleYearClassification <- function(predictions) {
   obs_aspt_aut <- biological_data[, "AUT_TL2_WHPT_ASPT (ABW,DISTFAM)"]
 
   # OBSERVED NTAXA
-  # observed_ntaxa <- read.csv("src/observed_ntaxa.csv") # read.csv(paste0(path,"/observed_ntaxa.csv"))
   # obs_ntaxa_spr <- observed_ntaxa[,1]
   obs_ntaxa_spr <- biological_data[, "SPR_TL2_WHPT_NTAXA (ABW,DISTFAM)"]
   # Obs_ntaxa_aut <- observed_ntaxa[,2]
@@ -82,7 +70,6 @@ singleYearClassification <- function(predictions) {
   rjaj <- compute_RjAj(rj, adjusted_params)
   one_over_rjaj <- 1 / rjaj
 
-
   # Write a function that computes aspt, ntaxa adjusted (1 = "NTAXA", 2="ASPT")
   # or select them by name as declared in the classification functions
   ntaxa_adjusted <- dplyr::select(predictions, dplyr::contains("_NTAXA_")) / rjaj[, "NTAXA"]
@@ -92,7 +79,8 @@ singleYearClassification <- function(predictions) {
   adjusted_expected <- cbind(ntaxa_adjusted, aspt_adjusted)
   adjusted_expected_new <- cbind(as.data.frame(all_sites), adjusted_expected) # Include site names from predictions
 
-  # Part 3:  Calculation of Exp_ref from "AdjustedExpected_new" values, divide by K ( = 1.0049 for NTAXA,  = 0.9921 for ASPT)
+  # Part 3:  Calculation of Exp_ref from "AdjustedExpected_new" values, divide
+  # by K ( = 1.0049 for NTAXA,  = 0.9921 for ASPT)
   n_runs <- 10000
   # ******* FOR ASPT ************
 
@@ -102,7 +90,6 @@ singleYearClassification <- function(predictions) {
   # find the non-bias corrected  EQR = obs/ExpRef
   nonBiasCorrected_WHPT_aspt_spr <- obs_aspt_spr / dplyr::select(Exp_ref_aspt, dplyr::contains("_spr"))
   nonBiasCorrected_WHPT_aspt_aut <- obs_aspt_aut / dplyr::select(Exp_ref_aspt, dplyr::contains("_aut"))
-
 
   # Now do the Obs_rb withONE SITE obs_aspt_spr[1]
   sdobs_aspt <- sdobs_one_year_new(0.269, 0.279, 1)
@@ -139,7 +126,6 @@ singleYearClassification <- function(predictions) {
   EQRAverages_ntaxa_spr <- data.frame() # Store average EQRs for spr in a dataframe
   EQRAverages_ntaxa_aut <- data.frame() # Store average EQRs for spr in a dataframe
 
-
   # ASPT
   SiteProbabilityclasses_spr_aspt <- data.frame() # Store site probabilities in a dataframe
   SiteProbabilityclasses_aut_aspt <- data.frame() # Store site probabilities in a dataframe
@@ -151,7 +137,7 @@ singleYearClassification <- function(predictions) {
   Ubias8r_spr <- getUbias8r_new(n_runs, Ubias8)
   Ubias8r_aut <- getUbias8r_new(n_runs, Ubias8)
 
-  for (k in 1:nrow(predictions)) {
+  for (k in seq_len(nrow(predictions))) {
 
     # LOOP all the sites from here
     # Part 1. Adjust the Observed values
@@ -175,19 +161,17 @@ singleYearClassification <- function(predictions) {
     # Part 1: for "Spring" - DO FOR NTAXA
 
     # Find the averages of both spr and autum, declare a function to compute this
-    #
-
-    eqr_av_spr <- getAvgEQR_SprAut(EQR_spr = EQR_ntaxa_spr, EQR_aut = EQR_ntaxa_aut, row_name = F) #
-    # print(eqr_av_spr)
-
-    # eqr_av_aut  <- getAvgEQR_SprAut (EQR_ntaxa_spr,EQR_ntaxa_aut )
+    eqr_av_spr <- getAvgEQR_SprAut(EQR_spr = EQR_ntaxa_spr, EQR_aut = EQR_ntaxa_aut, row_name = F)
 
     # Classify these for each SITE using the EQR just for spring
     classArray_siteOne_spr_ntaxa <- getClassarray_ntaxa(EQR_ntaxa_spr)
     classArray_siteOne_aut_ntaxa <- getClassarray_ntaxa(EQR_ntaxa_aut)
 
-    # define an array to hold probability of class for each site- how much of the site belongs to each classes, adds up to 100%
-    probClass_spr <- matrix(0, ncol = 1, nrow = 5) # 5 is the number of classes- H, G, M, B, P, ncol=1 or 2 for two seasons or ntaxa_spr, ntaxa_aut, spr_aut_av_taxa, and spt etc
+    # Define an array to hold probability of class for each site- how much of
+    # the site belongs to each classes, adds up to 100%.
+    # 5 is the number of classes- H, G, M, B, P, ncol=1 or 2 for two seasons or
+    # ntaxa_spr, ntaxa_aut, spr_aut_av_taxa, and spt etc.
+    probClass_spr <- matrix(0, ncol = 1, nrow = 5)
     probClass_aut <- matrix(0, ncol = 1, nrow = 5)
 
     for (i in 1:5) {
@@ -226,7 +210,8 @@ singleYearClassification <- function(predictions) {
     probClass_spr_aut_comb <- matrix(0, ncol = 1, nrow = 5)
     # Process probabilities
     for (i in 1:5) {
-      probClass_spr_aut_comb[i] <- 100 * sum(classArray_siteOne_combined_spr[classArray_siteOne_combined_spr == i, ] / i) / n_runs
+      probClass_spr_aut_comb[i] <- 100 *
+        sum(classArray_siteOne_combined_spr[classArray_siteOne_combined_spr == i, ] / i) / n_runs
     }
 
     a_ntaxa_spr_aut <- t(probClass_spr_aut_comb) # spr
@@ -238,7 +223,6 @@ singleYearClassification <- function(predictions) {
     SiteProbabilityclasses_spr_aut_comb_ntaxa <- rbind(SiteProbabilityclasses_spr_aut_comb_ntaxa, a_ntaxa_spr_aut)
 
     # **** Workout FOR ASPT STARTS HERE
-
     ### RALPH
     u_9a <- 4.35
     u_9b <- 0.271
@@ -263,14 +247,17 @@ singleYearClassification <- function(predictions) {
     ObsIDX8rb_spr <- ObsIDX8r_spr + Ubias8r_spr
     ObsIDX8rb_aut <- ObsIDX8r_aut + Ubias8r_aut
 
-    # Obs_site1_aspt_spr <- getObsIDX8r_new(obs_aspt_spr[k],getZObs_r_new(sdobs_aspt,n_runs))  + getUbias8r_new (n_runs, Ubias8) # ths is repolaced by "ObsIDX9rB_spr"
-    # Obs_site1_aspt_aut <- getObsIDX8r_new(obs_aspt_aut[k], getZObs_r_new(sdobs_aspt,n_runs)) + getUbias8r_new (n_runs, Ubias8)
+    # Obs_site1_aspt_spr <-
+    # getObsIDX8r_new(obs_aspt_spr[k],getZObs_r_new(sdobs_aspt,n_runs)) +
+    # getUbias8r_new (n_runs, Ubias8) # ths is replaced by "ObsIDX9rB_spr"
+    # Obs_site1_aspt_aut <-
+    # getObsIDX8r_new(obs_aspt_aut[k], getZObs_r_new(sdobs_aspt,n_runs)) +
+    # getUbias8r_new (n_runs, Ubias8)
 
     ObsIDX9rb_spr <- ObsIDX7rb_spr / ObsIDX8rb_spr
     ObsIDX9rb_aut <- ObsIDX7rb_aut / ObsIDX8rb_aut
 
     # Part 2 . Do the RefAdjExpected bias
-
     # Expected reference adjusted , as an array , ONE SITE, site 14
 
     sdexp9_aspt <- 0.081 # For aspt we use a different value, 0.081
@@ -283,18 +270,17 @@ singleYearClassification <- function(predictions) {
 
     # Part 1: for "Spring"
     # Find the averages of both spr and autum, declare a function to compute this
-    eqr_av_spr_aspt <- getAvgEQR_SprAut(EQR_aspt_spr, EQR_aspt_aut) #
-    # print(eqr_av_spr)
-
-    # eqr_av_aut  <- getAvgEQR_SprAut (EQR_ntaxa_spr,EQR_ntaxa_aut )
+    eqr_av_spr_aspt <- getAvgEQR_SprAut(EQR_aspt_spr, EQR_aspt_aut)
 
     # Classify these for each SITE using the EQR just for spring
     classArray_siteOne_spr_aspt <- getClassarray_aspt(EQR_aspt_spr)
     classArray_siteOne_aut_aspt <- getClassarray_aspt(EQR_aspt_aut)
 
-    # define an array to hold probability of class for each site- how much of the site belongs to each classes, adds up to 100%
-
-    probClass_spr <- matrix(0, ncol = 1, nrow = 5) # 5 is the number of classes- H, G, M, B, P, ncol=1 or 2 for two seasons or ntaxa_spr, ntaxa_aut, spr_aut_av_taxa, and spt etc
+    # define an array to hold probability of class for each site- how much of
+    # the site belongs to each classes, adds up to 100%
+    # 5 is the number of classes- H, G, M, B, P, ncol=1 or 2 for two seasons or
+    # ntaxa_spr, ntaxa_aut, spr_aut_av_taxa, and spt etc
+    probClass_spr <- matrix(0, ncol = 1, nrow = 5)
     probClass_aut <- matrix(0, ncol = 1, nrow = 5)
 
     for (i in 1:5) {
@@ -335,7 +321,8 @@ singleYearClassification <- function(predictions) {
     # Process probabilities
 
     for (i in 1:5) {
-      probClass_spr_aut_comb[i] <- 100 * sum(classArray_siteOne_combined_spr_aspt[classArray_siteOne_combined_spr_aspt == i, ] / i) / n_runs
+      probClass_spr_aut_comb[i] <- 100 *
+        sum(classArray_siteOne_combined_spr_aspt[classArray_siteOne_combined_spr_aspt == i, ] / i) / n_runs
     }
 
     a_aspt_spr_aut <- t(probClass_spr_aut_comb) # spr
@@ -349,10 +336,13 @@ singleYearClassification <- function(predictions) {
     ########  Calculate the MINTA - worse class = 5 i.e. max of class from NTAXA and ASPT ######
     matrix_ntaxa_spr <- as.matrix(classArray_siteOne_spr_ntaxa)
     matrix_aspt_spr <- as.matrix(classArray_siteOne_spr_aspt)
-    minta_ntaxa_aspt_spr <- getMINTA_ntaxa_aspt(as.matrix(classArray_siteOne_spr_ntaxa), as.matrix(classArray_siteOne_spr_aspt))
+    minta_ntaxa_aspt_spr <- getMINTA_ntaxa_aspt(as.matrix(classArray_siteOne_spr_ntaxa),
+                                                as.matrix(classArray_siteOne_spr_aspt))
 
     # Now calculate proportion of each class H to B for MINTA
-    minta_probClass_spr <- matrix(0, ncol = 1, nrow = 5) # 5 is the number of classes- H, G, M, B, P, ncol=1 or 2 for two seasons or ntaxa_spr, ntaxa_aut, spr_aut_av_taxa, and spt etc
+    # 5 is the number of classes- H, G, M, B, P, ncol=1 or 2 for two seasons or
+    # ntaxa_spr, ntaxa_aut, spr_aut_av_taxa, and spt etc
+    minta_probClass_spr <- matrix(0, ncol = 1, nrow = 5)
 
     for (i in 1:5) {
       minta_probClass_spr[i] <- 100 * sum(minta_ntaxa_aspt_spr[minta_ntaxa_aspt_spr == i, ] / i) / n_runs
@@ -369,9 +359,11 @@ singleYearClassification <- function(predictions) {
     SiteMINTA_whpt_spr <- rbind(SiteMINTA_whpt_spr, aa)
 
     # Do the MINTA aut case
-    minta_ntaxa_aspt_aut <- getMINTA_ntaxa_aspt(as.matrix(classArray_siteOne_aut_ntaxa), as.matrix(classArray_siteOne_aut_aspt))
-    minta_probClass_aut <- matrix(0, ncol = 1, nrow = 5) # 5 is the number of classes- H, G, M, B, P, ncol=1 or 2 for two seasons or ntaxa_spr, ntaxa_aut, spr_aut_av_taxa, and spt etc
-
+    minta_ntaxa_aspt_aut <- getMINTA_ntaxa_aspt(as.matrix(classArray_siteOne_aut_ntaxa),
+                                                as.matrix(classArray_siteOne_aut_aspt))
+    # 5 is the number of classes- H, G, M, B, P, ncol=1 or 2 for two seasons or
+    # ntaxa_spr, ntaxa_aut, spr_aut_av_taxa, and spt etc
+    minta_probClass_aut <- matrix(0, ncol = 1, nrow = 5)
     for (i in 1:5) {
       minta_probClass_aut[i] <- 100 * sum(minta_ntaxa_aspt_aut[minta_ntaxa_aspt_aut == i, ] / i) / n_runs
     }
@@ -387,8 +379,11 @@ singleYearClassification <- function(predictions) {
     SiteMINTA_whpt_aut <- rbind(SiteMINTA_whpt_aut, aa)
 
     # Do the MINTA spr_aut case
-    minta_ntaxa_aspt_spr_aut <- getMINTA_ntaxa_aspt(as.matrix(classArray_siteOne_combined_spr), as.matrix(classArray_siteOne_combined_spr_aspt))
-    minta_probClass_spr_aut <- matrix(0, ncol = 1, nrow = 5) # 5 is the number of classes- H, G, M, B, P, ncol=1 or 2 for two seasons or ntaxa_spr, ntaxa_aut, spr_aut_av_taxa, and spt etc
+    minta_ntaxa_aspt_spr_aut <- getMINTA_ntaxa_aspt(as.matrix(classArray_siteOne_combined_spr),
+                                                    as.matrix(classArray_siteOne_combined_spr_aspt))
+    # 5 is the number of classes- H, G, M, B, P, ncol=1 or 2 for two seasons or
+    # ntaxa_spr, ntaxa_aut, spr_aut_av_taxa, and spt etc
+    minta_probClass_spr_aut <- matrix(0, ncol = 1, nrow = 5)
 
     for (i in 1:5) {
       minta_probClass_spr_aut[i] <- 100 * sum(minta_ntaxa_aspt_spr_aut[minta_ntaxa_aspt_spr_aut == i, ] / i) / n_runs
@@ -423,7 +418,8 @@ singleYearClassification <- function(predictions) {
   # Rename column names so they dont conflict
   colnames(SiteProbabilityclasses_spr_ntaxa) <- paste0(colnames(SiteProbabilityclasses_spr_ntaxa), "_NTAXA_spr")
   colnames(SiteProbabilityclasses_aut_ntaxa) <- paste0(colnames(SiteProbabilityclasses_aut_ntaxa), "_NTAXA_aut")
-  colnames(SiteProbabilityclasses_spr_aut_comb_ntaxa) <- paste0(colnames(SiteProbabilityclasses_spr_aut_comb_ntaxa), "_NTAXA_spr_aut")
+  colnames(SiteProbabilityclasses_spr_aut_comb_ntaxa) <- paste0(colnames(SiteProbabilityclasses_spr_aut_comb_ntaxa),
+                                                                "_NTAXA_spr_aut")
 
   # Get ntaxa spr average
   averages_spr_ntaxa <- cbind(SiteProbabilityclasses_spr_ntaxa, EQRAverages_ntaxa_spr[1]) #
@@ -442,7 +438,8 @@ singleYearClassification <- function(predictions) {
   # Rename column names so they dont conflict
   colnames(SiteProbabilityclasses_spr_aspt) <- paste0(colnames(SiteProbabilityclasses_spr_aspt), "_ASPT_spr")
   colnames(SiteProbabilityclasses_aut_aspt) <- paste0(colnames(SiteProbabilityclasses_aut_aspt), "_ASPT_aut")
-  colnames(SiteProbabilityclasses_spr_aut_comb_aspt) <- paste0(colnames(SiteProbabilityclasses_spr_aut_comb_aspt), "_ASPT_spr_aut")
+  colnames(SiteProbabilityclasses_spr_aut_comb_aspt) <- paste0(colnames(SiteProbabilityclasses_spr_aut_comb_aspt),
+                                                               "_ASPT_spr_aut")
 
   averages_spr_aspt <- cbind(SiteProbabilityclasses_spr_aspt, EQRAverages_aspt_spr[1]) #
   probclasses_ave_aspt <- cbind(SiteProbabilityclasses_aut_aspt, EQRAverages_aspt_spr[2]) # averages_spr_aspt)

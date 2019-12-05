@@ -8,3 +8,7 @@
 ^CONDUCT\.md$
 .lintr
 ^CONTRIBUTING\.md$
+^LICENSE\.md$
+^pkgdown$
+^doc$
+^Meta$

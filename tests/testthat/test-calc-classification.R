@@ -1,17 +1,16 @@
 context("test calcClassifcation")
 
-
 test_that("calcClassifcation outputs match azure single-year outputs", {
-  observed_values <- utils::read.csv(system.file("extdat",
+  data <- utils::read.csv(system.file("extdat",
     "validation-input-single-year.csv",
     package = "rict"
   ),
   check.names = F, stringsAsFactors = F
   )
-  observed_values <- observed_values[1, ] # only one year required
-  test_validation_func <- rict:::validate_observed(observed_values)
-  predictions <- calcPrediction(observed_values = observed_values)
-  classification <- calcClassification(predictions, year_type = "single")
+  data <- data[1, ] # only one year required
+  test_validation_func <- rict:::rict_validate(data)
+  predictions <- rict_predict(data)
+  classification <- rict_classify(predictions, year_type = "single")
   expect_equal(class(classification), "data.frame")
 
   validation_classification <- utils::read.csv(system.file("extdat",
@@ -33,8 +32,8 @@ test_that("calcClassifcation outputs match azure single-year outputs", {
 
 
 test_that("calcClassifcation outputs match azure multi-year outputs", {
-  predictions <- calcPrediction(observed_values = demo_observed_values)
-  classification <- calcClassification(predictions)
+  predictions <- rict_predict(demo_observed_values)
+  classification <- rict_classify(predictions)
   expect_equal(class(classification), "data.frame")
 
   # compare results downloaded from azure with package (Results on azure were manually user tested).
@@ -111,6 +110,21 @@ test_that("calcClassifcation outputs on SEPA system", {
   )
 
   observed_values <- transformRict(ecology_results)
-
   predictions <- rict::calcPrediction(observed_values)
+})
+
+
+
+test_that("rict classify GIS", {
+  skip("Work in progress - not passing")
+
+
+  predictions <- rict_predict(demo_gis_values, model="gis")
+  predictions3 <- predictions[, !names(predictions) %in% c("Chalk_O1_CEH",
+                                            "Limestone_O1_CEH",
+                                            "Hardrock_O1_CEH",
+                                            "Clay_O1_CEH")]
+
+  results <- rict_classify()
+
 })

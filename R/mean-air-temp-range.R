@@ -61,12 +61,14 @@ AVCALL <- function(ME1, ME2, KE, MN1, MN2, KN, VMEAN, VRANGE){
 
 #Program to calculate mean temperature and annual temperature
 
-calcTemps <- function(coordinates, air_temp_grid){
+calcTemps <- function(coordinates){
   # coordinates is a data frame with three columns
   # SITE_ID
   # EASTING4
   # NORTHING4
   # air_temp_grid is data found in rict package
+  # load air temp grid - required for validation
+  air_temp_grid <- utils::read.csv(system.file("extdat", "air-temp-grid.csv", package = "rict"))
 
   NP <- NULL
   SMEAN <- NULL

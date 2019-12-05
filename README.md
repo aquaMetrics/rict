@@ -1,8 +1,3 @@
----
-output:
-  html_document: default
-  pdf_document: default
----
 [![Travis-CI Build Status](https://travis-ci.org/aquaMetrics/rict.svg?branch=master)](https://travis-ci.org/aquaMetrics/rict)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/aquaMetrics/rict?branch=master&svg=true)](https://ci.appveyor.com/project/ecodata1/rict/branch/master)
 [![codecov](https://codecov.io/gh/aquaMetrics/rict/branch/master/graph/badge.svg)](https://codecov.io/gh/aquaMetrics/rict)
@@ -17,7 +12,7 @@ An R package for calculating River Invertebrate Classification Tool (rict) predi
 
 ## Install
 
-Install [R](rstats.org/install) and then recommend installing [Rstudio](rstudio.com/install).
+Install [R](rstats.org/install) and also recommend installing [Rstudio](rstudio.com/install).
 
 Open Rstudio.
   
@@ -28,23 +23,26 @@ library(devtools)
 install_github("aquaMetrics/rict")
 library(rict)
 ```
-Run the demo dataset through the `rict_predict` function to get predicted scores:
+Run the demo dataset through the `rict` function to get classification results:
+
+```
+results <- rict(demo_observed_values)
+```
+Use `rict_predict` to only calculate predictions:
 
 ```
 predictions <- rict_predict(demo_observed_values)
 ```
-Then run the predictions through `rict_classify` to compare the predicted scores against your observed scores, giving you the classification output:
+And `rict_classify` to classify these predictions:
 
 ```
-class_results <- rict_classify(predictions)
+results <- rict_classify(predictions)
 ```
-The `demo_observed_values` contain physical environmental variables such width and depth. By default, the above code runs a multi-year prediction based on the Great Britain model. These default can be overridden:
+See [documentation](https://aquametrics.github.io/rict/) for further usage details. For example, how to change the default area from Great Britain to Northern Ireland, physical to GIS model and multi-year to single year classification:
 
 ```
-predictions <- rict_predict(demo_observed_values, year_type = "single", area="ni")
+results <- rict(demo_gis_values, area = "ni", model = "gis", year_type = "single")
 ```
-This code runs a single year output using validation checks for Northern Ireland. See documentation for more information.
-
 ## Contributing 
 
 Please read the [Contributing guidelines](CONTRIBUTING.md) file for more details 

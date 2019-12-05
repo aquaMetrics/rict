@@ -19,7 +19,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' predictions <- rict_predict(data = rict::demo_observed_values)
+#' predictions <- rict_predict(demo_observed_values)
 #' }
 rict_predict <- function(data = NULL, model = "physical", area = "gb") {
   # Validate predictive input data

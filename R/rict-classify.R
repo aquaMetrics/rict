@@ -10,7 +10,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' predictions <- rict_predict(rict_observed = rict::demo_rict_observed)
+#' predictions <- rict_predict(demo_observed_values)
 #' classifications <- rict_classify(predictions)
 #' }
 #'

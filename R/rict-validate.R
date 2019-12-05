@@ -41,7 +41,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' validations <- rict_validate(data = rict::demo_data)
+#' validations <- rict_validate(demo_observed_values)
 #' }
 rict_validate <- function(data = NULL, model = "physical", area = "gb") {
   # check params -------------------------------------------------------

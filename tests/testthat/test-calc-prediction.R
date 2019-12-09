@@ -23,6 +23,8 @@ test_that("rict_predict for GIS variables", {
   skip("not passing - Work in progress")
   predictions <- rict_predict(data = demo_gis_values, model = "gis")
 
+  # ISSUE: expected predictions are adjusted reference values not raw!!
+  # Currently predictions function gives unadjusted values.
   expected_predictions <- utils::read.csv(system.file("extdat",
     "expected-biotic-scores-model-44.csv",
     package = "rict"
@@ -30,9 +32,8 @@ test_that("rict_predict for GIS variables", {
 
   # ISSUE: lat/lon calculation converts NGR slightly different to values on
   # Spreadsheet "RICT(E and Azure) software - Independent code Testing Results v2"
-  # has slightly difference in log values.
-  # Rounding issues in discrimant functions? Even using log values from
-  # spreadsheet there's in Mahalanobis Distances.
+  # If using prepared data on spreadsheet (Lat/Lon) etc then same results.
+
 
   equal <- all.equal(
     predictions[, names(predictions) %in% names(expected_predictions)],

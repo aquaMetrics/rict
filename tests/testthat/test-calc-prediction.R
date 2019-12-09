@@ -28,11 +28,11 @@ test_that("rict_predict for GIS variables", {
     package = "rict"
   ), check.names = F)
 
-
-
   # ISSUE: lat/lon calculation converts NGR slightly different to values on
-  # RICT(E and Azure) software - Independent code Testing Results v2
-  # Also slight difference in log values.
+  # Spreadsheet "RICT(E and Azure) software - Independent code Testing Results v2"
+  # has slightly difference in log values.
+  # Rounding issues in discrimant functions? Even using log values from
+  # spreadsheet there's in Mahalanobis Distances.
 
   equal <- all.equal(
     predictions[, names(predictions) %in% names(expected_predictions)],

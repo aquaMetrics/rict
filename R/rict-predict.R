@@ -21,7 +21,7 @@
 #' \dontrun{
 #' predictions <- rict_predict(demo_observed_values)
 #' }
-rict_predict <- function(data = NULL, model = "physical", area = "gb") {
+rict_predict <- function(data = NULL, model = "physical", area = "gb", test = F) {
   # Validate predictive input data
   all_validation <- rict_validate(data, model = model, area = area)
   # Change all column names to uppercase
@@ -139,6 +139,14 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
       "Clay_O1_CEH"              =  final_predictors_one$CLAY_O1_CEH,
       "Hardrock_O1_CEH"          =  final_predictors_one$HARDROCK_O1_CEH,
       "Limestone_O1_CEH"         =  final_predictors_one$LIMESTONE_O1_CEH
+    )
+  }
+
+  if (test == T) { # load file containing extact log values from testing spreadsheet
+  final_predictors <-
+    utils::read.csv(
+      system.file("extdat", "test-predictors-model-44.csv",
+                  package = "rict"), check.names = F
     )
   }
 

@@ -4,7 +4,7 @@
 \alias{rict_predict}
 \title{Calculate River Invertebrate Classification Tool (RICT) predictions}
 \usage{
-rict_predict(data = NULL, model = "physical", area = "gb")
+rict_predict(data = NULL, model = "physical", area = "gb", test = F)
 }
 \arguments{
 \item{data}{Dataframe of predictive environmental values

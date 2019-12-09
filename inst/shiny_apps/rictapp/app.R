@@ -89,7 +89,7 @@ server <- function(input, output) {
       "mintawhpt_spr_aut_mostProb_MINTA_"
     )]
 
-    files <- list(predictions, results)
+    output_files <- list(predictions, results)
     output$download_file <- downloadHandler(
       filename = function() {
         paste("rict-output", "zip", sep = ".")
@@ -98,10 +98,10 @@ server <- function(input, output) {
         fs <- c()
         tmpdir <- tempdir()
         setwd(tempdir())
-        for (i in 1:seq_len(files)) {
+        for (i in 1:2) {
           path <- paste0("sample_", i, ".csv")
           fs <- c(fs, path)
-          write.csv(files[[i]], file = path)
+          write.csv(output_files[[i]], file = path)
         }
         zip(zipfile = fname, files = fs)
       }

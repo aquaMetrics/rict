@@ -247,28 +247,42 @@ getMostProbableClass  <- function (dframe){
   return (colnames(dframe)[apply(dframe,1,which.max)])
 }
 
-
 #Find the class array of each site
 getClassarray_ntaxa <- function (EQR_ntaxa) {
-  #classArray_siteOne <- data.frame(nrow= nrow(EQR_ntaxa_spr))
-  # Classify these for SITE ONE using the EQR just for spring
-  classArray_siteOne <- data.frame(nrow= nrow(EQR_ntaxa))
-  for (i in 1:nrow(EQR_ntaxa)) {
-       # print(EQR_ntaxa[i,1]) # change AZURE!!!
-       classArray_siteOne[i,1] <- getClassFromEQR_ntaxa(EQR_ntaxa[i,1])
-  }
-  return (classArray_siteOne)
+
+  # classArray_siteOne <- data.frame(nrow= nrow(EQR_ntaxa_spr))
+  # # Classify these for SITE ONE using the EQR just for spring
+  # classArray_siteOne <- data.frame(nrow= nrow(EQR_ntaxa))
+  # for (i in 1:nrow(EQR_ntaxa)) {
+  #      # print(EQR_ntaxa[i,1]) # change AZURE!!!
+  #      classArray_siteOne[i,1] <- getClassFromEQR_ntaxa(EQR_ntaxa[i,1])
+  # }
+  EQR_ntaxa[, 1][is.na(EQR_ntaxa)] <- 5 # really?
+  EQR_ntaxa[, 1][EQR_ntaxa >= 0.8] <- 1  # class = H
+  EQR_ntaxa[, 1][EQR_ntaxa >= 0.68 & EQR_ntaxa < 0.8] <- 2  # class = G
+  EQR_ntaxa[, 1][EQR_ntaxa >= 0.56 & EQR_ntaxa < 0.68] <- 3 # class = M
+  EQR_ntaxa[, 1][EQR_ntaxa >= 0.47 & EQR_ntaxa < 0.56] <- 4 # class = P
+  EQR_ntaxa[, 1][EQR_ntaxa >= 0.0 & EQR_ntaxa < 0.47] <- 5  # class = B
+  EQR_ntaxa[, 1][EQR_ntaxa < 0.0] <- 9 # Default if no condition is satisfied?
+  return (EQR_ntaxa)
 }
 
 # Find the class array
 getClassarray_aspt <- function (EQR_aspt) {
   #classArray_siteOne <- data.frame(nrow= nrow(EQR_ntaxa_spr))
   # Classify these for SITE ONE using the EQR just for spring
-  classArray_siteOne <- data.frame(nrow= nrow(EQR_aspt))
-  for (i in 1:nrow(EQR_aspt)) {
-    classArray_siteOne[i,1] <- getClassFromEQR_aspt(EQR_aspt[i,1])
-  }
-  return (as.data.frame(classArray_siteOne))
+  # classArray_siteOne <- data.frame(nrow= nrow(EQR_aspt))
+  # for (i in 1:nrow(EQR_aspt)) {
+  #   classArray_siteOne[i,1] <- getClassFromEQR_aspt(EQR_aspt[i,1])
+  # }
+  EQR_aspt[, 1][is.na(EQR_aspt)] <- 5 # really?
+  EQR_aspt[, 1][EQR_aspt >= 0.97] <- 1  # class = H
+  EQR_aspt[, 1][EQR_aspt >= 0.86 & EQR_aspt < 0.97] <- 2  # class = G
+  EQR_aspt[, 1][EQR_aspt >= 0.72 & EQR_aspt < 0.86] <- 3 # class = M
+  EQR_aspt[, 1][EQR_aspt >= 0.59 & EQR_aspt < 0.72] <- 4 # class = P
+  EQR_aspt[, 1][EQR_aspt >= 0.0 & EQR_aspt < 0.59] <- 5  # class = B
+  EQR_aspt[, 1][EQR_aspt < 0.0] <- 9 # Default if no condition is satisfied?
+  return (EQR_aspt)
 }
 #Find the averages of both spr and autum, declare a function to compute this
 getAvgEQR_SprAut <- function (EQR_spr, EQR_aut, k, row_name = F) {

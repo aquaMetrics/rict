@@ -385,6 +385,7 @@ rict_classify <- function(data = NULL, year_type = "multi") {
           rowMeans(multiYear_EQRAverages_aspt_spr_aut)
       )
       # data.frame(EQR_ntaxa_spr))
+
       classArray_siteOne_spr_aut_ntaxa <- getClassarray_ntaxa(multiYear_EQRAverages_ntaxa_spr_aut)
       # define an array to hold probability of class for each site- how much of the site belongs to each classes,
       # adds up to 100%
@@ -472,7 +473,6 @@ rict_classify <- function(data = NULL, year_type = "multi") {
     } # END of FOR LOOP
 
     # MINTA outputs
-
     colnames(SiteMINTA_whpt_spr_aut) <- c(paste0("mintawhpt_spr_aut_", names(SiteMINTA_whpt_spr_aut)))
     # Combine all MINTA
 
@@ -516,7 +516,6 @@ rict_classify <- function(data = NULL, year_type = "multi") {
     # Rename columns for MINTA, so they dont conflict
     colnames(SiteMINTA_whpt_spr_aut) <- paste0(colnames(SiteMINTA_whpt_spr_aut), "_MINTA_")
     classification_results <- cbind(allResults, SiteMINTA_whpt_spr_aut)
-
     return(classification_results)
   }
 }

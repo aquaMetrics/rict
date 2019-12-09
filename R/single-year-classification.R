@@ -83,7 +83,6 @@ singleYearClassification <- function(predictions) {
   # by K ( = 1.0049 for NTAXA,  = 0.9921 for ASPT)
   n_runs <- 10000
   # ******* FOR ASPT ************
-
   Exp_ref_aspt <- aspt_adjusted / 0.9921
   Ubias8 <- ubias_main
 
@@ -453,5 +452,12 @@ singleYearClassification <- function(predictions) {
   allResults_ntaxa_aspt <- cbind(allResults_ntaxa_aspt, allMINTA_whpt)
   allResults_ntaxa_aspt_minta_combined <- cbind(all_sites, allResults_ntaxa_aspt)
 
+  allResults_ntaxa_aspt_minta_combined$SITE <-
+    allResults_ntaxa_aspt_minta_combined$all_sites
+  allResults_ntaxa_aspt_minta_combined$all_sites <- NULL
+
+  allResults_ntaxa_aspt_minta_combined$mintawhpt_spr_aut_mostProb_MINTA_ <-
+    allResults_ntaxa_aspt_minta_combined$mintawhpt_spr_aut_mostProb
+  allResults_ntaxa_aspt_minta_combined$mintawhpt_spr_aut_mostProb <- NULL
   return(allResults_ntaxa_aspt_minta_combined)
 }

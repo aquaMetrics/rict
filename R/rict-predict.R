@@ -50,7 +50,7 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
         system.file("extdat", "end-group-means-discriminant-scores-model-44.csv",
                     package = "rict")
       )
-    df_mean_gb685 <- df_mean_gb685[,3:19]
+    df_mean_gb685 <- df_mean_gb685[, 3:19]
     df_coeff_gb685 <-
       utils::read.csv(
         system.file("extdat", "discriminant-function-coefficients-model-44.csv",
@@ -83,7 +83,7 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
   this_failing <- all_validation[[2]]
   data <- all_validation[[3]]
 
- if (model =="gis") {
+ if (model == "gis") {
      data$`TEST SITECODE`  <- NULL
    } # remove TEST-SITE_CODE column - not required and causes issues later on?!
   # Data validation and conversion
@@ -190,9 +190,9 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
   # Find max class group belongs to by getting the column name: use
   # belongs_to_end_grp <- colnames(final_predictors_try2[,15:57])[apply(final_predictors_try2[,15:57], 1, which.max)]
   # This sometimes returns a list, use unlist below to repair this
-  belongs_to_end_grp <- colnames(final_predictors_try2[, paste0("p",1:43)])[apply(
-    data.frame(matrix(unlist(final_predictors_try2[, paste0("p",1:43)]),
-                      nrow = nrow(final_predictors_try2[, paste0("p",1:43)]),
+  belongs_to_end_grp <- colnames(final_predictors_try2[, paste0("p", 1:43)])[apply(
+    data.frame(matrix(unlist(final_predictors_try2[, paste0("p", 1:43)]),
+                      nrow = nrow(final_predictors_try2[, paste0("p", 1:43)]),
                       byrow = T),
                 stringsAsFactors = FALSE), 1, which.max)]
 

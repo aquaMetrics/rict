@@ -416,8 +416,8 @@ rict_validate <- function(data = NULL, model = "physical", area = "gb") {
     data$TMEAN <- my_temperatures$TMEAN
     data$TRANGE <- my_temperatures$TRANGE
 
-    if (model == "gis"){
-      return(list(data.frame(),data.frame(), data))
+    if (model == "gis") {
+      return(list(data.frame(), data.frame(), data))
     }
 
     # Data validation and conversion

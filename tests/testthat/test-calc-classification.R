@@ -119,7 +119,7 @@ test_that("rict classify GIS", {
   skip("Work in progress - not passing")
 
 
-  predictions <- rict_predict(demo_gis_values, model="gis")
+  predictions <- rict_predict(demo_gis_values, model = "gis")
   predictions3 <- predictions[, !names(predictions) %in% c("Chalk_O1_CEH",
                                             "Limestone_O1_CEH",
                                             "Hardrock_O1_CEH",

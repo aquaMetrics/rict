@@ -21,7 +21,7 @@ test_that("rict_predict for physical variables", {
 
 test_that("rict_predict for GIS variables", {
   skip("not passing - Work in progress")
-  predictions <- rict_predict(data = demo_gis_values, model="gis")
+  predictions <- rict_predict(data = demo_gis_values, model = "gis")
 
   expected_predictions <- utils::read.csv(system.file("extdat",
     "expected-biotic-scores-model-44.csv",

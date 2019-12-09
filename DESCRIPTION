@@ -30,7 +30,11 @@ Imports:
  sp,
  readxl,
  rlang,
- gridExtra
+ gridExtra,
+ shiny,
+ DT,
+ htmltools,
+ leaflet
 Suggests: testthat,
     knitr,
     rmarkdown,

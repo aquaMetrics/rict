@@ -90,6 +90,8 @@ server <- function(input, output) {
     )]
 
     output_files <- list(predictions, results)
+
+
     output$download_file <- downloadHandler(
       filename = function() {
         paste("rict-output", "zip", sep = ".")

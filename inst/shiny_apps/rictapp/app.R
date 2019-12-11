@@ -11,20 +11,20 @@ library(leaflet)
 library(htmltools)
 
 # Define UI for application
-ui <- fluidPage(
-  # Application title
-  titlePanel("RICT"),
-  h4("River Invertebrate Classification Tool"),
 
-  # Sidebar input
-  sidebarLayout(
-    sidebarPanel(
+  ui = tagList(
+  #  shinythemes::themeSelector(),
+    navbarPage(
+      # theme = "cerulean",  # <--- To use a theme, uncomment this
+      "RICT",
+      tabPanel("Predict & Classify",
+               sidebarPanel(
       h3("Options"),
       radioButtons(
         "model", "Model Type:",
         c(
-          "GIS - Geology, Catchment area etc" = "gis",
-          "Physcial - Slope, depth, discharge etc" = "physical"
+          "Physcial - Slope, depth, width..." = "physical",
+          "GIS - Geology, catchment area..." = "gis"
         )
       ),
       radioButtons(
@@ -41,6 +41,13 @@ ui <- fluidPage(
           "Northern Ireland" = "ni"
         )
       ),
+      radioButtons(
+        "output", "Output:",
+        c(
+          "Prediction & Classification" = "predict_classify",
+          "Prediction only" = "predict"
+        )
+      ),
       fileInput("dataset", "Choose CSV File",
         accept = c(
           "text/csv",
@@ -55,10 +62,12 @@ ui <- fluidPage(
       p(),
       htmlOutput("tables")
     )
-  )
+  ),
+  tabPanel("GIS variables", "This panel is intentionally left blank. This will be for future GIS variables map")
+)
 )
 
-# Define server logic
+# Define server logic ------------------------------------------------------------------
 server <- function(input, output) {
   output$tables <- renderUI({
     inFile <- input$dataset
@@ -72,6 +81,7 @@ server <- function(input, output) {
     progress$set(message = "Calculating", value = 1)
     data <- read.csv(inFile$datapath, check.names = F)
     predictions <- rict_predict(data, model = input$model, area = input$area)
+
     predictions_table <- predictions[, c(
       "SITE", "YEAR",
       "TL2_WHPT_NTAXA_AbW_DistFam_spr", "TL2_WHPT_ASPT_AbW_DistFam_spr",
@@ -79,18 +89,19 @@ server <- function(input, output) {
       "TL2_WHPT_NTAXA_AbW_DistFam_sum", "TL2_WHPT_ASPT_AbW_DistFam_sum"
     )]
 
-    if (!is.null(predictions)) {
+    output_files <- list(predictions)
+    classification_table <- data.frame()
+    if (!is.null(predictions) & input$output == 'predict_classify') {
       results <- rict_classify(predictions,
         year_type = input$year_type
       )
+      classification_table <- results[, c(
+        "SITE", "YEAR",
+        "mintawhpt_spr_aut_mostProb_MINTA_"
+      )]
+
+      output_files <- list(predictions, results)
     }
-    classification_table <- results[, c(
-      "SITE", "YEAR",
-      "mintawhpt_spr_aut_mostProb_MINTA_"
-    )]
-
-    output_files <- list(predictions, results)
-
 
     output$download_file <- downloadHandler(
       filename = function() {
@@ -100,8 +111,8 @@ server <- function(input, output) {
         fs <- c()
         tmpdir <- tempdir()
         setwd(tempdir())
-        for (i in 1:2) {
-          path <- paste0("sample_", i, ".csv")
+        for (i in seq_along(output_files)) {
+          path <- paste0("output_", i, ".csv")
           fs <- c(fs, path)
           write.csv(output_files[[i]], file = path)
         }
@@ -110,7 +121,7 @@ server <- function(input, output) {
     )
 
     download_data <- renderUI({
-      downloadButton("download_file", "Data Download")
+      downloadButton("download_file", "Download Outputs")
     })
 
     map <- leaflet(predictions) %>%
@@ -133,3 +144,5 @@ server <- function(input, output) {
 
 # Run the application
 shinyApp(ui = ui, server = server)
+
+

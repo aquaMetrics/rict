@@ -86,18 +86,11 @@ rict_classify <- function(data = NULL, year_type = "multi") {
     }
 
     # OBSERVED ASPT
-    # observed_aspt <- read.csv("src/observed_aspt.csv")
-    # obs_aspt_spr <- observed_aspt[,1]
     obs_aspt_spr <- biological_data[, "SPR_TL2_WHPT_ASPT (ABW,DISTFAM)"]
-    # obs_aspt_aut <- observed_aspt[,2]
     obs_aspt_aut <- biological_data[, "AUT_TL2_WHPT_ASPT (ABW,DISTFAM)"]
 
     # OBSERVED NTAXA
-    # observed_ntaxa <- read.csv("src/observed_ntaxa.csv")
-    # read.csv(paste0(path,"/observed_ntaxa.csv"))
-    # obs_ntaxa_spr <- observed_ntaxa[,1]
     obs_ntaxa_spr <- biological_data[, "SPR_TL2_WHPT_NTAXA (ABW,DISTFAM)"]
-    # obs_ntaxa_aut <- observed_ntaxa[,2]
     obs_ntaxa_aut <- biological_data[, "AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)"] # change AZURE
 
     # Input Multiplicative Adjustment factors adjusted_params, 1,..,5)
@@ -112,7 +105,6 @@ rict_classify <- function(data = NULL, year_type = "multi") {
     # NTAXA, ASPT, so transpose to multiply by rj
     rjaj <- compute_RjAj(rj, adjusted_params)
     one_over_rjaj <- 1 / rjaj
-    # tail(one_over_rjaj,10)
 
     # Write a function that computes aspt, ntaxa adjusted (1 = "NTAXA", 2="ASPT")
     # or select them by name as declared in the classification functions
@@ -123,9 +115,6 @@ rict_classify <- function(data = NULL, year_type = "multi") {
     adjusted_expected <- cbind(ntaxa_adjusted, aspt_adjusted)
     # Include site names from data
     adjusted_expected_new <- cbind(as.data.frame(all_sites), adjusted_expected)
-    # head(adjusted_expected_new,12)
-    # tail(adjusted_expected_new,12)
-    # writeToFile(adjusted_expected_new, path, "/AdjExpectedValues_new_data.csv")
 
     # Part 3:  Calculation of Exp_ref from "AdjustedExpected_new" values,
     # divide by K ( = 1.0049 for NTAXA,  = 0.9921 for ASPT)
@@ -219,7 +208,7 @@ rict_classify <- function(data = NULL, year_type = "multi") {
     # Collection of indices
     indicesDistinct <- data.frame()
     k <- 1
-
+browser()
     while (k <= nrow(data) | (lastSiteProcessed == FALSE)) {
       # initalise all MultiYear AGAIN for each site
       multiYear_EQRAverages_ntaxa_spr <- data.frame(n = n_runs)
@@ -302,7 +291,7 @@ rict_classify <- function(data = NULL, year_type = "multi") {
       }
 
       if (multipleSite_encoutered == FALSE) {
-        if (k == nrow(data)) {
+        if (k >= nrow(data)) {
           lastSiteProcessed <- TRUE
         }
         # Part 1: Deal with NTAXA: observed and Expected Calculations
@@ -470,6 +459,7 @@ rict_classify <- function(data = NULL, year_type = "multi") {
 
       # Move the pointer k to new adjusted position for j - whether multiple or not
       k <- j + 1
+      print(k)
     } # END of FOR LOOP
 
     # MINTA outputs

@@ -404,7 +404,7 @@ rict_validate <- function(data = NULL, model = "physical", area = "gb") {
     # function calcTemps() from package "rnfra"
     # Use function getbng
     bng <- with(data, getBNG(NGR, EASTING, NORTHING, "BNG"))
-
+    browser()
     # Lat long used for temperature lookups, using mean-air-temp-range.R helper function
     my_temperatures <- calcTemps(coordinates = data.frame(
       Site_ID = data$SITE,
@@ -413,8 +413,9 @@ rict_validate <- function(data = NULL, model = "physical", area = "gb") {
       stringsAsFactors = FALSE
     ))
     # Assign to variables as appropriate
-    data$TMEAN <- my_temperatures$TMEAN
-    data$TRANGE <- my_temperatures$TRANGE
+
+    data$TMEAN <- round(my_temperatures$TMEAN,6) # weird behaviour if not rounded
+    data$TRANGE <- round(my_temperatures$TRANGE,6)
 
     if (model == "gis") {
       return(list(data.frame(), data.frame(), data))

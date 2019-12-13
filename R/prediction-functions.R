@@ -20,11 +20,13 @@ getDFScoresTotal <- function (EnvValues, DFCoeff) {
 #3. getMahdist: Calculate the Mahanalobis distance of point x from site g
 
 getMahDist <- function (DFscore, meanvalues) {
+  meanvalues <- as.matrix(meanvalues)
+  DFscore <- as.matrix(DFscore)
   mah_Score <- matrix(0, nrow=nrow(DFscore), ncol = nrow(meanvalues))
   # Declare a matrix of zeros, with nrow, ncol dimensions
   for(row_dfscore in 1:nrow(DFscore)){
     for(row_means in 1:nrow(meanvalues)) {
-      mah_Score[row_dfscore, row_means] <- rowSums((DFscore[row_dfscore,] - meanvalues[row_means,])^2)
+      mah_Score[row_dfscore, row_means] <- sum((DFscore[row_dfscore,] - meanvalues[row_means,])^2)
       # apply rowSums() or sum()
     }
   }

@@ -3,10 +3,11 @@
 
 #1. Compute the proportions of table with sumofRows divide by each element in the row
 computeScoreProportions  <- function (ScoreDFrame) {
-  for (i in 1:nrow(ScoreDFrame)){
-    ScoreDFrame[i,] <- ScoreDFrame[i,]/(rowSums(ScoreDFrame[,])[i])
+  #ScoreDFrame <- as.matrix(ScoreDFrame)
+  for (i in 1:nrow(ScoreDFrame)) {
+    ScoreDFrame[i, ] <- ScoreDFrame[i, ] / (rowSums(ScoreDFrame[, ])[i])
   }
-  return (ScoreDFrame)
+  return (as.data.frame(ScoreDFrame))
 }
 
 # 2.  Multiply each sites probabilities with these scores, i.e. Pi*Qij, use computeScoreProportions() function
@@ -298,24 +299,24 @@ getAvgEQR_SprAut <- function (EQR_spr, EQR_aut, k, row_name = F) {
 # 5.4 Calculate Zbias9r - Random number deviate from a standard Normal distribution of mean 0.0 and SD of 1.0
 # zbias mean and standard deviation
 
-getZbias_9r <- function (N_sims, zbias_mean, zbias_sd){
+getZbias_9r <- function(N_sims, zbias_mean, zbias_sd) {
     #set.seed(1234)
-    ZNorm_ir_whpt <- as.data.frame( stats::rnorm(N_sims, 0, 1))
-    return (ZNorm_ir_whpt)
+    ZNorm_ir_whpt <- stats::rnorm(N_sims, 0, 1)
+    return(ZNorm_ir_whpt)
 }
 
 #5.5 Calculating Ubias9r -abundance weighted wHPT taxa of the ubias8r, ubias_8r is a list/dframe of n simulations, so loop around
 
-getUbias9r_new <- function (u_9a, u_9b, u_9c,obsIDX_9, N_runs, ubias_8r) {
+getUbias9r_new <- function (u_9a, u_9b, u_9c, obsIDX_9, N_runs, ubias_8r) {
 
-    ubias_8r[ubias_8r==0] <- 1
+    ubias_8r[ubias_8r == 0] <- 1
    # if(ubias_8r>0) {
     rnorm_runs <- getZbias_9r(N_runs)
     rep_u9a <- rep(u_9a, N_runs)
     rep_u9b <- rep(u_9b, N_runs)
-    rep_obsIDX_9  <- rep(obsIDX_9,N_runs)
+    rep_obsIDX_9  <- rep(obsIDX_9, N_runs)
     rep_u9c <- rep(u_9c, N_runs)
-    return (rep_u9a+rep_u9b*rep_obsIDX_9+rnorm_runs*(rep_u9c/sqrt(ubias_8r)))
+    return(rep_u9a+rep_u9b*rep_obsIDX_9+rnorm_runs*(rep_u9c/sqrt(ubias_8r)))
 }
 
 # getMINTA_ntaxa_aspt() - Function to calculate MINTA - minimum taxa - he worst of spr aut EQR for NTAXA, ASPT

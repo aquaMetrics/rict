@@ -8,7 +8,7 @@ This R package is in development. Please don't use in production.
 
 ## rict package
 
-An R package for calculating River Invertebrate Classification Tool (rict) predictions
+An R package for calculating River Invertebrate Classification Tool (RICT) predictions
 
 ## Install
 
@@ -23,7 +23,13 @@ library(devtools)
 install_github("aquaMetrics/rict")
 library(rict)
 ```
-Run the demo dataset through the `rict` function to get classification results:
+
+Open interactive web app:
+
+```
+rict_app()
+```
+Or run the demo dataset through the `rict` function in R to get classification results:
 
 ```
 results <- rict(demo_observed_values)

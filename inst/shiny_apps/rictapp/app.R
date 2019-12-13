@@ -12,7 +12,7 @@ library(htmltools)
 
 # Define UI for application
 
-  ui = tagList(
+  ui <- tagList(
   #  shinythemes::themeSelector(),
     navbarPage(
       # theme = "cerulean",  # <--- To use a theme, uncomment this
@@ -82,23 +82,25 @@ server <- function(input, output) {
     data <- read.csv(inFile$datapath, check.names = F)
     predictions <- rict_predict(data, model = input$model, area = input$area)
 
-    predictions_table <- predictions[, c(
-      "SITE", "YEAR",
-      "TL2_WHPT_NTAXA_AbW_DistFam_spr", "TL2_WHPT_ASPT_AbW_DistFam_spr",
-      "TL2_WHPT_NTAXA_AbW_DistFam_aut", "TL2_WHPT_ASPT_AbW_DistFam_aut",
-      "TL2_WHPT_NTAXA_AbW_DistFam_sum", "TL2_WHPT_ASPT_AbW_DistFam_sum"
-    )]
+    predictions_table <- predictions
+    # [, c(
+    #   "SITE", "YEAR",
+    #   "TL2_WHPT_NTAXA_AbW_DistFam_spr", "TL2_WHPT_ASPT_AbW_DistFam_spr",
+    #   "TL2_WHPT_NTAXA_AbW_DistFam_aut", "TL2_WHPT_ASPT_AbW_DistFam_aut",
+    #   "TL2_WHPT_NTAXA_AbW_DistFam_sum", "TL2_WHPT_ASPT_AbW_DistFam_sum"
+    # )]
 
     output_files <- list(predictions)
     classification_table <- data.frame()
-    if (!is.null(predictions) & input$output == 'predict_classify') {
+    if (!is.null(predictions) & input$output == "predict_classify") {
       results <- rict_classify(predictions,
         year_type = input$year_type
       )
-      classification_table <- results[, c(
-        "SITE", "YEAR",
-        "mintawhpt_spr_aut_mostProb_MINTA_"
-      )]
+      classification_table <- results
+      # [, c(
+      #   "SITE", "YEAR",
+      #   "mintawhpt_spr_aut_mostProb_MINTA_"
+      # )]
 
       output_files <- list(predictions, results)
     }
@@ -144,5 +146,3 @@ server <- function(input, output) {
 
 # Run the application
 shinyApp(ui = ui, server = server)
-
-

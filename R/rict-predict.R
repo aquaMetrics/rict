@@ -28,7 +28,7 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb", test = F)
   names(data) <- toupper(names(data))
   # load supporting tables
   taxa_average_abundance <-
-    utils::read.csv(system.file("extdat", "taxxaab.csv", package = "rict"))
+    read.csv(system.file("extdat", "taxxaab.csv", package = "rict"))
   if (model == "physical") {
   df_mean_gb685 <-
     utils::read.delim(
@@ -124,8 +124,8 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb", test = F)
       "SITE"                     =  final_predictors_one$SITE,
       "LATITUDE"                 =  final_predictors_one$LATITUDE,
       "LONGITUDE"                =  final_predictors_one$LONGITUDE,
-      "TEMPM"                    =  final_predictors_one$TEMPM,
-      "TEMPR"                    =  final_predictors_one$TEMPR,
+      "TEMPM"                    =  final_predictors_one$TMEAN,
+      "TEMPR"                    =  final_predictors_one$TRANGE,
       "ALKALINITY"               =  final_predictors_one$ALKALINITY,
       "LgAlk"                    =  final_predictors_one$LgAlk,
       "LgArea_CEH"               =  final_predictors_one$LgArea_CEH,

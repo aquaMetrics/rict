@@ -208,7 +208,7 @@ rict_classify <- function(data = NULL, year_type = "multi") {
     # Collection of indices
     indicesDistinct <- data.frame()
     k <- 1
-browser()
+
     while (k <= nrow(data) | (lastSiteProcessed == FALSE)) {
       # initalise all MultiYear AGAIN for each site
       multiYear_EQRAverages_ntaxa_spr <- data.frame(n = n_runs)

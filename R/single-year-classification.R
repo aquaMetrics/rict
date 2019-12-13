@@ -160,7 +160,7 @@ singleYearClassification <- function(predictions) {
     # Part 1: for "Spring" - DO FOR NTAXA
 
     # Find the averages of both spr and autum, declare a function to compute this
-    eqr_av_spr <- getAvgEQR_SprAut(EQR_spr = EQR_ntaxa_spr, EQR_aut = EQR_ntaxa_aut, row_name = F)
+    eqr_av_spr <- getAvgEQR_SprAut(EQR_spr = EQR_ntaxa_spr, EQR_aut = EQR_ntaxa_aut, k, row_name = T)
 
     # Classify these for each SITE using the EQR just for spring
     classArray_siteOne_spr_ntaxa <- getClassarray_ntaxa(EQR_ntaxa_spr)
@@ -269,7 +269,7 @@ singleYearClassification <- function(predictions) {
 
     # Part 1: for "Spring"
     # Find the averages of both spr and autum, declare a function to compute this
-    eqr_av_spr_aspt <- getAvgEQR_SprAut(EQR_aspt_spr, EQR_aspt_aut)
+    eqr_av_spr_aspt <- getAvgEQR_SprAut(EQR_aspt_spr, EQR_aspt_aut, k, row_name = T)
 
     # Classify these for each SITE using the EQR just for spring
     classArray_siteOne_spr_aspt <- getClassarray_aspt(EQR_aspt_spr)

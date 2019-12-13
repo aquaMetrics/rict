@@ -1,5 +1,5 @@
 ---
-title: "technical-specification"
+title: "Technical specification"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{technical-specification}
@@ -15,56 +15,66 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, message=F}
 library(rict)
 library(knitr)
+library(dplyr)
 ```
 
-## Input variables
+## File input columns
 
-### Need to define all input variables. Should we use a meta-data standard - e.g. Darwin core or Ecological Data? Let's use a standard input format?
-
-All input files require:
+All input files require these columns:
 ```{r}
  validation_rules <-
     utils::read.csv(system.file("extdat", "validation-rules.csv", package = "rict"),
       stringsAsFactors = F
     )
 
-kable(validation_rules[validation_rules$models == "all" &
-                       validation_rules$source == "input",
-                       c("variable","optional")])
+kable(filter(validation_rules, models == "all" & source == "input") %>%
+                       select("variable"), col.names = "Column")
 ```
 
-Physical model requires:
+Physical model in file also requires:
 ```{r}
 
 kable(unique(validation_rules[validation_rules$models == "physical" &
                         validation_rules$source == "input",
-                       c("variable","optional","optional_notes")]))
+                       c("variable","optional_notes")]),col.names = c("Column","Note"))
 ```
 
 GIS model requires:
 ```{r}
 
-kable(validation_rules[validation_rules$models == "all" &
-                          validation_rules$source == "input",
-                          c("variable","optional")])
+kable(unique(filter(validation_rules, models == "gis" &
+                         source == "input") %>%
+                          select(variable)), col.names = "Column")
 ```
 
-Classification additionally requires:
+To run a classification requires these biological observations:
 ```{r}
 kable(validation_rules[validation_rules$models == "biological" &
                           validation_rules$source == "input",
-                         c("variable","optional")])
+                         c("variable")], col.names = c("Column"))
+```
+
+Any additional columns can be added if required for reference
+
+Example physical input:
+```{r}
+kable(demo_observed_values[1, ],)
+```
+
+Example GIS input:
+```{r}
+kable(demo_gis_values[1, ],)
 ```
 
 ## Validate observed values
 
-Low level function to validate input `data`. Returns list of dataframes
-containing fails, warnings and passing observed values. The validation rules
-adjust based on the `model` and `area` arguments. Here is a summary of
-checks:
+The low level `rict_validate` function validates the input `data`. Returns list
+of dataframes containing fails, warnings and passing observed values. The
+validation rules adjust based on the `model` and `area` arguments. Here is a
+summary of checks:
   
 * Input 'data' exists
 * Input is dataframe
@@ -72,9 +82,10 @@ checks:
 * Columns have correct class
 * Conditional columns if present are correct class
 * Where multiple classes are allowed, convert columns to
-* standardised class for example integer to numeric.
+  standardised class for example integer to numeric.
 * Suspected input errors are corrected for example `0` slope.
 * Additional columns/variables calculated for example mean temperate.
 * Logs failures and warnings applied using `validation_rules` table.
 * Replacements made to very low values for example
 * Returns dataframe with passing values, warnings, fails
+

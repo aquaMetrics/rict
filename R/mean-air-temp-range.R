@@ -245,8 +245,6 @@ calcTemps <- function(coordinates){
   temp_grid_out<-as.data.frame(temp_grid_out)
   #names(temp_grid_out)<-c("Site", "East", "North", "TMEAN", "TRANGE") # this line removed as it's stopping the function return working
   #so we deal with the names back in the calling code
-
-
 }
 
 # End Exclude Linting

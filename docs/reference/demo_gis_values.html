@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Demo observed values for physical model — demo_observed_values • rict</title>
+<title>Demo observed values for gis model — demo_gis_values • rict</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,11 @@
 
 
 
-<meta property="og:title" content="Demo observed values for physical model — demo_observed_values" />
-<meta property="og:description" content="A dataset containing demo observed values" />
+<meta property="og:title" content="Demo observed values for gis model — demo_gis_values" />
+<meta property="og:description" content="A dataset containing demo observed gis values. Stored as .csv
+    demo_gis_values &amp;lt;- utils::read.csv(
+     system.file(&quot;extdat&quot;, &quot;environmental-test-data-model-44.csv&quot;,
+             package = &quot;rict&quot;), check.names = F)" />
 <meta name="twitter:card" content="summary" />
 
 <meta name="robots" content="noindex" />
@@ -117,46 +120,31 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Demo observed values for physical model</h1>
-    <small class="dont-index">Source: <a href='https://github.com/aquaMetrics/rict/blob/master/R/demo_observed_values.R'><code>R/demo_observed_values.R</code></a></small>
-    <div class="hidden name"><code>demo_observed_values.Rd</code></div>
+    <h1>Demo observed values for gis model</h1>
+    <small class="dont-index">Source: <a href='https://github.com/aquaMetrics/rict/blob/master/R/demo_gis_values.R'><code>R/demo_gis_values.R</code></a></small>
+    <div class="hidden name"><code>demo_gis_values.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A dataset containing demo observed values</p>
+    <p>A dataset containing demo observed gis values. Stored as .csv
+    demo_gis_values &lt;- utils::read.csv(
+     system.file("extdat", "environmental-test-data-model-44.csv",
+             package = "rict"), check.names = F)</p>
     </div>
 
-    <pre class="usage"><span class='no'>demo_observed_values</span></pre>
+    <pre class="usage"><span class='no'>demo_gis_values</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A data frame with 24 rows and 33 variables:</p><dl class='dl-horizontal'>
+    <p>A data frame with 12 rows and 18 variables:</p><dl class='dl-horizontal'>
+  <dt>...</dt><dd><p>DOCUMENT modelled varibales here!!!</p></dd>
   <dt>SITE</dt><dd><p>Site identifier</p></dd>
-  <dt>Waterbody</dt><dd><p>Water body identifier</p></dd>
+  <dt>WATERBODY</dt><dd><p>Water body identifier</p></dd>
   <dt>Year</dt><dd><p>Year of sampling</p></dd>
   <dt>NGR</dt><dd><p>National grid letters</p></dd>
   <dt>Easting</dt><dd><p>Easting co-ordinate</p></dd>
   <dt>Northing</dt><dd><p>Northing co-ordinate</p></dd>
-  <dt>Altitude</dt><dd><p>Altitude in metres</p></dd>
-  <dt>Slope</dt><dd><p>Slope in metres per km</p></dd>
-  <dt>Discharge</dt><dd><p>Discharge categories</p></dd>
-  <dt>Velocity</dt><dd><p>Velocity in metres per second</p></dd>
-  <dt>Dist_from_Source</dt><dd><p>Distance from Source in km</p></dd>
-  <dt>Mean_Width</dt><dd><p>Mean Width in metres</p></dd>
-  <dt>Mean_Depth</dt><dd><p>Mean Width in metres</p></dd>
-  <dt>Alkalinity</dt><dd><p>Hardness, Calcium concentration or Electrical
-  conductivity can be provided if unable to provide Alkalinity – One of the
-  values must be present (spreadsheet validation)</p></dd>
-  <dt>Boulder_Cobbles</dt><dd><p>Substrate</p></dd>
-  <dt>Pebbles_Gravel</dt><dd><p>Substrate</p></dd>
-  <dt>Sand</dt><dd><p>Substrate</p></dd>
-  <dt>Silt_Clay</dt><dd><p>Substrate</p></dd>
-  <dt>Hardness</dt><dd><p>Can be provided instead of Alkalinity and follows the same
-  validation rules (spreadsheet validation)</p></dd> <dt>Calcium</dt><dd><p>Can be provided
-  instead of Alkalinity and follows the same validation rules (spreadsheet
-  validation)</p></dd> <dt>Conductivity</dt><dd><p>Can be provided instead of Alkalinity and
-  follows the same validation rules (spreadsheet validation)</p></dd>
   <dt>Spr_Season_ID</dt><dd><p>season ID</p></dd>
   <dt><code>Spr_TL2_WHPT_ASPT (AbW,DistFam)</code></dt><dd><p>ASPT</p></dd>
   <dt><code>Spr_TL2_WHPT_NTaxa (AbW,DistFam)</code></dt><dd><p>NTAXA</p></dd>

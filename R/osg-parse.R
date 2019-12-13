@@ -29,7 +29,7 @@
 #'   osg_parse(grid_refs = c("SN831869","SN829838"))
 #' }
 #'
-
+# Begin Exclude Linting
 osg_parse <- function(grid_refs, coord_system = c("BNG", "WGS84")) {
 
     gridRefs <- as.character(grid_refs)
@@ -94,3 +94,4 @@ osg_parse <- function(grid_refs, coord_system = c("BNG", "WGS84")) {
     colnames(xy) <- names.out
     return(as.list(xy))
   }
+# End Exclude Linting

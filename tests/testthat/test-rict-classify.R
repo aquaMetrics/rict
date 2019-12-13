@@ -1,6 +1,6 @@
-context("test calcClassifcation")
+context("test rict_classify")
 
-test_that("calcClassifcation outputs match azure single-year outputs", {
+test_that("Outputs match azure single-year outputs", {
   data <- utils::read.csv(system.file("extdat",
     "validation-input-single-year.csv",
     package = "rict"
@@ -31,7 +31,7 @@ test_that("calcClassifcation outputs match azure single-year outputs", {
 })
 
 
-test_that("calcClassifcation outputs match azure multi-year outputs", {
+test_that("Outputs match azure multi-year outputs", {
   predictions <- rict_predict(demo_observed_values)
   classification <- rict_classify(predictions)
   expect_equal(class(classification), "data.frame")
@@ -100,7 +100,7 @@ test_that("calcClassifcation outputs match azure multi-year outputs", {
   expect_true(equal == T)
 })
 
-test_that("calcClassifcation outputs on SEPA system", {
+test_that("Outputs on SEPA system", {
   skip("internal sepa test only")
   library(sepaTools)
   ecology_results <- getEcologyResults(
@@ -113,18 +113,9 @@ test_that("calcClassifcation outputs on SEPA system", {
   predictions <- rict::calcPrediction(observed_values)
 })
 
-
-
-test_that("rict classify GIS", {
-  skip("Work in progress - not passing")
-
+test_that("GIS variables classification", {
 
   predictions <- rict_predict(demo_gis_values, model = "gis")
-  predictions3 <- predictions[, !names(predictions) %in% c("Chalk_O1_CEH",
-                                            "Limestone_O1_CEH",
-                                            "Hardrock_O1_CEH",
-                                            "Clay_O1_CEH")]
-
-  results <- rict_classify()
+  results <- rict_classify(predictions, year_type = "single")
 
 })

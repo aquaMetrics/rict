@@ -115,7 +115,27 @@ test_that("Outputs on SEPA system", {
 
 test_that("GIS variables classification", {
 
+  data("demo_gis_values")
+  demo_gis_values$WATERBODY <- demo_gis_values$`Test SiteCode`
   predictions <- rict_predict(demo_gis_values, model = "gis")
   results <- rict_classify(predictions, year_type = "single")
+  predictions <- select(predictions, -starts_with("p"))
+  output <- inner_join(predictions, results, by = c("WATERBODY" = "WATERBODY"))
+  output <- as.data.frame(t(output))
+  output$SITE <- row.names(output)
+
+  names(output)[1:12] <- c(as.matrix(filter(output, SITE == "WATERBODY")))[1:12]
+
+  test_data <- utils::read.csv(system.file("extdat",
+                                      "test-sites-gb-model-44-classification-draft.csv",
+                                      package = "rict"
+  ),
+  check.names = F, stringsAsFactors = F
+  )
+
+  output <- filter(output, SITE %in%  test_data$SITE)
+  test_data <- filter(test_data, SITE %in%  output$SITE)[,1:13]
+
+  # check differences!
 
 })

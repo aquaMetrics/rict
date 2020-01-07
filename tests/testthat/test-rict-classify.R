@@ -113,9 +113,10 @@ test_that("Outputs on SEPA system", {
   predictions <- rict::rict_predict(observed_values)
 })
 
-test_that("GIS variables classification", {
+test_that("GIS variables classification against Ralph's output", {
 
   library(dplyr)
+  library(tidyr)
   data("demo_gis_values")
   demo_gis_values$WATERBODY <- demo_gis_values$`Test SiteCode`
   predictions <- rict_predict(demo_gis_values, model = "gis")
@@ -127,7 +128,7 @@ test_that("GIS variables classification", {
   # tidy data so it matches test data format
   output <- as.data.frame(t(output))
   output$SITE <- row.names(output)
-  names(output)[1:12] <- c(as.matrix(filter(output, SITE == "WATERBODY")))[1:12]
+  names(output)[1:24] <- c(as.matrix(filter(output, SITE == "WATERBODY")))[1:24]
   # read in test data to check against
   test_data <- utils::read.csv(system.file("extdat",
                                       "test-sites-gb-model-44-classification-draft.csv",
@@ -135,14 +136,24 @@ test_that("GIS variables classification", {
   ),
   check.names = F, stringsAsFactors = F
   )
+
   # filter only things that match
+
   output <- filter(output, SITE %in%  test_data$SITE)
-  test_data <- filter(test_data, SITE %in%  output$SITE)[, 1:13]
+  test_data <- filter(test_data, SITE %in%  output$SITE)
   # select columns in same order
   output <- select(output, SITE, everything())
   output <- arrange(output, SITE)
   test_data <- arrange(test_data, SITE)
 
+  output <-  output %>% pivot_longer(-SITE, names_to = "SITES", values_to = "count")
+  output <-  output %>% pivot_wider(names_from = SITE, values_from = "count")
+
+  test_data <-  test_data %>% pivot_longer(-SITE, names_to = "SITES", values_to = "count")
+  test_data <-  test_data %>% pivot_wider(names_from = SITE, values_from = "count")
   # check differences!
+
+  # write.csv(test_data, file = "testing-data-from-ralph.csv")
+  # write.csv(output, file = "r-output.csv")
 
 })

@@ -19,25 +19,26 @@ test_that("rict_predict for physical variables", {
   expect_true(equal == T)
 })
 
-test_that("rict_predict for GIS variables", {
-  predictions <- rict_predict(data = demo_gis_values, model = "gis")
+test_that("end group means for GIS variables", {
+  # only need 12 sites for end group means (the 24 tests sites are repeated)
+  predictions <- rict_predict(data = demo_gis_values, model = "gis")[1:12, ]
   # load unadjusted reference predicted values:
   expected_predictions <- utils::read.csv(system.file("extdat",
     "expected-unadjusted-biotic-scores-model-44.csv",
     package = "rict"
   ), check.names = F)
 
- expected_end_group <- utils::read.csv(system.file("extdat",
-                     "test-expected-end-group-model-44.csv",
-                     package = "rict"
+  expected_end_group <- utils::read.csv(system.file("extdat",
+    "test-expected-end-group-model-44.csv",
+    package = "rict"
   ), check.names = F, header = F)
- expected_end_group <- data.frame(t(expected_end_group))
- names(expected_end_group) <- paste0("p", 1:43)
+  expected_end_group <- data.frame(t(expected_end_group))
+  names(expected_end_group) <- paste0("p", 1:43)
 
-test <-  predictions[, names(predictions) %in% names(expected_end_group)] -
- expected_end_group[, names(expected_end_group) %in% names(predictions)]
-# check end groups don't differ more than 0.00038 - Ralph's rule of thumb
-expect_true(max(test) < 0.00038)
+  test <- predictions[, names(predictions) %in% names(expected_end_group)] -
+    expected_end_group[, names(expected_end_group) %in% names(predictions)]
+  # check end groups don't differ more than 0.00038 - Ralph's rule of thumb
+  expect_true(max(test) < 0.00038)
 
   # Note: lat/lon calculation converts NGR slightly different to values and rounding on
   # log values may also cause slight changes. So rounding output to 2 decimal places:

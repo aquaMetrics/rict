@@ -110,31 +110,38 @@ test_that("Outputs on SEPA system", {
   )
 
   observed_values <- transformRict(ecology_results)
-  predictions <- rict::calcPrediction(observed_values)
+  predictions <- rict::rict_predict(observed_values)
 })
 
 test_that("GIS variables classification", {
 
+  library(dplyr)
   data("demo_gis_values")
   demo_gis_values$WATERBODY <- demo_gis_values$`Test SiteCode`
   predictions <- rict_predict(demo_gis_values, model = "gis")
   results <- rict_classify(predictions, year_type = "single")
+  # remove non-required  predictions variables
   predictions <- select(predictions, -starts_with("p"))
+  # need both predictions and classificatoin outputs to fully check classification
   output <- inner_join(predictions, results, by = c("WATERBODY" = "WATERBODY"))
+  # tidy data so it matches test data format
   output <- as.data.frame(t(output))
   output$SITE <- row.names(output)
-
   names(output)[1:12] <- c(as.matrix(filter(output, SITE == "WATERBODY")))[1:12]
-
+  # read in test data to check against
   test_data <- utils::read.csv(system.file("extdat",
                                       "test-sites-gb-model-44-classification-draft.csv",
                                       package = "rict"
   ),
   check.names = F, stringsAsFactors = F
   )
-
+  # filter only things that match
   output <- filter(output, SITE %in%  test_data$SITE)
-  test_data <- filter(test_data, SITE %in%  output$SITE)[,1:13]
+  test_data <- filter(test_data, SITE %in%  output$SITE)[, 1:13]
+  # select columns in same order
+  output <- select(output, SITE, everything())
+  output <- arrange(output, SITE)
+  test_data <- arrange(test_data, SITE)
 
   # check differences!
 

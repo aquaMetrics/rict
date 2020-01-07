@@ -68,7 +68,7 @@ singleYearClassification <- function(predictions) {
 
   # Multiply rj by adjusted_params, note each row of adjusted_params is for NTAXA, ASPT, so transpose to multiply by rj
   rjaj <- compute_RjAj(rj, adjusted_params)
-  one_over_rjaj <- 1 / rjaj
+  # one_over_rjaj <- 1 / rjaj
 
   # Write a function that computes aspt, ntaxa adjusted (1 = "NTAXA", 2="ASPT")
   # or select them by name as declared in the classification functions

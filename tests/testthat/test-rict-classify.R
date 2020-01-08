@@ -152,7 +152,15 @@ test_that("GIS variables classification against Ralph's output", {
   test_data <-  test_data %>% pivot_longer(-SITE, names_to = "SITES", values_to = "count")
   test_data <-  test_data %>% pivot_wider(names_from = SITE, values_from = "count")
   # check differences!
+  test_data <- type.convert(test_data)
+  output <- type.convert(output)
+  test <- data.frame(select_if(test_data, is.numeric))
+  test2 <- data.frame(select_if(output, is.numeric))
 
+  test3 <- 100 / (test + 1) * (test2 + 1 ) - 100
+  # check end groups don't differ on average more than 1.5% - (Sampling error?)
+  # this is not a very good test as it takes the mean! but just a placeholder for now!
+  expect_true(mean(t(test3)) < 1.50)
   # write.csv(test_data, file = "testing-data-from-ralph.csv")
   # write.csv(output, file = "r-output.csv")
 

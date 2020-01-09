@@ -8,7 +8,10 @@ init:
         Import-Module '..\appveyor-tool.ps1'
 
 install:
-  ps: Bootstrap
+  R_VERSION: 3.4.4
+
+environment:
+  VARIABLE: value
 
 cache:
   - C:\RLibrary

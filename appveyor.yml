@@ -13,8 +13,7 @@ install:
 environment:
   R_VERSION: 3.4.4
 
-cache:
-  - C:\RLibrary
+
 
 # Adapt as necessary starting from here
 

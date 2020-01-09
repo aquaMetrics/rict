@@ -19,7 +19,6 @@ Depends:
 Imports: 
  dplyr, 
  magrittr, 
- rgdal, 
  plyr, 
  httr, 
  xml2, 
@@ -40,6 +39,7 @@ Suggests: testthat,
     knitr,
     rmarkdown,
     devtools,
-    covr
+    covr,
+    rgdal
 RoxygenNote: 7.0.2
 VignetteBuilder: knitr

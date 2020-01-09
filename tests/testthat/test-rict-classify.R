@@ -121,6 +121,7 @@ test_that("GIS variables classification against Ralph's output", {
   demo_gis_values$WATERBODY <- demo_gis_values$`Test SiteCode`
   predictions <- rict_predict(demo_gis_values, model = "gis")
   results <- rict_classify(predictions, year_type = "single")
+
   # remove non-required  predictions variables
   predictions <- select(predictions, -starts_with("p"))
   # need both predictions and classificatoin outputs to fully check classification
@@ -159,9 +160,10 @@ test_that("GIS variables classification against Ralph's output", {
 
   test3 <- 100 / (test + 1) * (test2 + 1 ) - 100
   # check end groups don't differ on average more than 1.5% - (Sampling error?)
-  # this is not a very good test as it takes the mean! but just a placeholder for now!
+  # this is not a very good test as it takes the mean! but Ralph happy that results match
   expect_true(mean(t(test3)) < 1.50)
   # write.csv(test_data, file = "testing-data-from-ralph.csv")
   # write.csv(output, file = "r-output.csv")
+  # write.csv(results, file = "r-output-standard.csv")
 
 })

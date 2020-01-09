@@ -13,8 +13,6 @@ install:
 environment:
   R_VERSION: oldrel
 
-cache:
-  - C:\RLibrary
 
 # Adapt as necessary starting from here
 

@@ -1,9 +1,9 @@
 #' Validate observed values
 #'
 #' Low level function to validate input `data`. Returns list of dataframes
-#' containing fails, warnings and passing observed values. The validation rules
-#' adjust based on the `model` and `area` arguments. Here is a summary of
-#' checks:
+#' containing fails/warnings and passing observed values. The function detects
+#' which model (gis or physical) and area (GB & NI) and applies validation rules
+#' as required. Here is a summary of checks:
 #' \enumerate{
 #'  \item Input 'data' exists
 #'  \item Input is dataframe
@@ -12,7 +12,6 @@
 #'  \item Conditional columns if present are correct class
 #'  \item Where multiple classes are allowed, convert columns to
 #'  standardised class for example integer to numeric.
-#'  \item Suspected input errors are corrected for example `0` slope.
 #'  \item Additional columns/variables calculated for example mean temperate.
 #'  \item Logs failures and warnings applied using `validation_rules` table.
 #'  \item
@@ -21,17 +20,13 @@
 #' }
 #' See `validation` vignette for full details.
 #'
-#' @param data dataframe of observed envornmental variables
+#' @param data dataframe of observed environmental variables
 #' \describe{
 #'   \item{SITE}{Site identifier}
 #'   \item{Waterbody}{Water body identifier}
 #'   ...
 #' }
 #'
-#' @param model Specify model to apply correct validation rules, default is
-#'   "physical".
-#' @param area Specify area of UK to apply localised validation rules, default
-#'   is "gb". Accepts "ni" (Northern Ireland) or "gb" (Great Britain).
 #'
 #' @return List of three dataframes: 1. warnings_failings, 2. this_failing 3.
 #'   valid 'data'.
@@ -43,56 +38,108 @@
 #' \dontrun{
 #' validations <- rict_validate(demo_observed_values)
 #' }
-rict_validate <- function(data = NULL, model = "physical", area = "gb") {
-  # check params -------------------------------------------------------
-  if (is.null(model) | !model %in% c("physical", "gis")) {
-    stop("The 'model' argument is '", model, "'
-       We expected 'model' to be 'physical' or 'gis'.", call. = FALSE)
-  }
-  if (is.null(area) | !area %in% c("gb", "ni")) {
-    stop("The 'area' argument is '", model, "'
-       We expected 'area' to be 'gb' or 'ni'.", call. = FALSE)
-  }
+rict_validate <- function(data = NULL) {
+  ### Sense checks --------------------------------------------------------------------
+  # check data object provided  -
   if (is.null(data)) {
     stop("Can't find 'data' object.
        We expected 'data' with environmental values.", call. = FALSE)
   }
-  # Check input is dataframe ---------------------------------------------
+  # Check data object is a dataframe
   if (class(data) != "data.frame") {
     stop("You provided 'data' object with class '", class(data), "'.
        We expect 'data' to have class 'data.frame'
        Hint: Does your 'data' object contain your observed environmental
        values?", call. = FALSE)
   }
-  # State which parameters are being checked for clarity --------------------------------------
-  message("Validating data using rules for '", model, "' model...")
-
   # Load validation rules
-  area_selected <- area # re-assigning due to issue with filter column and varibale sharing same name
   validation_rules <-
     utils::read.csv(system.file("extdat", "validation-rules.csv", package = "rict"),
       stringsAsFactors = F
-    ) %>%
-    # filter rules based on which model and area selected
-    dplyr::filter(area %in% c(area_selected, "all")) %>%
-    dplyr::filter(models %in% c(model, "all"))
-
-  # Standardise all column names to uppercase -------------------------------------------------
+    )
+  # Standardise all column names to uppercase
   names(data) <- toupper(names(data))
   names(validation_rules$variable) <- toupper(validation_rules$variable)
 
-  ## Check column names correct (additional columns are allowed) -------------------------------
+  # Check data contains at least some required column names
+  if (dplyr::filter(validation_rules, variable %in% names(data)) %>% nrow() < 1) {
+    stop("The data provided contains none of the required column names
+          Hint: Double-check your data  contains correct column names", call. = FALSE)
+  }
+  # Check if data contains variable names for more than one model type
+  models <- c("gis", "physical")
+  check_models <- lapply(models, function(model) {
+    ifelse(any(names(data) %in% validation_rules$variable[validation_rules$models == model]),
+      TRUE, FALSE
+    )
+  })
+  # Predictor variables provided for more than one model? --------------------------------------
+  # For example, input data has columns for GIS and Physical models
+  # check if variables contain values or are empty
+  if (length(check_models[check_models == T]) > 1) {
+    data_present <- lapply(models, function(model) {
+      model_variables <- validation_rules$variable[
+        validation_rules$models %in% model &
+          validation_rules$source == "input" &
+          validation_rules$optional == F &
+          validation_rules$shared == F
+      ]
+
+      model_data <- suppressWarnings(dplyr::select(data, dplyr::one_of(model_variables)))
+
+      ifelse(nrow(model_data %>% na.omit()) > 0 & ncol(model_data %>% na.omit()) > 0, TRUE, FALSE)
+    })
+    # If values provided for more than one model then stop.
+    if (length(data_present[data_present == T]) > 1) {
+      stop("The data provided contains values for more than one model
+        Hint: Check your data contains values for a single model type only: ",
+        paste(c(models), collapse = " or "),
+        call. = FALSE
+      )
+    }
+  }
+  # Create variable for data model detected  --------------------------------------------
+  model <- data.frame(cbind(models, data_present))
+  model <- model$models[model$data_present == T]
+
+  # Display which model type has been detected
+  message("'", model, "' model values detected - applying relevant checks...")
+
+  # Detect NI / GB grid references -----------------------------------------------------
+  areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", data$NGR), "gb", "ni"))
+  if (length(areas) > 1) {
+    stop("The data provided contains more than one area of the UK.
+        Hint: Check your data contains values area either: ",
+      paste(c(areas), collapse = " or "),
+      call. = FALSE
+    )
+  } else {
+    area <- areas
+  }
+  # Display which model area has been detected
+  message("'", toupper(area), "' grid reference values detected - applying relevant checks...")
+
+  # Re-assigning area due to issue with filtering column and variable sharing same name
+  area_selected <- area
+
+  # Filter rules based on which model and area selected ---------------------------
+  validation_rules <-
+    dplyr::filter(validation_rules, area %in% c(area_selected, "all")) %>%
+    dplyr::filter(models %in% c(model, "all"))
+
+  # Check column names correct -----------------------------------------------------
+  # Note: additional columns provided by user are allowed
   if (all(validation_rules$variable[validation_rules$source == "input"] %in%
     names(data)) == FALSE) {
     stop(
       "Can't find these columns in data: ",
       paste("\n", validation_rules$variable[!validation_rules$variable %in%
-        names(data)]),
+        names(data) & validation_rules$source == "input"]),
       call. = FALSE
     )
   }
 
-  ## Check class of each column is correct
+  # Check class of each column is correct ----------------------------------------
   # Loop through each 'variable' in rules dataframe
   fails <- lapply(
     split(
@@ -107,7 +154,7 @@ rict_validate <- function(data = NULL, model = "physical", area = "gb") {
       if (!all(is.na(values))) {
         # test class is what is expected
         if (!class(values) %in% c(rule$type, rule$fall_back_type)) {
-           return(paste0(
+          return(paste0(
             "You provided column '", rule$variable,
             "' with class '", class(values),
             "', we expect class '", rule$type, "'"
@@ -121,52 +168,109 @@ rict_validate <- function(data = NULL, model = "physical", area = "gb") {
   if (length(fails) != 0) {
     stop(fails, call. = FALSE)
   }
-  # ------------------------------------------------------------
-  # Check columns that may or may not be provided but at  -
+  # Check columns that may or may not be provided ------------------------------
   if (model == "physical") {
-    if (all(c(is.null(data$DISCHARGE), is.null(data$VELOCITY))) == TRUE) {
-      stop("You have not provided VELOCITY and DISCHARGE columns,
-          we expect both these columns")
-    }
-
     if (all(is.na(data$DISCHARGE)) &
       all(is.na(data$VELOCITY))) {
       stop("You provided empty VELOCITY and DISCHARGE values,
-          we expect values for at least one of these variables")
+          we expect values for at least one of these variables", call. = FALSE)
     }
 
     if (all(!is.na(data$DISCHARGE)) &
       all(!is.na(data$VELOCITY))) {
       warning("You provided both VELOCITY and DISCHARGE values,
-          DISCHARGE will be used by default")
+          DISCHARGE will be used by default", call. = FALSE)
+      # remove VELOCITY from validation rules so no rule will be applied
+      validation_rules <- validation_rules[validation_rules$variable != "VELOCITY", ]
+      # remove VELOCITY from input data
       data$VELOCITY <- NULL
     }
   }
 
-  # Add calculated columns ------------------------------------------------------------
-  # 1. TEMPM
-  # 2. TEMPR
-  #  etc...
-
-  # Convert to character as required by specification ---------------------------------------
+  ### Add calculated variables based on input data ------------------------------------
+  # Convert to character as required by specification
   data$SITE <- as.character(data$SITE)
   data$EASTING <- as.character(data$EASTING)
   data$NORTHING <- as.character(data$NORTHING)
 
-  # check for length <5, add a "0" to get proper Easting/Northing 5 digit codes --------------
-  data$EASTING <- getCorrectCodes(data$EASTING)
-  data$NORTHING <- getCorrectCodes(data$NORTHING)
+  # Check NGR length
+  data$NGR <- as.character(data$NGR)
+  data$NGR_LENGTH <- nchar(data$NGR)
+  if (any(data$NGR_LENGTH > 2)) {
+    stop("You provided an NGR with more than two letters,
+       Hint: Check your NGR variables have less than 3 three letters", call. = FALSE)
+  }
+  # Check for length <5, add a "0" to get proper Easting/Northing 5 digit codes
+  data$EASTING_LENGTH <- nchar(data$EASTING)
+  data$NORTHING_LENGTH <- nchar(data$NORTHING)
+  data$EASTING[data$EASTING_LENGTH < 5] <- paste0("0", data$EASTING[data$EASTING_LENGTH < 5])
+  data$NORTHING[data$NORTHING_LENGTH < 5] <- paste0("0", data$NORTHING[data$NORTHING_LENGTH < 5])
+browser()
+  # Calculate Longitude & Latitude
+  lat_long <- with(data, getLatLong(NGR, EASTING, NORTHING, "WGS84"))
+  data$LONGITUDE <- lat_long$lon
+  data$LATITUDE <- lat_long$lat
 
-  ## Check each value in observed values passes validation rules -----------------------------
-  # Loop through each variable in rules dataframe
-  message("Applying data validation rules for '", toupper(area), "' area...")
-  ################## remove "input" filter once ALL calculated columns are added above ! ################
-  validation_rules <- validation_rules[validation_rules$source == "input", ]
+  # Calculate Lat/Long using bng (British National Grid)
+  bng <- with(data, getBNG(NGR, EASTING, NORTHING, "BNG"))
+
+  # Calculate mean temperature (TMEAN), range temperature (TRANGE) if not provided
+  # Possible that users will provide temperatures to study climate change etc...
+  if (is.na(data$TMEAN) | is.na(data$TRANGE)) {
+    my_temperatures <- calcTemps(data.frame(
+      Site_ID = as.character(data$SITE),
+      Easting4 = bng$easting / 100,
+      Northing4 = bng$northing / 100,
+      stringsAsFactors = FALSE
+    ))
+    # Add temp variables to data
+    data <- dplyr::bind_cols(data, my_temperatures[, c("TMEAN", "TRANGE")])
+  } else {
+     warning("Input data file includes mean temperature and range (TMEAN & TRANGE).
+             These values have been used instead of calculating them from Grid Reference values")
+   }
+  # Total substrate
+  if (model == "physical") {
+    data$TOTSUB <- rowSums(data[, c("BOULDER_COBBLES", "PEBBLES_GRAVEL", "SILT_CLAY", "SAND")])
+
+    data$MSUBST <- ((-7.75 * data$BOULDER_COBBLES) - (3.25 * data$PEBBLES_GRAVEL) +
+      (2 * data$SAND) + (8 * data$SILT_CLAY)) / data$TOTSUB
+    # re-assign substrate variable to match with prediction function requirements
+    data$vld_substr_log <- data$MSUBST
+  }
+
+  # Add log10 values where required
+  log_rules <- validation_rules[validation_rules$log == TRUE, ]
+  # loop through variables and add log10 variable if required
+  columns <- lapply(
+    split(log_rules, row.names(log_rules)),
+    function(variable) {
+      log_col_name <- variable$log_col_name
+      # hack to increase slope to 1 if less than 1.
+      if (log_col_name == "LgSlope_CEH") {
+        temp <-  data[, variable$variable]
+        temp[temp < 1]  <- 1
+        data[, log_col_name] <- log10(temp)
+      } else {
+      data[, log_col_name] <- log10(data[, variable$variable])
+      }
+      column <- data.frame(data[, log_col_name])
+      names(column) <- log_col_name
+      return(column)
+    }
+  )
+  # bind log10 variables to input data
+  columns <- dplyr::bind_cols(columns)
+  data <- dplyr::bind_cols(data, columns)
+
+
+  ### Check values in predictor variables pass validation rules ------------------------
+  # Loop through each variable in validation rules dataframe
   checks <- lapply(split(
     validation_rules,
     validation_rules$variable
   ), function(rule) {
-    # find matching column in data
+    # find matching column in input data to validation rule
     values <- data[, c(rule$variable, "SITE", "YEAR")]
     # skip column if contains only NA values - e.g. HARDNESS - this
     # column will be class logical and not as expected by validation rules
@@ -174,299 +278,97 @@ rict_validate <- function(data = NULL, model = "physical", area = "gb") {
       # loop through all values in column
       checks <- lapply(split(values, row.names(values)), function(value) {
         # make dataframe to hold checks
-        checks <- data.frame(
+        check <- data.frame(
           "SITE" = "",
           "YEAR" = "",
-          "fail" = "",
+          "FAIL" = "",
+          "WARNING" = "",
           stringsAsFactors = F
         )
-        # check for less than fails
+        # if value not NA check for less than fails
+        fails <- ""
         if (is.na(rule$less_than_fail) == FALSE) {
           if (value[, rule$variable] < rule$less_than_fail) {
-            checks <- dplyr::bind_rows(
-              checks,
-              test <- data.frame(
-                "SITE" = value$SITE,
-                "YEAR" = as.character(value$YEAR),
-                "fail" = paste0(
-                  "Fail, you provided ", names(value)[1], ": ", value[, rule$variable],
-                  ", expected value greater than ", rule$less_than_fail
-                ),
-                stringsAsFactors = F
+            fails <- c(
+              fails,
+              paste0(
+                "You provided ", names(value)[1], ": ", value[, rule$variable],
+                ", expected value greater than ", rule$less_than_fail
               )
             )
           }
         }
-        # check for greater than fails
+        # Check for greater than fails
         if (is.na(rule$greater_than_fail) == FALSE) {
           if (value[, rule$variable] > rule$greater_than_fail) {
-            checks <- dplyr::bind_rows(
-              checks,
-              data.frame(
-                "SITE" = as.character(value$SITE),
-                "YEAR" = as.character(value$YEAR),
-                "fail" =
-                  paste0(
-                    "Fail, you provided ", names(value)[1], ": ", value[, rule$variable],
-                    ", expected value less than ", rule$greater_than_fail
-                  ),
-                stringsAsFactors = F
+            fails <- c(
+              fails,
+              paste0(
+                "You provided ", names(value)[1], ": ", value[, rule$variable],
+                ", expected value less than ", rule$greater_than_fail
               )
             )
           }
         }
 
-
+        # if value not NA, then check for less than warnings
+        warnings <- ""
+        if (is.na(rule$less_than_warn) == FALSE) {
+          if (value[, rule$variable] < rule$less_than_warn) {
+            warnings <- c(
+              warnings,
+              paste0(
+                "You provided ", names(value)[1], ": ", value[, rule$variable],
+                ", expected value greater than ", rule$less_than_warn
+              )
+            )
+          }
+         }
+        # Check for greater than warnings
+        if (is.na(rule$greater_than_warn) == FALSE) {
+          if (value[, rule$variable] > rule$greater_than_warn) {
+            warnings <- c(
+              warnings,
+              paste0(
+                "You provided ", names(value)[1], ": ", value[, rule$variable],
+                ", expected value less than ", rule$greater_than_warn
+              )
+            )
+          }
+        }
+        # bind all checks and warnings into data frame
+        checks <- dplyr::bind_rows(
+          check,
+          test <- data.frame(
+            "SITE" = value$SITE,
+            "YEAR" = as.character(value$YEAR),
+            "FAIL" = fails,
+            "WARNING" = warnings,
+            stringsAsFactors = F
+          )
+        )
         return(checks)
       })
       return(dplyr::bind_rows(checks))
     }
   })
+  # Bind and format checks into data frame
+  checks <- dplyr::bind_rows(checks)
+  checks <- checks[checks$FAIL != "" | checks$WARN != "", ]
+  checks$WARNING[checks$WARNING == ""] <- "---"
+  checks$FAIL[checks$FAIL == ""] <- "---"
+  # Print warnings and failures
+  if (nrow(checks) > 0) {
+    lapply(nrow(checks), function(n) {
+      print(checks[n, ])
+    })
+  } else {
+    print("Success, all validation checks passed!")
+  }
 
-  # log10 values
-  log_rules <- validation_rules[validation_rules$log == TRUE, ]
-  columns <- lapply(split(log_rules, row.names(log_rules)),
-               function(variable) {
-                 log_col_name <- variable$log_col_name
-               data[, log_col_name] <- log10(data[, variable$variable])
-              column <- data.frame(data[, log_col_name])
-              names(column) <- log_col_name
-      return(column)
-  })
-
-  columns <- dplyr::bind_cols(columns)
-  data <- dplyr::bind_cols(data, columns)
-  checks <- dplyr::bind_rows(checks[[1]])
   if (length(checks$fail[checks$fail != ""]) > 0) {
     message(paste(checks$SITE, checks$YEAR, checks$fail, "\n"))
   }
-  if (model == "physical") {
-    # 1. MEAN_WIDTH, lower_bound=0.4, upper_bound=117
-    # head(getValidEnvInput(data$MEAN_WIDTH[10], 0.4, 117, "MEAN_WIDTH"),5)
-    valid_mean_width <- data.frame(log = as.numeric(), msg = as.character())
-    for (i in seq_len(nrow(data))) {
-      valid_mean_width <- rbind(valid_mean_width, getValidEnvInput(
-        data$MEAN_WIDTH[i],
-        0.4,
-        117,
-        "MEAN_WIDTH"
-      ))
-    }
 
-    # Change column names to suit env variable name, and cbind to original dataset
-    colnames(valid_mean_width) <- paste0("mn_width_", noquote(colnames(valid_mean_width)))
-    data <- cbind(data, valid_mean_width)
-
-    # # Data validation
-    # # 2. MEAN_DEPTH, lower_bound=1.7, upper_bound=300
-    valid_mean_depth <- data.frame(log = as.numeric(), msg = as.character())
-    for (i in seq_len(nrow(data))) {
-      valid_mean_depth <- rbind(valid_mean_depth, getValidEnvInput(
-        data$MEAN_DEPTH [i],
-        1.7,
-        300,
-        "MEAN_DEPTH"
-      ))
-    }
-    colnames(valid_mean_depth) <- paste0("mn_depth_", noquote(colnames(valid_mean_depth)))
-    data <- cbind(data, valid_mean_depth)
-
-    # Data validation
-    # 3. SLOPE, lower_bound=0.1, upper_bound=150
-    valid_slope <- data.frame(log = as.numeric(), msg = as.character())
-    for (i in seq_len(nrow(data))) {
-      valid_slope <- rbind(valid_slope, getValidEnvInput(
-        data$SLOPE[i],
-        0.1,
-        150,
-        "SLOPE"
-      ))
-    }
-    colnames(valid_slope) <- paste0("vld_slope_", noquote(colnames(valid_slope))) # vld = valid
-    data <- cbind(data, valid_slope)
-
-    # Data validation
-    # 4. DIST_FROM_SOURCE, lower_bound=0.1, upper_bound=202.8
-    valid_dist_src <- data.frame(log = as.numeric(), msg = as.character())
-    for (i in seq_len(nrow(data))) {
-      valid_dist_src <- rbind(valid_dist_src, getValidEnvInput(
-        data$DIST_FROM_SOURCE[i],
-        0.1,
-        202.8,
-        "DIST_FROM_SOURCE"
-      ))
-    }
-    colnames(valid_dist_src) <- paste0("vld_dist_src_", noquote(colnames(valid_dist_src))) # vld = valid
-    data <- cbind(data, valid_dist_src)
-
-    # Data validation
-    # 5. ALTITUDE, has two sets of bounds, lower_bound=1, upper_bound=590, lower_low_bound=0, upper_up_bound = 1345
-    # [0,1345] are hard coded, could be parameterised QED
-    valid_altitude <- data.frame(log = as.numeric(), msg = as.character())
-    for (i in seq_len(nrow(data))) {
-      valid_altitude <- rbind(valid_altitude, getAltitude(
-        data$ALTITUDE[i],
-        1,
-        590
-      ))
-    }
-    colnames(valid_altitude) <- paste0("vld_alt_src_", noquote(colnames(valid_altitude))) # vld = valid
-    data <- cbind(data, valid_altitude)
-    #
-    #
-    # # Data validation
-    # # 6. ALKALINITY, has bounds, lower_bound=1.2, upper_bound=366
-    # # getLogAlkalinity <- function (hardness, calcium, conduct, alkal, lower_b, upper_b)
-    #
-    valid_alkalinity <- data.frame(log = as.numeric(), msg = as.character())
-    for (i in seq_len(nrow(data))) {
-      valid_alkalinity <- rbind(valid_alkalinity, getLogAlkalinity(
-        data$HARDNESS[i],
-        data$CALCIUM[i],
-        data$CONDUCTIVITY[i],
-        data$ALKALINITY[i],
-        1.2,
-        366
-      ))
-    }
-    colnames(valid_alkalinity) <- paste0("vld_alkal_", noquote(colnames(valid_alkalinity))) # vld = valid
-    data <- cbind(data, valid_alkalinity)
-
-    # Data validation
-    # 7. Validate SUBSTRATUM for sum of values "TOTSUB" in interval [97,103] exclussive,and MSUBSTR in
-    # interval [-8, 8]. Write to a file if errors found
-    # Remove the site or records with such errors, and continue the prediction
-    # Note that we don't use log for calculation of substrate
-    valid_substrate <- data.frame(log = as.numeric(), msg = as.character())
-    for (i in seq_len(nrow(data))) {
-      valid_substrate <- rbind(valid_substrate, getSubstrate(
-        data$BOULDER_COBBLES[i],
-        data$PEBBLES_GRAVEL[i],
-        data$SAND[i],
-        data$SILT_CLAY[i],
-        97,
-        103
-      ))
-    }
-    colnames(valid_substrate) <- paste0("vld_substr_", noquote(colnames(valid_substrate))) # vld = valid
-    data <- cbind(data, valid_substrate)
-
-    # Data validation and conversion
-    # 8. Discharge category, bounds [0, 10]. Discharge calculated from velocity if not provided using width, depth
-    valid_discharge <- data.frame(log = as.numeric(), msg = as.character())
-    for (i in seq_len(nrow(data))) {
-      valid_discharge <- rbind(valid_discharge, getLogDischarge(
-        data$MEAN_DEPTH[i],
-        data$MEAN_WIDTH[i],
-        data$DISCHARGE [i],
-        data$VELOCITY[i],
-        0,
-        10
-      ))
-    }
-    colnames(valid_discharge) <- paste0("disch_", noquote(colnames(valid_discharge)))
-    data <- cbind(data, valid_discharge)
-  }
-    # Data validation and conversion
-    # 9. Calculation of Lat/Long, and validation of LAT, LONG
-    # Calculation of Lat/Long using bng (British National Grids)
-    # Use function getLatLong
-    lat_long <- with(data, getLatLong(NGR, EASTING, NORTHING, "WGS84"))
-
-    ## Calculate Longitude ##
-    data$LONGITUDE <- lat_long$lon
-    valid_longitude <- data.frame(log = as.numeric(), msg = as.character())
-    for (i in seq_len(nrow(data))) {
-      valid_longitude <- rbind(valid_longitude, getLongitude(
-        data$LONGITUDE[i],
-        -8,
-        1.4
-      ))
-    }
-    colnames(valid_longitude) <- paste0("vld_long_src_", noquote(colnames(valid_longitude))) # vld = valid
-    data <- cbind(data, valid_longitude)
-
-    ## Calculate Latitude ##
-    data$LATITUDE <- lat_long$lat
-    valid_latitude <- data.frame(log = as.numeric(), msg = as.character())
-    for (i in seq_len(nrow(data))) {
-      valid_latitude <- rbind(valid_latitude, getLatitude(
-        data$LATITUDE[i],
-        50.8,
-        52
-      ))
-    }
-    colnames(valid_latitude) <- paste0("vld_lat_src_", noquote(colnames(valid_latitude))) # vld = valid
-    data <- cbind(data, valid_latitude)
-
-    # Data validation and conversion
-    # 10. Calculation of mean temperature (TMEAN), range temperature (TRANGE), using
-    # function calcTemps() from package "rnfra"
-    # Use function getbng
-    bng <- with(data, getBNG(NGR, EASTING, NORTHING, "BNG"))
-
-    # Lat long used for temperature lookups, using mean-air-temp-range.R helper function
-    my_temperatures <-  calcTemps(coordinates = data.frame(
-      Site_ID = data$SITE,
-      Easting4 = bng$easting / 100,
-      Northing4 = bng$northing / 100,
-      stringsAsFactors = FALSE
-    ))
-    # Assign to variables as appropriate
-    data  <- dplyr::bind_cols(data, my_temperatures[, c("TMEAN", "TRANGE")])
-
-    if (model == "gis") {
-      return(list(data.frame(), data.frame(), data))
-    }
-
-    # Data validation and conversion
-    # 12. Write to file all Warnings and Failrures: SITE, MSG, iterate through the list of all variables with vld
-    # WRITE TO LOG FILES all Warnings and Errors
-    # 1. Warnings to log file :1
-    #
-    # Deal with all warnings, save them in a file
-    # Same as above, but using pipes, and using all the variables
-    msg_columns <- names(dplyr::select(data, dplyr::ends_with("_msg")))
-    this_warning <- data
-    this_warning <- dplyr::filter(
-      this_warning,
-      substr(.data$vld_alt_src_msg, 1, 5) == "Warn:" | substr(.data$mn_width_msg, 1, 5) == "Warn:"
-      | substr(.data$mn_depth_msg, 1, 5) == "Warn:" | substr(.data$vld_alkal_msg, 1, 5) == "Warn:"
-      | substr(.data$disch_msg, 1, 5) == "Warn:" | substr(.data$vld_substr_msg, 1, 5) == "Warn:"
-      | substr(.data$vld_dist_src_msg, 1, 5) == "Warn:" | substr(.data$vld_slope_msg, 1, 5) == "Warn:"
-      | substr(.data$vld_lat_src_msg, 1, 5) == "Warn:" | substr(.data$vld_long_src_msg, 1, 5) == "Warn:"
-    )
-    #  select("SITE","YEAR",msg_columns) # Select some columns
-    # write.csv(this_warning, file = paste0(path,"/Warnings_file_data.csv"))
-    # which rows are these
-    # data[which(this_warning[1,1] %in% data[,c("SITE")]),]
-
-    # 2. Failings to log file
-    # Deal with all failings, save them in a file
-    this_failing <- data
-    this_failing <- dplyr::filter(
-      this_failing,
-      substr(.data$vld_alt_src_msg, 1, 5) == "Fail:" | substr(.data$mn_width_msg, 1, 5) == "Fail:"
-      | substr(.data$mn_depth_msg, 1, 5) == "Fail:" | substr(.data$vld_alkal_msg, 1, 5) == "Fail:"
-      | substr(.data$disch_msg, 1, 5) == "Fail:" | substr(.data$vld_substr_msg, 1, 5) == "Fail:"
-      | substr(.data$vld_dist_src_msg, 1, 5) == "Fail:" | substr(.data$vld_slope_msg, 1, 5) == "Fail:"
-      | substr(.data$vld_lat_src_msg, 1, 5) == "Fail:" | substr(.data$vld_long_src_msg, 1, 5) == "Fail:"
-    )
-    # select("SITE","YEAR",msg_columns) # Select some columns
-    # # write.csv(this_failing, file = paste0(path,"/Failings_file_data.csv"))
-    # Put warnings and failures in a file of warnings_failings
-    warnings_failings <- rbind(this_warning, this_failing)
-    # message(knitr::kable(warnings_failings, widetable = TRUE))
-    if (length(warnings_failings) == 0) {
-      message("Success, all validations passed!", all. = FALSE)
-    }
-    else if (length(this_warning) > 0) {
-      #  options(warn = warning(knitr::kable(warnings_failings, widetable = TRUE)))
-      # warnings <- function() warning(knitr::kable(warnings_failings, widetable = TRUE))
-      warning("Some values outside expected, see warnings()", call. = FALSE)
-    } else {
-      warning("Some values failed validation, see warnings()", call. = FALSE)
-    }
-    return(list(warnings_failings, this_failing, data))
-
+  return(list(data, checks))
 }

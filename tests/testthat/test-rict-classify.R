@@ -121,7 +121,14 @@ test_that("GIS variables classification against Ralph's output", {
   demo_gis_values$WATERBODY <- demo_gis_values$`Test SiteCode`
   predictions <- rict_predict(demo_gis_values, model = "gis")
   results <- rict_classify(predictions, year_type = "single")
-
+  results_two <- rict(demo_gis_values, year_type = "single", model = "gis")
+  # test that creating predictions then classifying works the same as  going straight to
+  # classifying
+  equal <- all.equal(
+    results,
+    results_two
+  )
+  expect_true(equal == T)
   # remove non-required  predictions variables
   predictions <- select(predictions, -starts_with("p"))
   # need both predictions and classificatoin outputs to fully check classification
@@ -139,7 +146,6 @@ test_that("GIS variables classification against Ralph's output", {
   )
 
   # filter only things that match
-
   output <- filter(output, SITE %in%  test_data$SITE)
   test_data <- filter(test_data, SITE %in%  output$SITE)
   # select columns in same order
@@ -158,10 +164,10 @@ test_that("GIS variables classification against Ralph's output", {
   test <- data.frame(select_if(test_data, is.numeric))
   test2 <- data.frame(select_if(output, is.numeric))
 
-  test3 <- 100 / (test + 1) * (test2 + 1 ) - 100
+  test3 <- 100 / (test + 1) * (test2 + 1) - 100
   # check end groups don't differ on average more than 1.5% - (Sampling error?)
   # this is not a very good test as it takes the mean! but Ralph happy that results match
-  expect_true(mean(t(test3)) < 1.50)
+  expect_true(mean(t(test3)) < 0.686)
   # write.csv(test_data, file = "testing-data-from-ralph.csv")
   # write.csv(output, file = "r-output.csv")
   # write.csv(results, file = "r-output-standard.csv")

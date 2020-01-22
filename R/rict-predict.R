@@ -23,7 +23,7 @@
 #' }
 rict_predict <- function(data = NULL, model = "physical", area = "gb", test = F) {
   # Validate predictive input data
-  all_validation <- rict_validate(data, model = model, area = area)
+  all_validation <- rict_validate(data)
   # Change all column names to uppercase
   names(data) <- toupper(names(data))
   # load supporting tables
@@ -79,9 +79,10 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb", test = F)
     seasons_to_run <- 1:3
   }
   # extract fails, warnings and values from list of dataframes returned from rict_validate function:
-  warning_failings <- all_validation[[1]]
+  # warning_failings <- all_validation[[1]]
   this_failing <- all_validation[[2]]
-  data <- all_validation[[3]]
+  this_failing <- this_failing[this_failing$fail != "", ]
+  data <- all_validation[[1]]
 
  if (model == "gis") {
      data$`TEST SITECODE`  <- NULL
@@ -95,7 +96,7 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb", test = F)
   # but not in ML AZURE
   final_predictors_one <- data[is.na(match(data$SITE, this_failing$SITE)), ]
 
-  # DONT SORT, if you do, don't use the SORTED array for prediction. it duplicates the results ******
+    # DONT SORT, if you do, don't use the SORTED array for prediction. it duplicates the results ******
   # final_predictors_one <- final_predictors_one[order(final_predictors_one$SITE),]
   # Print to see where the sorting is taking place  #
   # Generate data for classification

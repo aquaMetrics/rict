@@ -141,7 +141,6 @@ singleYearClassification <- function(predictions) {
     # LOOP all the sites from here
     # Part 1. Adjust the Observed values
     # Loop strarts from here with site = k, i.e. sqr (sqrt(Obs) + ZObs) + Ubias8r
-
     ObsIDX8r_spr <- getObsIDX8rB(obs_ntaxa_spr[k], getZObs_r_new(sdobs_ntaxa, n_runs))
     ObsIDX8r_aut <- getObsIDX8rB(Obs_ntaxa_aut[k], getZObs_r_new(sdobs_ntaxa, n_runs))
 

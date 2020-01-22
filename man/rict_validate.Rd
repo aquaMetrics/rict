@@ -4,21 +4,19 @@
 \alias{rict_validate}
 \title{Validate observed values}
 \usage{
-rict_validate(data = NULL, model = "physical", area = "gb")
+rict_validate(data = NULL, temp_override = F)
 }
 \arguments{
-\item{data}{dataframe of observed envornmental variables
+\item{data}{dataframe of observed environmental variables
 \describe{
   \item{SITE}{Site identifier}
   \item{Waterbody}{Water body identifier}
   ...
 }}
 
-\item{model}{Specify model to apply correct validation rules, default is
-"physical".}
-
-\item{area}{Specify area of UK to apply localised validation rules, default
-is "gb". Accepts "ni" (Northern Ireland) or "gb" (Great Britain).}
+\item{temp_override}{If set to TRUE - user provided temperatures in columns
+TMEAN and TRANGE will ovedrride calculated temperature generated from
+NGR.This allows research on responses to temperature.}
 }
 \value{
 List of three dataframes: 1. warnings_failings, 2. this_failing 3.
@@ -26,9 +24,9 @@ List of three dataframes: 1. warnings_failings, 2. this_failing 3.
 }
 \description{
 Low level function to validate input `data`. Returns list of dataframes
-containing fails, warnings and passing observed values. The validation rules
-adjust based on the `model` and `area` arguments. Here is a summary of
-checks:
+containing fails/warnings and passing observed values. The function detects
+which model (gis or physical) and area (GB & NI) and applies validation rules
+as required. Here is a summary of checks:
 \enumerate{
  \item Input 'data' exists
  \item Input is dataframe
@@ -37,7 +35,6 @@ checks:
  \item Conditional columns if present are correct class
  \item Where multiple classes are allowed, convert columns to
  standardised class for example integer to numeric.
- \item Suspected input errors are corrected for example `0` slope.
  \item Additional columns/variables calculated for example mean temperate.
  \item Logs failures and warnings applied using `validation_rules` table.
  \item

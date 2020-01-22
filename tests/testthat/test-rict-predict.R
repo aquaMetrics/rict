@@ -21,6 +21,7 @@ test_that("rict_predict for physical variables", {
 
 test_that("end group means for GIS variables", {
   # only need 12 sites for end group means (the 24 tests sites are repeated)
+  test <- rict_validate(data = demo_gis_values)[[1]][1:12, ]
   predictions <- rict_predict(data = demo_gis_values, model = "gis")[1:12, ]
   # load unadjusted reference predicted values:
   expected_predictions <- utils::read.csv(system.file("extdat",

@@ -35,7 +35,8 @@ Imports:
  htmltools,
  leaflet,
  formattable
-Suggests: testthat,
+Suggests: 
+    testthat (>= 2.1.0),
     knitr,
     rmarkdown,
     devtools,

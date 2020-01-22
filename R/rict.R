@@ -20,7 +20,7 @@
 #' results <- rict(demo_observed_values)
 #' }
 rict <- function(data = NULL, model = "physical", area = "gb", year_type = "multi") {
-  predictions <- rict_predict(data, model, area)
+  predictions <- rict_predict(data, model = model, area = area)
   results <- rict_classify(predictions, year_type)
   return(results)
 }

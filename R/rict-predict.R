@@ -21,14 +21,14 @@
 #' \dontrun{
 #' predictions <- rict_predict(demo_observed_values)
 #' }
-rict_predict <- function(data = NULL, model = "physical", area = "gb", test = F) {
+rict_predict <- function(data = NULL, model = "physical", area = "gb") {
   # Validate predictive input data
   all_validation <- rict_validate(data)
   # Change all column names to uppercase
   names(data) <- toupper(names(data))
   # load supporting tables
   taxa_average_abundance <-
-    read.csv(system.file("extdat", "taxxaab.csv", package = "rict"))
+    utils::read.csv(system.file("extdat", "taxxaab.csv", package = "rict"))
   if (model == "physical") {
   df_mean_gb685 <-
     utils::read.delim(
@@ -91,12 +91,10 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb", test = F)
   # 13.2 subset the instances to run in prediction by removing "this_failing", use anti-join
   # i.e."Return all rows from x where there are no matching values in y, keeping just columns from x.
   # This is a filtering join"
-
   # final_predictors_one <- anti_join(data, this_failing, by="SITE") # This works in R Studio,
   # but not in ML AZURE
   final_predictors_one <- data[is.na(match(data$SITE, this_failing$SITE)), ]
-
-    # DONT SORT, if you do, don't use the SORTED array for prediction. it duplicates the results ******
+  # DONT SORT, if you do, don't use the SORTED array for prediction. it duplicates the results ******
   # final_predictors_one <- final_predictors_one[order(final_predictors_one$SITE),]
   # Print to see where the sorting is taking place  #
   # Generate data for classification
@@ -140,14 +138,6 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb", test = F)
       "Clay_O1_CEH"              =  final_predictors_one$CLAY_O1_CEH,
       "Hardrock_O1_CEH"          =  final_predictors_one$HARDROCK_O1_CEH,
       "Limestone_O1_CEH"         =  final_predictors_one$LIMESTONE_O1_CEH
-    )
-  }
-
-  if (test == T) { # load file containing extact log values from testing spreadsheet
-  final_predictors <-
-    utils::read.csv(
-      system.file("extdat", "test-predictors-model-44.csv",
-                  package = "rict"), check.names = F
     )
   }
 

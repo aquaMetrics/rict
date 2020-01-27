@@ -32,6 +32,7 @@
 #'   valid 'data'.
 #' @export
 #' @importFrom rlang .data
+#' @importFrom stats na.omit
 #' @importFrom magrittr "%>%"
 #'
 #' @examples
@@ -205,7 +206,7 @@ rict_validate <- function(data = NULL) {
   data$NORTHING_LENGTH <- nchar(data$NORTHING)
   data$EASTING[data$EASTING_LENGTH < 5] <- paste0("0", data$EASTING[data$EASTING_LENGTH < 5])
   data$NORTHING[data$NORTHING_LENGTH < 5] <- paste0("0", data$NORTHING[data$NORTHING_LENGTH < 5])
-browser()
+
   # Calculate Longitude & Latitude
   lat_long <- with(data, getLatLong(NGR, EASTING, NORTHING, "WGS84"))
   data$LONGITUDE <- lat_long$lon
@@ -214,9 +215,10 @@ browser()
   # Calculate Lat/Long using bng (British National Grid)
   bng <- with(data, getBNG(NGR, EASTING, NORTHING, "BNG"))
 
-  # Calculate mean temperature (TMEAN), range temperature (TRANGE) if not provided
-  # Possible that users will provide temperatures to study climate change etc...
-  if (is.na(data$TMEAN) | is.na(data$TRANGE)) {
+  # Calculate mean temperature (TMEAN), range temperature (TRANGE) only if
+  # users have not provided temperatures to study climate change etc...
+  if ((is.null(data$TMEAN) | is.null(data$TRANGE)) ||
+    (any(is.na(data$TMEAN)) | any(is.na(data$TRANGE)))) {
     my_temperatures <- calcTemps(data.frame(
       Site_ID = as.character(data$SITE),
       Easting4 = bng$easting / 100,
@@ -226,9 +228,9 @@ browser()
     # Add temp variables to data
     data <- dplyr::bind_cols(data, my_temperatures[, c("TMEAN", "TRANGE")])
   } else {
-     warning("Input data file includes mean temperature and range (TMEAN & TRANGE).
+    warning("Input data file includes mean temperature and range (TMEAN & TRANGE).
              These values have been used instead of calculating them from Grid Reference values")
-   }
+  }
   # Total substrate
   if (model == "physical") {
     data$TOTSUB <- rowSums(data[, c("BOULDER_COBBLES", "PEBBLES_GRAVEL", "SILT_CLAY", "SAND")])
@@ -248,11 +250,11 @@ browser()
       log_col_name <- variable$log_col_name
       # hack to increase slope to 1 if less than 1.
       if (log_col_name == "LgSlope_CEH") {
-        temp <-  data[, variable$variable]
-        temp[temp < 1]  <- 1
+        temp <- data[, variable$variable]
+        temp[temp < 0.1] <- 0.1
         data[, log_col_name] <- log10(temp)
       } else {
-      data[, log_col_name] <- log10(data[, variable$variable])
+        data[, log_col_name] <- log10(data[, variable$variable])
       }
       column <- data.frame(data[, log_col_name])
       names(column) <- log_col_name
@@ -323,7 +325,7 @@ browser()
               )
             )
           }
-         }
+        }
         # Check for greater than warnings
         if (is.na(rule$greater_than_warn) == FALSE) {
           if (value[, rule$variable] > rule$greater_than_warn) {

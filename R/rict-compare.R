@@ -7,14 +7,14 @@
 rict_compare <- function(eqr_a = 0.8, eqr_b = 0.6, n = 10000) {
   message("Just demo-ing ASPT for now - not doing NTAXA yet")
   # SD for simulating EQRs taking into accountant sampling error
-  sd_obs_aspt <- rict:::sdobs_one_year_new(0.269, 0.279, 1)
+  sd_obs_aspt <- sdobs_one_year_new(0.269, 0.279, 1)
   #sd_obs_ntaxa <- sd_obs_one_year_new(0.247, 0.211, 1)
 
   ### Simulate EQRs - not required get sims from classification function?  ----------------
   simulate <- function(eqr, n = 10000, sd_obs_aspt = sd_obs_aspt) {
     # Simulate EQRs
     set.seed(42)
-    z_obs <- sd_obs_aspt * rnorm(n, mean = 0, sd = 1) # copied from classification helper funciton
+    z_obs <- sd_obs_aspt * stats::rnorm(n, mean = 0, sd = 1) # copied from classification helper funciton
     ObsIDX8rB <- (sqrt(eqr) + z_obs) ^ 2  # copied from classificariton helper function
 
     ObsIDX8rB[ObsIDX8rB > 1.0] <- 1.0 # rounding for cut function later on

@@ -17,7 +17,7 @@ LazyData: true
 Depends: 
  R (>= 3.1.0)
 Imports: 
- dplyr, 
+ dplyr,
  magrittr, 
  plyr, 
  httr, 
@@ -41,6 +41,7 @@ Suggests:
     rmarkdown,
     devtools,
     covr,
-    rgdal
+    rgdal,
+    tidyr
 RoxygenNote: 7.0.2
 VignetteBuilder: knitr

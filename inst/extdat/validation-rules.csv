@@ -65,4 +65,4 @@ TOTSUB,,,all,physical,FALSE,FALSE,calculated,numeric,integer,97,103,,,FALSE,,Com
 LgArea_CEH,,,all,gis,FALSE,FALSE,calculated,numeric,integer,-2.60206,3.99875,-0.053,3.9,FALSE,,,,
 LgAltBar_CEH,,,all,gis,FALSE,FALSE,calculated,numeric,integer,-2.81558,3.12905,0.14,2.86,FALSE,,,,
 LgDFS_CEH,,,all,gis,FALSE,FALSE,calculated,numeric,integer,,,-0.017,2.39,FALSE,,,,
-LgSlope_CEH,,,all,gis,FALSE,FALSE,calculated,numeric,integer,,,-0.01,2.15,FALSE,,,,
+LgSlope_CEH,,,all,gis,FALSE,FALSE,calculated,numeric,integer,,,-1,2.15,FALSE,,,,

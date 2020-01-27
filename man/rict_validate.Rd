@@ -4,7 +4,7 @@
 \alias{rict_validate}
 \title{Validate observed values}
 \usage{
-rict_validate(data = NULL, temp_override = F)
+rict_validate(data = NULL)
 }
 \arguments{
 \item{data}{dataframe of observed environmental variables
@@ -13,10 +13,6 @@ rict_validate(data = NULL, temp_override = F)
   \item{Waterbody}{Water body identifier}
   ...
 }}
-
-\item{temp_override}{If set to TRUE - user provided temperatures in columns
-TMEAN and TRANGE will ovedrride calculated temperature generated from
-NGR.This allows research on responses to temperature.}
 }
 \value{
 List of three dataframes: 1. warnings_failings, 2. this_failing 3.

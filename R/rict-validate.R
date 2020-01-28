@@ -110,13 +110,14 @@ rict_validate <- function(data = NULL) {
   areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", data$NGR), "gb", "ni"))
   if (length(areas) > 1) {
     stop("The data provided contains more than one area of the UK.
-        Hint: Check your data contains values area either: ",
-      paste(c(areas), collapse = " or "),
+        Hint: Check your data contains NGR grid letters for either: ",
+      paste(c(toupper(areas)), collapse = " or "),
       call. = FALSE
     )
   } else {
     area <- areas
   }
+
   # Display which model area has been detected
   message("'", toupper(area), "' grid reference values detected - applying relevant checks...")
 
@@ -164,12 +165,12 @@ rict_validate <- function(data = NULL) {
       }
     }
   )
-  # stop process is any incorrect classes found
+  # Stop process is any incorrect classes found
   fails <- Filter(Negate(is.null), fails)
   if (length(fails) != 0) {
     stop(fails, call. = FALSE)
   }
-  # Check columns that may or may not be provided ------------------------------
+  # Check columns that may or may not be provided --------------------------------------
   if (model == "physical") {
     if (all(is.na(data$DISCHARGE)) &
       all(is.na(data$VELOCITY))) {
@@ -191,6 +192,7 @@ rict_validate <- function(data = NULL) {
   ### Add calculated variables based on input data ------------------------------------
   # Convert to character as required by specification
   data$SITE <- as.character(data$SITE)
+  data$WATERBODY <- as.character(data$WATERBODY)
   data$EASTING <- as.character(data$EASTING)
   data$NORTHING <- as.character(data$NORTHING)
 
@@ -204,19 +206,24 @@ rict_validate <- function(data = NULL) {
   # Check for length <5, add a "0" to get proper Easting/Northing 5 digit codes
   data$EASTING_LENGTH <- nchar(data$EASTING)
   data$NORTHING_LENGTH <- nchar(data$NORTHING)
-  data$EASTING[data$EASTING_LENGTH < 5] <- paste0("0", data$EASTING[data$EASTING_LENGTH < 5])
-  data$NORTHING[data$NORTHING_LENGTH < 5] <- paste0("0", data$NORTHING[data$NORTHING_LENGTH < 5])
-
+  if(any(is.na(data$EASTING)) | any(is.na(data$NORTHING))) {
+    stop("EASTING or NORTHING value(s) have not been supplied, we expect
+       all rows to have Easting and Northing values.
+       Hint: Check all rows of input data have Easting and Northing values", call. = FALSE)
+  } else {
+    data$EASTING[data$EASTING_LENGTH < 5] <- paste0("0", data$EASTING[data$EASTING_LENGTH < 5])
+    data$NORTHING[data$NORTHING_LENGTH < 5] <- paste0("0", data$NORTHING[data$NORTHING_LENGTH < 5])
+  }
   # Calculate Longitude & Latitude
   lat_long <- with(data, getLatLong(NGR, EASTING, NORTHING, "WGS84"))
   data$LONGITUDE <- lat_long$lon
   data$LATITUDE <- lat_long$lat
 
-  # Calculate Lat/Long using bng (British National Grid)
+  # Calculate Lat/Long using bng (British National Grid) - temperate lookup needs BNG
   bng <- with(data, getBNG(NGR, EASTING, NORTHING, "BNG"))
 
   # Calculate mean temperature (TMEAN), range temperature (TRANGE) only if
-  # users have not provided temperatures to study climate change etc...
+  # users have not provided temperatures e.g. could be studying climate change etc...
   if ((is.null(data$TMEAN) | is.null(data$TRANGE)) ||
     (any(is.na(data$TMEAN)) | any(is.na(data$TRANGE)))) {
     my_temperatures <- calcTemps(data.frame(
@@ -228,8 +235,8 @@ rict_validate <- function(data = NULL) {
     # Add temp variables to data
     data <- dplyr::bind_cols(data, my_temperatures[, c("TMEAN", "TRANGE")])
   } else {
-    warning("Input data file includes mean temperature and range (TMEAN & TRANGE).
-             These values have been used instead of calculating them from Grid Reference values")
+    warning("Your input data file includes mean temperature and range (TMEAN & TRANGE).
+These values will be used instead of calculating them from Grid Reference values")
   }
   # Total substrate
   if (model == "physical") {
@@ -248,14 +255,7 @@ rict_validate <- function(data = NULL) {
     split(log_rules, row.names(log_rules)),
     function(variable) {
       log_col_name <- variable$log_col_name
-      # hack to increase slope to 1 if less than 1.
-      if (log_col_name == "LgSlope_CEH") {
-        temp <- data[, variable$variable]
-        temp[temp < 0.1] <- 0.1
-        data[, log_col_name] <- log10(temp)
-      } else {
-        data[, log_col_name] <- log10(data[, variable$variable])
-      }
+      data[, log_col_name] <- log10(data[, variable$variable])
       column <- data.frame(data[, log_col_name])
       names(column) <- log_col_name
       return(column)
@@ -265,8 +265,7 @@ rict_validate <- function(data = NULL) {
   columns <- dplyr::bind_cols(columns)
   data <- dplyr::bind_cols(data, columns)
 
-
-  ### Check values in predictor variables pass validation rules ------------------------
+  ### Check values pass validation rules ----------------------------------------------
   # Loop through each variable in validation rules dataframe
   checks <- lapply(split(
     validation_rules,
@@ -290,7 +289,7 @@ rict_validate <- function(data = NULL) {
         # if value not NA check for less than fails
         fails <- ""
         if (is.na(rule$less_than_fail) == FALSE) {
-          if (value[, rule$variable] < rule$less_than_fail) {
+          if (is.na(value[, rule$variable]) || value[, rule$variable] < rule$less_than_fail) {
             fails <- c(
               fails,
               paste0(
@@ -302,7 +301,7 @@ rict_validate <- function(data = NULL) {
         }
         # Check for greater than fails
         if (is.na(rule$greater_than_fail) == FALSE) {
-          if (value[, rule$variable] > rule$greater_than_fail) {
+          if (is.na(value[, rule$variable]) || value[, rule$variable] > rule$greater_than_fail) {
             fails <- c(
               fails,
               paste0(
@@ -312,11 +311,10 @@ rict_validate <- function(data = NULL) {
             )
           }
         }
-
         # if value not NA, then check for less than warnings
         warnings <- ""
         if (is.na(rule$less_than_warn) == FALSE) {
-          if (value[, rule$variable] < rule$less_than_warn) {
+          if (!is.na(value[, rule$variable]) & value[, rule$variable] < rule$less_than_warn) {
             warnings <- c(
               warnings,
               paste0(
@@ -328,7 +326,7 @@ rict_validate <- function(data = NULL) {
         }
         # Check for greater than warnings
         if (is.na(rule$greater_than_warn) == FALSE) {
-          if (value[, rule$variable] > rule$greater_than_warn) {
+          if (!is.na(value[, rule$variable]) & value[, rule$variable] > rule$greater_than_warn) {
             warnings <- c(
               warnings,
               paste0(
@@ -354,6 +352,29 @@ rict_validate <- function(data = NULL) {
       return(dplyr::bind_rows(checks))
     }
   })
+  # Replace values, if value is less than the ‘overall’ minimum value
+  if (any(data$ALTITUDE[!is.na(data$ALTITUDE)] == 0)) {
+    data$ALTITUDE[data$ALTITUDE == 0]  <- 1
+  }
+  if (any(data$DIST_FROM_SOURCE[!is.na(data$DIST_FROM_SOURCE)] < 0.1)) {
+    data$DIST_FROM_SOURCE[data$DIST_FROM_SOURCE < 0.1] <- 0.1
+  }
+  if (any(data$MEAN_WIDTH[!is.na(data$MEAN_WIDTH)] < 0.1)) {
+    data$MEAN_WIDTH[data$MEAN_WIDTH < 0.1] <- 0.1
+  }
+  if (any(data$MEAN_DEPTH[!is.na(data$MEAN_DEPTH)] < 1)) {
+    data$MEAN_DEPTH[data$MEAN_DEPTH < 1] <- 1
+  }
+  if (any(data$DISCHARGE[!is.na(data$DISCHARGE)] == 0)) {
+    data$DISCHARGE[data$DISCHARGE == 0] <- 1
+  }
+  if (any(data$ALKALINITY[!is.na(data$ALKALINITY)] < 0.1)) {
+    data$ALKALINITY[data$ALKALINITY < 0.1] <- 0.1
+  }
+  if (any(data$SLOPE[!is.na(data$SLOPE)] == 0)) {
+    data$SLOPE[data$SLOPE == 0] <- 0.1
+  }
+
   # Bind and format checks into data frame
   checks <- dplyr::bind_rows(checks)
   checks <- checks[checks$FAIL != "" | checks$WARN != "", ]

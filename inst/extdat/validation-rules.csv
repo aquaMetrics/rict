@@ -1,7 +1,7 @@
 variable,pretty_name,units,area,models,shared,optional,source,type,fall_back_type,less_than_fail,greater_than_fail,less_than_warn,greater_than_warn,log,log_col_name,validation_notes,optional_notes,calculation_notes
-SITE,Site,,all,all,TRUE,FALSE,input,character,factor,,,,,FALSE,,,,
-WATERBODY,Waterbody,,all,all,TRUE,FALSE,input,character,factor,,,,,FALSE,,,,
-YEAR,Year,,all,all,TRUE,FALSE,input,integer,integer,,,,,FALSE,,,,
+SITE,Site,,all,all,TRUE,FALSE,input,character,factor,0,,,,FALSE,,,,
+WATERBODY,Waterbody,,all,all,TRUE,FALSE,input,character,factor,0,,,,FALSE,,,,
+YEAR,Year,,all,all,TRUE,FALSE,input,integer,integer,0,,,,FALSE,,,,
 NGR,NGR,,all,all,TRUE,FALSE,input,character,factor,,,,,FALSE,,"Must be 5 digits; text not number, to retain leading zeros (input file screening). In R Code: If less than 5 digits leading zeros have been added",,
 EASTING,Easting,,all,all,TRUE,FALSE,input,character,integer,,,,,FALSE,,"Must be 5 digits; text not number, to retain leading zeros (input file screening). In R Code: If less than 5 digits leading zeros have been added",,
 NORTHING,Northing,,all,all,TRUE,FALSE,input,character,integer,,,,,FALSE,,"Must be 5 digits; text not number, to retain leading zeros (input file screening). In R Code: If less than 5 digits leading zeros have been added",,

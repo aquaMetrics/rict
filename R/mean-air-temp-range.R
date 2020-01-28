@@ -92,11 +92,13 @@ calcTemps <- function(coordinates){
   temp_grid_out <- NULL
 
   for (l in c(1:nrow(coordinates))) {
-    if(nchar(coordinates$Site_ID[l])<4) {
-      for(z in c(1:(4-nchar(coordinates$Site_ID[l])))){
-        coordinates$Site_ID[l]<-paste("0", coordinates$Site_ID[l],sep="")
-      }
-    }
+    # Commenting out this part - not sure need length check required for Site_ID? And causes
+    # issues with validation if NA. (The NA check comes later in the validation script).
+    # if(nchar(coordinates$Site_ID[l])<4) {
+    #   for(z in c(1:(4-nchar(coordinates$Site_ID[l])))){
+    #     coordinates$Site_ID[l]<-paste("0", coordinates$Site_ID[l],sep="")
+    #   }
+    # }
 
     IGEAST <- coordinates$Easting4[l]
     IGNORTH <- coordinates$Northing4[l]

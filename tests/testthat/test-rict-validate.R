@@ -6,7 +6,7 @@ test_that("sense-checks work", {
   # Wrong variable names
   expect_error(rict_validate(data.frame("test" = 1:10)))
   # Data provided for more than two model i.e. gis and physical
-  expect_error(rict_validate(cbind(demo_observed_values, demo_gis_values[,14:17])))
+  expect_error(rict_validate(cbind(demo_observed_values, demo_gis_values[, 14:17])))
   # Data from GB and NI in input dataset
   test_data <- demo_gis_values
   test_data$NGR <- as.character(test_data$NGR)
@@ -15,6 +15,20 @@ test_that("sense-checks work", {
   # All variables present
   test_data <- demo_gis_values
   test_data$SITE <- NULL
+  expect_error(rict_validate(test_data))
+  # Check NA caught
+  test_data <- demo_gis_values
+  test_data$Alkalinity[1] <- NA
+  test_data$SITE[1] <- NA
+  test <- rict_validate(test_data)
+  expect_equal(length(test[[2]][, 1]), 2)
+  # Check NA in NGR will fail
+  test_data <- demo_gis_values
+  test_data$NGR[1] <- NA
+  expect_error(rict_validate(test_data))
+  # Check missing Easting and Northing will fail
+  test_data <- demo_gis_values
+  test_data$EASTING[1] <- NA
   expect_error(rict_validate(test_data))
   # Check data types are correct
   test_data <- demo_gis_values
@@ -37,21 +51,23 @@ test_that("sense-checks work", {
   expect_error(rict_validate(test_data))
 })
 
+# ---------------------------------------------------------------------
 test_that("temperature override works", {
   test_data <- demo_observed_values
   test_data$TMEAN <- 15
   test_data$TRANGE <- 36
-  test <- rict_validate(test_data)
+  expect_warning(rict_validate(test_data))
 })
-
+# ---------------------------------------------------------------------
 test_that("warnings work", {
   test_data <- demo_observed_values
   test_data$Slope[1] <- 1500
   test_data$Slope[2] <- 0
+  test_data$Slope[3] <- 0.1
   test <- rict_validate(test_data)
   expect_equal(length(test[[2]][, 1]), 2)
 })
-
+# ---------------------------------------------------------------------
 test_that("failures work", {
   test_data <- demo_observed_values
   test_data$Discharge[1] <- 1500
@@ -59,3 +75,25 @@ test_that("failures work", {
   test <- rict_validate(test_data)
   expect_equal(length(test[[2]][, 1]), 2)
 })
+
+# ---------------------------------------------------------------------
+test_that("Replacement values work", {
+  test_data <- demo_observed_values
+  test_data$Altitude[1] <- 0
+  test_data$Dist_from_Source[1] <- 0.01
+  test_data$Mean_Width[1] <- 0.01
+  test_data$Mean_Depth[1] <- 0.1
+  test_data$Discharge[1] <- 0
+  test_data$Alkalinity[1] <- 0.001
+  test_data$Slope[1] <- 0
+  test <- rict_validate(test_data)
+  expect_equal(length(test[[2]][, 1]), 7)
+  expect_equal(test[[1]][1, c("ALTITUDE")], 1)
+  expect_equal(test[[1]][1, c("DIST_FROM_SOURCE")], 0.1)
+  expect_equal(test[[1]][1, c("MEAN_WIDTH")], 0.1)
+  expect_equal(test[[1]][1, c("MEAN_DEPTH")], 1)
+  expect_equal(test[[1]][1, c("DISCHARGE")], 1)
+  expect_equal(test[[1]][1, c("ALKALINITY")], 0.1)
+  expect_equal(test[[1]][1, c("SLOPE")], 0.1)
+})
+

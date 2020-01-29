@@ -5,18 +5,17 @@
 #' which model (gis or physical) and area (GB & NI) and applies validation rules
 #' as required. Here is a summary of checks:
 #' \enumerate{
-#'  \item Input 'data' exists
-#'  \item Input is dataframe
-#'  \item Required columns are present
-#'  \item Columns have correct class
-#'  \item Conditional columns if present are correct class
+#'  \item Input 'data' exists.
+#'  \item Input is dataframe.
+#'  \item Required columns are present.
+#'  \item Columns have correct class.
+#'  \item Conditional columns if present are correct class.
 #'  \item Where multiple classes are allowed, convert columns to
 #'  standardised class for example integer to numeric.
 #'  \item Additional columns/variables calculated for example mean temperate.
 #'  \item Logs failures and warnings applied using `validation_rules` table.
-#'  \item
-#'  \item Replacements made to very low values for example
-#'  \item Returns dataframe with passing values, warnings, fails
+#'  \item Replace values if value is less than the ‘overall’ minimum value.
+#'  \item Returns dataframe with passing values, warnings, fails.
 #' }
 #' See `validation` vignette for full details.
 #'
@@ -188,8 +187,57 @@ rict_validate <- function(data = NULL) {
       data$VELOCITY <- NULL
     }
   }
-
   ### Add calculated variables based on input data ------------------------------------
+  # Check alkalinity related columns and calculate if necessary
+  # if (all(is.na(data$HARDNESS)) &
+  #   all(is.na(data$CALCIUM)) &
+  #   all(is.na(data$CONDUCT)) &
+  #   all(is.na(data$ALKALINITY))
+  # ) {
+  #   stop("You provided empty ALKALINITY, HARDNESS, CONDUCT and CALCIUM values,
+  #      we expect values for at least one of these variables", call. = FALSE)
+  # } else { # loop through rows and calculate Alkalinity
+  #   data <- lapply(split(data, row.names(data)), function(data_row) {
+  #     if (!is.null(data_row$HARDNESS) && !is.na(data_row$HARDNESS)) {
+  #       data_row$ALKALINITY <- 4.677 + 0.6393 * data_row$HARDNESS
+  #       message(paste(
+  #         "Using Hardness value to calculate Alkalinity at",
+  #         data_row$SITE, "-", data_row$YEAR
+  #       ))
+  #     }
+  #     else
+  #     if (!is.null(data_row$CALCIUM) && !is.na(data_row$CALCIUM)) {
+  #       data_row$ALKALINITY <- 14.552 + 1.7606 * data_row$CALCIUM
+  #       paste(message(
+  #         "Using Calcium value to calculate Alkalinity at",
+  #         data_row$SITE, "-", data_row$YEAR
+  #       ))
+  #     }
+  #     else
+  #     if (!is.null(data_row$CONDUCTIVITY) && !is.na(data_row$CONDUCTIVITY)) {
+  #       data_row$ALKALINITY <- 0.3201 * data_row$CONDUCTIVITY - 8.0593
+  #       paste(message(
+  #         "Using Conductivity value to calculate Alkalinity at",
+  #         data_row$SITE, "-", data_row$YEAR
+  #       ))
+  #     }
+  #     return(data_row)
+  #   })
+  #   data <- dplyr::bind_rows(data)
+  # }
+  #
+  # # Calculate discharge category from velocity and width if required
+  # data <- lapply(split(data, row.names(data)), function(data_row) {
+  #   if (!is.null(data_row$VELOCITY) && !is.na(data_row$VELOCITY)) {
+  #     data_row$DISCHARGE <- data_row$MEAN_DEPTH / 100 * data_row$MEAN_WIDTH * data_row$VELOCITY / 100
+  #     message("Using velocity, width and depth to calculate discharge category")
+  #   }
+  #   # hack - to avoid errors if some VELOCITY rows are NA - but avoids velocity validation rules..
+  #     data_row$VELOCITY <- NULL
+  #     return(data_row)
+  # })
+  # data <- dplyr::bind_rows(data)
+
   # Convert to character as required by specification
   data$SITE <- as.character(data$SITE)
   data$WATERBODY <- as.character(data$WATERBODY)
@@ -206,7 +254,7 @@ rict_validate <- function(data = NULL) {
   # Check for length <5, add a "0" to get proper Easting/Northing 5 digit codes
   data$EASTING_LENGTH <- nchar(data$EASTING)
   data$NORTHING_LENGTH <- nchar(data$NORTHING)
-  if(any(is.na(data$EASTING)) | any(is.na(data$NORTHING))) {
+  if (any(is.na(data$EASTING)) | any(is.na(data$NORTHING))) {
     stop("EASTING or NORTHING value(s) have not been supplied, we expect
        all rows to have Easting and Northing values.
        Hint: Check all rows of input data have Easting and Northing values", call. = FALSE)
@@ -224,8 +272,8 @@ rict_validate <- function(data = NULL) {
 
   # Calculate mean temperature (TMEAN), range temperature (TRANGE) only if
   # users have not provided temperatures e.g. could be studying climate change etc...
-  if ((is.null(data$TMEAN) | is.null(data$TRANGE)) ||
-    (any(is.na(data$TMEAN)) | any(is.na(data$TRANGE)))) {
+  if ((is.null(data$MEAN.AIR.TEMP) | is.null(data$AIR.TEMP.RANGE)) ||
+    (any(is.na(data$MEAN.AIR.TEMP)) | any(is.na(data$AIR.TEMP.RANGE)))) {
     my_temperatures <- calcTemps(data.frame(
       Site_ID = as.character(data$SITE),
       Easting4 = bng$easting / 100,
@@ -235,7 +283,9 @@ rict_validate <- function(data = NULL) {
     # Add temp variables to data
     data <- dplyr::bind_cols(data, my_temperatures[, c("TMEAN", "TRANGE")])
   } else {
-    warning("Your input data file includes mean temperature and range (TMEAN & TRANGE).
+    data$TMEAN <- data$MEAN.AIR.TEMP
+    data$TRANGE <- data$AIR.TEMP.RANGE
+    warning("Your input data file includes mean temperature and range (MEAN.AIR.TEMP & AIR.TEMP.RANGE).
 These values will be used instead of calculating them from Grid Reference values")
   }
   # Total substrate
@@ -268,8 +318,8 @@ These values will be used instead of calculating them from Grid Reference values
   ### Check values pass validation rules ----------------------------------------------
   # Loop through each variable in validation rules dataframe
   checks <- lapply(split(
-    validation_rules,
-    validation_rules$variable
+    validation_rules[validation_rules$variable %in% names(data), ],
+    validation_rules$variable[validation_rules$variable %in% names(data)]
   ), function(rule) {
     # find matching column in input data to validation rule
     values <- data[, c(rule$variable, "SITE", "YEAR")]
@@ -312,11 +362,11 @@ These values will be used instead of calculating them from Grid Reference values
           }
         }
         # if value not NA, then check for less than warnings
-        warnings <- ""
+        warns <- ""
         if (is.na(rule$less_than_warn) == FALSE) {
           if (!is.na(value[, rule$variable]) & value[, rule$variable] < rule$less_than_warn) {
-            warnings <- c(
-              warnings,
+            warns <- c(
+              warns,
               paste0(
                 "You provided ", names(value)[1], ": ", value[, rule$variable],
                 ", expected value greater than ", rule$less_than_warn
@@ -327,8 +377,8 @@ These values will be used instead of calculating them from Grid Reference values
         # Check for greater than warnings
         if (is.na(rule$greater_than_warn) == FALSE) {
           if (!is.na(value[, rule$variable]) & value[, rule$variable] > rule$greater_than_warn) {
-            warnings <- c(
-              warnings,
+            warns <- c(
+              warns,
               paste0(
                 "You provided ", names(value)[1], ": ", value[, rule$variable],
                 ", expected value less than ", rule$greater_than_warn
@@ -343,7 +393,7 @@ These values will be used instead of calculating them from Grid Reference values
             "SITE" = value$SITE,
             "YEAR" = as.character(value$YEAR),
             "FAIL" = fails,
-            "WARNING" = warnings,
+            "WARNING" = warns,
             stringsAsFactors = F
           )
         )
@@ -352,9 +402,10 @@ These values will be used instead of calculating them from Grid Reference values
       return(dplyr::bind_rows(checks))
     }
   })
-  # Replace values, if value is less than the ‘overall’ minimum value
+
+  # Replace values if value is less than the ‘overall’ minimum value ---------------
   if (any(data$ALTITUDE[!is.na(data$ALTITUDE)] == 0)) {
-    data$ALTITUDE[data$ALTITUDE == 0]  <- 1
+    data$ALTITUDE[data$ALTITUDE == 0] <- 1
   }
   if (any(data$DIST_FROM_SOURCE[!is.na(data$DIST_FROM_SOURCE)] < 0.1)) {
     data$DIST_FROM_SOURCE[data$DIST_FROM_SOURCE < 0.1] <- 0.1
@@ -378,19 +429,17 @@ These values will be used instead of calculating them from Grid Reference values
   # Bind and format checks into data frame
   checks <- dplyr::bind_rows(checks)
   checks <- checks[checks$FAIL != "" | checks$WARN != "", ]
+  # if both fail and warn - then only return fail
+  checks$WARN[checks$FAIL != "" & checks$WARN != ""]  <-  "---"
   checks$WARNING[checks$WARNING == ""] <- "---"
   checks$FAIL[checks$FAIL == ""] <- "---"
   # Print warnings and failures
   if (nrow(checks) > 0) {
-    lapply(nrow(checks), function(n) {
-      print(checks[n, ])
-    })
+    test <-  checks
+    row.names(test) <- NULL
+    print(test)
   } else {
-    print("Success, all validation checks passed!")
-  }
-
-  if (length(checks$fail[checks$fail != ""]) > 0) {
-    message(paste(checks$SITE, checks$YEAR, checks$fail, "\n"))
+    message("Success, all validation checks passed!")
   }
 
   return(list(data, checks))

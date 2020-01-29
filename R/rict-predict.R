@@ -81,9 +81,8 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
   # extract fails, warnings and values from list of dataframes returned from rict_validate function:
   # warning_failings <- all_validation[[1]]
   this_failing <- all_validation[[2]]
-  this_failing <- this_failing[this_failing$fail != "", ]
+  this_failing <- this_failing[this_failing$fail != "---", ]
   data <- all_validation[[1]]
-
  if (model == "gis") {
      data$`TEST SITECODE`  <- NULL
    } # remove TEST-SITE_CODE column - not required and causes issues later on?!

@@ -50,14 +50,23 @@ test_that("sense-checks work", {
   test_data$NGR[1] <- "BIG"
   expect_error(rict_validate(test_data))
 })
-
 # ---------------------------------------------------------------------
-test_that("temperature override works", {
+test_that("alkalinity, hardness, conductivity and calcium calculations work", {
   test_data <- demo_observed_values
-  test_data$TMEAN <- 15
-  test_data$TRANGE <- 36
-  expect_warning(rict_validate(test_data))
+  test_data$Alkalinity[1:2]  <- NA
+  test_data$Hardness[1]  <- 50
+  test_data$Calcium[2]  <- 50
+  test <- rict_validate(test_data)
+  expect_equal(length(test[[2]][, 1]), 0)
 })
+# ---------------------------------------------------------------------
+test_that("velocity calculation work", {
+  test_data <- demo_observed_values
+  test_data$Velocity[1:5]  <- 5
+  test <- rict_validate(test_data)
+  expect_equal(length(test[[2]][, 1]), 5)
+})
+
 # ---------------------------------------------------------------------
 test_that("warnings work", {
   test_data <- demo_observed_values
@@ -75,9 +84,8 @@ test_that("failures work", {
   test <- rict_validate(test_data)
   expect_equal(length(test[[2]][, 1]), 2)
 })
-
 # ---------------------------------------------------------------------
-test_that("Replacement values work", {
+test_that("replacement values work if value is less than the ‘overall’ minimum value", {
   test_data <- demo_observed_values
   test_data$Altitude[1] <- 0
   test_data$Dist_from_Source[1] <- 0.01
@@ -95,5 +103,12 @@ test_that("Replacement values work", {
   expect_equal(test[[1]][1, c("DISCHARGE")], 1)
   expect_equal(test[[1]][1, c("ALKALINITY")], 0.1)
   expect_equal(test[[1]][1, c("SLOPE")], 0.1)
+})
+# ---------------------------------------------------------------------
+test_that("user supplied temperatures override calculate temperatures", {
+  test_data <- demo_observed_values
+  test_data$MEAN.AIR.TEMP <- 15
+  test_data$AIR.TEMP.RANGE <- 36
+  expect_warning(rict_validate(test_data))
 })
 

@@ -24,18 +24,17 @@ containing fails/warnings and passing observed values. The function detects
 which model (gis or physical) and area (GB & NI) and applies validation rules
 as required. Here is a summary of checks:
 \enumerate{
- \item Input 'data' exists
- \item Input is dataframe
- \item Required columns are present
- \item Columns have correct class
- \item Conditional columns if present are correct class
+ \item Input 'data' exists.
+ \item Input is dataframe.
+ \item Required columns are present.
+ \item Columns have correct class.
+ \item Conditional columns if present are correct class.
  \item Where multiple classes are allowed, convert columns to
  standardised class for example integer to numeric.
  \item Additional columns/variables calculated for example mean temperate.
  \item Logs failures and warnings applied using `validation_rules` table.
- \item
- \item Replacements made to very low values for example
- \item Returns dataframe with passing values, warnings, fails
+ \item Replace values if value is less than the ‘overall’ minimum value.
+ \item Returns dataframe with passing values, warnings, fails.
 }
 See `validation` vignette for full details.
 }

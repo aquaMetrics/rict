@@ -202,6 +202,9 @@ rict_classify <- function(data = NULL, year_type = "multi") {
     # Store the duplicated names of sites as single names
     namesOfSites <- data.frame()
 
+    # Store EQRs
+    eqrs <- list()
+
     # Variable that flags if last site has not been processed
     lastSiteProcessed <- FALSE
 
@@ -429,7 +432,9 @@ rict_classify <- function(data = NULL, year_type = "multi") {
       SiteProbabilityclasses_spr_aut_comb_aspt <- rbind(SiteProbabilityclasses_spr_aut_comb_aspt, a_aspt_spr_aut)
       # Add the averages of spr
       EQRAverages_aspt_spr_aut <- rbind(EQRAverages_aspt_spr_aut, eqr_av_spr_aspt)
-
+      # bind ASPT EQRs into list dataframe column
+      eqr <- list(c(EQR_aspt_spr))
+      eqrs <- rbind(eqrs, eqr)
       ########  Calculate the MINTA -spring aut case  worse class = 1 i.e. min of class from NTAXA and ASPT ######
 
       # Do the MINTA spr_aut case
@@ -459,7 +464,7 @@ rict_classify <- function(data = NULL, year_type = "multi") {
 
       # Move the pointer k to new adjusted position for j - whether multiple or not
       k <- j + 1
-      print(k)
+      #print(k)
     } # END of FOR LOOP
 
     # MINTA outputs
@@ -506,6 +511,8 @@ rict_classify <- function(data = NULL, year_type = "multi") {
     # Rename columns for MINTA, so they dont conflict
     colnames(SiteMINTA_whpt_spr_aut) <- paste0(colnames(SiteMINTA_whpt_spr_aut), "_MINTA_")
     classification_results <- cbind(allResults, SiteMINTA_whpt_spr_aut)
+    eqrs <-  data.frame(eqrs)
+    classification_results <- cbind(classification_results, eqrs)
     return(classification_results)
   }
 }

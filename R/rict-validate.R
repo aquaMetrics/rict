@@ -442,5 +442,5 @@ These values will be used instead of calculating them from Grid Reference values
     message("Success, all validation checks passed!")
   }
 
-  return(list(data, checks))
+  return(list("data" = data, "checks" = checks, "model" = model, "area" = area))
 }

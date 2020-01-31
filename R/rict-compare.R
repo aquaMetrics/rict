@@ -64,6 +64,7 @@ rict_compare <- function(data = NULL,
         diff <- unlist(results[results$RESULT == b_result, eqr]) -
           unlist(results[results$RESULT == a_result, eqr])
         # make dataframe of useful test statistics
+
         compare <- data.frame(
           "EQR metric compared" = eqr,
           "Result A" = a_result,
@@ -79,9 +80,9 @@ rict_compare <- function(data = NULL,
            sd(unlist(results[results$RESULT == b_result, eqr]) -
             unlist(results[results$RESULT == a_result, eqr])),
           "Lower 95% (L95) of Difference" = quantile(sort(diff),
-                                   probs = c(2.5, 97.5) / 100)[1],
+                                   probs = c(2.5, 97.5) / 100)[[1]][1],
           "Upper 95% (U95) of Difference" = quantile(sort(diff),
-                                   probs = c(2.5, 97.5) / 100)[2],
+                                   probs = c(2.5, 97.5) / 100)[[2]][2],
           "2-sided test probability p of No difference in EQR" =
             2 * min(diff[diff >= 0],  diff[diff <= 0]),
             check.names = F, stringsAsFactors = F
@@ -171,6 +172,5 @@ rict_compare <- function(data = NULL,
 
   compare_probability <- compare_probability(results, eqrs, a, b)
   compare_output <- cbind(compare_test, compare_probability)
-  row.names(compare_output) <- 1:nrow(compare_output)
   return(compare_output)
 }

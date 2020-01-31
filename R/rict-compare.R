@@ -35,8 +35,8 @@ rict_compare <- function(data = NULL,
 
   # Classify - 10000 EQRs are in the ASPT, NTAXA...etc columns
   results <- rict_classify(predictions, store_eqrs = T)
+  results <- cbind(results[[1]],list(results[[2]]), list(results[[3]]))
   #results$ASPT <- results$eqrs
-  print(results)
   # Need a  function to identify which result(s)
   # will be compared to which result(s).
   # This could default to something or use extra column in the input data
@@ -64,7 +64,7 @@ rict_compare <- function(data = NULL,
         diff <- unlist(results[results$RESULT == b_result, eqr]) -
           unlist(results[results$RESULT == a_result, eqr])
         # make dataframe of useful test statistics
-        print("Hello from compare test")
+        print("Hello from compare_test")
         compare <- data.frame(
           "EQR metric compared" = eqr,
           "Result A" = a_result,
@@ -159,7 +159,6 @@ rict_compare <- function(data = NULL,
 
         table_prop$name <- paste("Prob A in", table_prop$Results_A,
                                   "& B in", table_prop$Results_B)
-        t(table_prop[, c("name", "Freq")])
         table <-   data.frame(t(table_prop[, c( "Freq")]))
         names(table) <- table_prop$name
         class_table <- cbind(classes, table)

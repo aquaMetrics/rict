@@ -534,7 +534,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
     ASPT <- data.frame(ASPT)
     NTAXA <- data.frame(NTAXA)
     #MINTA <-  data.frame(MINTA)
-    classification_results <- cbind(classification_results, ASPT, NTAXA)
+    classification_results <- list(classification_results, ASPT, NTAXA)
     }
     return(classification_results)
   }

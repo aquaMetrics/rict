@@ -21,7 +21,6 @@
 
 rict_compare <- function(data = NULL,
                          eqrs = c("ASPT", "NTAXA")) {
-  message("Comparing results...")
   # validate data
   valid <- suppressMessages(rict_validate(data))
 
@@ -37,13 +36,14 @@ rict_compare <- function(data = NULL,
   # Classify - 10000 EQRs are in the ASPT, NTAXA...etc columns
   results <- rict_classify(predictions, store_eqrs = T)
   #results$ASPT <- results$eqrs
-
+  print(results)
   # Need a  function to identify which result(s)
   # will be compared to which result(s).
   # This could default to something or use extra column in the input data
   # Possible validation errors if users can select which results to compare?
   # PROTOTYPE:
   # Compare everything!!
+  message("Comparing results...")
   results$RESULT <- paste(results$SITE, results$YEAR)
   a <- unique(results$RESULT)
   # Take all the others as 'y'
@@ -64,7 +64,7 @@ rict_compare <- function(data = NULL,
         diff <- unlist(results[results$RESULT == b_result, eqr]) -
           unlist(results[results$RESULT == a_result, eqr])
         # make dataframe of useful test statistics
-
+        print("Hello from compare test")
         compare <- data.frame(
           "EQR metric compared" = eqr,
           "Result A" = a_result,
@@ -97,6 +97,7 @@ rict_compare <- function(data = NULL,
   }
 
   compare_test <- compare_test(results, eqrs = eqrs, a, b)
+  print(compare_test)
   ## Create class proportion "confusion table" ---------------------------------------
   # EQR breaks - not needed!! get from classification function???
   compare_probability <-  function(results, eqrs, a, b) {
@@ -109,6 +110,7 @@ rict_compare <- function(data = NULL,
         if(a_result == b_result) {
           return()
         }
+        print("Hello from compare_probability")
         eqr_bands <- c(0.0, 0.59, 0.72, 0.86, 0.97, 1.0)
         labels <-  5:1
         a_eqrs <- unlist(results[results$RESULT == a_result, eqr])
@@ -171,6 +173,7 @@ rict_compare <- function(data = NULL,
   }
 
   compare_probability <- compare_probability(results, eqrs, a, b)
+  print(compare_probability)
   compare_output <- cbind(compare_test, compare_probability)
   return(compare_output)
 }

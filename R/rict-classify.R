@@ -4,6 +4,8 @@
 #'   'rict__predict' function
 #' @param year_type "single" or "multi" depending if multi-year classification
 #'   required - default is "multi"
+#' @param store_eqrs Boolean to signal if simulate EQRs should be stored. If
+#'   TRUE, EQRs are stored allowing `rict_compare` to compare EQR results
 #' @return Dataframe of classification results
 #' @export
 #' @importFrom rlang .data
@@ -14,7 +16,8 @@
 #' classifications <- rict_classify(predictions)
 #' }
 #'
-rict_classify <- function(data = NULL, year_type = "multi") {
+rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
+  message("classifying...")
   # This is a hack - best to combine single year and multiple year into single
   # function? For now, I've just stuck the single year into a different
   # function until these can be merged
@@ -202,9 +205,12 @@ rict_classify <- function(data = NULL, year_type = "multi") {
     # Store the duplicated names of sites as single names
     namesOfSites <- data.frame()
 
-    # Store EQRs
-    eqrs <- list()
-
+    # Create store for EQRs to retain for compare function
+    if (store_eqrs == T) {
+    ASPT <- list()
+    NTAXA <- list()
+    MINTA <- list()
+    }
     # Variable that flags if last site has not been processed
     lastSiteProcessed <- FALSE
 
@@ -228,7 +234,7 @@ rict_classify <- function(data = NULL, year_type = "multi") {
       # Declare a boolean variable that indicates multiple sites encountered,
       # then switch it back to FALSE at start of loop
       j <- k
-      print(c(" j = ", j))
+      # print(c(" j = ", j))
       indicesDistinct <- rbind(indicesDistinct, j)
 
       if (j < nrow(data) && (data[j, "SITE"] == data[j + 1, "SITE"])) {
@@ -403,6 +409,11 @@ rict_classify <- function(data = NULL, year_type = "multi") {
       # Add the averages of spr,aut
       EQRAverages_ntaxa_spr_aut <- rbind(EQRAverages_ntaxa_spr_aut, eqr_av_spr)
 
+      # bind EQRs into list dataframe column
+      if( store_eqrs == T) {
+      eqr <- list(c(multiYear_EQRAverages_ntaxa_spr_aut))
+      NTAXA <- rbind(NTAXA, eqr)
+      }
       # ************** Now do the ASPT from HERE - using the calculations from ASPT ABOVE*******************
 
       # Part 2: Start calculating for ASPT probability of CLASS
@@ -433,8 +444,10 @@ rict_classify <- function(data = NULL, year_type = "multi") {
       # Add the averages of spr
       EQRAverages_aspt_spr_aut <- rbind(EQRAverages_aspt_spr_aut, eqr_av_spr_aspt)
       # bind ASPT EQRs into list dataframe column
-      eqr <- list(c(EQR_aspt_spr))
-      eqrs <- rbind(eqrs, eqr)
+      if( store_eqrs == T) {
+      eqr <- list(c(multiYear_EQRAverages_aspt_spr_aut))
+      ASPT <- rbind(ASPT, eqr)
+      }
       ########  Calculate the MINTA -spring aut case  worse class = 1 i.e. min of class from NTAXA and ASPT ######
 
       # Do the MINTA spr_aut case
@@ -460,6 +473,11 @@ rict_classify <- function(data = NULL, year_type = "multi") {
       aa <- data.frame(cbind(aa, mostProb))
       # Now bind the MINTA proportion to the dataframe
       SiteMINTA_whpt_spr_aut <- rbind(SiteMINTA_whpt_spr_aut, aa) # Error in match.names(clabs, names(xi)) :
+
+      # bind EQRs into list dataframe column
+      # eqr <- list(c(EQR_minta_spr))
+      # MINTA <- rbind(MINTA, eqr)
+
       ##### MINTA ENDS HERE  #####
 
       # Move the pointer k to new adjusted position for j - whether multiple or not
@@ -511,8 +529,13 @@ rict_classify <- function(data = NULL, year_type = "multi") {
     # Rename columns for MINTA, so they dont conflict
     colnames(SiteMINTA_whpt_spr_aut) <- paste0(colnames(SiteMINTA_whpt_spr_aut), "_MINTA_")
     classification_results <- cbind(allResults, SiteMINTA_whpt_spr_aut)
-    eqrs <-  data.frame(eqrs)
-    classification_results <- cbind(classification_results, eqrs)
+    # bind stored eqrs
+    if( store_eqrs == T) {
+    ASPT <- data.frame(ASPT)
+    NTAXA <- data.frame(NTAXA)
+    #MINTA <-  data.frame(MINTA)
+    classification_results <- cbind(classification_results, ASPT, NTAXA)
+    }
     return(classification_results)
   }
 }

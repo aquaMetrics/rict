@@ -2,22 +2,32 @@
 % Please edit documentation in R/rict-compare.R
 \name{rict_compare}
 \alias{rict_compare}
-\title{Compare the statistical significance of differences between classifications}
+\title{Compare the statistical differences between classifications results}
 \usage{
-rict_compare(data = rict::demo_observed_values)
+rict_compare(data = NULL, eqrs = c("ASPT", "NTAXA"))
 }
 \arguments{
-\item{data}{Standard input data - TBC: default compare site with same name or extra column indicating pairs??
-Run prediction
-Run classification only until 10000 EQR have been generated?
-Store EQI (correct for bias) as well as normal classification outputs? This could be a lot if big run?
-When all samples have run - check which sites need to be compared}
+\item{data}{Standard input data - TBC: default compare site with same name or
+extra column indicating pairs??}
+
+\item{eqrs}{list of eqr metrics to compare for example ASPT, NTAXA, MINTA}
+}
+\value{
+Dataframe of compare results
 }
 \description{
 The Compare function allows the user to assess whether there is a real
-difference in EQR values and/or status class between a pair of samples and/or
-sites and/or time periods
+difference in EQR values and/or status class between a pair of results and/or
+sites and/or time periods. What this function does:
+\enumerate{
+ \item Runs `rict_predict`.
+ \item Runs  `rict_classify`
+ \item Stores EQI (correct for bias) as well as normal classification outputs.
+ \item When all results have run - check which sites need to be compareds.
 }
-\details{
-What this does:
+}
+\examples{
+\dontrun{
+compare <- rict_compare(demo_observed_values)
+}
 }

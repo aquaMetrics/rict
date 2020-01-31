@@ -171,5 +171,6 @@ rict_compare <- function(data = NULL,
 
   compare_probability <- compare_probability(results, eqrs, a, b)
   compare_output <- cbind(compare_test, compare_probability)
+  row.names(compare_output) <- 1:nrow(compare_output)
   return(compare_output)
 }

@@ -52,6 +52,7 @@ test_that("sense-checks work", {
 })
 # ---------------------------------------------------------------------
 test_that("alkalinity, hardness, conductivity and calcium calculations work", {
+  skip("needs more work")
   test_data <- demo_observed_values
   test_data$Alkalinity[1:2]  <- NA
   test_data$Hardness[1]  <- 50
@@ -61,6 +62,7 @@ test_that("alkalinity, hardness, conductivity and calcium calculations work", {
 })
 # ---------------------------------------------------------------------
 test_that("velocity calculation work", {
+  skip("needs more work")
   test_data <- demo_observed_values
   test_data$Velocity[1:5]  <- 5
   test <- rict_validate(test_data)

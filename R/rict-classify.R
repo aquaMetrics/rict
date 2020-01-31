@@ -17,7 +17,7 @@
 #' }
 #'
 rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
-  message("classifying...")
+  message("Classifying...")
   # This is a hack - best to combine single year and multiple year into single
   # function? For now, I've just stuck the single year into a different
   # function until these can be merged
@@ -207,6 +207,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
 
     # Create store for EQRs to retain for compare function
     if (store_eqrs == T) {
+      print("hello from list setup")
     ASPT <- list()
     NTAXA <- list()
     MINTA <- list()
@@ -411,6 +412,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
 
       # bind EQRs into list dataframe column
       if( store_eqrs == T) {
+        print("hello from NTAXA list")
       eqr <- list(c(multiYear_EQRAverages_ntaxa_spr_aut))
       NTAXA <- rbind(NTAXA, eqr)
       }
@@ -445,6 +447,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
       EQRAverages_aspt_spr_aut <- rbind(EQRAverages_aspt_spr_aut, eqr_av_spr_aspt)
       # bind ASPT EQRs into list dataframe column
       if( store_eqrs == T) {
+        print("hello from ASPT list")
       eqr <- list(c(multiYear_EQRAverages_aspt_spr_aut))
       ASPT <- rbind(ASPT, eqr)
       }
@@ -530,7 +533,8 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
     colnames(SiteMINTA_whpt_spr_aut) <- paste0(colnames(SiteMINTA_whpt_spr_aut), "_MINTA_")
     classification_results <- cbind(allResults, SiteMINTA_whpt_spr_aut)
     # bind stored eqrs
-    if( store_eqrs == T) {
+    if (store_eqrs == T) {
+      print("hello from list to dataframe")
     ASPT <- data.frame(ASPT)
     NTAXA <- data.frame(NTAXA)
     #MINTA <-  data.frame(MINTA)

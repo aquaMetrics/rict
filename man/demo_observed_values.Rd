@@ -48,6 +48,9 @@
 demo_observed_values
 }
 \description{
-A dataset containing demo observed values
+A dataset containing demo observed values. Stored as .csv
+    demo_observed_values <- utils::read.csv(
+     system.file("extdat", "new-input-file-data-to-use-multi-year-1.csv",
+             package = "rict"), check.names = F)
 }
 \keyword{datasets}

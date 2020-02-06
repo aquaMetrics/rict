@@ -1,4 +1,4 @@
-singleYearClassification <- function(predictions) {
+singleYearClassification <- function(predictions, store_eqrs = F) {
 
   # set global random seed for rnorm functions etc
   set.seed(1234)
@@ -136,6 +136,13 @@ singleYearClassification <- function(predictions) {
   Ubias8r_spr <- getUbias8r_new(n_runs, Ubias8)
   Ubias8r_aut <- getUbias8r_new(n_runs, Ubias8)
 
+  # Create store for EQRs to retain for compare function
+  if (store_eqrs == T) {
+    ASPT <- list()
+    NTAXA <- list()
+    MINTA <- list()
+  }
+
   for (k in seq_len(nrow(predictions))) {
 
     # LOOP all the sites from here
@@ -220,6 +227,12 @@ singleYearClassification <- function(predictions) {
     a_ntaxa_spr_aut <- cbind(a_ntaxa_spr_aut, mostProb)
     SiteProbabilityclasses_spr_aut_comb_ntaxa <- rbind(SiteProbabilityclasses_spr_aut_comb_ntaxa, a_ntaxa_spr_aut)
 
+
+    # bind EQRs into list dataframe column
+    if( store_eqrs == T) {
+      eqr <- list(c(rowAverage_spr_aut))
+      NTAXA <- rbind(NTAXA, eqr)
+    }
     # **** Workout FOR ASPT STARTS HERE
     ### RALPH
     u_9a <- 4.35
@@ -330,6 +343,12 @@ singleYearClassification <- function(predictions) {
     mostProb <- getMostProbableClass(a_aspt_spr_aut)
     a_aspt_spr_aut <- cbind(a_aspt_spr_aut, mostProb)
     SiteProbabilityclasses_spr_aut_comb_aspt <- rbind(SiteProbabilityclasses_spr_aut_comb_aspt, a_aspt_spr_aut)
+
+    # bind EQRs into list dataframe column
+    if (store_eqrs == T) {
+      eqr <- list(c(rowAverage_spr_aut))
+      ASPT <- rbind(ASPT, eqr)
+    }
 
     ########  Calculate the MINTA - worse class = 5 i.e. max of class from NTAXA and ASPT ######
     matrix_ntaxa_spr <- as.matrix(classArray_siteOne_spr_ntaxa)
@@ -458,5 +477,16 @@ singleYearClassification <- function(predictions) {
   allResults_ntaxa_aspt_minta_combined$mintawhpt_spr_aut_mostProb_MINTA_ <-
     allResults_ntaxa_aspt_minta_combined$mintawhpt_spr_aut_mostProb
   allResults_ntaxa_aspt_minta_combined$mintawhpt_spr_aut_mostProb <- NULL
+
+  if (store_eqrs == T) {
+    ASPT <- data.frame(ASPT)
+    NTAXA <- data.frame(NTAXA)
+    #MINTA <-  data.frame(MINTA)
+    allResults_ntaxa_aspt_minta_combined <-
+      cbind(allResults_ntaxa_aspt_minta_combined[, c("SITE","YEAR")],
+            ASPT, NTAXA)
+   # allResults_ntaxa_aspt_minta_combined <- list(allResults_ntaxa_aspt_minta_combined, ASPT, NTAXA)
+  }
+
   return(allResults_ntaxa_aspt_minta_combined)
 }

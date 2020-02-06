@@ -89,3 +89,34 @@ summary of checks:
 * Replacements made to very low values for example
 * Returns dataframe with passing values, warnings, fails
 
+## Functions
+
+### High-level functions
+ User provides raw data input and receives a single file output:
+   
+`rict` - produces single unnest output for predictions (metrics and taxa), classifications and comparisons.
+`rict_predict` - predictions 
+`rict_classify` - classification 
+`rict_compare` - compare
+
+### Low-level functions
+`validate`  
+`predict`
+`classify`
+`compare`
+
+The `rict()` high-level function is equivalent to:
+`validate(raw_data) %>% `
+`predict() %>% `
+`classify() %>% `
+`compare()`
+
+### Significnt functions which are not exported 
+
+compare_test - probability results are in same class
+compare_pobabilities - probabilities of result A in result B classes
+
+
+
+
+

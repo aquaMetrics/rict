@@ -2,15 +2,21 @@
 % Please edit documentation in R/rict-compare.R
 \name{rict_compare}
 \alias{rict_compare}
-\title{Compare the statistical differences between classifications results}
+\title{Compare the Statistical Differences between Classifications Results}
 \usage{
-rict_compare(data = NULL, eqrs = c("ASPT", "NTAXA"))
+rict_compare(
+  results_a = NULL,
+  results_b = NULL,
+  eqr_metrics = c("NTAXA", "ASPT")
+)
 }
 \arguments{
-\item{data}{Standard input data - TBC: default compare site with same name or
-extra column indicating pairs??}
+\item{results_a}{Data frame output from `rict(store_eqrs = T)`}
 
-\item{eqrs}{list of eqr metrics to compare for example ASPT, NTAXA, MINTA}
+\item{results_b}{Data frame output from `rict(store_eqrs = T)`}
+
+\item{list}{of eqr_metrics to compare, default is average year ASPT and NTAXA
+metric}
 }
 \value{
 Dataframe of compare results
@@ -18,16 +24,24 @@ Dataframe of compare results
 \description{
 The Compare function allows the user to assess whether there is a real
 difference in EQR values and/or status class between a pair of results and/or
-sites and/or time periods. What this function does:
-\enumerate{
- \item Runs `rict_predict`.
- \item Runs  `rict_classify`
- \item Stores EQI (correct for bias) as well as normal classification outputs.
- \item When all results have run - check which sites need to be compareds.
+sites and/or time periods.
 }
+\details{
+By default detects if upstream / downstream comparison required. This is
+indicate by 'a' sites not included in 'b' sites or detects. Else it detects
+if sites are paired between both datasets. For instance, if comparing season
+to season or year to year pairs.
+
+By default only two metrics will be compared - these will be whatever EQR
+metrics are in the columns following the 'SITE' and 'RESULT' columns. Edit
+the file to re-order which EQR metrics to compare. Column three should be
+ASPT and column four NTAXA.
 }
 \examples{
 \dontrun{
-compare <- rict_compare(demo_observed_values)
+results_a <- rict(demo_observed_values[1, ], store_eqrs = T, year_type = "single")
+results_b <- rict(demo_gis_values[1, ], store_eqrs = T, year_type = "single", model = "gis")
+compare <- rict_compare(results_a, results_b)
 }
+
 }

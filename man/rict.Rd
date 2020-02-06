@@ -4,25 +4,35 @@
 \alias{rict}
 \title{Run the River Invertebrate Classification Tool (RICT)}
 \usage{
-rict(data = NULL, model = "physical", area = "gb", year_type = "multi")
+rict(
+  data = NULL,
+  model = "physical",
+  area = "gb",
+  year_type = "multi",
+  store_eqrs = F
+)
 }
 \arguments{
 \item{data}{Dataframe of observed environmental values
 \describe{
-  \item{SITE}{Site identifier}
-  \item{Waterbody}{Water body identifier}
-  ...
-}}
+ \item{SITE}{Site identifier}
+ \item{Waterbody}{Water body identifier}
+  }}
 
 \item{model}{Model to use either 'gis' or 'physical'}
 
-\item{area}{Area of UK, either 'ni' (Northern Ireland) or 'gb' (Great Britain)}
+\item{area}{Area of UK, either 'ni' (Northern Ireland) or 'gb' (Great
+Britain)}
 
 \item{year_type}{"single" or "multi" depending if multi-year classification
 required - default is "multi".}
+
+\item{store_eqrs}{TRUE/FALSE if set to TRUE function will return simulate
+EQRs only}
 }
 \value{
-Dataframe of classification results
+Dataframe of classification results (or simulated EQRs if store_eqrs
+  = TRUE)
 }
 \description{
 The \code{rict} function classifies observed environmental values.

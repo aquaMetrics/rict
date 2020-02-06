@@ -302,6 +302,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
   # Spring Dist
   bind_all <- cbind(data_to_bindTo, spring_whpt_ntaxa_Abw_Dist)
   bind_all <- cbind(bind_all, spring_whpt_aspt_Abw_Dist)
+
   # Autumn Dist
   bind_all <- cbind(bind_all, autumn_whpt_ntaxa_Abw_Dist)
   bind_all <- cbind(bind_all, autumn_whpt_aspt_Abw_Dist)
@@ -309,6 +310,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
   # Spring CompFam
   bind_all <- cbind(bind_all, spring_whpt_ntaxa_Abw_CompFam)
   bind_all <- cbind(bind_all, spring_whpt_aspt_Abw_CompFam)
+
   # Autumn CompFam
   bind_all <- cbind(bind_all, autumn_whpt_ntaxa_Abw_CompFam)
   bind_all <- cbind(bind_all, autumn_whpt_aspt_Abw_CompFam)

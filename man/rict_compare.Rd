@@ -7,7 +7,7 @@
 rict_compare(
   results_a = NULL,
   results_b = NULL,
-  eqr_metrics = c("NTAXA", "ASPT")
+  eqr_metrics = c("AVG_NTAXA", "AVG_ASPT")
 )
 }
 \arguments{

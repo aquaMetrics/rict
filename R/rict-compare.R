@@ -28,7 +28,7 @@
 #' }
 #'
 rict_compare <- function(results_a = NULL, results_b = NULL,
-                         eqr_metrics = c("NTAXA", "ASPT")) {
+                         eqr_metrics = c("AVG_NTAXA", "AVG_ASPT")) {
   # Create 'result' ID
   results_a$RESULT <- paste(results_a$SITE, results_a$YEAR)
   results_b$RESULT <- paste(results_b$SITE, results_b$YEAR)
@@ -69,7 +69,7 @@ rict_compare <- function(results_a = NULL, results_b = NULL,
   # Detect if sites are paired between both datasets. For instance, if comparing
   # season to season or year to year pairs.
   else if (results_a$SITE == results_b$SITE) {
-    # Loop through all rows in 'a' comparing to matching result in b
+    # Loop through all rows in 'a' comparing to matching result in 'b'
     comparisons <- purrr::map_df(nrow(results_a), function(a) {
       compare(data[c(a, length(a) + a), ],
         a = data$RESULT[a],

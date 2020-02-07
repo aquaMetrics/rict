@@ -20,6 +20,7 @@
 #'
 compare <- function(data = NULL, a = NULL, b = NULL) {
   message("Comparing results...")
+
   results <- data
   # Compare all the RESULT rows (a) with all the other RESULT rows (b)
   if (is.null(a) | is.null(b)) {
@@ -36,9 +37,14 @@ defaulting to comparing all results to all other results in input data!")
   # Compare probability table
   compare_probability <- compare_probability(results, eqrs, a, b)
   # Join output
+  if(!is.null(compare_test)) {
   compare_output <- merge(compare_test, compare_probability,
                             by.x = c("Result A","Result B"),
                             by.y = c("Result A","Result B"))
   message("Comparison completed!")
   return(compare_output)
+  } else {
+    message("Nothing to compare - Results A the same as Results B")
+    return(NULL) }
+
 }

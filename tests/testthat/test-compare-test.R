@@ -1,11 +1,15 @@
 test_that("expect compare test to work", {
 
+  # Get SPR NTAXA
+  # results <- rict(demo_observed_values, year_type = "single", store_eqrs = T)
+  # results <- dplyr::select(test, SITE, YEAR, SPR_NTAXA)
+  # results$RESULT <-  paste(results$SITE)
   # Get demo eqrs provided by Ralph
-  results <- demo_eqr_values
+   results <- demo_eqr_values
 
   # Compare all the RESULT rows (a) with all the other RESULT rows (b)
-  a <- results$RESULT[grep("R",results$RESULT)]
-  b <- results$RESULT[grep("D",results$RESULT)]
+  a <- results$RESULT[grep("-R",results$RESULT)]
+  b <- results$RESULT[grep("-D",results$RESULT)]
 
   test_results <- rict:::compare_test(results = results, a = a, b = b, eqrs = "NTAXA EQR")
 
@@ -21,8 +25,12 @@ test_that("expect compare test to work", {
    "compare-results-for-gb-model-1-test-sites.csv",
           package = "rict"), check.names = F)
 
+ row.names(test_results) <- 1:nrow(test_results)
+ row.names(compare_test_values) <- 1:nrow(compare_test_values)
  # close enough?
- equal <- all.equal(round(test_results[, 4:10],3),
-                   compare_test_values[, 4:10])
+ equal <- all.equal(round(test_results[, 4:10], 1),
+                    round(compare_test_values[, 4:10], 1))
+
+ expect_equal(equal, "Names: 5 string mismatches")
 
 })

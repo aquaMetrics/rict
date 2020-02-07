@@ -138,9 +138,12 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
 
   # Create store for EQRs to retain for compare function
   if (store_eqrs == T) {
-    ASPT <- list()
-    NTAXA <- list()
-    MINTA <- list()
+    AVG_ASPT <- list()
+    AVG_NTAXA <- list()
+    SPR_NTAXA <- list()
+    AUT_NTAXA <- list()
+    SPR_ASPT <- list()
+    AUT_ASPT <- list()
   }
 
   for (k in seq_len(nrow(predictions))) {
@@ -163,6 +166,13 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
     EQR_ntaxa_spr <- as.data.frame(Obs_site1_ntaxa_spr / ExpIDX8r_ntaxa_spr[, 1])
     EQR_ntaxa_aut <- as.data.frame(Obs_site1_ntaxa_aut / ExpIDX8r_ntaxa_aut[, 1])
 
+    # bind EQRs into list dataframe column
+    if(store_eqrs == T) {
+      eqr <- list(c(EQR_ntaxa_spr))
+      SPR_NTAXA <- rbind(SPR_NTAXA, eqr)
+      eqr <- list(c(EQR_ntaxa_aut))
+      AUT_NTAXA <- rbind(AUT_NTAXA, eqr)
+    }
     # Part 1: for "Spring" - DO FOR NTAXA
 
     # Find the averages of both spr and autum, declare a function to compute this
@@ -231,7 +241,7 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
     # bind EQRs into list dataframe column
     if( store_eqrs == T) {
       eqr <- list(c(rowAverage_spr_aut))
-      NTAXA <- rbind(NTAXA, eqr)
+      AVG_NTAXA <- rbind(AVG_NTAXA, eqr)
     }
     # **** Workout FOR ASPT STARTS HERE
     ### RALPH
@@ -278,6 +288,14 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
     # Calculating simulated EQR
     EQR_aspt_spr <- as.data.frame(ObsIDX9rb_spr / ExpIDX9r_aspt_spr[, 1])
     EQR_aspt_aut <- as.data.frame(ObsIDX9rb_aut / ExpIDX9r_aspt_aut[, 1])
+
+    # bind EQRs into list dataframe column
+    if(store_eqrs == T) {
+      eqr <- list(c(EQR_aspt_spr))
+      SPR_ASPT <- rbind(SPR_ASPT, eqr)
+      eqr <- list(c(EQR_aspt_aut))
+      AUT_ASPT <- rbind(AUT_ASPT, eqr)
+    }
 
     # Part 1: for "Spring"
     # Find the averages of both spr and autum, declare a function to compute this
@@ -347,7 +365,7 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
     # bind EQRs into list dataframe column
     if (store_eqrs == T) {
       eqr <- list(c(rowAverage_spr_aut))
-      ASPT <- rbind(ASPT, eqr)
+      AVG_ASPT <- rbind(AVG_ASPT, eqr)
     }
 
     ########  Calculate the MINTA - worse class = 5 i.e. max of class from NTAXA and ASPT ######
@@ -479,12 +497,17 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
   allResults_ntaxa_aspt_minta_combined$mintawhpt_spr_aut_mostProb <- NULL
 
   if (store_eqrs == T) {
-    ASPT <- data.frame(ASPT)
-    NTAXA <- data.frame(NTAXA)
-    #MINTA <-  data.frame(MINTA)
-    allResults_ntaxa_aspt_minta_combined <-
+    # return simulated EQRS in data.frame
+    AVG_ASPT <- data.frame(AVG_ASPT)
+    AVG_NTAXA <- data.frame(AVG_NTAXA)
+    SPR_NTAXA <- data.frame(SPR_NTAXA)
+    SPR_ASPT <- data.frame(SPR_ASPT)
+    AUT_NTAXA <- data.frame(AUT_NTAXA)
+    AUT_ASPT <- data.frame(AUT_ASPT)
+
+     allResults_ntaxa_aspt_minta_combined <-
       cbind(allResults_ntaxa_aspt_minta_combined[, c("SITE","YEAR")],
-            ASPT, NTAXA)
+            AVG_ASPT, AVG_NTAXA, SPR_NTAXA, SPR_ASPT, AUT_NTAXA, AUT_ASPT)
    # allResults_ntaxa_aspt_minta_combined <- list(allResults_ntaxa_aspt_minta_combined, ASPT, NTAXA)
   }
 

@@ -531,11 +531,11 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
     classification_results <- cbind(allResults, SiteMINTA_whpt_spr_aut)
     # bind stored eqrs
     if (store_eqrs == T) {
-    ASPT <- data.frame(ASPT)
-    NTAXA <- data.frame(NTAXA)
+    AVG_ASPT <- data.frame(ASPT)
+    AVG_NTAXA <- data.frame(NTAXA)
     #MINTA <-  data.frame(MINTA)
     classification_results <- cbind(classification_result[, c("SITE", "YEAR")],
-                                    ASPT, NTAXA)
+                                    AVG_ASPT, AVG_NTAXA)
     # classification_results <- list(classification_results, ASPT, NTAXA)
     }
     return(classification_results)

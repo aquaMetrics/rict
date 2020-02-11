@@ -1,13 +1,12 @@
 ## Create class proportion "confusion table" ---------------------------------------
 compare_probability <- function(a, b, eqr = NULL,
                                 eqr_bands = c(0.0, 0.2, 0.4, 0.6, 0.8, 1.0)) {
-
-  # Use classification function form RICT to get eqr bands
+  # Use classification function from RICT to get eqr bands
   if (!is.null(eqr) && grepl("aspt", eqr, ignore.case = T)) {
     Results_A <- getClassarray_aspt(data.frame(a))
     Results_B <- getClassarray_aspt(data.frame(b))
   }
-  if (!is.null(eqr) && grepl("ntaxa", eqr, ignore.case = T)) {
+  else if (!is.null(eqr) && grepl("ntaxa", eqr, ignore.case = T)) {
     Results_A <- getClassarray_ntaxa(data.frame(a))
     Results_B <- getClassarray_ntaxa(data.frame(b))
   } else {

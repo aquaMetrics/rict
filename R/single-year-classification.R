@@ -504,6 +504,7 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
     SPR_ASPT <- data.frame(SPR_ASPT)
     AUT_NTAXA <- data.frame(AUT_NTAXA)
     AUT_ASPT <- data.frame(AUT_ASPT)
+    # minta - take the lowest value from each pair of AVG_NTAXA /  AVG_ASPT
 
      allResults_ntaxa_aspt_minta_combined <-
       cbind(allResults_ntaxa_aspt_minta_combined[, c("SITE","YEAR")],

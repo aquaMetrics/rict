@@ -13,13 +13,61 @@ rict_compare(
 \arguments{
 \item{results_a}{Data frame output from `rict(store_eqrs = T)`.}
 
-\item{results_b}{Data frame output from `rict(store_eqrs = T)`}
+\item{results_b}{Data frame output from `rict(store_eqrs = T)`.}
 
-\item{list}{of eqr_metrics to compare, default is average year ASPT and NTAXA
-metric}
+\item{eqr_metrics}{List of eqr_metrics to compare, default is average year ASPT and NTAXA
+metric.}
 }
 \value{
-Dataframe of compare results
+Dataframe of compare results with 44 variables see `technical
+specifications` for details:
+\describe{
+  \item{EQR metric Result A}{EQR metric from Result A which is being compared}
+  \item{EQR metric Result B}{EQR metric from Result B which is being compared}
+  \item{Result A}{Concatennated results name of Year and Site}
+  \item{Result B}{Concatennated results name of Year and Site}
+  \item{Average EQR for Result A}{Average EQR}
+  \item{Average EQR for Result B}{Average EQR}
+  \item{Average EQR: Difference (B - A)}{Difference in EQR}
+  \item{Standard Deviation of Difference}{Standard Deviation of Difference}
+  \item{Lower 95\% (L95) of Difference}{Lower 95\% (L95) of Difference}
+  \item{Upper 95\% (U95) of Difference}{Upper 95\% (U95) of Difference}
+  \item{2-sided test probability p of No difference in EQR}{p of probability test}
+  \item{Most Probable Class for Result A}{Most Probable Class for Result A}
+  \item{Probability of most likely class for Result A}{Probability of most likely class for Result A}
+  \item{Most Probable Class for Result B}{Most Probable Class for Result B}
+  \item{Probability of most likely class for Result B}{Probability of most likely class for Result B}
+  \item{Probability B more than one class Worse than A}{Probability B more than one class Worse than A}
+  \item{Probability B one class Worse than A}{Probability B one class Worse than A}
+  \item{Probability B same Class as A}{Probability B same Class as A}
+  \item{Probability B one class Better than A}{Probability B one class Better than A}
+  \item{Probability B more than one class Better than A}{Probability B more than one class Better than A}
+  \item{Probability Result A in High & Result B in High}{Probability...}
+  \item{Probability Result A in High & Result B in Good}{Probability...}
+  \item{Probability Result A in High & Result B in Moderate}{Probability...}
+  \item{Probability Result A in High & Result B in Poor}{Probability...}
+  \item{Probability Result A in High & Result B in Bad}{Probability...}
+  \item{Probability Result A in Good & Result B in High}{Probability...}
+  \item{Probability Result A in Good & Result B in Good}{...}
+  \item{Probability Result A in Good & Result B in Moderate}{...}
+  \item{Probability Result A in Good & Result B in Poor}{...}
+  \item{Probability Result A in Good & Result B in Bad}{...}
+  \item{Probability Result A in Moderate & Result B in High}{...}
+  \item{Probability Result A in Moderate & Result B in Good}{...}
+  \item{Probability Result A in Moderate & Result B in Moderate}{...}
+  \item{Probability Result A in Moderate & Result B in Poor}{...}
+  \item{Probability Result A in Moderate & Result B in Bad}{...}
+  \item{Probability Result A in Poor & Result B in High}{...}
+  \item{Probability Result A in Poor & Result B in Good}{...}
+  \item{Probability Result A in Poor & Result B in Moderate}{...}
+  \item{Probability Result A in Poor & Result B in Poor}{...}
+  \item{Probability Result A in Poor & Result B in Bad}{...}
+  \item{Probability Result A in Bad & Result B in High}{...}
+  \item{Probability Result A in Bad & Result B in Good}{...}
+  \item{Probability Result A in Bad & Result B in Moderate}{...}
+  \item{Probability Result A in Bad & Result B in Poor}{...}
+  \item{Probability Result A in Bad & Result B in Bad}{...}
+}
 }
 \description{
 The Compare function allows the user to assess whether there is a real
@@ -34,8 +82,8 @@ to season or year to year pairs.
 }
 \examples{
 \dontrun{
-results_a <- rict(demo_observed_values[1, ], store_eqrs = T, year_type = "single")
-results_b <- rict(demo_gis_values[1, ], store_eqrs = T, year_type = "single", model = "gis")
+results_a <- rict(demo_observed_values[1:, ], store_eqrs = T, year_type = "single")
+results_b <- rict(demo_gis_values[1:3, ], store_eqrs = T, year_type = "single", model = "gis")
 compare <- rict_compare(results_a, results_b)
 }
 

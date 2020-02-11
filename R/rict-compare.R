@@ -9,7 +9,6 @@
 #' if sites are paired between both datasets. For instance, if comparing season
 #' to season or year to year pairs.
 #'
-#'
 #' @param results_a Data frame output from `rict(store_eqrs = T)`.
 #' @param results_b Data frame output from `rict(store_eqrs = T)`.
 #' @param eqr_metrics List of eqr_metrics to compare, default is average year ASPT and NTAXA
@@ -17,8 +16,7 @@
 #' @return Dataframe of compare results with 44 variables see `technical
 #' specifications` for details:
 #' \describe{
-#'   \item{EQR metric Result A}{EQR metric from Result A which is being compared}
-#'   \item{EQR metric Result B}{EQR metric from Result B which is being compared}
+#'   \item{EQR metric compared}{EQR metric from Result A which is being compared}
 #'   \item{Result A}{Concatennated results name of Year and Site}
 #'   \item{Result B}{Concatennated results name of Year and Site}
 #'   \item{Average EQR for Result A}{Average EQR}
@@ -66,41 +64,40 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' results_a <- rict(demo_observed_values[1:, ], store_eqrs = T, year_type = "single")
-#' results_b <- rict(demo_gis_values[1:3, ], store_eqrs = T, year_type = "single", model = "gis")
+#' results_a <- rict(demo_observed_values[1, ], store_eqrs = T, year_type = "single")
+#' results_b <- rict(demo_gis_values[2, ], store_eqrs = T, year_type = "single", model = "gis")
 #' compare <- rict_compare(results_a, results_b)
 #' }
 #'
 rict_compare <- function(results_a = NULL, results_b = NULL,
-                         eqr_metrics = c("AVG_NTAXA", "AVG_ASPT")) {
+                         eqr_metrics = NULL) {
   # Create 'result' ID
   results_a$RESULT <- paste(results_a$SITE, results_a$YEAR)
   results_b$RESULT <- paste(results_b$SITE, results_b$YEAR)
 
   # Arrange datasets so matching sites/results will line up if present
-  results_a <- dplyr::arrange(results_a, RESULT)
-  results_b <- dplyr::arrange(results_b, RESULT)
+  results_a <- dplyr::arrange(results_a, RESULT, `EQR Metrics`)
+  results_b <- dplyr::arrange(results_b, RESULT, `EQR Metrics`)
 
   # Convert to character because of potentially different factor levels
   results_a$SITE <- as.character(results_a$SITE)
   results_b$SITE <- as.character(results_b$SITE)
 
+  results_a$RESULT_TYPE <- "Result A"
+  results_b$RESULT_TYPE <- "Result B"
   # Bind columns from a anda b results. If eqr_metrics specified keep only these
-  # columns otherwise bind all columns.
-  if (is.null(eqr_metrics)) {
+  # columns otherwise bind all.
+  if (!is.null(eqr_metrics)) {
     # Default to min number of columns if a and b differ in column number
-    min_length <- min(length(results_a), length(results_b))
     data <- dplyr::bind_rows(
-      results_a[, min_length],
-      results_b[, min_length]
+      results_a[results_a$`EQR Metrics` %in% eqr_metrics, ],
+      results_b[results_a$`EQR Metrics` %in% eqr_metrics, ]
     )
   } else {
-    columns <- c("SITE", "YEAR", "RESULT", eqr_metrics)
     data <- dplyr::bind_rows(
-      results_a[, columns],
-      results_b[, columns]
+      results_a,
+      results_b
     )
-    names(data) <- columns
   }
 
   ## Select which results to compare -------------------------------------------------
@@ -109,15 +106,24 @@ rict_compare <- function(results_a = NULL, results_b = NULL,
   if (any(unique(results_a$SITE) != unique(results_b$SITE))) {
     comparisons <- compare(data, a = results_a$RESULT, b = results_b$RESULT)
   }
+
   # Detect if sites are paired between both datasets. For instance, if comparing
   # season to season or year to year pairs.
   else if (all(results_a$SITE == results_b$SITE)) {
+    # Get EQR metrics (sometimes these will be different)
+    eqr_metrics <- paste(data$`EQR Metrics`[data$RESULT_TYPE == "Result A"],
+                         "Vs",
+                         data$`EQR Metrics`[data$RESULT_TYPE == "Result B"])
+    data$`EQR Metrics` <- eqr_metrics
 
-    # Loop through all rows in 'a' comparing to matching result in 'b'
-    comparisons <- purrr::map_df(as.numeric(row.names(results_a)), function(a) {
-      compare(data[c(a, (length(data$RESULT) / 2) + a), ],
-        a = data$RESULT[a],
-        b = data$RESULT[(length(data$RESULT) / 2) + a]
+    results_a$RESULT_B <- results_b$RESULT
+    # Loop through all unique results in 'a' comparing to paired result in 'b'
+    comparisons <- purrr::map_df(split(results_a, results_a$RESULT), function(a) {
+
+      compare(data[data$RESULT == unique(a$RESULT) |
+                     data$RESULT == unique(a$RESULT_B),],
+        a = data$RESULT[data$RESULT == unique(a$RESULT)],
+        b = data$RESULT[data$RESULT == unique(a$RESULT_B)]
       )
     })
   } else {

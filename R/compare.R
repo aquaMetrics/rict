@@ -34,7 +34,8 @@ defaulting to comparing all results to all other differing results in input data
     return(NULL)
   }
   # find all EQR metrics to compare - ASPT, NTAXA, SPR_NTAXA...
-  eqrs <- names(results)[!names(results) %in% c("RESULT", "SITE", "YEAR")]
+  #eqrs <- names(results)[!names(results) %in% c("RESULT", "SITE", "YEAR")]
+  eqrs <- unique(results$`EQR Metrics`)
 
   ## Loop through results and run tests to compare results ----------------------------------------------
   combine_compare <- function(results, eqrs, a_results, b_results) {
@@ -49,8 +50,10 @@ defaulting to comparing all results to all other differing results in input data
             return()
           }
           # Filter results to get relevant EQRs
-          a <- unlist(results[results$RESULT == a_result, eqr])
-          b <- unlist(results[results$RESULT == b_result, eqr])
+          a <- unlist(results$EQR[results$RESULT == a_result &
+                                  results$`EQR Metrics` == eqr])
+          b <- unlist(results$EQR[results$RESULT == b_result &
+                                  results$`EQR Metrics` == eqr])
           # Compare probability test
           compare_test <- compare_test(a, b)
           # Compare probability table

@@ -5,16 +5,12 @@
 #' sites and/or time periods.
 #'
 #' By default detects if upstream / downstream comparison required. This is
-#' indicate by 'a' sites not included in 'b' sites or detects. Else it detects
+#' indicate by 'a' sites not included in 'b' sites or else it detects
 #' if sites are paired between both datasets. For instance, if comparing season
 #' to season or year to year pairs.
 #'
-#' By default only two metrics will be compared - these will be whatever EQR
-#' metrics are in the columns following the 'SITE' and 'RESULT' columns. Edit
-#' the file to re-order which EQR metrics to compare. Column three should be
-#' ASPT and column four NTAXA.
 #'
-#' @param results_a Data frame output from `rict(store_eqrs = T)`
+#' @param results_a Data frame output from `rict(store_eqrs = T)`.
 #' @param results_b Data frame output from `rict(store_eqrs = T)`
 #' @param list of eqr_metrics to compare, default is average year ASPT and NTAXA
 #'   metric
@@ -41,18 +37,17 @@ rict_compare <- function(results_a = NULL, results_b = NULL,
   results_a$SITE <- as.character(results_a$SITE)
   results_b$SITE <- as.character(results_b$SITE)
 
-  # Bind first four columns from datasets. By default only two metrics will be
-  # compared - these will be whatever EQR metrics are in the columns following
-  # the 'SITE' and 'RESULT' columns. Edit the file to re-order which EQR metrics
-  # to compare. Column three should be ASPT and column four NTAXA
+  # Bind columns from a anda b results. If eqr_metrics specified keep only these
+  # columns otherwise bind all columns.
   if (is.null(eqr_metrics)) {
-    # Default to first four columns from each
+    # Default to min number of columns if a and b differ in column number
+    min_length <- min(length(results_a), length(results_b))
     data <- dplyr::bind_rows(
-      results_a[, 1:4],
-      results_b[, 1:4]
+      results_a[, min_length],
+      results_b[, min_length]
     )
   } else {
-    columns <- c("SITE", "RESULT", eqr_metrics)
+    columns <- c("SITE", "YEAR", "RESULT", eqr_metrics)
     data <- dplyr::bind_rows(
       results_a[, columns],
       results_b[, columns]

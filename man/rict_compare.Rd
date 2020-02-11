@@ -11,7 +11,7 @@ rict_compare(
 )
 }
 \arguments{
-\item{results_a}{Data frame output from `rict(store_eqrs = T)`}
+\item{results_a}{Data frame output from `rict(store_eqrs = T)`.}
 
 \item{results_b}{Data frame output from `rict(store_eqrs = T)`}
 
@@ -28,14 +28,9 @@ sites and/or time periods.
 }
 \details{
 By default detects if upstream / downstream comparison required. This is
-indicate by 'a' sites not included in 'b' sites or detects. Else it detects
+indicate by 'a' sites not included in 'b' sites or else it detects
 if sites are paired between both datasets. For instance, if comparing season
 to season or year to year pairs.
-
-By default only two metrics will be compared - these will be whatever EQR
-metrics are in the columns following the 'SITE' and 'RESULT' columns. Edit
-the file to re-order which EQR metrics to compare. Column three should be
-ASPT and column four NTAXA.
 }
 \examples{
 \dontrun{

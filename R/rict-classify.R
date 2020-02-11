@@ -207,8 +207,8 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
 
     # Create store for EQRs to retain for compare function
     if (store_eqrs == T) {
-    ASPT <- list()
-    NTAXA <- list()
+    AVG_ASPT <- list()
+    AVG_NTAXA <- list()
     MINTA <- list()
     }
     # Variable that flags if last site has not been processed
@@ -533,8 +533,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
     if (store_eqrs == T) {
     AVG_ASPT <- data.frame(ASPT)
     AVG_NTAXA <- data.frame(NTAXA)
-    #MINTA <-  data.frame(MINTA)
-    classification_results <- cbind(classification_result[, c("SITE", "YEAR")],
+    classification_results <- cbind(classification_results[, c("SITE", "YEAR")],
                                     AVG_ASPT, AVG_NTAXA)
     # classification_results <- list(classification_results, ASPT, NTAXA)
     }

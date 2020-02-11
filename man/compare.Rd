@@ -4,7 +4,7 @@
 \alias{compare}
 \title{Compare the statistical differences between classifications results}
 \usage{
-compare(data = NULL, a = NULL, b = NULL)
+compare(data = NULL, a_results = NULL, b_results = NULL)
 }
 \arguments{
 \item{data}{Data frame containing at least three columns.  A 'RESULT' and 'SITE' column

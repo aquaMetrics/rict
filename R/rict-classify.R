@@ -412,7 +412,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
       # bind EQRs into list dataframe column
       if( store_eqrs == T) {
       eqr <- list(c(multiYear_EQRAverages_ntaxa_spr_aut))
-      NTAXA <- rbind(NTAXA, eqr)
+      AVG_NTAXA <- rbind(AVG_NTAXA, eqr)
       }
       # ************** Now do the ASPT from HERE - using the calculations from ASPT ABOVE*******************
 
@@ -446,7 +446,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
       # bind ASPT EQRs into list dataframe column
       if( store_eqrs == T) {
       eqr <- list(c(multiYear_EQRAverages_aspt_spr_aut))
-      ASPT <- rbind(ASPT, eqr)
+      AVG_ASPT <- rbind(AVG_ASPT, eqr)
       }
       ########  Calculate the MINTA -spring aut case  worse class = 1 i.e. min of class from NTAXA and ASPT ######
 
@@ -531,11 +531,31 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
     classification_results <- cbind(allResults, SiteMINTA_whpt_spr_aut)
     # bind stored eqrs
     if (store_eqrs == T) {
-    AVG_ASPT <- data.frame(ASPT)
-    AVG_NTAXA <- data.frame(NTAXA)
-    classification_results <- cbind(classification_results[, c("SITE", "YEAR")],
-                                    AVG_ASPT, AVG_NTAXA)
+    AVG_ASPT <- data.frame(AVG_ASPT)
+    AVG_NTAXA <- data.frame(AVG_NTAXA)
+    # minta
+
+    MINTA <-  list("MINTA" = c(unlist(AVG_ASPT)[ unlist(AVG_ASPT) < unlist(AVG_NTAXA)],
+                unlist(AVG_NTAXA)[ unlist(AVG_NTAXA) < unlist(AVG_ASPT)]))
+
+    # classification_results <- cbind(classification_results[, c("SITE", "YEAR")],
+    #                               AVG_ASPT, AVG_NTAXA)
     # classification_results <- list(classification_results, ASPT, NTAXA)
+
+    classification_results <-rbind(
+      data.frame(classification_results[, c("SITE","YEAR")],
+                 "EQR Metrics" = names(AVG_ASPT),
+                 "EQR" = unlist(AVG_ASPT),
+                 check.names = F),
+      data.frame(classification_results[, c("SITE","YEAR")],
+                 "EQR Metrics" = names(AVG_NTAXA),
+                 "EQR" = unlist(AVG_NTAXA),
+                 check.names = F),
+      data.frame(classification_results[, c("SITE","YEAR")],
+                 "EQR Metrics" = names(MINTA),
+                 "EQR" = unlist(MINTA),
+                 check.names = F)
+    )
     }
     return(classification_results)
   }

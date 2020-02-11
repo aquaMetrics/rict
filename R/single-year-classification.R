@@ -505,6 +505,8 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
     AUT_NTAXA <- data.frame(AUT_NTAXA)
     AUT_ASPT <- data.frame(AUT_ASPT)
     # minta - take the lowest value from each pair of AVG_NTAXA /  AVG_ASPT
+    MINTA <-  list("MINTA" = c(unlist(AVG_ASPT)[ unlist(AVG_ASPT) < unlist(AVG_NTAXA)],
+                               unlist(AVG_NTAXA)[ unlist(AVG_NTAXA) < unlist(AVG_ASPT)]))
 
      # allResults_ntaxa_aspt_minta_combined <-
      #  cbind(allResults_ntaxa_aspt_minta_combined[, c("SITE","YEAR")],
@@ -534,6 +536,10 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
  data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE","YEAR")],
             "EQR Metrics" = names(AUT_NTAXA),
             "EQR" = unlist(AUT_NTAXA),
+            check.names = F),
+ data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE","YEAR")],
+            "EQR Metrics" = names(MINTA),
+            "EQR" = unlist(MINTA),
             check.names = F)
 )
    # allResults_ntaxa_aspt_minta_combined <- list(allResults_ntaxa_aspt_minta_combined, ASPT, NTAXA)

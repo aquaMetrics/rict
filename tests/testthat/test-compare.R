@@ -18,6 +18,7 @@ test_that("expect compare function to match with test data", {
 
   # Get demo eqrs provided by Ralph
   results <- demo_eqr_values
+  results$`EQR Metrics` <- "SPR_NTAXA"
 
   # Compare all the RESULT rows (a) with all the other RESULT rows (b)
   a <- results$RESULT[grep("-R", results$RESULT)]

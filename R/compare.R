@@ -19,7 +19,6 @@
 #' }
 #'
 compare <- function(data = NULL, a_results = NULL, b_results = NULL) {
-  message("Comparing simulated EQR results...")
 
   results <- data
   # Compare all the RESULT rows (a) with all the other RESULT rows (b)
@@ -34,10 +33,9 @@ defaulting to comparing all results to all other differing results in input data
     return(NULL)
   }
   # find all EQR metrics to compare - ASPT, NTAXA, SPR_NTAXA...
-  #eqrs <- names(results)[!names(results) %in% c("RESULT", "SITE", "YEAR")]
   eqrs <- unique(results$`EQR Metrics`)
 
-  ## Loop through results and run tests to compare results ----------------------------------------------
+  ## Loop through eqrs, results and run tests to compare results ----------------------------------------------
   combine_compare <- function(results, eqrs, a_results, b_results) {
     # Loop for each eqr type e.g. NTAXA, ASPT etc
     loop_eqr_types <- lapply(eqrs, function(eqr) {
@@ -81,6 +79,6 @@ defaulting to comparing all results to all other differing results in input data
   }
 
   compare_output <- combine_compare(results, eqrs, a_results, b_results)
-  message("Simulated EQR comparison completed!")
+
   return(compare_output)
 }

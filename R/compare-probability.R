@@ -82,6 +82,11 @@ compare_probability <- function(a, b, eqr = NULL,
   # is.na(table) <- sapply(table, is.infinite)
   # table[is.na(table) | table == 0] <- "-"
 
+  #browser()
+  # Could create a table and graph output here?
+  # print(paste(eqr, "\n", table_prop))
+  # data <- data.frame("a" = a, "b" = b)
+  # ggplot(data, aes(a, b)) + geom_point()
   # Pivot tbale into dataframe to make summing up probabilities easier
   table_prop <- as.data.frame(table_prop)
   table_prop_class <- as.data.frame(table_prop_class)

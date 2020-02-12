@@ -4,11 +4,7 @@
 \alias{rict_compare}
 \title{Compare the Statistical Differences between Classifications Results}
 \usage{
-rict_compare(
-  results_a = NULL,
-  results_b = NULL,
-  eqr_metrics = c("AVG_NTAXA", "AVG_ASPT")
-)
+rict_compare(results_a = NULL, results_b = NULL, eqr_metrics = NULL)
 }
 \arguments{
 \item{results_a}{Data frame output from `rict(store_eqrs = T)`.}
@@ -22,8 +18,7 @@ metric.}
 Dataframe of compare results with 44 variables see `technical
 specifications` for details:
 \describe{
-  \item{EQR metric Result A}{EQR metric from Result A which is being compared}
-  \item{EQR metric Result B}{EQR metric from Result B which is being compared}
+  \item{EQR metric compared}{EQR metric from Result A which is being compared}
   \item{Result A}{Concatennated results name of Year and Site}
   \item{Result B}{Concatennated results name of Year and Site}
   \item{Average EQR for Result A}{Average EQR}
@@ -82,8 +77,8 @@ to season or year to year pairs.
 }
 \examples{
 \dontrun{
-results_a <- rict(demo_observed_values[1:, ], store_eqrs = T, year_type = "single")
-results_b <- rict(demo_gis_values[1:3, ], store_eqrs = T, year_type = "single", model = "gis")
+results_a <- rict(demo_observed_values[1, ], store_eqrs = T, year_type = "single")
+results_b <- rict(demo_gis_values[2, ], store_eqrs = T, year_type = "single", model = "gis")
 compare <- rict_compare(results_a, results_b)
 }
 

@@ -71,6 +71,7 @@
 #'
 rict_compare <- function(results_a = NULL, results_b = NULL,
                          eqr_metrics = NULL) {
+  message("Comparing simulated EQR results...")
   # Create 'result' ID
   results_a$RESULT <- paste(results_a$SITE, results_a$YEAR)
   results_b$RESULT <- paste(results_b$SITE, results_b$YEAR)
@@ -110,7 +111,7 @@ rict_compare <- function(results_a = NULL, results_b = NULL,
   # Detect if sites are paired between both datasets. For instance, if comparing
   # season to season or year to year pairs.
   else if (all(results_a$SITE == results_b$SITE)) {
-    # Get EQR metrics (sometimes these will be different)
+    # Get EQR metrics (sometimes these could be different)
     eqr_metrics <- paste(data$`EQR Metrics`[data$RESULT_TYPE == "Result A"],
                          "Vs",
                          data$`EQR Metrics`[data$RESULT_TYPE == "Result B"])
@@ -119,7 +120,7 @@ rict_compare <- function(results_a = NULL, results_b = NULL,
     results_a$RESULT_B <- results_b$RESULT
     # Loop through all unique results in 'a' comparing to paired result in 'b'
     comparisons <- purrr::map_df(split(results_a, results_a$RESULT), function(a) {
-
+browser()
       compare(data[data$RESULT == unique(a$RESULT) |
                      data$RESULT == unique(a$RESULT_B),],
         a = data$RESULT[data$RESULT == unique(a$RESULT)],
@@ -131,5 +132,7 @@ rict_compare <- function(results_a = NULL, results_b = NULL,
  but differing number of rows. We expect datasets that share matching
  SITE(S) to have matching number of rows.")
   }
+  message("Simulated EQR comparison completed!")
   return(comparisons)
+
 }

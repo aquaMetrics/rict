@@ -508,57 +508,36 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
   if (store_eqrs == T) {
 
     # return simulated EQRS in data.frame
-    AVG_ASPT <- data.frame(AVG_ASPT)
-    AVG_NTAXA <- data.frame(AVG_NTAXA)
-    SPR_NTAXA <- data.frame(SPR_NTAXA)
-    SPR_ASPT <- data.frame(SPR_ASPT)
-    AUT_NTAXA <- data.frame(AUT_NTAXA)
-    AUT_ASPT <- data.frame(AUT_ASPT)
+    minta = data.frame(AVG_ASPT)
+    names(minta) <- "MINTA"
+    eqrs_list <- list("AVG_ASPT" = data.frame(AVG_ASPT),
+    "AVG_NTAXA" = data.frame(AVG_NTAXA),
+    "SPR_NTAXA" = data.frame(SPR_NTAXA),
+    "SPR_ASPT" = data.frame(SPR_ASPT),
+    "AUT_NTAXA" = data.frame(AUT_NTAXA),
+    "AUT_ASPT" = data.frame(AUT_ASPT),
+    "MINTA" = minta
+    )
     # minta - take the lowest value from each pair of AVG_NTAXA /  AVG_ASPT
     #  MINTA <-  list("MINTA" = c(unlist(AVG_ASPT)[ unlist(AVG_ASPT) < unlist(AVG_NTAXA)],
     #                            unlist(AVG_NTAXA)[ unlist(AVG_NTAXA) < unlist(AVG_ASPT)]))
 
-    MINTA <- data.frame(AVG_ASPT)
-    names(MINTA) <- "MINTA"
-    allResults_ntaxa_aspt_minta_combined <- rbind(
-      data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE", "YEAR")],
-        "EQR Metrics" = names(AVG_ASPT),
-        "EQR" = unlist(AVG_ASPT),
-        check.names = F
-      ),
-      data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE", "YEAR")],
-        "EQR Metrics" = names(AVG_NTAXA),
-        "EQR" = unlist(AVG_NTAXA),
-        check.names = F
-      ),
-      data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE", "YEAR")],
-        "EQR Metrics" = names(SPR_ASPT),
-        "EQR" = unlist(SPR_ASPT),
-        check.names = F
-      ),
-      data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE", "YEAR")],
-        "EQR Metrics" = names(SPR_NTAXA),
-        "EQR" = unlist(SPR_NTAXA),
-        check.names = F
-      ),
-      data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE", "YEAR")],
-        "EQR Metrics" = names(AUT_ASPT),
-        "EQR" = unlist(AUT_ASPT),
-        check.names  = F
-      ),
-      data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE", "YEAR")],
-        "EQR Metrics" = names(AUT_NTAXA),
-        "EQR" = unlist(AUT_NTAXA),
-        check.names = F
-      ),
-      data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE", "YEAR")],
-        "EQR Metrics" = names(MINTA),
-        "EQR" = unlist(MINTA),
-        check.names = F
-      )
-    )
-    # allResults_ntaxa_aspt_minta_combined <- list(allResults_ntaxa_aspt_minta_combined, ASPT, NTAXA)
-  }
+
+    all_eqrs <- lapply(eqrs_list, function(eqrs) {
+     eqr_sites <-  lapply(seq_len(nrow(eqrs)), function(eqr_site) {
+        eqr_n <- rbind(
+          data.frame(allResults_ntaxa_aspt_minta_combined[eqr_site, c("SITE", "YEAR")],
+                  "EQR Metrics" = names(eqrs),
+                  "EQR" = unlist(eqrs[eqr_site, ]),
+                  check.names = F)
+           )
+         return( eqr_n)
+     })
+     all_eqrs <- do.call("rbind", eqr_sites)
+   })
+    # bind list back together into dataframe
+    allResults_ntaxa_aspt_minta_combined <- dplyr::bind_rows(all_eqrs)
+   }
 
   return(allResults_ntaxa_aspt_minta_combined)
 }

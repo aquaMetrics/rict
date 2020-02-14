@@ -237,7 +237,7 @@ rict_validate <- function(data = NULL) {
       message("Using velocity, width and depth to calculate discharge category")
     }
     # hack - to avoid errors if some VELOCITY rows are NA - but avoids velocity validation rules..
-     # data_row$VELOCITY <- NULL
+      data_row$VELOCITY <- NULL
       return(data_row)
   })
   discharge <- dplyr::bind_rows(discharge)

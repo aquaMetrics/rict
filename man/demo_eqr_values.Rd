@@ -20,7 +20,7 @@ demo_eqr_values <- utils::read.csv(
          package = "rict"), check.names = F)
 }
 \details{
-demo_eqr_values <-  purrr::map_df(names(demo_eqr_values), function (name){
+demo_eqr_values <-  purrr::map_df(names(demo_eqr_values), function(name) {
   eqrs <-  list(c(demo_eqr_values[, name]))
   NTAXA <- list()
   test <- rbind(NTAXA,eqrs)

@@ -11,11 +11,11 @@ compare_test <- function(a, b) {
     "Average EQR: Difference (B - A)" =
       mean(b) - mean(a),
     "Standard Deviation of Difference" =
-      sd(b - a),
-    "Lower 95% (L95) of Difference" = quantile(sort(diff),
+      stats::sd(b - a),
+    "Lower 95% (L95) of Difference" = stats::quantile(sort(diff),
       probs = c(2.5, 97.5) / 100
     )[[1]],
-    "Upper 95% (U95) of Difference" = quantile(sort(diff),
+    "Upper 95% (U95) of Difference" = stats::quantile(sort(diff),
       probs = c(2.5, 97.5) / 100
     )[[2]],
     "2-sided test probability p of No difference in EQR" =

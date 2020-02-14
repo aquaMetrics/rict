@@ -167,7 +167,7 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
     EQR_ntaxa_aut <- as.data.frame(Obs_site1_ntaxa_aut / ExpIDX8r_ntaxa_aut[, 1])
 
     # bind EQRs into list dataframe column
-    if(store_eqrs == T) {
+    if (store_eqrs == T) {
       eqr <- list(c(EQR_ntaxa_spr))
       SPR_NTAXA <- rbind(SPR_NTAXA, eqr)
       eqr <- list(c(EQR_ntaxa_aut))
@@ -239,7 +239,7 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
 
 
     # bind EQRs into list dataframe column
-    if( store_eqrs == T) {
+    if (store_eqrs == T) {
       eqr <- list(c(rowAverage_spr_aut))
       AVG_NTAXA <- rbind(AVG_NTAXA, eqr)
     }
@@ -290,7 +290,7 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
     EQR_aspt_aut <- as.data.frame(ObsIDX9rb_aut / ExpIDX9r_aspt_aut[, 1])
 
     # bind EQRs into list dataframe column
-    if(store_eqrs == T) {
+    if (store_eqrs == T) {
       eqr <- list(c(EQR_aspt_spr))
       SPR_ASPT <- rbind(SPR_ASPT, eqr)
       eqr <- list(c(EQR_aspt_aut))
@@ -371,8 +371,10 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
     ########  Calculate the MINTA - worse class = 5 i.e. max of class from NTAXA and ASPT ######
     matrix_ntaxa_spr <- as.matrix(classArray_siteOne_spr_ntaxa)
     matrix_aspt_spr <- as.matrix(classArray_siteOne_spr_aspt)
-    minta_ntaxa_aspt_spr <- getMINTA_ntaxa_aspt(as.matrix(classArray_siteOne_spr_ntaxa),
-                                                as.matrix(classArray_siteOne_spr_aspt))
+    minta_ntaxa_aspt_spr <- getMINTA_ntaxa_aspt(
+      as.matrix(classArray_siteOne_spr_ntaxa),
+      as.matrix(classArray_siteOne_spr_aspt)
+    )
 
     # Now calculate proportion of each class H to B for MINTA
     # 5 is the number of classes- H, G, M, B, P, ncol=1 or 2 for two seasons or
@@ -394,8 +396,10 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
     SiteMINTA_whpt_spr <- rbind(SiteMINTA_whpt_spr, aa)
 
     # Do the MINTA aut case
-    minta_ntaxa_aspt_aut <- getMINTA_ntaxa_aspt(as.matrix(classArray_siteOne_aut_ntaxa),
-                                                as.matrix(classArray_siteOne_aut_aspt))
+    minta_ntaxa_aspt_aut <- getMINTA_ntaxa_aspt(
+      as.matrix(classArray_siteOne_aut_ntaxa),
+      as.matrix(classArray_siteOne_aut_aspt)
+    )
     # 5 is the number of classes- H, G, M, B, P, ncol=1 or 2 for two seasons or
     # ntaxa_spr, ntaxa_aut, spr_aut_av_taxa, and spt etc
     minta_probClass_aut <- matrix(0, ncol = 1, nrow = 5)
@@ -414,8 +418,10 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
     SiteMINTA_whpt_aut <- rbind(SiteMINTA_whpt_aut, aa)
 
     # Do the MINTA spr_aut case
-    minta_ntaxa_aspt_spr_aut <- getMINTA_ntaxa_aspt(as.matrix(classArray_siteOne_combined_spr),
-                                                    as.matrix(classArray_siteOne_combined_spr_aspt))
+    minta_ntaxa_aspt_spr_aut <- getMINTA_ntaxa_aspt(
+      as.matrix(classArray_siteOne_combined_spr),
+      as.matrix(classArray_siteOne_combined_spr_aspt)
+    )
     # 5 is the number of classes- H, G, M, B, P, ncol=1 or 2 for two seasons or
     # ntaxa_spr, ntaxa_aut, spr_aut_av_taxa, and spt etc
     minta_probClass_spr_aut <- matrix(0, ncol = 1, nrow = 5)
@@ -453,8 +459,10 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
   # Rename column names so they dont conflict
   colnames(SiteProbabilityclasses_spr_ntaxa) <- paste0(colnames(SiteProbabilityclasses_spr_ntaxa), "_NTAXA_spr")
   colnames(SiteProbabilityclasses_aut_ntaxa) <- paste0(colnames(SiteProbabilityclasses_aut_ntaxa), "_NTAXA_aut")
-  colnames(SiteProbabilityclasses_spr_aut_comb_ntaxa) <- paste0(colnames(SiteProbabilityclasses_spr_aut_comb_ntaxa),
-                                                                "_NTAXA_spr_aut")
+  colnames(SiteProbabilityclasses_spr_aut_comb_ntaxa) <- paste0(
+    colnames(SiteProbabilityclasses_spr_aut_comb_ntaxa),
+    "_NTAXA_spr_aut"
+  )
 
   # Get ntaxa spr average
   averages_spr_ntaxa <- cbind(SiteProbabilityclasses_spr_ntaxa, EQRAverages_ntaxa_spr[1]) #
@@ -473,8 +481,10 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
   # Rename column names so they dont conflict
   colnames(SiteProbabilityclasses_spr_aspt) <- paste0(colnames(SiteProbabilityclasses_spr_aspt), "_ASPT_spr")
   colnames(SiteProbabilityclasses_aut_aspt) <- paste0(colnames(SiteProbabilityclasses_aut_aspt), "_ASPT_aut")
-  colnames(SiteProbabilityclasses_spr_aut_comb_aspt) <- paste0(colnames(SiteProbabilityclasses_spr_aut_comb_aspt),
-                                                               "_ASPT_spr_aut")
+  colnames(SiteProbabilityclasses_spr_aut_comb_aspt) <- paste0(
+    colnames(SiteProbabilityclasses_spr_aut_comb_aspt),
+    "_ASPT_spr_aut"
+  )
 
   averages_spr_aspt <- cbind(SiteProbabilityclasses_spr_aspt, EQRAverages_aspt_spr[1]) #
   probclasses_ave_aspt <- cbind(SiteProbabilityclasses_aut_aspt, EQRAverages_aspt_spr[2]) # averages_spr_aspt)
@@ -495,8 +505,8 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
   allResults_ntaxa_aspt_minta_combined$mintawhpt_spr_aut_mostProb_MINTA_ <-
     allResults_ntaxa_aspt_minta_combined$mintawhpt_spr_aut_mostProb
   allResults_ntaxa_aspt_minta_combined$mintawhpt_spr_aut_mostProb <- NULL
-  browser()
   if (store_eqrs == T) {
+
     # return simulated EQRS in data.frame
     AVG_ASPT <- data.frame(AVG_ASPT)
     AVG_NTAXA <- data.frame(AVG_NTAXA)
@@ -505,40 +515,49 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
     AUT_NTAXA <- data.frame(AUT_NTAXA)
     AUT_ASPT <- data.frame(AUT_ASPT)
     # minta - take the lowest value from each pair of AVG_NTAXA /  AVG_ASPT
-  #  MINTA <-  list("MINTA" = c(unlist(AVG_ASPT)[ unlist(AVG_ASPT) < unlist(AVG_NTAXA)],
-   #                            unlist(AVG_NTAXA)[ unlist(AVG_NTAXA) < unlist(AVG_ASPT)]))
-    MINTA <- unlist(AVG_ASPT)
-    allResults_ntaxa_aspt_minta_combined <-rbind(
-  data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE","YEAR")],
-           "EQR Metrics" = names(AVG_ASPT),
-           "EQR" = unlist(AVG_ASPT),
-           check.names = F),
- data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE","YEAR")],
-            "EQR Metrics" = names(AVG_NTAXA),
-            "EQR" = unlist(AVG_NTAXA),
-            check.names = F),
- data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE","YEAR")],
-            "EQR Metrics" = names(SPR_ASPT),
-            "EQR" = unlist(SPR_ASPT),
-            check.names = F),
- data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE","YEAR")],
-            "EQR Metrics" = names(SPR_NTAXA),
-            "EQR" = unlist(SPR_NTAXA),
-            check.names = F),
- data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE","YEAR")],
-            "EQR Metrics" = names(AUT_ASPT),
-            "EQR" = unlist(AUT_ASPT),
-            check.names  = F),
- data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE","YEAR")],
-            "EQR Metrics" = names(AUT_NTAXA),
-            "EQR" = unlist(AUT_NTAXA),
-            check.names = F),
- data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE","YEAR")],
-            "EQR Metrics" = names(MINTA),
-            "EQR" = unlist(MINTA),
-            check.names = F)
-)
-   # allResults_ntaxa_aspt_minta_combined <- list(allResults_ntaxa_aspt_minta_combined, ASPT, NTAXA)
+    #  MINTA <-  list("MINTA" = c(unlist(AVG_ASPT)[ unlist(AVG_ASPT) < unlist(AVG_NTAXA)],
+    #                            unlist(AVG_NTAXA)[ unlist(AVG_NTAXA) < unlist(AVG_ASPT)]))
+
+    MINTA <- data.frame(AVG_ASPT)
+    names(MINTA) <- "MINTA"
+    allResults_ntaxa_aspt_minta_combined <- rbind(
+      data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE", "YEAR")],
+        "EQR Metrics" = names(AVG_ASPT),
+        "EQR" = unlist(AVG_ASPT),
+        check.names = F
+      ),
+      data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE", "YEAR")],
+        "EQR Metrics" = names(AVG_NTAXA),
+        "EQR" = unlist(AVG_NTAXA),
+        check.names = F
+      ),
+      data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE", "YEAR")],
+        "EQR Metrics" = names(SPR_ASPT),
+        "EQR" = unlist(SPR_ASPT),
+        check.names = F
+      ),
+      data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE", "YEAR")],
+        "EQR Metrics" = names(SPR_NTAXA),
+        "EQR" = unlist(SPR_NTAXA),
+        check.names = F
+      ),
+      data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE", "YEAR")],
+        "EQR Metrics" = names(AUT_ASPT),
+        "EQR" = unlist(AUT_ASPT),
+        check.names  = F
+      ),
+      data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE", "YEAR")],
+        "EQR Metrics" = names(AUT_NTAXA),
+        "EQR" = unlist(AUT_NTAXA),
+        check.names = F
+      ),
+      data.frame(allResults_ntaxa_aspt_minta_combined[, c("SITE", "YEAR")],
+        "EQR Metrics" = names(MINTA),
+        "EQR" = unlist(MINTA),
+        check.names = F
+      )
+    )
+    # allResults_ntaxa_aspt_minta_combined <- list(allResults_ntaxa_aspt_minta_combined, ASPT, NTAXA)
   }
 
   return(allResults_ntaxa_aspt_minta_combined)

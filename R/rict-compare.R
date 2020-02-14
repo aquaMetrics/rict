@@ -72,11 +72,12 @@
 rict_compare <- function(results_a = NULL, results_b = NULL,
                          eqr_metrics = NULL) {
   message("Comparing simulated EQR results...")
+
   # Create 'result' ID
   results_a$RESULT <- paste(results_a$SITE, results_a$YEAR)
   results_b$RESULT <- paste(results_b$SITE, results_b$YEAR)
 
-  # Arrange datasets so matching sites/results will line up if present
+  # Arrange datasets so both in matching sites/results order
   results_a <- dplyr::arrange(results_a, RESULT, `EQR Metrics`)
   results_b <- dplyr::arrange(results_b, RESULT, `EQR Metrics`)
 
@@ -92,7 +93,7 @@ rict_compare <- function(results_a = NULL, results_b = NULL,
     # Default to min number of columns if a and b differ in column number
     data <- dplyr::bind_rows(
       results_a[results_a$`EQR Metrics` %in% eqr_metrics, ],
-      results_b[results_a$`EQR Metrics` %in% eqr_metrics, ]
+      results_b[results_b$`EQR Metrics` %in% eqr_metrics, ]
     )
   } else {
     data <- dplyr::bind_rows(
@@ -119,14 +120,14 @@ rict_compare <- function(results_a = NULL, results_b = NULL,
 
     results_a$RESULT_B <- results_b$RESULT
     # Loop through all unique results in 'a' comparing to paired result in 'b'
-    comparisons <- purrr::map_df(split(results_a, results_a$RESULT), function(a) {
-browser()
-      compare(data[data$RESULT == unique(a$RESULT) |
-                     data$RESULT == unique(a$RESULT_B),],
-        a = data$RESULT[data$RESULT == unique(a$RESULT)],
-        b = data$RESULT[data$RESULT == unique(a$RESULT_B)]
+    comparisons <- lapply(split(results_a, results_a$RESULT), function(a) {
+
+      compare(data[data$RESULT %in% c(unique(a$RESULT), unique(a$RESULT_B)), ],
+        a = unique(a$RESULT),
+        b = unique(a$RESULT_B)
       )
     })
+    comparisons <- do.call("rbind", comparisons)
   } else {
     message("You provided two datasets with matching SITE(s)
  but differing number of rows. We expect datasets that share matching

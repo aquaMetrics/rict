@@ -18,6 +18,7 @@ test_that("expect compare function to match with test data", {
 
   # Get demo eqrs provided by Ralph
   results <- demo_eqr_values
+  results$EQR <- results$`NTAXA EQR`
   results$`EQR Metrics` <- "SPR_NTAXA"
 
   # Compare all the RESULT rows (a) with all the other RESULT rows (b)
@@ -25,6 +26,7 @@ test_that("expect compare function to match with test data", {
   b <- results$RESULT[grep("-D", results$RESULT)]
 
   test_results <- rict:::compare(data = results, a_results = a, b_results = b)
+
 
   # Filter only to compare matching 'R' (real?) with 'D' (artificially downgraded?)
   # This matches the sites compared in Ralph's provided comparison data
@@ -50,8 +52,8 @@ test_that("expect compare function to match with test data", {
 
   test_results <- test_results %>% dplyr::mutate_if(is.factor, as.character)
 
-  row.names(test_results) <- 1:nrow(test_results)
-  row.names(compare_test_values) <- 1:nrow(compare_test_values)
+  row.names(test_results) <- seq_len(nrow(test_results))
+  row.names(compare_test_values) <- seq_len(nrow(compare_test_values))
 
   # close enough?
   equal <- all.equal(

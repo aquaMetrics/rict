@@ -19,7 +19,7 @@ compare_probability <- function(a, b, eqr = NULL,
     Results_A <- data.frame(cut(a, breaks = eqr_bands, labels, include.lowest = T))
     Results_B <- data.frame(cut(b, breaks = eqr_bands, labels, include.lowest = T))
     message(paste0("No EQR boundaries detected for '", eqr, "' using ",
-                  paste(eqr_bands,collapse = ', ' )))
+                  paste(eqr_bands, collapse = ", ")))
   }
 
   # Need to factorise the results to create table

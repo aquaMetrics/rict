@@ -6,7 +6,7 @@
 #'   "model-m1-gb-10000-simulated-eqr-values-whpt-ntaxa-spring-for-test-sites.csv",
 #'          package = "rict"), check.names = F)
 #'
-#' demo_eqr_values <-  purrr::map_df(names(demo_eqr_values), function (name){
+#' demo_eqr_values <-  purrr::map_df(names(demo_eqr_values), function(name) {
 #'   eqrs <-  list(c(demo_eqr_values[, name]))
 #'   NTAXA <- list()
 #'   test <- rbind(NTAXA,eqrs)

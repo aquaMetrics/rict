@@ -113,4 +113,3 @@ test_that("user supplied temperatures override calculate temperatures", {
   test_data$AIR.TEMP.RANGE <- 36
   expect_warning(rict_validate(test_data))
 })
-

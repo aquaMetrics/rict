@@ -20,23 +20,22 @@
 #'
 compare <- function(data = NULL, a_results = NULL, b_results = NULL) {
 
-  results <- data
+  data <- data
   # Compare all the RESULT rows (a) with all the other RESULT rows (b)
   if (is.null(a_results) | is.null(b_results)) {
-    a_results <- results$RESULT
-    b_results <- results$RESULT
+    a_results <- unique(data$RESULT)
+    b_results <- unique(data$RESULT)
     message("No parameter provided to `a` and/or `b` arguments -
-defaulting to comparing all results to all other differing results in input data!")
+defaulting to comparing all data to all other differing data in input data!")
   }
   if (all(a_results == b_results)) {
-    message("Nothing to compare - Results A the same as Results B")
-    return(NULL)
+    message("Nothing to compare - Results A the same as Results B?")
   }
   # find all EQR metrics to compare - ASPT, NTAXA, SPR_NTAXA...
-  eqrs <- unique(results$`EQR Metrics`)
+  eqrs <- unique(data$`EQR Metrics`)
 
-  ## Loop through eqrs, results and run tests to compare results ----------------------------------------------
-  combine_compare <- function(results, eqrs, a_results, b_results) {
+  ## Loop through eqrs, data and run tests to compare data ----------------------------------------------
+  combine_compare <- function(data, eqrs, a_results, b_results) {
     # Loop for each eqr type e.g. NTAXA, ASPT etc
     loop_eqr_types <- lapply(eqrs, function(eqr) {
       # Loop for each unique result(s) "a"
@@ -47,11 +46,12 @@ defaulting to comparing all results to all other differing results in input data
           if (a_result == b_result) {
             return()
           }
-          # Filter results to get relevant EQRs
-          a <- unlist(results$EQR[results$RESULT == a_result &
-                                  results$`EQR Metrics` == eqr])
-          b <- unlist(results$EQR[results$RESULT == b_result &
-                                  results$`EQR Metrics` == eqr])
+
+          # Filter data to get relevant EQRs
+          a <- unlist(data$EQR[data$RESULT == a_result &
+                                  data$`EQR Metrics` == eqr])
+          b <- unlist(data$EQR[data$RESULT == b_result &
+                                  data$`EQR Metrics` == eqr])
           # Compare probability test
           compare_test <- compare_test(a, b)
           # Compare probability table
@@ -78,7 +78,7 @@ defaulting to comparing all results to all other differing results in input data
     comparisons_eqr <- do.call("rbind", loop_eqr_types) # bind all eqr type
   }
 
-  compare_output <- combine_compare(results, eqrs, a_results, b_results)
+  compare_output <- combine_compare(data, eqrs, a_results, b_results)
 
   return(compare_output)
 }

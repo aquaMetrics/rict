@@ -103,7 +103,7 @@ rict_validate <- function(data = NULL) {
   model <- model$models[model$data_present == T]
 
   # Display which model type has been detected
-  message("'", model, "' model values detected - applying relevant checks...")
+  message("Variables for the '", model, "' model detected - applying relevant checks.")
 
   # Detect NI / GB grid references -----------------------------------------------------
   areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", data$NGR), "gb", "ni"))
@@ -118,7 +118,7 @@ rict_validate <- function(data = NULL) {
   }
 
   # Display which model area has been detected
-  message("'", toupper(area), "' grid reference values detected - applying relevant checks...")
+  message("Grid reference values detected for '", toupper(area), "' - applying relevant checks.")
 
   # Re-assigning area due to issue with filtering column and variable sharing same name
   area_selected <- area
@@ -189,54 +189,62 @@ rict_validate <- function(data = NULL) {
   }
   ### Add calculated variables based on input data ------------------------------------
   # Check alkalinity related columns and calculate if necessary
-  # if (all(is.na(data$HARDNESS)) &
-  #   all(is.na(data$CALCIUM)) &
-  #   all(is.na(data$CONDUCT)) &
-  #   all(is.na(data$ALKALINITY))
-  # ) {
-  #   stop("You provided empty ALKALINITY, HARDNESS, CONDUCT and CALCIUM values,
-  #      we expect values for at least one of these variables", call. = FALSE)
-  # } else { # loop through rows and calculate Alkalinity
-  #   data <- lapply(split(data, row.names(data)), function(data_row) {
-  #     if (!is.null(data_row$HARDNESS) && !is.na(data_row$HARDNESS)) {
-  #       data_row$ALKALINITY <- 4.677 + 0.6393 * data_row$HARDNESS
-  #       message(paste(
-  #         "Using Hardness value to calculate Alkalinity at",
-  #         data_row$SITE, "-", data_row$YEAR
-  #       ))
-  #     }
-  #     else
-  #     if (!is.null(data_row$CALCIUM) && !is.na(data_row$CALCIUM)) {
-  #       data_row$ALKALINITY <- 14.552 + 1.7606 * data_row$CALCIUM
-  #       paste(message(
-  #         "Using Calcium value to calculate Alkalinity at",
-  #         data_row$SITE, "-", data_row$YEAR
-  #       ))
-  #     }
-  #     else
-  #     if (!is.null(data_row$CONDUCTIVITY) && !is.na(data_row$CONDUCTIVITY)) {
-  #       data_row$ALKALINITY <- 0.3201 * data_row$CONDUCTIVITY - 8.0593
-  #       paste(message(
-  #         "Using Conductivity value to calculate Alkalinity at",
-  #         data_row$SITE, "-", data_row$YEAR
-  #       ))
-  #     }
-  #     return(data_row)
-  #   })
-  #   data <- dplyr::bind_rows(data)
-  # }
-  #
-  # # Calculate discharge category from velocity and width if required
-  # data <- lapply(split(data, row.names(data)), function(data_row) {
-  #   if (!is.null(data_row$VELOCITY) && !is.na(data_row$VELOCITY)) {
-  #     data_row$DISCHARGE <- data_row$MEAN_DEPTH / 100 * data_row$MEAN_WIDTH * data_row$VELOCITY / 100
-  #     message("Using velocity, width and depth to calculate discharge category")
-  #   }
-  #   # hack - to avoid errors if some VELOCITY rows are NA - but avoids velocity validation rules..
-  #     data_row$VELOCITY <- NULL
-  #     return(data_row)
-  # })
-  # data <- dplyr::bind_rows(data)
+  if (all(is.na(data$HARDNESS)) &
+    all(is.na(data$CALCIUM)) &
+    all(is.na(data$CONDUCT)) &
+    all(is.na(data$ALKALINITY))
+  ) {
+    stop("You provided empty ALKALINITY, HARDNESS, CONDUCT and CALCIUM values,
+       we expect values for at least one of these variables", call. = FALSE)
+  } else { # loop through rows and calculate Alkalinity
+
+    alkalinity <- lapply(split(data, paste(data$SITE, data$YEAR)), function(data_row) {
+      if (!is.null(data_row$HARDNESS) && !is.na(data_row$HARDNESS)) {
+        data_row$ALKALINITY <- 4.677 + 0.6393 * data_row$HARDNESS
+        message(paste(
+          "Using Hardness value to calculate Alkalinity at",
+          data_row$SITE, "-", data_row$YEAR
+        ))
+      }
+      else
+      if (!is.null(data_row$CALCIUM) && !is.na(data_row$CALCIUM)) {
+        data_row$ALKALINITY <- 14.552 + 1.7606 * data_row$CALCIUM
+        paste(message(
+          "Using Calcium value to calculate Alkalinity at",
+          data_row$SITE, "-", data_row$YEAR
+        ))
+      }
+      else
+      if (!is.null(data_row$CONDUCTIVITY) && !is.na(data_row$CONDUCTIVITY)) {
+        data_row$ALKALINITY <- 0.3201 * data_row$CONDUCTIVITY - 8.0593
+        paste(message(
+          "Using Conductivity value to calculate Alkalinity at",
+          data_row$SITE, "-", data_row$YEAR
+        ))
+      }
+      return(data_row)
+    })
+    alkalinity <- dplyr::bind_rows(alkalinity)
+    # Keep order and row.names the same as original input data for consistent output
+    data <- alkalinity[order(match(alkalinity[, "SITE"], data[, "SITE"])), ]
+    row.names(data) <- seq_len(nrow(data))
+  }
+
+  # Calculate discharge category from velocity and width if required
+  discharge <- lapply(split(data, paste(data$SITE, data$YEAR)), function(data_row) {
+    if (!is.null(data_row$VELOCITY) && !is.na(data_row$VELOCITY)) {
+      data_row$DISCHARGE <- data_row$MEAN_DEPTH / 100 * data_row$MEAN_WIDTH * data_row$VELOCITY / 100
+      message("Using velocity, width and depth to calculate discharge category")
+    }
+    # hack - to avoid errors if some VELOCITY rows are NA - but avoids velocity validation rules..
+     # data_row$VELOCITY <- NULL
+      return(data_row)
+  })
+  discharge <- dplyr::bind_rows(discharge)
+  # Keep order and row.names the same as original input data for consistent output
+  data <- discharge[order(match(discharge[, "SITE"], data[, "SITE"])), ]
+  row.names(data) <- seq_len(nrow(data))
+
 
   # Convert to character as required by specification
   data$SITE <- as.character(data$SITE)
@@ -285,8 +293,8 @@ rict_validate <- function(data = NULL) {
   } else {
     data$TMEAN <- data$MEAN.AIR.TEMP
     data$TRANGE <- data$AIR.TEMP.RANGE
-    warning("Your input data file includes mean temperature and range (MEAN.AIR.TEMP & AIR.TEMP.RANGE).
-These values will be used instead of calculating them from Grid Reference values")
+    warning("Your input data file includes mean temperature and/or range (MEAN.AIR.TEMP & AIR.TEMP.RANGE).
+These values will be used instead of calculating them from Grid Reference values.")
   }
   # Total substrate
   if (model == "physical") {

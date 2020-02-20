@@ -8,10 +8,12 @@
 #' compare functions: `compare_test` and `compare_probability`. For instance,
 #' special handling of the 'MINTA' outputs from RICT classification.
 #'
-#' @param results_a Data frame output from `rict(store_eqrs = T)`. The `results_b` and `results_b` input  dataframes must have the same number of
-#' rows
-#' @param results_b Data frame output from `rict(store_eqrs = T)`. The `results_b` and `results_b` input  dataframes must have the same number of
-#' rows
+#' @param results_a Data frame output from `rict(store_eqrs = T)`. The
+#'   `results_b` and `results_b` input  dataframes must have the same number of
+#'   rows
+#' @param results_b Data frame output from `rict(store_eqrs = T)`. The
+#'   `results_b` and `results_b` input  dataframes must have the same number of
+#'   rows
 #' @return Dataframe of compare results with 44 variables see `technical
 #' specifications` for details. Returns output of results the same length as
 #' the input files.
@@ -143,6 +145,6 @@ rict_compare <- function(results_a = NULL, results_b = NULL) {
   results[grep("MINTA", results$`EQR metric compared`), 4:10] <- NA
   # Tidy messy row.names
   row.names(results) <- seq_len(nrow(results))
-  message("Simulated EQR comparison completed!")
+  message("Simulated EQR comparison completed")
   return(results)
 }

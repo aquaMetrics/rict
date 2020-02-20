@@ -32,8 +32,10 @@ as results 'b'. Designed for comparing simulated Enironmental Quality Ratios (EQ
 }
 \examples{
 \dontrun{
-test <- compare_probability(a = c(0.3,0.4,0.6),
-                            b = c(1,0.9,0.6),
-                            eqr_bands <- c(0, 0.47, 0.56, 0.68, 0.8, 1))
+test <- compare_probability(
+  a = c(0.3, 0.4, 0.6),
+  b = c(1, 0.9, 0.6),
+  eqr_bands <- c(0, 0.47, 0.56, 0.68, 0.8, 1)
+)
 }
 }

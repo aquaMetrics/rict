@@ -207,9 +207,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
 
     # Create store for EQRs to retain for compare function
     if (store_eqrs == T) {
-      AVG_ASPT <- list()
-      AVG_NTAXA <- list()
-      MINTA <- list()
+      eqr_metrics <- list()
     }
     # Variable that flags if last site has not been processed
     lastSiteProcessed <- FALSE
@@ -409,11 +407,6 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
       # Add the averages of spr,aut
       EQRAverages_ntaxa_spr_aut <- rbind(EQRAverages_ntaxa_spr_aut, eqr_av_spr)
 
-      # bind EQRs into list dataframe column
-      if (store_eqrs == T) {
-        eqr <- list(c(multiYear_EQRAverages_ntaxa_spr_aut))
-        AVG_NTAXA <- rbind(AVG_NTAXA, eqr)
-      }
       # ************** Now do the ASPT from HERE - using the calculations from ASPT ABOVE*******************
 
       # Part 2: Start calculating for ASPT probability of CLASS
@@ -443,11 +436,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
       SiteProbabilityclasses_spr_aut_comb_aspt <- rbind(SiteProbabilityclasses_spr_aut_comb_aspt, a_aspt_spr_aut)
       # Add the averages of spr
       EQRAverages_aspt_spr_aut <- rbind(EQRAverages_aspt_spr_aut, eqr_av_spr_aspt)
-      # bind ASPT EQRs into list dataframe column
-      if (store_eqrs == T) {
-        eqr <- list(c(multiYear_EQRAverages_aspt_spr_aut))
-        AVG_ASPT <- rbind(AVG_ASPT, eqr)
-      }
+
       ########  Calculate the MINTA -spring aut case  worse class = 1 i.e. min of class from NTAXA and ASPT ######
 
       # Do the MINTA spr_aut case
@@ -479,6 +468,29 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
       # MINTA <- rbind(MINTA, eqr)
 
       ##### MINTA ENDS HERE  #####
+
+      #### Store EQRs in list
+      if (store_eqrs == T) {
+        # Create variable to store list of simulated EQRs for each metric
+          eqrs <- list(multiYear_EQRAverages_aspt_spr_aut,
+                         multiYear_EQRAverages_ntaxa_spr_aut,
+                         data.frame(minta_ntaxa_aspt_spr_aut))
+        # Create variable to store list of 'pretty' names for eqr metrics
+        eqr_names <- list("AVG_ASPT", "AVG_NTAXA", "MINTA")
+        # To make it easier to merge and process simulated EQRs and
+        # classification results, bind all simluated EQRs into single dataframe
+        # with a 'pretty' name for later manipulation
+        eqrs <- lapply(seq_len(length(eqrs)), function(n) {
+          df <- eqrs[[n]]
+          eqr <- cbind(df, eqr_names[n], k)
+          names(eqr) <- c("EQR", "EQR Metrics", "ID")
+          return(eqr)
+        })
+        eqrs <- do.call("rbind", eqrs)
+        # Bind eqrs into list on each iteration (this is much faster than rbind-ing
+        # into a big dataframe)
+        eqr_metrics <- c(eqr_metrics, list(eqrs))
+      }
 
       # Move the pointer k to new adjusted position for j - whether multiple or not
       k <- j + 1
@@ -529,38 +541,14 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
     # Rename columns for MINTA, so they dont conflict
     colnames(SiteMINTA_whpt_spr_aut) <- paste0(colnames(SiteMINTA_whpt_spr_aut), "_MINTA_")
     classification_results <- cbind(allResults, SiteMINTA_whpt_spr_aut)
-    # bind stored eqrs
+
     if (store_eqrs == T) {
-      AVG_ASPT <- data.frame(AVG_ASPT)
-      AVG_NTAXA <- data.frame(AVG_NTAXA)
-      # minta
-
-      MINTA <- list("MINTA" = c(
-        unlist(AVG_ASPT)[unlist(AVG_ASPT) < unlist(AVG_NTAXA)],
-        unlist(AVG_NTAXA)[unlist(AVG_NTAXA) < unlist(AVG_ASPT)]
-      ))
-
-      # classification_results <- cbind(classification_results[, c("SITE", "YEAR")],
-      #                               AVG_ASPT, AVG_NTAXA)
-      # classification_results <- list(classification_results, ASPT, NTAXA)
-
-      classification_results <- rbind(
-        data.frame(classification_results[, c("SITE", "YEAR")],
-          "EQR Metrics" = names(AVG_ASPT),
-          "EQR" = unlist(AVG_ASPT),
-          check.names = F
-        ),
-        data.frame(classification_results[, c("SITE", "YEAR")],
-          "EQR Metrics" = names(AVG_NTAXA),
-          "EQR" = unlist(AVG_NTAXA),
-          check.names = F
-        ),
-        data.frame(classification_results[, c("SITE", "YEAR")],
-          "EQR Metrics" = names(MINTA),
-          "EQR" = unlist(MINTA),
-          check.names = F
-        )
-      )
+      # bind stored eqrs
+      eqr_metrics <- dplyr::bind_rows(eqr_metrics)
+      eqr_metrics$ID <- seq_len(length(unique(eqr_metrics$ID)))
+      classification_results$ID <- seq_len(nrow(classification_results))
+      # Merge simluated eqrs with classification results based on 'ID' (row number)
+      classification_results <- merge(classification_results, eqr_metrics)
     }
     return(classification_results)
   }

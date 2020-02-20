@@ -78,19 +78,23 @@ test_that("expect compare function to match with test data", {
 
 
 test_that("minta class work", {
- compare_probability(a = c(1), b = c(1),
-                             eqr_bands <-  c(0, 1, 2, 3, 4, 5),
-                            cap_eqrs <- F,
-                        labels = 1:5)
+  compare_probability(
+    a = c(1), b = c(1),
+    eqr_bands <- c(0, 1, 2, 3, 4, 5),
+    cap_eqrs <- F,
+    labels = 1:5
+  )
 
-  compare_probability(a = c(1), b = c(1),
-                      eqr_bands <- c(0, 0.47, 0.56, 0.68, 0.8, 1),
-                      cap_eqrs <- T)
+  compare_probability(
+    a = c(1), b = c(1),
+    eqr_bands <- c(0, 0.47, 0.56, 0.68, 0.8, 1),
+    cap_eqrs <- T
+  )
 
   # MYR-GB-05-R 2018	MYR-GB-05-D 2018
-  a <- rict(demo_observed_values[demo_observed_values$SITE == "MYR-GB-05-R",], year_type = "single", store_eqrs = T)
-  b <- rict(demo_observed_values[demo_observed_values$SITE == "MYR-GB-05-D",], year_type = "single", store_eqrs = T)
+  a <- rict(demo_observed_values[demo_observed_values$SITE == "MYR-GB-05-R", ], year_type = "single", store_eqrs = T)
+  b <- rict(demo_observed_values[demo_observed_values$SITE == "MYR-GB-05-D", ], year_type = "single", store_eqrs = T)
 
-  a <- a[a$YEAR == "2018",]
-  b <- b[b$YEAR == "2018",]
+  a <- a[a$YEAR == "2018", ]
+  b <- b[b$YEAR == "2018", ]
 })

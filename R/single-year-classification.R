@@ -514,8 +514,7 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
   if (store_eqrs == T) {
     eqr_metrics <- dplyr::bind_rows(eqr_metrics)
     # Merge simluated eqrs with classification results based on 'ID' (row number)
-    allResults_ntaxa_aspt_minta_combined$ID <-
-                              as.integer(row.names(allResults_ntaxa_aspt_minta_combined))
+    allResults_ntaxa_aspt_minta_combined$ID <- seq_len(nrow(allResults_ntaxa_aspt_minta_combined))
     allResults_ntaxa_aspt_minta_combined <- merge(allResults_ntaxa_aspt_minta_combined,
                                                   eqr_metrics)
   }

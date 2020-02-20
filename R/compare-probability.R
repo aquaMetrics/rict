@@ -14,9 +14,11 @@
 #'
 #' @examples
 #' \dontrun{
-#' test <- compare_probability(a = c(0.3,0.4,0.6),
-#'                             b = c(1,0.9,0.6),
-#'                             eqr_bands <- c(0, 0.47, 0.56, 0.68, 0.8, 1))
+#' test <- compare_probability(
+#'   a = c(0.3, 0.4, 0.6),
+#'   b = c(1, 0.9, 0.6),
+#'   eqr_bands <- c(0, 0.47, 0.56, 0.68, 0.8, 1)
+#' )
 #' }
 compare_probability <- function(a = NULL, b = NULL,
                                 eqr_bands = c(0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
@@ -26,22 +28,34 @@ compare_probability <- function(a = NULL, b = NULL,
   # By default cap EQRs between 0-1
   if (cap_eqrs == T) {
     a <- sapply(a, function(eqr) {
-      if (eqr < 0) {eqr = 0}
-      if (eqr > 1) {eqr = 1}
+      if (eqr < 0) {
+        eqr <- 0
+      }
+      if (eqr > 1) {
+        eqr <- 1
+      }
       return(eqr)
     })
     b <- sapply(b, function(eqr) {
-      if (eqr < 0) {eqr = 0}
-      if (eqr > 1) {eqr = 1}
+      if (eqr < 0) {
+        eqr <- 0
+      }
+      if (eqr > 1) {
+        eqr <- 1
+      }
       return(eqr)
     })
   }
 
   # Cut results/EQRs into classes
-  Results_A <- data.frame(cut(a, breaks = eqr_bands, labels,
-                              include.lowest = T, right= F))
-  Results_B <- data.frame(cut(b, breaks = eqr_bands, labels,
-                              include.lowest = T, right= F))
+  Results_A <- data.frame(cut(a,
+    breaks = eqr_bands, labels,
+    include.lowest = T, right = F
+  ))
+  Results_B <- data.frame(cut(b,
+    breaks = eqr_bands, labels,
+    include.lowest = T, right = F
+  ))
 
   # Need to factorise the results to create table
   Results_A <- factor(Results_A[, 1], levels = 1:5)
@@ -74,7 +88,7 @@ compare_probability <- function(a = NULL, b = NULL,
   table_prop_class <- round(prop.table(table(results_a_class, results_b_class)), 4) * 100
   table_prop <- round(prop.table(table(Results_A, Results_B)), 4) * 100
 
-  # Calculate most probable class for A and B results (this gets re-used a few times)
+  # Calculate most probable class for A and B results (this variable re-used a few times)
   prob_class_result_a <- as.integer(cut(which.max(table(Results_A)),
     breaks = c(0, 1, 2, 3, 4, 5),
     labels = 1:5,

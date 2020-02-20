@@ -7,10 +7,12 @@
 rict_compare(results_a = NULL, results_b = NULL)
 }
 \arguments{
-\item{results_a}{Data frame output from `rict(store_eqrs = T)`. The `results_b` and `results_b` input  dataframes must have the same number of
+\item{results_a}{Data frame output from `rict(store_eqrs = T)`. The
+`results_b` and `results_b` input  dataframes must have the same number of
 rows}
 
-\item{results_b}{Data frame output from `rict(store_eqrs = T)`. The `results_b` and `results_b` input  dataframes must have the same number of
+\item{results_b}{Data frame output from `rict(store_eqrs = T)`. The
+`results_b` and `results_b` input  dataframes must have the same number of
 rows}
 }
 \value{

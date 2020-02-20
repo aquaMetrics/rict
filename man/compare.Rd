@@ -4,12 +4,26 @@
 \alias{compare}
 \title{Compare the statistical differences between classifications results}
 \usage{
-compare(data = NULL, a_results = NULL, b_results = NULL)
+compare(
+  data = NULL,
+  a_results = NULL,
+  b_results = NULL,
+  eqr_bands = c(0, 0.2, 0.4, 0.6, 0.8, 1),
+  cap_eqrs = T
+)
 }
 \arguments{
-\item{data}{Data frame containing at least three columns.  A 'RESULT' and 'SITE' column
-plus at least one column with simulated eqrs. For
-example see `demo_eqr_values` - this is nested but flat dataframe will work too.}
+\item{data}{Data frame containing at least three columns: 'RESULT',
+'EQR', 'EQR Metrics'. For example see `demo_eqr_values` - this is nested but
+flat dataframe will work too.}
+
+\item{a_results}{List of results A in data to compare.}
+
+\item{b_results}{List of results B in data to compare.}
+
+\item{eqr_bands}{Breaks values to cut EQR values into class boudnaries}
+
+\item{cap_eqrs}{Default TRUE, EQR values will be capped between 0-1, if FALSE values won't be capped.}
 }
 \value{
 Dataframe of compare results

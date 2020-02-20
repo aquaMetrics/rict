@@ -136,19 +136,15 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
   Ubias8r_spr <- getUbias8r_new(n_runs, Ubias8)
   Ubias8r_aut <- getUbias8r_new(n_runs, Ubias8)
 
-  # Create store for EQRs to retain for compare function
+  # Create varaibale to store EQRs to retain for compare function
   if (store_eqrs == T) {
-    AVG_ASPT <- list()
-    AVG_NTAXA <- list()
-    SPR_NTAXA <- list()
-    AUT_NTAXA <- list()
-    SPR_ASPT <- list()
-    AUT_ASPT <- list()
+    eqr_metrics <- list()
   }
 
   for (k in seq_len(nrow(predictions))) {
 
-    # LOOP all the sites from here
+    # LOOP all the sites from herec
+
     # Part 1. Adjust the Observed values
     # Loop strarts from here with site = k, i.e. sqr (sqrt(Obs) + ZObs) + Ubias8r
     ObsIDX8r_spr <- getObsIDX8rB(obs_ntaxa_spr[k], getZObs_r_new(sdobs_ntaxa, n_runs))
@@ -166,13 +162,7 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
     EQR_ntaxa_spr <- as.data.frame(Obs_site1_ntaxa_spr / ExpIDX8r_ntaxa_spr[, 1])
     EQR_ntaxa_aut <- as.data.frame(Obs_site1_ntaxa_aut / ExpIDX8r_ntaxa_aut[, 1])
 
-    # bind EQRs into list dataframe column
-    if (store_eqrs == T) {
-      eqr <- list(c(EQR_ntaxa_spr))
-      SPR_NTAXA <- rbind(SPR_NTAXA, eqr)
-      eqr <- list(c(EQR_ntaxa_aut))
-      AUT_NTAXA <- rbind(AUT_NTAXA, eqr)
-    }
+
     # Part 1: for "Spring" - DO FOR NTAXA
 
     # Find the averages of both spr and autum, declare a function to compute this
@@ -218,9 +208,9 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
 
     # Part 3:: Do combined spr, aut processing
     # First find the row averages of all the 10,000 simulations
-    rowAverage_spr_aut <- data.frame(rowMeans(cbind(EQR_ntaxa_spr, EQR_ntaxa_aut)))
+    EQR_ntaxa_avg <- data.frame(rowMeans(cbind(EQR_ntaxa_spr, EQR_ntaxa_aut)))
     # Classify these for each SITE using the EQR just for spring
-    classArray_siteOne_combined_spr <- getClassarray_ntaxa(rowAverage_spr_aut)
+    classArray_siteOne_combined_spr <- getClassarray_ntaxa(EQR_ntaxa_avg)
     # Define an array to hold probability of class
     probClass_spr_aut_comb <- matrix(0, ncol = 1, nrow = 5)
     # Process probabilities
@@ -238,11 +228,7 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
     SiteProbabilityclasses_spr_aut_comb_ntaxa <- rbind(SiteProbabilityclasses_spr_aut_comb_ntaxa, a_ntaxa_spr_aut)
 
 
-    # bind EQRs into list dataframe column
-    if (store_eqrs == T) {
-      eqr <- list(c(rowAverage_spr_aut))
-      AVG_NTAXA <- rbind(AVG_NTAXA, eqr)
-    }
+
     # **** Workout FOR ASPT STARTS HERE
     ### RALPH
     u_9a <- 4.35
@@ -289,13 +275,7 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
     EQR_aspt_spr <- as.data.frame(ObsIDX9rb_spr / ExpIDX9r_aspt_spr[, 1])
     EQR_aspt_aut <- as.data.frame(ObsIDX9rb_aut / ExpIDX9r_aspt_aut[, 1])
 
-    # bind EQRs into list dataframe column
-    if (store_eqrs == T) {
-      eqr <- list(c(EQR_aspt_spr))
-      SPR_ASPT <- rbind(SPR_ASPT, eqr)
-      eqr <- list(c(EQR_aspt_aut))
-      AUT_ASPT <- rbind(AUT_ASPT, eqr)
-    }
+
 
     # Part 1: for "Spring"
     # Find the averages of both spr and autum, declare a function to compute this
@@ -342,9 +322,9 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
 
     # Part 3:: start the combined spr_aut processing
     # First find the row averages of all the 10,000 simulations
-    rowAverage_spr_aut <- data.frame(rowMeans(cbind(EQR_aspt_spr, EQR_aspt_aut)))
+    EQR_aspt_avg <- data.frame(rowMeans(cbind(EQR_aspt_spr, EQR_aspt_aut)))
     # Classify these for each SITE using the EQR just for spring
-    classArray_siteOne_combined_spr_aspt <- getClassarray_aspt(rowAverage_spr_aut)
+    classArray_siteOne_combined_spr_aspt <- getClassarray_aspt(EQR_aspt_avg)
     # Define an array to hold probability of class
     probClass_spr_aut_comb <- matrix(0, ncol = 1, nrow = 5)
     # Process probabilities
@@ -362,11 +342,7 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
     a_aspt_spr_aut <- cbind(a_aspt_spr_aut, mostProb)
     SiteProbabilityclasses_spr_aut_comb_aspt <- rbind(SiteProbabilityclasses_spr_aut_comb_aspt, a_aspt_spr_aut)
 
-    # bind EQRs into list dataframe column
-    if (store_eqrs == T) {
-      eqr <- list(c(rowAverage_spr_aut))
-      AVG_ASPT <- rbind(AVG_ASPT, eqr)
-    }
+
 
     ########  Calculate the MINTA - worse class = 5 i.e. max of class from NTAXA and ASPT ######
     matrix_ntaxa_spr <- as.matrix(classArray_siteOne_spr_ntaxa)
@@ -439,7 +415,36 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
     aa <- cbind(aa, mostProb)
     # Now bind the MINTA proportion to the dataframe
     SiteMINTA_whpt_spr_aut <- rbind(SiteMINTA_whpt_spr_aut, aa)
-    ##### MINTA ENDS HERE  #############
+    ##### MINTA ENDS HERE  #######
+
+    #### Store EQRs in list
+      if (store_eqrs == T) {
+       # Create variable to store list of simulated EQRs for each metric
+       eqrs <- list(
+         EQR_aspt_avg, EQR_ntaxa_avg, EQR_aspt_spr,
+         EQR_aspt_aut, EQR_ntaxa_spr, EQR_ntaxa_aut,
+         data.frame(minta_ntaxa_aspt_spr_aut))
+       # Create variable to store list of 'pretty' names for eqr metrics
+       eqr_names <- list(
+         "AVG_ASPT", "AVG_NTAXA", "SPR_ASPT",
+         "SPR_NTAXA", "AUT_ASPT", "AUT_NTAXA", "MINTA"
+       )
+       # To make it easier to merge and process simulated EQRs and
+       # classification results, bind all simluated EQRs into single dataframe
+       # with a 'pretty' name for later manipulation
+       eqrs <- lapply(seq_len(length(eqrs)), function(n) {
+         df <- eqrs[[n]]
+         eqr <- cbind(df, eqr_names[n], k)
+         names(eqr) <- c("EQR", "EQR Metrics", "ID")
+         return(eqr)
+       })
+       eqrs <- do.call("rbind", eqrs)
+       # Bind eqrs into list on each iteration (this is much faster than rbind-ing
+       # into a big dataframe)
+       eqr_metrics <- c(eqr_metrics, list(eqrs))
+
+      }
+
   } # END of FOR LOOP
 
   # MINTA outputs
@@ -505,39 +510,15 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
   allResults_ntaxa_aspt_minta_combined$mintawhpt_spr_aut_mostProb_MINTA_ <-
     allResults_ntaxa_aspt_minta_combined$mintawhpt_spr_aut_mostProb
   allResults_ntaxa_aspt_minta_combined$mintawhpt_spr_aut_mostProb <- NULL
+
   if (store_eqrs == T) {
-
-    # return simulated EQRS in data.frame
-    minta = data.frame(AVG_ASPT)
-    names(minta) <- "MINTA"
-    eqrs_list <- list("AVG_ASPT" = data.frame(AVG_ASPT),
-    "AVG_NTAXA" = data.frame(AVG_NTAXA),
-    "SPR_NTAXA" = data.frame(SPR_NTAXA),
-    "SPR_ASPT" = data.frame(SPR_ASPT),
-    "AUT_NTAXA" = data.frame(AUT_NTAXA),
-    "AUT_ASPT" = data.frame(AUT_ASPT),
-    "MINTA" = minta
-    )
-    # minta - take the lowest value from each pair of AVG_NTAXA /  AVG_ASPT
-    #  MINTA <-  list("MINTA" = c(unlist(AVG_ASPT)[ unlist(AVG_ASPT) < unlist(AVG_NTAXA)],
-    #                            unlist(AVG_NTAXA)[ unlist(AVG_NTAXA) < unlist(AVG_ASPT)]))
-
-
-    all_eqrs <- lapply(eqrs_list, function(eqrs) {
-     eqr_sites <-  lapply(seq_len(nrow(eqrs)), function(eqr_site) {
-        eqr_n <- rbind(
-          data.frame(allResults_ntaxa_aspt_minta_combined[eqr_site, c("SITE", "YEAR")],
-                  "EQR Metrics" = names(eqrs),
-                  "EQR" = unlist(eqrs[eqr_site, ]),
-                  check.names = F)
-           )
-         return( eqr_n)
-     })
-     all_eqrs <- do.call("rbind", eqr_sites)
-   })
-    # bind list back together into dataframe
-    allResults_ntaxa_aspt_minta_combined <- dplyr::bind_rows(all_eqrs)
-   }
+    eqr_metrics <- dplyr::bind_rows(eqr_metrics)
+    # Merge simluated eqrs with classification results based on 'ID' (row number)
+    allResults_ntaxa_aspt_minta_combined$ID <-
+                              as.integer(row.names(allResults_ntaxa_aspt_minta_combined))
+    allResults_ntaxa_aspt_minta_combined <- merge(allResults_ntaxa_aspt_minta_combined,
+                                                  eqr_metrics)
+  }
 
   return(allResults_ntaxa_aspt_minta_combined)
 }

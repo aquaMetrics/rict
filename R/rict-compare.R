@@ -1,20 +1,20 @@
 #' Compare the Statistical Differences between Classifications Results
 #'
-#' The Compare function allows the user to assess whether there is a real
+#' The `rict_compare` function allows the user to assess whether there is a real
 #' difference in EQR values and/or status class between a pair of results and/or
 #' sites and/or time periods.
 #'
-#' By default detects if upstream / downstream comparison required. This is
-#' indicate by 'a' sites not included in 'b' sites or else it detects
-#' if sites are paired between both datasets. For instance, if comparing season
-#' to season or year to year pairs.
+#' The `rict_compare` function controls RICT specific use of the lower level
+#' compare functions: `compare_test` and `compare_probability`. For instance,
+#' special handling of the 'MINTA' outputs from RICT classification.
 #'
-#' @param results_a Data frame output from `rict(store_eqrs = T)`.
-#' @param results_b Data frame output from `rict(store_eqrs = T)`.
-#' @param eqr_metrics List of eqr_metrics to compare, default is average year ASPT and NTAXA
-#' metric.
+#' @param results_a Data frame output from `rict(store_eqrs = T)`. The `results_b` and `results_b` input  dataframes must have the same number of
+#' rows
+#' @param results_b Data frame output from `rict(store_eqrs = T)`. The `results_b` and `results_b` input  dataframes must have the same number of
+#' rows
 #' @return Dataframe of compare results with 44 variables see `technical
-#' specifications` for details:
+#' specifications` for details. Returns output of results the same length as
+#' the input files.
 #' \describe{
 #'   \item{EQR metric compared}{EQR metric from Result A which is being compared}
 #'   \item{Result A}{Concatennated results name of Year and Site}
@@ -69,71 +69,80 @@
 #' compare <- rict_compare(results_a, results_b)
 #' }
 #'
-rict_compare <- function(results_a = NULL, results_b = NULL,
-                         eqr_metrics = NULL) {
+rict_compare <- function(results_a = NULL, results_b = NULL) {
   message("Comparing simulated EQR results...")
+
+  # Stop if results_a and b are not paired/ equal length.
+  if (nrow(results_a) != nrow(results_b)) {
+    stop("You supplied two datasets to compare with differing number of rows.
+        We expect both datasets have the same number of rows.
+        HINT - Check your datasets have the same number of rows")
+  }
 
   # Create 'result' ID
   results_a$RESULT <- paste(results_a$SITE, results_a$YEAR)
   results_b$RESULT <- paste(results_b$SITE, results_b$YEAR)
 
-  # Arrange datasets so both in matching sites/results order
-  results_a <- dplyr::arrange(results_a, RESULT, `EQR Metrics`)
-  results_b <- dplyr::arrange(results_b, RESULT, `EQR Metrics`)
+  # Get EQR metric names (sometimes these could be different) for example
+  # comparing SPR_NTAXA to AUT_NTAXA
+  EQR_Metrics <- paste(
+    results_a$`EQR Metrics`,
+    "Vs",
+    results_b$`EQR Metrics`
+  )
 
-  # Convert to character because of potentially different factor levels
-  results_a$SITE <- as.character(results_a$SITE)
-  results_b$SITE <- as.character(results_b$SITE)
+  results_a$`EQR Metrics` <- EQR_Metrics
+  results_b$`EQR Metrics` <- EQR_Metrics
+  ### TODO Filter out ASPT Vs NTAXA Vs Minta - comparison not allowed?  ###
 
-  results_a$RESULT_TYPE <- "Result A"
-  results_b$RESULT_TYPE <- "Result B"
-  # Bind columns from a anda b results. If eqr_metrics specified keep only these
-  # columns otherwise bind all.
-  if (!is.null(eqr_metrics)) {
-    # Default to min number of columns if a and b differ in column number
-    data <- dplyr::bind_rows(
-      results_a[results_a$`EQR Metrics` %in% eqr_metrics, ],
-      results_b[results_b$`EQR Metrics` %in% eqr_metrics, ]
-    )
-  } else {
-    data <- dplyr::bind_rows(
-      results_a,
-      results_b
-    )
-  }
+  # Loop through each EQR metrics
+  comparisons <- lapply(split(results_a, results_a$`EQR Metrics`), function(eqr_metric) {
+    # Special case handling - provide 'EQR' boundaries, labels and cap_eqr paraemters
+    # in preparation for compare_probability() function
+    if (any(eqr_metric$`EQR Metrics` == "MINTA Vs MINTA")) {
+      eqr_bands <- c(0, 1, 2, 3, 4, 5) # Minta uses class not EQR boundaries
+      cap_eqrs <- F
+      labels <- 1:5
+    }
+    if (grepl("aspt", unique(eqr_metric$`EQR Metrics`), ignore.case = T)) {
+      eqr_bands <- c(0, 0.59, 0.72, 0.86, 0.97, 1)
+      cap_eqrs <- T
+      labels <- 5:1
+    }
+    if (grepl("ntaxa", unique(eqr_metric$`EQR Metrics`), ignore.case = T)) {
+      eqr_bands <- c(0, 0.47, 0.56, 0.68, 0.8, 1)
+      cap_eqrs <- T
+      labels <- 5:1
+    }
+    # Loop through all unique results in 'a'
+    comparison <- lapply(split(eqr_metric, eqr_metric$ID), function(a) {
+      # Find matching b results EQRs to compare
+       b <- results_b[results_b$ID == unique(a$ID) &
+        results_b$`EQR Metrics` == unique(a$`EQR Metrics`), ]
 
-  ## Select which results to compare -------------------------------------------------
-  # Detect if upstream / downstream comparison required. This is indicate by 'a'
-  # sites not included in 'b' sites
-  if (any(unique(results_a$SITE) != unique(results_b$SITE))) {
-    comparisons <- compare(data, a = results_a$RESULT, b = results_b$RESULT)
-  }
+      compare_probability <- compare_probability(a = a$EQR,
+                                                 b = b$EQR,
+                                                 eqr_bands = eqr_bands,
+                                                 cap_eqrs = cap_eqrs,
+                                                 labels = labels)
+      compare_test <- compare_test(a = a$EQR, b = b$EQR)
 
-  # Detect if sites are paired between both datasets. For instance, if comparing
-  # season to season or year to year pairs.
-  else if (all(results_a$SITE == results_b$SITE)) {
-    # Get EQR metrics (sometimes these could be different)
-    eqr_metrics <- paste(data$`EQR Metrics`[data$RESULT_TYPE == "Result A"],
-                         "Vs",
-                         data$`EQR Metrics`[data$RESULT_TYPE == "Result B"])
-    data$`EQR Metrics` <- eqr_metrics
-
-    results_a$RESULT_B <- results_b$RESULT
-    # Loop through all unique results in 'a' comparing to paired result in 'b'
-    comparisons <- lapply(split(results_a, results_a$RESULT), function(a) {
-
-      compare(data[data$RESULT %in% c(unique(a$RESULT), unique(a$RESULT_B)), ],
-        a = unique(a$RESULT),
-        b = unique(a$RESULT_B)
+      compare_output <- cbind(
+        "EQR metric compared" = unique(a$`EQR Metrics`),
+        "Result A" = unique(a$RESULT),
+        "Result B" = unique(b$RESULT),
+        compare_test,
+        compare_probability
       )
+      return(compare_output)
     })
-    comparisons <- do.call("rbind", comparisons)
-  } else {
-    message("You provided two datasets with matching SITE(s)
- but differing number of rows. We expect datasets that share matching
- SITE(S) to have matching number of rows.")
-  }
+    comparisons <- do.call("rbind", comparison)
+  })
+  results <- do.call("rbind", comparisons)
+  # Special case - filter out minta `compare_test()` results as not applicable
+  results[grep("MINTA", results$`EQR metric compared`), 4:10] <- NA
+  # Tidy messy row.names
+  row.names(results) <- seq_len(nrow(results))
   message("Simulated EQR comparison completed!")
-  return(comparisons)
-
+  return(results)
 }

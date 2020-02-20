@@ -4,19 +4,19 @@
 \alias{rict_compare}
 \title{Compare the Statistical Differences between Classifications Results}
 \usage{
-rict_compare(results_a = NULL, results_b = NULL, eqr_metrics = NULL)
+rict_compare(results_a = NULL, results_b = NULL)
 }
 \arguments{
-\item{results_a}{Data frame output from `rict(store_eqrs = T)`.}
+\item{results_a}{Data frame output from `rict(store_eqrs = T)`. The `results_b` and `results_b` input  dataframes must have the same number of
+rows}
 
-\item{results_b}{Data frame output from `rict(store_eqrs = T)`.}
-
-\item{eqr_metrics}{List of eqr_metrics to compare, default is average year ASPT and NTAXA
-metric.}
+\item{results_b}{Data frame output from `rict(store_eqrs = T)`. The `results_b` and `results_b` input  dataframes must have the same number of
+rows}
 }
 \value{
 Dataframe of compare results with 44 variables see `technical
-specifications` for details:
+specifications` for details. Returns output of results the same length as
+the input files.
 \describe{
   \item{EQR metric compared}{EQR metric from Result A which is being compared}
   \item{Result A}{Concatennated results name of Year and Site}
@@ -65,15 +65,14 @@ specifications` for details:
 }
 }
 \description{
-The Compare function allows the user to assess whether there is a real
+The `rict_compare` function allows the user to assess whether there is a real
 difference in EQR values and/or status class between a pair of results and/or
 sites and/or time periods.
 }
 \details{
-By default detects if upstream / downstream comparison required. This is
-indicate by 'a' sites not included in 'b' sites or else it detects
-if sites are paired between both datasets. For instance, if comparing season
-to season or year to year pairs.
+The `rict_compare` function controls RICT specific use of the lower level
+compare functions: `compare_test` and `compare_probability`. For instance,
+special handling of the 'MINTA' outputs from RICT classification.
 }
 \examples{
 \dontrun{

@@ -7,10 +7,13 @@
 #'  \item Run probability of difference
 #'  \item Enumerate probability of difference
 #' }
-#' @param data Data frame containing at least three columns.  A 'RESULT' and 'SITE' column
-#'   plus at least one column with simulated eqrs. For
-#'   example see `demo_eqr_values` - this is nested but flat dataframe will work too.
-#' @param
+#' @param data Data frame containing at least three columns: 'RESULT',
+#'  'EQR', 'EQR Metrics'. For example see `demo_eqr_values` - this is nested but
+#'  flat dataframe will work too.
+#' @param a_results List of results A in data to compare.
+#' @param b_results List of results B in data to compare.
+#' @param eqr_bands Breaks values to cut EQR values into class boudnaries
+#' @param cap_eqrs Default TRUE, EQR values will be capped between 0-1, if FALSE values won't be capped.
 #' @return Dataframe of compare results
 #' @export
 #' @examples
@@ -18,19 +21,18 @@
 #' compare_results <- compare(demo_eqr_values)
 #' }
 #'
-compare <- function(data = NULL, a_results = NULL, b_results = NULL) {
-
-  data <- data
+compare <- function(data = NULL, a_results = NULL, b_results = NULL,
+                    eqr_bands = c(0.0, 0.2, 0.4, 0.6, 0.8, 1.0), cap_eqrs = T) {
   # Compare all the RESULT rows (a) with all the other RESULT rows (b)
   if (is.null(a_results) | is.null(b_results)) {
     a_results <- unique(data$RESULT)
     b_results <- unique(data$RESULT)
     message("No parameter provided to `a` and/or `b` arguments -
-defaulting to comparing all data to all other differing data in input data!")
+defaulting to comparing all results to all other results!")
   }
-  if (all(a_results == b_results)) {
-    message("Nothing to compare - Results A the same as Results B?")
-  }
+  # if (all(a_results == b_results)) {
+  #   message("Nothing to compare - Results A the same as Results B?")
+  # }
   # find all EQR metrics to compare - ASPT, NTAXA, SPR_NTAXA...
   eqrs <- unique(data$`EQR Metrics`)
 
@@ -55,7 +57,10 @@ defaulting to comparing all data to all other differing data in input data!")
           # Compare probability test
           compare_test <- compare_test(a, b)
           # Compare probability table
-          compare_probability <- compare_probability(a, b, eqr)
+          compare_probability <- compare_probability(a, b,
+                                                     eqr_bands = eqr_bands,
+                                                     cap_eqrs = cap_eqrs)
+
           # Check something got returned else return NULL
           if (!is.null(compare_test)) {
             # Join output

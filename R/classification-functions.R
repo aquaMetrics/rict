@@ -481,7 +481,7 @@ getAdjustedExpected_old <- function (AdjParameters, EndGrPredictions) {
 #Similar to above but check with Ralph
 
 calculate_Estimatedbias_whpt_aspt <- function (M, Obs_WHPT_ASPT){
-  set.seed(1234)
+  #set.seed(1234)
   SDev_denom <- 2/sqrt(M)
   mean_of_whpt_aspt_missed <-  4.35  +  (0.271*Obs_WHPT_ASPT) # the mean
   return (stats::rnorm(Obs_WHPT_ASPT,mean_of_whpt_aspt_missed,SDev_denom)) # normal distribution, mean of "mean_of_whpt_aspt_missed",and SD of "SDev_denom"

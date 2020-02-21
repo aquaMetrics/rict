@@ -47,7 +47,8 @@ compare_probability <- function(a = NULL, b = NULL,
     })
   }
 
-  # Cut results/EQRs into classes
+  # Cut results/EQRs into classes - We could use getClassarray_aspt()
+  # classificaiton function etc...but this is flexible for Minta classes etc
   Results_A <- data.frame(cut(a,
     breaks = eqr_bands, labels,
     include.lowest = T, right = F

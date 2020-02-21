@@ -298,7 +298,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
       }
 
       if (multipleSite_encoutered == FALSE) {
-        if (k >= nrow(data)) {
+        if (k == nrow(data)) {
           lastSiteProcessed <- TRUE
         }
         # Part 1: Deal with NTAXA: observed and Expected Calculations
@@ -494,7 +494,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
 
       # Move the pointer k to new adjusted position for j - whether multiple or not
       k <- j + 1
-      # print(k)
+       print(k)
     } # END of FOR LOOP
 
     # MINTA outputs
@@ -543,9 +543,12 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
     classification_results <- cbind(allResults, SiteMINTA_whpt_spr_aut)
 
     if (store_eqrs == T) {
-      # bind stored eqrs
+      # Bind stored eqrs
       eqr_metrics <- dplyr::bind_rows(eqr_metrics)
-      eqr_metrics$ID <- seq_len(length(unique(eqr_metrics$ID)))
+      # Create a ID for joining EQRs to classification results
+      eqr_metrics$ID <- as.factor(eqr_metrics$ID)
+      levels(eqr_metrics$ID) <- seq_len(length(unique(eqr_metrics$ID)))
+      eqr_metrics$ID <- as.integer(eqr_metrics$ID)
       classification_results$ID <- seq_len(nrow(classification_results))
       # Merge simluated eqrs with classification results based on 'ID' (row number)
       classification_results <- merge(classification_results, eqr_metrics)

@@ -32,7 +32,7 @@ compare_test <- function(a, b) {
     )[[2]],
     "2-sided test probability p of No difference in EQR" =
       2 * min(
-        length(diff[diff >= 0]) / length(diff),
+        length(diff[diff <= 0]) / length(diff),
         length(diff[diff >= 0]) / length(diff)
       ),
     check.names = F, stringsAsFactors = F

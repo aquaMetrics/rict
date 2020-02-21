@@ -442,7 +442,6 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
        # Bind eqrs into list on each iteration (this is much faster than rbind-ing
        # into a big dataframe)
        eqr_metrics <- c(eqr_metrics, list(eqrs))
-
       }
 
   } # END of FOR LOOP

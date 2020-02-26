@@ -13,7 +13,10 @@
 #' }
 compare_test <- function(a, b) {
   # Calculate difference between a and b eqrs
-  diff <- b - a
+
+  # set seed for reproducible results
+  set.seed(42)
+  diff <- sample(b) - sample(a)
   # Make dataframe of useful test statistics
   compare <- data.frame(
     "Average EQR for Result A" =
@@ -23,7 +26,7 @@ compare_test <- function(a, b) {
     "Average EQR: Difference (B - A)" =
       mean(b) - mean(a),
     "Standard Deviation of Difference" =
-      stats::sd(b - a),
+      stats::sd(diff),
     "Lower 95% (L95) of Difference" = stats::quantile(sort(diff),
       probs = c(2.5, 97.5) / 100
     )[[1]],

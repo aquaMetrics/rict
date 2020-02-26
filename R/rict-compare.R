@@ -101,8 +101,8 @@ rict_compare <- function(results_a = NULL, results_b = NULL) {
   comparisons <- lapply(split(results_a, results_a$`EQR Metrics`), function(eqr_metric) {
     # Special case handling - provide 'EQR' boundaries, labels and cap_eqr paraemters
     # in preparation for compare_probability() function
-    if (any(eqr_metric$`EQR Metrics` == "MINTA Vs MINTA")) {
-      eqr_bands <- c(0, 1, 2, 3, 4, 5) # Minta uses class not EQR boundaries
+    if (grepl("minta", unique(eqr_metric$`EQR Metrics`), ignore.case = T)) {
+      eqr_bands <- 1:6 # Minta uses class not EQR boundaries
       cap_eqrs <- F
       labels <- 1:5
     }

@@ -136,7 +136,7 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
   Ubias8r_spr <- getUbias8r_new(n_runs, Ubias8)
   Ubias8r_aut <- getUbias8r_new(n_runs, Ubias8)
 
-  # Create varaibale to store EQRs to retain for compare function
+  # Create variable to store EQRs to retain for compare function
   if (store_eqrs == T) {
     eqr_metrics <- list()
   }
@@ -345,7 +345,7 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
 
 
     ########  Calculate the MINTA - worse class = 5 i.e. max of class from NTAXA and ASPT ######
-    matrix_ntaxa_spr <- as.matrix(classArray_siteOne_spr_ntaxa)
+     matrix_ntaxa_spr <- as.matrix(classArray_siteOne_spr_ntaxa)
     matrix_aspt_spr <- as.matrix(classArray_siteOne_spr_aspt)
     minta_ntaxa_aspt_spr <- getMINTA_ntaxa_aspt(
       as.matrix(classArray_siteOne_spr_ntaxa),
@@ -421,13 +421,20 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
       if (store_eqrs == T) {
        # Create variable to store list of simulated EQRs for each metric
        eqrs <- list(
-         EQR_aspt_avg, EQR_ntaxa_avg, EQR_aspt_spr,
-         EQR_aspt_aut, EQR_ntaxa_spr, EQR_ntaxa_aut,
+         EQR_aspt_avg, EQR_ntaxa_avg,
+         EQR_aspt_spr, EQR_ntaxa_spr,
+         EQR_aspt_aut, EQR_ntaxa_aut,
+         data.frame(minta_ntaxa_aspt_spr),
+         data.frame(minta_ntaxa_aspt_aut),
          data.frame(minta_ntaxa_aspt_spr_aut))
        # Create variable to store list of 'pretty' names for eqr metrics
        eqr_names <- list(
-         "AVG_ASPT", "AVG_NTAXA", "SPR_ASPT",
-         "SPR_NTAXA", "AUT_ASPT", "AUT_NTAXA", "MINTA"
+         "AVG_ASPT", "AVG_NTAXA",
+         "SPR_ASPT", "SPR_NTAXA",
+         "AUT_ASPT", "AUT_NTAXA",
+         "MINTA_SPR",
+         "MINTA_AUT",
+         "MINTA"
        )
        # To make it easier to merge and process simulated EQRs and
        # classification results, bind all simluated EQRs into single dataframe

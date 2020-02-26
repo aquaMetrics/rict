@@ -24,6 +24,6 @@ test_that("rict_compare matches test data", {
 
   test_rict_compare <- test_rict_compare[, 2:45]
 
-  expect_equal(length(all.equal(test, test_rict_compare )), 3)
+  expect_equal(length(all.equal(test, test_rict_compare)), 3)
 
 })

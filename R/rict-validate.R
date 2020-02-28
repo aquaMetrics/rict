@@ -271,30 +271,39 @@ rict_validate <- function(data = NULL) {
     data$NORTHING[data$NORTHING_LENGTH < 5] <- paste0("0", data$NORTHING[data$NORTHING_LENGTH < 5])
   }
   # Calculate Longitude & Latitude
-  lat_long <- with(data, getLatLong(NGR, EASTING, NORTHING, "WGS84"))
-  data$LONGITUDE <- lat_long$lon
-  data$LATITUDE <- lat_long$lat
+  if (area == "gb") {
+    lat_long <- with(data, getLatLong(NGR, EASTING, NORTHING, "WGS84", area))
+    data$LONGITUDE <- lat_long$lon
+    data$LATITUDE <- lat_long$lat
 
-  # Calculate Lat/Long using bng (British National Grid) - temperate lookup needs BNG
-  bng <- with(data, getBNG(NGR, EASTING, NORTHING, "BNG"))
-
-  # Calculate mean temperature (TMEAN), range temperature (TRANGE) only if
-  # users have not provided temperatures e.g. could be studying climate change etc...
-  if ((is.null(data$MEAN.AIR.TEMP) | is.null(data$AIR.TEMP.RANGE)) ||
-    (any(is.na(data$MEAN.AIR.TEMP)) | any(is.na(data$AIR.TEMP.RANGE)))) {
-    my_temperatures <- calcTemps(data.frame(
-      Site_ID = as.character(data$SITE),
-      Easting4 = bng$easting / 100,
-      Northing4 = bng$northing / 100,
-      stringsAsFactors = FALSE
-    ))
-    # Add temp variables to data
-    data <- dplyr::bind_cols(data, my_temperatures[, c("TMEAN", "TRANGE")])
   } else {
-    data$TMEAN <- data$MEAN.AIR.TEMP
-    data$TRANGE <- data$AIR.TEMP.RANGE
-    warning("Your input data file includes mean temperature and/or range (MEAN.AIR.TEMP & AIR.TEMP.RANGE).
+    lat_long <- with(data, getLatLong_NI(EASTING, NORTHING))
+    data$LONGITUDE <- lat_long$Longitude
+    data$LATITUDE <- lat_long$Latitude
+  }
+
+  if(area == "gb") {
+    # Calculate Lat/Long using bng (British National Grid) - temperate lookup needs BNG
+    bng <- with(data, getBNG(NGR, EASTING, NORTHING, "BNG"))
+
+    # Calculate mean temperature (TMEAN), range temperature (TRANGE) only if
+    # users have not provided temperatures e.g. could be studying climate change etc...
+    if ((is.null(data$MEAN.AIR.TEMP) | is.null(data$AIR.TEMP.RANGE)) ||
+        (any(is.na(data$MEAN.AIR.TEMP)) | any(is.na(data$AIR.TEMP.RANGE)))) {
+      my_temperatures <- calcTemps(data.frame(
+        Site_ID = as.character(data$SITE),
+        Easting4 = bng$easting / 100,
+        Northing4 = bng$northing / 100,
+        stringsAsFactors = FALSE
+      ))
+      # Add temp variables to data
+      data <- dplyr::bind_cols(data, my_temperatures[, c("TMEAN", "TRANGE")])
+    } else {
+      data$TMEAN <- data$MEAN.AIR.TEMP
+      data$TRANGE <- data$AIR.TEMP.RANGE
+      warning("Your input data file includes mean temperature and/or range (MEAN.AIR.TEMP & AIR.TEMP.RANGE).
 These values will be used instead of calculating them from Grid Reference values.")
+    }
   }
   # Total substrate
   if (model == "physical") {

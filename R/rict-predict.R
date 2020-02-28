@@ -27,8 +27,23 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
   # Change all column names to uppercase
   names(data) <- toupper(names(data))
   # load supporting tables
+
   taxa_average_abundance <-
     utils::read.csv(system.file("extdat", "taxxaab.csv", package = "rict"))
+  end_group_index <- utils::read.csv(system.file("extdat", "x-103-end-group-means.csv", package = "rict"))
+  nr_efg_groups <- utils::read.csv(system.file("extdat", "end-grp-assess-scores.csv", package = "rict"))
+
+  if (area == "ni") {
+    df_mean_gb685 <-
+      utils::read.delim(system.file("extdat", "DFMEAN_NI_RALPH.DAT", package = "rict"),
+                        header = FALSE, sep = "", as.is = TRUE)
+    df_coeff_gb685 <-
+      utils::read.delim(system.file("extdat", "DFCOEFF_NI.DAT",package = "rict"),
+                        header = FALSE,   sep = "", as.is = TRUE)
+    nr_efg_groups <-
+      utils::read.csv(system.file("extdat", "EndGrp_AssessScoresNI.csv",
+                                  package = "rict"))
+  }
   if (model == "physical") {
   df_mean_gb685 <-
     utils::read.delim(
@@ -43,7 +58,8 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
       header = FALSE,
       sep = "",
       as.is = TRUE
-    ) }
+    )
+  }
   if (model == "gis") {
       df_mean_gb685 <-
       utils::read.csv(
@@ -58,9 +74,7 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
       )
   }
 
-  end_points <- utils::read.csv(system.file("extdat", "test-data-end-point-means.csv", package = "rict"))
-  end_group_index <- utils::read.csv(system.file("extdat", "x-103-end-group-means.csv", package = "rict"))
-  nr_efg_groups <- utils::read.csv(system.file("extdat", "end-grp-assess-scores.csv", package = "rict"))
+
   # end_group_means_discriminant_scores_model_44 <-
   #   utils::read.csv(system.file("extdat", "end-group-means-discriminant-scores-model-44.csv",
   #                               package = "rict"))
@@ -98,7 +112,7 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
   # Print to see where the sorting is taking place  #
   # Generate data for classification
   # Final Data for classification e.g. Linear discriminant Analysis (LDA) classifier/predictor
-  if (model == "physical") {
+  if (model == "physical" & area == "gb") {
     final_predictors <- data.frame(
      "SITE"                      =  final_predictors_one$SITE,
      "LATITUDE"                  =  final_predictors_one$LATITUDE,
@@ -114,6 +128,22 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
      "LOG.SLOPE"                 =  final_predictors_one$vld_slope_log,
      "MEAN.AIR.TEMP"             =  final_predictors_one$TMEAN,
      "AIR.TEMP.RANGE"            =  final_predictors_one$TRANGE
+    )
+  }
+  if (area == "ni") {
+    final_predictors <- data.frame(
+      "SITE"                     =  final_predictors_one$SITE,
+      "LATITUDE"                 =  final_predictors_one$LATITUDE,
+      "LONGITUDE"                =  final_predictors_one$LONGITUDE,
+      "LOG.ALTITUDE"             =  final_predictors_one$vld_alt_src_log,
+      "LOG.DISTANCE.FROM.SOURCE" =  final_predictors_one$vld_dist_src_log,
+      "LOG.WIDTH"                =  final_predictors_one$mn_width_log,
+      "LOG.DEPTH"                =  final_predictors_one$mn_depth_log,
+      "MEAN.SUBSTRATUM"          =  final_predictors_one$vld_substr_log,
+      "DISCHARGE.CATEGORY"       =  final_predictors_one$DISCHARGE,    #data$disch_log,
+      "ALKALINITY"               =  final_predictors_one$ALKALINITY,
+      "LOG.ALKALINITY"           =  final_predictors_one$vld_alkal_log,
+      "LOG.SLOPE"                =  final_predictors_one$vld_slope_log
     )
   }
 
@@ -154,9 +184,16 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
                                          DFCoeff = df_coeff_gb685))
   # Calculate the Mahanalobis disance of point x from site g for all reference sites
   MahDist_g <- getMahDist(DFscore = df_scores, meanvalues = df_mean_gb685)
-  MahDistNames <- paste0("p", 1:43)
-  MahDistNames <- gsub("p", "Mah", MahDistNames)
-  colnames(MahDist_g) <- MahDistNames
+
+  if(area == "ni") {
+    DistNames <- c("p1","p2","p3","p4","p5","p6","p7","p8","p9","p10","p11")
+    MahDistNames <- gsub("p","Mah", DistNames)
+    colnames(MahDist_g) <- MahDistNames
+  } else {
+    DistNames <- paste0("p", 1:43)
+    MahDistNames <- gsub("p", "Mah", DistNames)
+    colnames(MahDist_g) <- MahDistNames
+  }
 
   # Calculate the minimum Mahanalobis disance of point x from site g
   MahDist_min <- getMahDist_min(df_scores, df_mean_gb685)
@@ -167,8 +204,11 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
   PDistTot <- as.data.frame(PDistTotal(PDist_g)) ## ALL probabilities p1..pn,  rowsums() add to 1,
   # except when last row which it "total" is removed i.e. rowSums(PDistTot[,-ncol(PDistTot)])=1
   # Rename the columns to probabilities p1,p2,...,p43
-  colnames(PDistTot) <- c(paste0("p", 1:43), "Total")
-
+  if(area == "ni") {
+    colnames(PDistTot) <- c("p1","p2","p3","p4","p5","p6","p7","p8","p9","p10","p11", "Total")
+  } else {
+    colnames(PDistTot) <- c(paste0("p", 1:43), "Total")
+  }
   # #  final_predictors <- cbind(final_predictors, PDist_g[,-ncol(PDist_g)]) # This is the line we need
   # sum(final_predictors_try[1,-c(1:14)]) should give 1
   final_predictors_try1 <- cbind(final_predictors, PDistTot[, -ncol(PDistTot)])

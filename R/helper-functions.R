@@ -250,6 +250,30 @@ getLatLong <- function (nat_grid_ref, easting, northing, coordsys_latlon, area) 
   return (lat_long)
 }
 
+getLatLong_NI <- function (x, y) {
+  # Declare the lat_long
+  lat_long_all <- NULL
+  # It is assumed the East/North have 5 digits, just add a ZERO at the end
+  xx <- as.numeric(paste0(x, 0))
+  yy <- as.numeric(paste0(y, 0))
+
+  # Loop throuhg the codes to extract the Easting and Northing
+
+  for(i in 1:length(x)) {
+    xy = data.frame(easting_x=xx[i], northing_y=yy[i]) # Edited, just to give site identifier
+    # 1. create sf object in Irish National Grid (CRS 29903)
+    irish.ng <- st_as_sf(xy, coords = c("easting_x", "northing_y"), crs = 29903)
+    lat_long <- st_transform(irish.ng, crs = 4326)
+    results <- c(lat_long$geometry[[1]][[2]], lat_long$geometry[[1]][1])
+    lat_long_all  <- rbind(lat_long_all,results)
+  }
+  #Remove rownames
+  rownames(lat_long_all) <- c()
+  #names columns appropriately as "Easting",and "Northing"
+  colnames(lat_long_all) <- c("Latitude","Longitude")
+  return (as.data.frame(lat_long_all))
+}
+
 # NOte :
 # Can view all Grid references with "SE..." from  allStations <- catalogue(), using the rNRFA package
 # this <- filter(allStations, grepl("SE", gridReference, fixed = TRUE))$gridReference

@@ -59,3 +59,12 @@ test_that("end group means for GIS variables", {
 
   expect_true(equal == T)
 })
+
+test_that("NI predictions", {
+ ni_data <-
+  utils::read.csv(system.file("extdat",
+                              "ni-model-1-test-data.csv",
+                              package = "rict"
+), check.names = F)
+
+})

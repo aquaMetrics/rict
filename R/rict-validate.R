@@ -352,7 +352,7 @@ These values will be used instead of calculating them from Grid Reference values
               fails,
               paste0(
                 "You provided ", names(value)[1], ": ", value[, rule$variable],
-                ", expected value greater than ", rule$less_than_fail
+                ", expected min value: ", rule$less_than_fail
               )
             )
           }
@@ -364,7 +364,7 @@ These values will be used instead of calculating them from Grid Reference values
               fails,
               paste0(
                 "You provided ", names(value)[1], ": ", value[, rule$variable],
-                ", expected value less than ", rule$greater_than_fail
+                ", expected max value: ", rule$greater_than_fail
               )
             )
           }
@@ -377,7 +377,7 @@ These values will be used instead of calculating them from Grid Reference values
               warns,
               paste0(
                 "You provided ", names(value)[1], ": ", value[, rule$variable],
-                ", expected value greater than ", rule$less_than_warn
+                ",  min value used to train model: ", rule$less_than_warn
               )
             )
           }
@@ -389,7 +389,7 @@ These values will be used instead of calculating them from Grid Reference values
               warns,
               paste0(
                 "You provided ", names(value)[1], ": ", value[, rule$variable],
-                ", expected value less than ", rule$greater_than_warn
+                ", max value used to train model: ", rule$greater_than_warn
               )
             )
           }

@@ -237,13 +237,17 @@ getRawAlkalinity <- function (alkalinity){
 }
 
 # 10. Get latLong, use package rnrfa for function osg_parse
-# library(rnrfa)
 
-getLatLong <- function(nat_grid_ref, easting, northing, coordsys_latlon){
-  lat_long <- NA
-  concat_bng  <- paste(nat_grid_ref, substr(easting, 1, 3), substr(northing, 1, 3), sep = "")
-  lat_long  <- osg_parse(grid_refs = concat_bng, coord_system = coordsys_latlon)
-  return(lat_long)
+getLatLong <- function (nat_grid_ref, easting, northing, coordsys_latlon, area) {
+  lat_long    <- NA
+  concat_bng  <- paste(nat_grid_ref, substr(easting,1,3), substr(northing,1,3), sep="")
+  if(area == "ni") {
+    # Add "I" for NOrthern Ireland
+    lat_long <- osg_parse (paste0("I",concat_bng), coord_system = coordsys_latlon)
+  } else {
+    lat_long <- osg_parse(concat_bng, coord_system = coordsys_latlon)
+  }
+  return (lat_long)
 }
 
 # NOte :

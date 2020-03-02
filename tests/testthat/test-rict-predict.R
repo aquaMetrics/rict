@@ -67,4 +67,6 @@ test_that("NI predictions", {
                               package = "rict"
 ), check.names = F)
 
+ test <- rict(ni_data, area = "ni", year_type = "single", model = "physical")
+
 })

@@ -6,6 +6,7 @@
 #'   required - default is "multi"
 #' @param store_eqrs Boolean to signal if simulate EQRs should be stored. If
 #'   TRUE, EQRs are stored allowing `rict_compare` to compare EQR results
+#' @param area Area of UK - Default "gb". Or use "ni".
 #' @return Dataframe of classification results
 #' @export
 #' @importFrom rlang .data
@@ -16,13 +17,13 @@
 #' classifications <- rict_classify(predictions)
 #' }
 #'
-rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
+rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F, area = "gb") {
   message("Classifying...")
   # This is a hack - best to combine single year and multiple year into single
   # function? For now, I've just stuck the single year into a different
   # function until these can be merged
   if (year_type == "single") {
-    classification_results <- singleYearClassification(data, store_eqrs)
+    classification_results <- singleYearClassification(data, store_eqrs, area = area)
     return(classification_results)
   } else {
     # set global random seed for rnorm functions etc
@@ -38,7 +39,9 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
       package = "rict"
     ))
 
-
+    if (area == "ni") {
+      gb685_assess_score <- utils::read.csv(system.file("extdat", "EndGrp_AssessScoresNI.csv", package = "rict"))
+    }
     # Enter source files
     # Use the column header as site names in the final output
     all_sites <- data[, 1]
@@ -75,6 +78,9 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
     # Store all_probabilities in one dataframe.
     # Use p1,p2,... etc in case data column positions change in future
     prob_names <- paste0("p", 1:43)
+    if (area == "ni") {
+      prob_names <- paste0("p", 1:11)
+    }
     # Needs to change when not uppercase
     all_probabilities <- data[, toupper(prob_names)]
     # Input Adjustment factors for reference site quality scores (Q1, Q2, Q3, Q4, Q5)

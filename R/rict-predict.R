@@ -33,18 +33,7 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
   end_group_index <- utils::read.csv(system.file("extdat", "x-103-end-group-means.csv", package = "rict"))
   nr_efg_groups <- utils::read.csv(system.file("extdat", "end-grp-assess-scores.csv", package = "rict"))
 
-  if (area == "ni") {
-    df_mean_gb685 <-
-      utils::read.delim(system.file("extdat", "DFMEAN_NI_RALPH.DAT", package = "rict"),
-                        header = FALSE, sep = "", as.is = TRUE)
-    df_coeff_gb685 <-
-      utils::read.delim(system.file("extdat", "DFCOEFF_NI.DAT",package = "rict"),
-                        header = FALSE,   sep = "", as.is = TRUE)
-    nr_efg_groups <-
-      utils::read.csv(system.file("extdat", "EndGrp_AssessScoresNI.csv",
-                                  package = "rict"))
-  }
-  if (model == "physical") {
+  if (model == "physical" & area == "gb") {
   df_mean_gb685 <-
     utils::read.delim(
       system.file("extdat", "df-mean-gb-685.DAT", package = "rict"),
@@ -59,6 +48,17 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
       sep = "",
       as.is = TRUE
     )
+  }
+  if (area == "ni") {
+    df_mean_gb685 <-
+      utils::read.delim(system.file("extdat", "DFMEAN_NI_RALPH.DAT", package = "rict"),
+                        header = FALSE, sep = "", as.is = TRUE)
+    df_coeff_gb685 <-
+      utils::read.delim(system.file("extdat", "DFCOEFF_NI.DAT", package = "rict"),
+                        header = FALSE,   sep = "", as.is = TRUE)
+    nr_efg_groups <-
+      utils::read.csv(system.file("extdat", "EndGrp_AssessScoresNI.csv",
+                                  package = "rict"))
   }
   if (model == "gis") {
       df_mean_gb685 <-
@@ -179,15 +179,14 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
   NRefg_all <- rowSums(nr_efg_groups[, -1])
   # #DFScore_g <- DFCoef1 * Env1 + ... + DFCoefn * Envn ; remove "SITE" col=1 from final_predictors,
   # and  remove col=1 from df_coeff_gb685
-
   df_scores <- as.data.frame(getDFScores(EnvValues = final_predictors,
                                          DFCoeff = df_coeff_gb685))
   # Calculate the Mahanalobis disance of point x from site g for all reference sites
   MahDist_g <- getMahDist(DFscore = df_scores, meanvalues = df_mean_gb685)
 
-  if(area == "ni") {
-    DistNames <- c("p1","p2","p3","p4","p5","p6","p7","p8","p9","p10","p11")
-    MahDistNames <- gsub("p","Mah", DistNames)
+  if (area == "ni") {
+    DistNames <- c("p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", "p11")
+    MahDistNames <- gsub("p", "Mah", DistNames)
     colnames(MahDist_g) <- MahDistNames
   } else {
     DistNames <- paste0("p", 1:43)
@@ -204,8 +203,8 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
   PDistTot <- as.data.frame(PDistTotal(PDist_g)) ## ALL probabilities p1..pn,  rowsums() add to 1,
   # except when last row which it "total" is removed i.e. rowSums(PDistTot[,-ncol(PDistTot)])=1
   # Rename the columns to probabilities p1,p2,...,p43
-  if(area == "ni") {
-    colnames(PDistTot) <- c("p1","p2","p3","p4","p5","p6","p7","p8","p9","p10","p11", "Total")
+  if (area == "ni") {
+    colnames(PDistTot) <- c("p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", "p11", "Total")
   } else {
     colnames(PDistTot) <- c(paste0("p", 1:43), "Total")
   }
@@ -228,9 +227,9 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
   # Find max class group belongs to by getting the column name: use
   # belongs_to_end_grp <- colnames(final_predictors_try2[,15:57])[apply(final_predictors_try2[,15:57], 1, which.max)]
   # This sometimes returns a list, use unlist below to repair this
-  belongs_to_end_grp <- colnames(final_predictors_try2[, paste0("p", 1:43)])[apply(
-    data.frame(matrix(unlist(final_predictors_try2[, paste0("p", 1:43)]),
-                      nrow = nrow(final_predictors_try2[, paste0("p", 1:43)]),
+  belongs_to_end_grp <- colnames(final_predictors_try2[, DistNames])[apply(
+    data.frame(matrix(unlist(final_predictors_try2[, DistNames]),
+                      nrow = nrow(final_predictors_try2[, DistNames]),
                       byrow = T),
                 stringsAsFactors = FALSE), 1, which.max)]
 
@@ -277,7 +276,8 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
   mainData <- getSeasonIndexScores(data_to_bindTo = final_predictors_try3,
                                           season_to_run = seasons_to_run,
                                           index_id = indices_to_run,
-                                          end_group_IndexDFrame = endgroup_index_frame)
+                                          end_group_IndexDFrame = endgroup_index_frame,
+                                          DistNames = DistNames)
 
   # Append the biological data to the main output dataframe
   # Get all the bioligical data

@@ -1,4 +1,4 @@
-singleYearClassification <- function(predictions, store_eqrs = F) {
+singleYearClassification <- function(predictions, store_eqrs = F, area = NULL) {
 
   # set global random seed for rnorm functions etc
   set.seed(1234)
@@ -6,6 +6,9 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
   gb685_assess_score <- utils::read.csv(system.file("extdat", "end-grp-assess-scores.csv", package = "rict"))
   adjusted_params <- utils::read.csv(system.file("extdat", "adjust-params-ntaxa-aspt.csv", package = "rict"))
 
+  if (area == "ni") {
+    gb685_assess_score <- utils::read.csv(system.file("extdat", "EndGrp_AssessScoresNI.csv", package = "rict"))
+  }
   # Enter source files
   # Use the column header as site names in the final output
   all_sites <- predictions[, 1]
@@ -39,6 +42,11 @@ singleYearClassification <- function(predictions, store_eqrs = F) {
 
   # Store all_probabilities in one dataframe. Use p1,p2,... etc in case data column positions change in future
   prob_names <- paste0("p", 1:43)
+
+  if (area == "ni") {
+    prob_names <- paste0("p", 1:11)
+  }
+
   all_probabilities <- predictions[, toupper(prob_names)] # Needs to change when not uppercase
   # Input Adjustment factors for reference site quality scores (Q1, Q2, Q3, Q4, Q5)
 

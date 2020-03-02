@@ -28,6 +28,7 @@ Imports:
  ggmap, 
  ggplot2, 
  sp,
+ sf,
  readxl,
  rlang,
  gridExtra,

@@ -25,6 +25,6 @@
 rict <- function(data = NULL, model = "physical", area = "gb",
                  year_type = "multi", store_eqrs = F) {
   predictions <- rict_predict(data, model = model, area = area)
-  results <- rict_classify(predictions, year_type, store_eqrs = store_eqrs)
+  results <- rict_classify(predictions, year_type, store_eqrs = store_eqrs, area = area)
   return(results)
 }

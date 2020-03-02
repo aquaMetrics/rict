@@ -199,7 +199,7 @@ rict_validate <- function(data = NULL) {
   } else { # loop through rows and calculate Alkalinity
 
     alkalinity <- lapply(split(data, paste(data$SITE, data$YEAR)), function(data_row) {
-      if (!is.null(data_row$HARDNESS) && !is.na(data_row$HARDNESS)) {
+      if (!any(is.null(data_row$HARDNESS)) && !any(is.na(data_row$HARDNESS))) {
         data_row$ALKALINITY <- 4.677 + 0.6393 * data_row$HARDNESS
         message(paste(
           "Using Hardness value to calculate Alkalinity at",
@@ -207,7 +207,7 @@ rict_validate <- function(data = NULL) {
         ))
       }
       else
-      if (!is.null(data_row$CALCIUM) && !is.na(data_row$CALCIUM)) {
+      if (!any(is.null(data_row$CALCIUM)) && !any(is.na(data_row$CALCIUM))) {
         data_row$ALKALINITY <- 14.552 + 1.7606 * data_row$CALCIUM
         paste(message(
           "Using Calcium value to calculate Alkalinity at",
@@ -215,7 +215,7 @@ rict_validate <- function(data = NULL) {
         ))
       }
       else
-      if (!is.null(data_row$CONDUCTIVITY) && !is.na(data_row$CONDUCTIVITY)) {
+      if (!any(is.null(data_row$CONDUCTIVITY)) && !any(is.na(data_row$CONDUCTIVITY))) {
         data_row$ALKALINITY <- 0.3201 * data_row$CONDUCTIVITY - 8.0593
         paste(message(
           "Using Conductivity value to calculate Alkalinity at",
@@ -232,7 +232,7 @@ rict_validate <- function(data = NULL) {
 
   # Calculate discharge category from velocity and width if required
   discharge <- lapply(split(data, paste(data$SITE, data$YEAR)), function(data_row) {
-    if (!is.null(data_row$VELOCITY) && !is.na(data_row$VELOCITY)) {
+    if (!any(is.null(data_row$VELOCITY)) && !any(is.na(data_row$VELOCITY))) {
       data_row$DISCHARGE <- data_row$MEAN_DEPTH / 100 * data_row$MEAN_WIDTH * data_row$VELOCITY / 100
       message("Using velocity, width and depth to calculate discharge category")
     }
@@ -282,7 +282,7 @@ rict_validate <- function(data = NULL) {
     data$LATITUDE <- lat_long$Latitude
   }
 
-  if(area == "gb") {
+  if (area == "gb") {
     # Calculate Lat/Long using bng (British National Grid) - temperate lookup needs BNG
     bng <- with(data, getBNG(NGR, EASTING, NORTHING, "BNG"))
 

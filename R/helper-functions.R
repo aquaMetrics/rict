@@ -262,8 +262,8 @@ getLatLong_NI <- function (x, y) {
   for(i in 1:length(x)) {
     xy = data.frame(easting_x=xx[i], northing_y=yy[i]) # Edited, just to give site identifier
     # 1. create sf object in Irish National Grid (CRS 29903)
-    irish.ng <- st_as_sf(xy, coords = c("easting_x", "northing_y"), crs = 29903)
-    lat_long <- st_transform(irish.ng, crs = 4326)
+    irish.ng <- sf::st_as_sf(xy, coords = c("easting_x", "northing_y"), crs = 29903)
+    lat_long <- sf::st_transform(irish.ng, crs = 4326)
     results <- c(lat_long$geometry[[1]][[2]], lat_long$geometry[[1]][1])
     lat_long_all  <- rbind(lat_long_all,results)
   }

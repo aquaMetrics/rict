@@ -43,7 +43,8 @@ test_that("sense-checks work", {
   # Warning if both discharge and velocity have values
   test_data <- demo_observed_values
   test_data$Velocity <- 1
-  expect_warning(rict_validate(test_data))
+  expect_warning(rict_validate(test_data), "You provided both VELOCITY and DISCHARGE values,
+          DISCHARGE will be used by default")
   # NGR must all be less than three letters long
   test_data <- demo_observed_values
   test_data$NGR <- as.character(test_data$NGR)

@@ -6,11 +6,29 @@ sudo: required
 dist: trusty
 warnings_are_errors: false
 cache: packages
+repos:
+  CRAN: https://cran.rstudio.com
+  rforge: http://R-Forge.R-project.org
 addons:
   apt:
     packages:
+      - gdal-bin
+      - proj-bin
       - libgdal-dev
+      - libgdal1-dev
       - libproj-dev
+      - libgeos-dev
+      - r-cran-ncdf4
+      - libv8-3.14-dev
+      - libprotobuf-dev
+      - protobuf-compiler
+      - libudunits2-dev
+      - libnetcdf-dev
+      - libjq-dev
+
+before_install:
+    - sudo add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
+    - sudo apt-get --yes --force-yes update -qq
 
 # set NOT_CRAN to true to ensure that skip_on_cran tests are run here
 env:

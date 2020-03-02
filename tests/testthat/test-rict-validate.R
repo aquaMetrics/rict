@@ -111,5 +111,6 @@ test_that("user supplied temperatures override calculate temperatures", {
   test_data <- demo_observed_values
   test_data$MEAN.AIR.TEMP <- 15
   test_data$AIR.TEMP.RANGE <- 36
-  expect_warning(rict_validate(test_data))
+  data <- rict_validate(test_data)
+  expect_equal(is.na(length(data[["checks"]]$WARN)), FALSE)
 })

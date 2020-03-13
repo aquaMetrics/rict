@@ -54,7 +54,7 @@ rict_validate <- function(data = NULL) {
   }
   # Load validation rules
   validation_rules <-
-    utils::read.csv(system.file("extdat", "validation-rules.csv", package = "rict"),
+    utils::read.csv(system.file("extdat", "validation-rules-2.csv", package = "rict"),
       stringsAsFactors = F
     )
   # Standardise all column names to uppercase
@@ -85,7 +85,7 @@ rict_validate <- function(data = NULL) {
           validation_rules$shared == F
       ]
 
-      model_data <- suppressWarnings(dplyr::select(data, dplyr::one_of(model_variables)))
+      model_data <- suppressWarnings(dplyr::select(data, dplyr::one_of(toupper(model_variables))))
 
       ifelse(nrow(model_data %>% na.omit()) > 0 & ncol(model_data %>% na.omit()) > 0, TRUE, FALSE)
     })
@@ -313,6 +313,11 @@ These values will be used instead of calculating them from Grid Reference values
       (2 * data$SAND) + (8 * data$SILT_CLAY)) / data$TOTSUB
     # re-assign substrate variable to match with prediction function requirements
     data$vld_substr_log <- data$MSUBST
+  }
+
+  # convert metres to km in Distance from source GIS attribute
+  if(model == "gis") {
+    data$`DISTANCE FROM SOURCE` <-  data$`DISTANCE FROM SOURCE` / 1000
   }
 
   # Add log10 values where required

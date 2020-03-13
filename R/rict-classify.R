@@ -6,7 +6,6 @@
 #'   required - default is "multi"
 #' @param store_eqrs Boolean to signal if simulate EQRs should be stored. If
 #'   TRUE, EQRs are stored allowing `rict_compare` to compare EQR results
-#' @param area Area of UK - Default "gb". Or use "ni".
 #' @return Dataframe of classification results
 #' @export
 #' @importFrom rlang .data
@@ -17,11 +16,12 @@
 #' classifications <- rict_classify(predictions)
 #' }
 #'
-rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F, area = "gb") {
+rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
   message("Classifying...")
   # This is a hack - best to combine single year and multiple year into single
   # function? For now, I've just stuck the single year into a different
   # function until these can be merged
+  area <- unique(data$area)
   if (year_type == "single") {
     classification_results <- singleYearClassification(data, store_eqrs, area = area)
     return(classification_results)
@@ -500,7 +500,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F, area
 
       # Move the pointer k to new adjusted position for j - whether multiple or not
       k <- j + 1
-       print(k)
+
     } # END of FOR LOOP
 
     # MINTA outputs

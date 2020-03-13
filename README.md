@@ -44,10 +44,10 @@ And `rict_classify` to classify these predictions:
 ```
 results <- rict_classify(predictions)
 ```
-See [documentation](https://aquametrics.github.io/rict/) for further usage details. For example, how to change the default area from Great Britain to Northern Ireland, physical to GIS model and multi-year to single year classification:
+See [documentation](https://aquametrics.github.io/rict/) for further usage details. For example, how to change the default `year_type` from multi-year to single year classification:
 
 ```
-results <- rict(demo_gis_values, area = "ni", model = "gis", year_type = "single")
+results <- rict(demo_gis_values, year_type = "single")
 ```
 ## Contributing 
 

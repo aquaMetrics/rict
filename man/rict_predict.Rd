@@ -4,7 +4,7 @@
 \alias{rict_predict}
 \title{Calculate River Invertebrate Classification Tool (RICT) predictions}
 \usage{
-rict_predict(data = NULL, model = "physical", area = "gb")
+rict_predict(data = NULL)
 }
 \arguments{
 \item{data}{Dataframe of predictive environmental values
@@ -16,10 +16,6 @@ rict_predict(data = NULL, model = "physical", area = "gb")
   \item{AUT_SEASON_ID}{Aut ID}
   \item{...}{etc}
 }}
-
-\item{model}{Validate observed values based on rules required for model selected.}
-
-\item{area}{Area of UK, either 'ni' (Northern Ireland) or 'gb' (Great Britain)}
 }
 \value{
 Dataframe of predicted biotic scores and probability of observed values

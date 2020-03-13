@@ -4,7 +4,7 @@
 \alias{rict_classify}
 \title{Calculate classification}
 \usage{
-rict_classify(data = NULL, year_type = "multi", store_eqrs = F, area = "gb")
+rict_classify(data = NULL, year_type = "multi", store_eqrs = F)
 }
 \arguments{
 \item{data}{Dataframe of predicted endgroups values from
@@ -15,8 +15,6 @@ required - default is "multi"}
 
 \item{store_eqrs}{Boolean to signal if simulate EQRs should be stored. If
 TRUE, EQRs are stored allowing `rict_compare` to compare EQR results}
-
-\item{area}{Area of UK - Default "gb". Or use "ni".}
 }
 \value{
 Dataframe of classification results

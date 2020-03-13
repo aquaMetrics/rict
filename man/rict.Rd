@@ -4,13 +4,7 @@
 \alias{rict}
 \title{Run the River Invertebrate Classification Tool (RICT)}
 \usage{
-rict(
-  data = NULL,
-  model = "physical",
-  area = "gb",
-  year_type = "multi",
-  store_eqrs = F
-)
+rict(data = NULL, year_type = "multi", store_eqrs = F)
 }
 \arguments{
 \item{data}{Dataframe of observed environmental values
@@ -18,11 +12,6 @@ rict(
  \item{SITE}{Site identifier}
  \item{Waterbody}{Water body identifier}
   }}
-
-\item{model}{Model to use either 'gis' or 'physical'}
-
-\item{area}{Area of UK, either 'ni' (Northern Ireland) or 'gb' (Great
-Britain)}
 
 \item{year_type}{"single" or "multi" depending if multi-year classification
 required - default is "multi".}

@@ -9,9 +9,6 @@
 #'   \item{AUT_SEASON_ID}{Aut ID}
 #'   \item{...}{etc}
 #' }
-#' @param model Validate observed values based on rules required for model selected.
-#' @param area Area of UK, either 'ni' (Northern Ireland) or 'gb' (Great Britain)
-#'
 #' @return Dataframe of predicted biotic scores and probability of observed values
 #' falling into each statistical grouping of rivers.
 #' @export
@@ -21,9 +18,11 @@
 #' \dontrun{
 #' predictions <- rict_predict(demo_observed_values)
 #' }
-rict_predict <- function(data = NULL, model = "physical", area = "gb") {
+rict_predict <- function(data = NULL) {
   # Validate predictive input data
   all_validation <- rict_validate(data)
+  model <-  all_validation[["model"]] # returns model based on input headers
+  area <- all_validation[["area"]] # returns area based on NGR
   # Change all column names to uppercase
   names(data) <- toupper(names(data))
   # load supporting tables
@@ -156,18 +155,20 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
       "TEMPR"                    =  final_predictors_one$TRANGE,
       "ALKALINITY"               =  final_predictors_one$ALKALINITY,
       "LgAlk"                    =  final_predictors_one$LgAlk,
-      "LgArea_CEH"               =  final_predictors_one$LgArea_CEH,
-      "LgAltBar_CEH"             =  final_predictors_one$LgAltBar_CEH,
+      "LgArea_CEH"               =  final_predictors_one$`LOG AREA`,
+      "LgAltBar_CEH"             =  final_predictors_one$`LOG ALTBAR`,
       "LgAlt_CEH"                =  final_predictors_one$LgAlt_CEH,
       "LgDFS_CEH"                =  final_predictors_one$LgDFS_CEH,
       "LgSlope_CEH"              =  final_predictors_one$LgSlope_CEH,
-      "QCat_CEH"                 =  final_predictors_one$QCAT_CEH,
-      "Peat_CEH"                 =  final_predictors_one$`%PEAT_CEH`,
-      "Chalk_O1_CEH"             =  final_predictors_one$CHALK_O1_CEH,
-      "Clay_O1_CEH"              =  final_predictors_one$CLAY_O1_CEH,
-      "Hardrock_O1_CEH"          =  final_predictors_one$HARDROCK_O1_CEH,
-      "Limestone_O1_CEH"         =  final_predictors_one$LIMESTONE_O1_CEH
+      "QCat_CEH"                 =  final_predictors_one$`DISCHARGE CATEGORY`,
+      "Peat_CEH"                 =  final_predictors_one$`PROPORTION PEAT`,
+      "Chalk_O1_CEH"             =  final_predictors_one$`PROPORTION CHALK`,
+      "Clay_O1_CEH"              =  final_predictors_one$`PROPORTION CLAY`,
+      "Hardrock_O1_CEH"          =  final_predictors_one$`PROPORTION HARDROCK`,
+      "Limestone_O1_CEH"         =  final_predictors_one$`PROPORTION LIMESTONE`
     )
+     # convert proportions to percentage for geology variables
+    final_predictors[, 14:18] <- final_predictors[, 14:18] * 100
   }
 
   # Prediction Settings
@@ -241,10 +242,9 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
   # #4 Prediction: WE1.5 Algorithms for prediction of expected values of any index based on probability of end group
   # # membership and average values of the index amongst reference sites in each end group.
   # We predict WHPT NTAXA, and WHPT ASP
-
-  getEndGroupMeansColsNeeded <- function(dframe) {
+  getEndGroupMeansColsNeeded <- function(dframe, area) {
       # Don't select RIVAPCSMODEL since we know model what we are processing
-     filtered_dframe <-  dplyr::filter(dframe, .data$RIVPACS.Model == "RIVPACS IV GB")
+     filtered_dframe <-  dframe[grep(area, dframe$RIVPACS.Model, ignore.case = T), ]
       dplyr::select(filtered_dframe, .data$`End.Group`, .data$`Season.Code`,
                     .data$`Season`,
                     .data$`TL2.WHPT.NTAXA..AbW.DistFam.`,
@@ -253,7 +253,7 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
                     .data$`TL2.WHPT.ASPT..AbW.CompFam.`)
   }
 
-  endgroup_index_frame <- getEndGroupMeansColsNeeded(end_group_index)
+  endgroup_index_frame <- getEndGroupMeansColsNeeded(end_group_index, area)
   colnames(endgroup_index_frame) <- c("EndGrp", "SeasonCode", "Season",
                                       "TL2_WHPT_NTAXA_AbW_DistFam", "TL2_WHPT_ASPT_AbW_DistFam",
                                       "TL2_WHPT_NTAXA_AbW_CompFam", "TL2_WHPT_ASPT_AbW_CompFam")
@@ -304,6 +304,7 @@ rict_predict <- function(data = NULL, model = "physical", area = "gb") {
     # remove column "SITE", the first one of columns
     biological_data <- biological_data[, -1]
     mainData <- cbind(mainData, biological_data)
+    mainData$area <- area #  needed for classify function
   }
   return(mainData)
 }

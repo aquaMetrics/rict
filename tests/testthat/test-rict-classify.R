@@ -119,9 +119,9 @@ test_that("GIS variables classification against Ralph's output", {
   library(tidyr)
   data("demo_gis_values")
   demo_gis_values$WATERBODY <- demo_gis_values$`Test SiteCode`
-  predictions <- rict_predict(demo_gis_values, model = "gis")
+  predictions <- rict_predict(demo_gis_values)
   results <- rict_classify(predictions, year_type = "single")
-  results_two <- rict(demo_gis_values, year_type = "single", model = "gis")
+  results_two <- rict(demo_gis_values, year_type = "single")
   # test that creating predictions then classifying works the same as  going straight to
   # classifying
   equal <- all.equal(

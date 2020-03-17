@@ -117,11 +117,11 @@ test_that("GIS variables classification against Ralph's output", {
 
   library(dplyr)
   library(tidyr)
-  data("demo_gis_values")
-  demo_gis_values$WATERBODY <- demo_gis_values$`Test SiteCode`
-  predictions <- rict_predict(demo_gis_values)
+  data("demo_gis_values_log")
+  demo_gis_values$WATERBODY <- demo_gis_values_log$SITE
+  predictions <- rict_predict(demo_gis_values_log)
   results <- rict_classify(predictions, year_type = "single")
-  results_two <- rict(demo_gis_values, year_type = "single")
+  results_two <- rict(demo_gis_values_log, year_type = "single")
   # test that creating predictions then classifying works the same as  going straight to
   # classifying
   equal <- all.equal(
@@ -132,11 +132,11 @@ test_that("GIS variables classification against Ralph's output", {
   # remove non-required  predictions variables
   predictions <- select(predictions, -starts_with("p"))
   # need both predictions and classificatoin outputs to fully check classification
-  output <- inner_join(predictions, results, by = c("WATERBODY" = "WATERBODY"))
+  output <- inner_join(predictions, results, by = c("SITE" = "SITE"))
   # tidy data so it matches test data format
   output <- as.data.frame(t(output))
   output$SITE <- row.names(output)
-  names(output)[1:24] <- c(as.matrix(filter(output, SITE == "WATERBODY")))[1:24]
+  names(output)[1:24] <- c(as.matrix(filter(output, SITE == "SITE")))[1:24]
   # read in test data to check against
   test_data <- utils::read.csv(system.file("extdat",
                                       "test-sites-gb-model-44-classification-draft.csv",

@@ -155,17 +155,17 @@ rict_predict <- function(data = NULL) {
       "TEMPR"                    =  final_predictors_one$TRANGE,
       "ALKALINITY"               =  final_predictors_one$ALKALINITY,
       "LgAlk"                    =  final_predictors_one$LgAlk,
-      "LgArea_CEH"               =  final_predictors_one$`LOG AREA`,
-      "LgAltBar_CEH"             =  final_predictors_one$`LOG ALTBAR`,
+      "LgArea_CEH"               =  final_predictors_one$LOG_AREA,
+      "LgAltBar_CEH"             =  final_predictors_one$LOG_CATCHMENT_ALTITUDE,
       "LgAlt_CEH"                =  final_predictors_one$LgAlt_CEH,
       "LgDFS_CEH"                =  final_predictors_one$LgDFS_CEH,
       "LgSlope_CEH"              =  final_predictors_one$LgSlope_CEH,
-      "QCat_CEH"                 =  final_predictors_one$`DISCHARGE CATEGORY`,
-      "Peat_CEH"                 =  final_predictors_one$`PROPORTION PEAT`,
-      "Chalk_O1_CEH"             =  final_predictors_one$`PROPORTION CHALK`,
-      "Clay_O1_CEH"              =  final_predictors_one$`PROPORTION CLAY`,
-      "Hardrock_O1_CEH"          =  final_predictors_one$`PROPORTION HARDROCK`,
-      "Limestone_O1_CEH"         =  final_predictors_one$`PROPORTION LIMESTONE`
+      "QCat_CEH"                 =  final_predictors_one$DISCHARGE_CATEGORY,
+      "Peat_CEH"                 =  final_predictors_one$PEAT,
+      "Chalk_O1_CEH"             =  final_predictors_one$CHALK,
+      "Clay_O1_CEH"              =  final_predictors_one$CLAY,
+      "Hardrock_O1_CEH"          =  final_predictors_one$HARDROCK,
+      "Limestone_O1_CEH"         =  final_predictors_one$LIMESTONE
     )
      # convert proportions to percentage for geology variables
     final_predictors[, 14:18] <- final_predictors[, 14:18] * 100

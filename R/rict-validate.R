@@ -139,6 +139,9 @@ rict_validate <- function(data = NULL) {
       call. = FALSE
     )
   }
+  # Convert to character as required by specification
+  data$SITE <- as.character(data$SITE)
+  data$WATERBODY <- as.character(data$WATERBODY)
 
   # Check class of each column is correct ----------------------------------------
   # Loop through each 'variable' in rules dataframe
@@ -245,10 +248,7 @@ rict_validate <- function(data = NULL) {
   data <- discharge[order(match(discharge[, "SITE"], data[, "SITE"])), ]
   row.names(data) <- seq_len(nrow(data))
 
-
   # Convert to character as required by specification
-  data$SITE <- as.character(data$SITE)
-  data$WATERBODY <- as.character(data$WATERBODY)
   data$EASTING <- as.character(data$EASTING)
   data$NORTHING <- as.character(data$NORTHING)
 
@@ -316,8 +316,8 @@ These values will be used instead of calculating them from Grid Reference values
   }
 
   # convert metres to km in Distance from source GIS attribute
-  if(model == "gis") {
-    data$`DISTANCE FROM SOURCE` <-  data$`DISTANCE FROM SOURCE` / 1000
+  if (model == "gis") {
+    data$DISTANCE_FROM_SOURCE <-  data$DISTANCE_FROM_SOURCE / 1000
   }
 
   # Add log10 values where required

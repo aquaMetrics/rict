@@ -6,40 +6,43 @@ test_that("sense-checks work", {
   # Wrong variable names
   expect_error(rict_validate(data.frame("test" = 1:10)))
   # Data provided for more than two model i.e. gis and physical
-  expect_error(rict_validate(cbind(demo_observed_values, demo_gis_values[, 14:17])))
+  expect_error(rict_validate(cbind(demo_observed_values, demo_gis_values_log[, 14:17])))
   # Data from GB and NI in input dataset
-  test_data <- demo_gis_values
+  test_data <- demo_gis_values_log
   test_data$NGR <- as.character(test_data$NGR)
   test_data$NGR[1] <- "S"
   expect_error(rict_validate(test_data))
   # All variables present
-  test_data <- demo_gis_values
+  test_data <- demo_gis_values_log
   test_data$SITE <- NULL
   expect_error(rict_validate(test_data))
   # Check NA caught
-  test_data <- demo_gis_values
+  test_data <- demo_gis_values_log
   test_data$Alkalinity[1] <- NA
   test_data$SITE[1] <- NA
   test <- rict_validate(test_data)
   expect_equal(length(test[[2]][, 1]), 2)
   # Check NA in NGR will fail
-  test_data <- demo_gis_values
+  test_data <- demo_gis_values_log
   test_data$NGR[1] <- NA
-  expect_error(rict_validate(test_data))
+  expect_error(rict_validate(test_data), "The data provided contains more than one area of the UK.
+        Hint: Check your data contains NGR grid letters for either: NI or GB")
   # Check missing Easting and Northing will fail
-  test_data <- demo_gis_values
+  test_data <- demo_gis_values_log
   test_data$EASTING[1] <- NA
-  expect_error(rict_validate(test_data))
+  expect_error(rict_validate(test_data), "EASTING or NORTHING")
   # Check data types are correct
-  test_data <- demo_gis_values
+  test_data <- demo_gis_values_log
   test_data$Alkalinity <- "test"
   test_data$NGR <- 1
-  expect_error(rict_validate(test_data))
+  expect_error(rict_validate(test_data),
+   "You provided column 'ALKALINITY' with class 'character', we expect class 'numeric'You provided column 'NGR' with class 'numeric', we expect class 'character'")
   # Check optional columns where one or the other column must be provided
   test_data <- demo_observed_values
   test_data$Velocity <- NA
   test_data$Discharge <- NA
-  expect_error(rict_validate(test_data))
+  expect_error(rict_validate(test_data), "You provided empty VELOCITY and DISCHARGE values,
+          we expect values for at least one of these variables")
   # Warning if both discharge and velocity have values
   test_data <- demo_observed_values
   test_data$Velocity <- 1

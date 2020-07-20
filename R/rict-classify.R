@@ -21,6 +21,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
   # This is a hack - best to combine single year and multiple year into single
   # function? For now, I've just stuck the single year into a different
   # function until these can be merged
+
   area <- unique(data$area)
   if (year_type == "single") {
     classification_results <- singleYearClassification(data, store_eqrs, area = area)
@@ -478,9 +479,11 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
       #### Store EQRs in list
       if (store_eqrs == T) {
         # Create variable to store list of simulated EQRs for each metric
-          eqrs <- list(multiYear_EQRAverages_aspt_spr_aut,
-                         multiYear_EQRAverages_ntaxa_spr_aut,
-                         data.frame(minta_ntaxa_aspt_spr_aut))
+        eqrs <- list(
+          multiYear_EQRAverages_aspt_spr_aut,
+          multiYear_EQRAverages_ntaxa_spr_aut,
+          data.frame(minta_ntaxa_aspt_spr_aut)
+        )
         # Create variable to store list of 'pretty' names for eqr metrics
         eqr_names <- list("AVG_ASPT", "AVG_NTAXA", "MINTA")
         # To make it easier to merge and process simulated EQRs and
@@ -500,7 +503,6 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
 
       # Move the pointer k to new adjusted position for j - whether multiple or not
       k <- j + 1
-
     } # END of FOR LOOP
 
     # MINTA outputs

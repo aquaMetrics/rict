@@ -35,8 +35,10 @@ test_that("sense-checks work", {
   test_data <- demo_gis_values_log
   test_data$Alkalinity <- "test"
   test_data$NGR <- 1
-  expect_error(rict_validate(test_data),
-   "You provided column 'ALKALINITY' with class 'character', we expect class 'numeric'You provided column 'NGR' with class 'numeric', we expect class 'character'")
+  expect_error(
+    rict_validate(test_data),
+    "You provided column 'ALKALINITY' with class 'character', we expect class 'numeric'You provided column 'NGR' with class 'numeric', we expect class 'character'"
+  )
   # Check optional columns where one or the other column must be provided
   test_data <- demo_observed_values
   test_data$Velocity <- NA
@@ -58,9 +60,9 @@ test_that("sense-checks work", {
 test_that("alkalinity, hardness, conductivity and calcium calculations work", {
   skip("needs more work")
   test_data <- demo_observed_values
-  test_data$Alkalinity[1:2]  <- NA
-  test_data$Hardness[1]  <- 50
-  test_data$Calcium[2]  <- 50
+  test_data$Alkalinity[1:2] <- NA
+  test_data$Hardness[1] <- 50
+  test_data$Calcium[2] <- 50
   test <- rict_validate(test_data)
   expect_equal(length(test[[2]][, 1]), 0)
 })
@@ -68,7 +70,7 @@ test_that("alkalinity, hardness, conductivity and calcium calculations work", {
 test_that("velocity calculation work", {
   skip("needs more work")
   test_data <- demo_observed_values
-  test_data$Velocity[1:5]  <- 5
+  test_data$Velocity[1:5] <- 5
   test <- rict_validate(test_data)
   expect_equal(length(test[[2]][, 1]), 5)
 })
@@ -86,7 +88,7 @@ test_that("warnings work", {
 test_that("failures work", {
   test_data <- demo_observed_values
   test_data$Discharge[1] <- 1500
-  test_data$Pebbles_Gravel[1]  <- 90
+  test_data$Pebbles_Gravel[1] <- 90
   test <- rict_validate(test_data)
   expect_equal(length(test[[2]][, 1]), 2)
 })

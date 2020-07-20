@@ -240,8 +240,8 @@ rict_validate <- function(data = NULL) {
       message("Using velocity, width and depth to calculate discharge category")
     }
     # hack - to avoid errors if some VELOCITY rows are NA - but avoids velocity validation rules..
-      data_row$VELOCITY <- NULL
-      return(data_row)
+    data_row$VELOCITY <- NULL
+    return(data_row)
   })
   discharge <- dplyr::bind_rows(discharge)
   # Keep order and row.names the same as original input data for consistent output
@@ -275,7 +275,6 @@ rict_validate <- function(data = NULL) {
     lat_long <- with(data, getLatLong(NGR, EASTING, NORTHING, "WGS84", area))
     data$LONGITUDE <- lat_long$lon
     data$LATITUDE <- lat_long$lat
-
   } else {
     lat_long <- with(data, getLatLong_NI(EASTING, NORTHING))
     data$LONGITUDE <- lat_long$Longitude
@@ -288,14 +287,24 @@ rict_validate <- function(data = NULL) {
 
     # Calculate mean temperature (TMEAN), range temperature (TRANGE) only if
     # users have not provided temperatures e.g. could be studying climate change etc...
+
     if ((is.null(data$MEAN.AIR.TEMP) | is.null(data$AIR.TEMP.RANGE)) ||
-        (any(is.na(data$MEAN.AIR.TEMP)) | any(is.na(data$AIR.TEMP.RANGE)))) {
+      (any(is.na(data$MEAN.AIR.TEMP)) | any(is.na(data$AIR.TEMP.RANGE)))) {
       my_temperatures <- calcTemps(data.frame(
         Site_ID = as.character(data$SITE),
         Easting4 = bng$easting / 100,
         Northing4 = bng$northing / 100,
         stringsAsFactors = FALSE
       ))
+      # test new temperature function
+      # Not working!
+      my_temperatures2 <- temperature_values(data.frame(
+        Site_ID = as.character(data$SITE),
+        Easting4 = bng$easting / 100,
+        Northing4 = bng$northing / 100,
+        stringsAsFactors = FALSE
+      ))
+
       # Add temp variables to data
       data <- dplyr::bind_cols(data, my_temperatures[, c("TMEAN", "TRANGE")])
     } else {
@@ -317,7 +326,7 @@ These values will be used instead of calculating them from Grid Reference values
 
   # convert metres to km in Distance from source GIS attribute
   if (model == "gis") {
-    data$DISTANCE_FROM_SOURCE <-  data$DISTANCE_FROM_SOURCE / 1000
+    data$DISTANCE_FROM_SOURCE <- data$DISTANCE_FROM_SOURCE / 1000
   }
 
   # Add log10 values where required
@@ -452,12 +461,12 @@ These values will be used instead of calculating them from Grid Reference values
   checks <- dplyr::bind_rows(checks)
   checks <- checks[checks$FAIL != "" | checks$WARN != "", ]
   # if both fail and warn - then only return fail
-  checks$WARN[checks$FAIL != "" & checks$WARN != ""]  <-  "---"
+  checks$WARN[checks$FAIL != "" & checks$WARN != ""] <- "---"
   checks$WARNING[checks$WARNING == ""] <- "---"
   checks$FAIL[checks$FAIL == ""] <- "---"
   # Print warnings and failures
   if (nrow(checks) > 0) {
-    test <-  checks
+    test <- checks
     row.names(test) <- NULL
     print(test)
   } else {

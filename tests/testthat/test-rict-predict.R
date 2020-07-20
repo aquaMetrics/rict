@@ -13,8 +13,8 @@ test_that("rict_predict for physical variables", {
   expected_predictions$belongs_to_end_grp <- NULL
   predictions$belongs_to_end_grp <- NULL
 
-  expected_predictions <- dplyr::arrange(expected_predictions,  SITE, TL2_WHPT_NTAXA_AbW_DistFam_spr)
-  predictions     <-  dplyr::arrange(predictions, SITE, TL2_WHPT_NTAXA_AbW_DistFam_spr)
+  expected_predictions <- dplyr::arrange(expected_predictions, SITE, TL2_WHPT_NTAXA_AbW_DistFam_spr)
+  predictions <- dplyr::arrange(predictions, SITE, TL2_WHPT_NTAXA_AbW_DistFam_spr)
 
   equal <- all.equal(
     predictions[, names(predictions) %in% names(expected_predictions)],
@@ -41,14 +41,14 @@ test_that("end group means for GIS variables", {
   expected_end_group <- data.frame(t(expected_end_group))
   names(expected_end_group) <- paste0("p", 1:43)
 
-  #expected_end_group <- dplyr::arrange(expected_end_group,  SITE, TL2_WHPT_NTAXA_AbW_DistFam_spr)
-  #predictions     <-  dplyr::arrange(predictions, SITE, TL2_WHPT_NTAXA_AbW_DistFam_spr)
-  #expected_predictions <- dplyr::arrange(expected_predictions,  SITE, TL2_WHPT_NTAXA_AbW_DistFam_spr)
+  # expected_end_group <- dplyr::arrange(expected_end_group,  SITE, TL2_WHPT_NTAXA_AbW_DistFam_spr)
+  # predictions     <-  dplyr::arrange(predictions, SITE, TL2_WHPT_NTAXA_AbW_DistFam_spr)
+  # expected_predictions <- dplyr::arrange(expected_predictions,  SITE, TL2_WHPT_NTAXA_AbW_DistFam_spr)
 
   test <- predictions[, names(predictions) %in% names(expected_end_group)] -
     expected_end_group[, names(expected_end_group) %in% names(predictions)]
   # check end groups don't differ more than 0.00038 - Ralph's rule of thumb
-   expect_true(max(test) < 0.00038)
+  expect_true(max(test) < 0.00038)
 
   # Note: lat/lon calculation converts NGR slightly different to values and rounding on
   # log values may also cause slight changes. So rounding output to 2 decimal places:
@@ -61,12 +61,11 @@ test_that("end group means for GIS variables", {
 })
 
 test_that("NI predictions", {
- ni_data <-
-  utils::read.csv(system.file("extdat",
-                              "ni-model-1-test-data.csv",
-                              package = "rict"
-), check.names = F)
+  ni_data <-
+    utils::read.csv(system.file("extdat",
+      "ni-model-1-test-data.csv",
+      package = "rict"
+    ), check.names = F)
 
- test <- rict(ni_data, year_type = "single")
-
+  test <- rict(ni_data, year_type = "single")
 })

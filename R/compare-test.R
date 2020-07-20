@@ -8,8 +8,10 @@
 #'
 #' @examples
 #' \dontrun{
-#' test <- compare_test(a = c(0.3,0.4,0.6),
-#'                             b = c(1,0.9,0.6))
+#' test <- compare_test(
+#'   a = c(0.3, 0.4, 0.6),
+#'   b = c(1, 0.9, 0.6)
+#' )
 #' }
 compare_test <- function(a, b) {
   # Calculate difference between a and b eqrs

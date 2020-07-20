@@ -1,50 +1,125 @@
+# Based on FORTRAN PROGRAM TEMPGRID
+# R version originally written by by C. Laize CEH in 2012
+# Amended by T. Loveday in 2019 - see mean_temp_function.R
+# Re-written in idiomatic R using spatial library (sf) in 2020
+
 temperature_values <- function(coordinates) {
-  # Load temperture grid .csv
-  air_temp_grid <- read.csv(system.file("extdat",
+  # Load temperature points -------------------------------------------
+  air_temp_points <- read.csv(system.file("extdat",
     "air-temp-grid.csv",
     package = "rict"
   ))
-  air_temp_grid <- sf::st_as_sf(air_temp_grid,
+  air_temp_points <- sf::st_as_sf(air_temp_points,
     coords = c("Easting", "Northing")
   )
   # Set coordinate system to British National Grid
-  sf::st_crs(air_temp_grid) <- 27700
-  # Convert temperature grid to spatial object:
-  grid <- sf::st_make_grid(air_temp_grid,
+  sf::st_crs(air_temp_points) <- 27700
+
+  ## Convert temperature points to spatial grid object -----------------
+  air_temp_grid <- sf::st_make_grid(air_temp_points,
     what = "polygons",
     cellsize = 50,
     offset = c(12.5, 12.5)
   )
-  grid <- sf::st_as_sf(grid)
-  # Set coordinate system to British National Grid
-  sf::st_crs(grid) <- 27700
-  grid_temps <- sf::st_join(grid, air_temp_grid)
+  air_temp_grid <- sf::st_as_sf(air_temp_grid)
+  sf::st_crs(air_temp_grid) <- 27700
 
-  # Format coordinates of sampling point into spatial object
+  # Copy across temperature/range values to grid from the temperature points
+  air_temp_grid <- sf::st_join(air_temp_grid, air_temp_points)
+
+  ## Format coordinates of sampling points into spatial object -------------
+  coordinates <- unique(coordinates)
   sampling_points <- data.frame(
     "site_id" = coordinates$Site_ID,
     "easting" = coordinates$Easting4,
-    "northing" = coordinates$Northing4
+    "northing" = coordinates$Northing4,
+    stringsAsFactors = F
   )
 
-  sampling_points <- sf::st_as_sf(sampling_points, coords = c("easting", "northing"))
-  sf::st_crs(sampling_points) <- 27700 # set coordinate system to British National Grid
+  sampling_points <- sf::st_as_sf(sampling_points,
+    coords = c("easting", "northing")
+  )
+  sf::st_crs(sampling_points) <- 27700
 
-  sampling_points <- sf::st_buffer(sampling_points, 51)
+  ## Create objects used to test logic for interpolating temperature ##
+  #
+  # Buffer grid square around sampling points equal in size to the standard
+  # temperature grid square
+  one_square_buffer <- sf::st_buffer(sampling_points, 50,
+    endCapStyle = "SQUARE"
+  )
 
-  test <- sf::st_join(grid_temps, sampling_points)
+  # For expanded search, buffer grid square around sampling points equal
+  # to 9 * the standard temperature grid square
+  nine_square_buffer <- sf::st_buffer(sampling_points, 150,
+    endCapStyle = "SQUARE"
+  )
 
-  temps <- test %>%
-    dplyr::filter(!is.na(site_id)) %>%
-    dplyr::group_by(site_id) %>%
-    dplyr::summarize(
-      "TMEAN" = mean(TEMPM, na.rm = T),
-      "TRANGE" = mean(TEMPR, na.rm = T)
-    )
 
-  sf::st_geometry(temps) <- NULL
-  # Find nearest feature and return temperatures range and mean and site_id
-  temperatures <- dplyr::inner_join(sampling_points, temps)
+  # Add columns TEMPM & TEMPR identifying if sampling buffer square exactly
+  # coincident with any temperature grid squares
+  one_square_buffer <- sf::st_join(one_square_buffer, air_temp_grid, st_equals)
+  one_square_buffer$coincident[!is.na(one_square_buffer$TEMPM)] <- TRUE
+  one_square_buffer$coincident[is.na(one_square_buffer$TEMPM)] <- FALSE
+  one_square_buffer$TEMPM <- NULL
+  one_square_buffer$TEMPR <- NULL
+  ### Check each sample point against temperature interpolating logic -----
+  temperatures <- purrr::map_df(
+    split(one_square_buffer, one_square_buffer$site_id),
+    function(sample_point_buffer) {
+      nine_square_buffer <- nine_square_buffer[nine_square_buffer$site_id ==
+        sample_point_buffer$site_id, ]
+
+      # Check if:
+      #   Buffer grid square  # # # # #                # # # # #
+      #   plum in middle      # # # # #   Or within()  # # + # #
+      #   of temp_grid        # # + # #   two squares  # # + # #
+      #   square              # # # # #                # # # # #
+      #                       # # # # #                # # # # #
+
+      if (is.na(sample_point_buffer$coincident) == TRUE |
+        length(sf::st_within(sample_point_buffer, air_temp_grid)[[1]]) == 2) {
+        return(sf::st_join(sample_point_buffer, air_temp_grid, st_within))
+      }
+
+      # Else expand search :
+      #                          # # # # #
+      #  Buffer grid square      # - - - #
+      #  must *intersect()* with # + + - #
+      #  4 or more temp_grid     # + + - #
+      #  squares                 # # # # #
+      #
+
+      else if (length(sf::st_intersects(sample_point_buffer, air_temp_grid)[[1]]) > 3) {
+        return(sf::st_join(sample_point_buffer, air_temp_grid, st_intersects))
+      }
+
+      # Expand search to find intersects with 9 buffer squares
+      # around sample point:
+      #   - + - - -
+      #   - - - + -
+      #   - - - - -
+      #   - + - - -
+      #   + - - + -
+      #
+      else if (length(sf::st_intersects(nine_square_buffer, air_temp_grid)[[1]]) > 4) {
+        return(sf::st_join(nine_grid_squares, air_temp_grid, st_intersects))
+      }
+
+      # If < 5 hits:
+      #   - - - + +
+      #   - - - - +
+      #   - - - - +
+      #   - - - - -
+      #   - - - - -
+      # Return zero values (will fail validation rules)
+
+      else {
+        return(sf::st_join(sample_point_buffer, air_temp_grid, st_within))
+      }
+    }
+  )
+  temperatures <- unique(temperatures)
   return(temperatures)
 }
 
@@ -52,8 +127,9 @@ temperature_values <- function(coordinates) {
 #
 # R version originally written by by C. Laize CEH in early 2012
 # Based on FORTRAN PROGRAM TEMPGRID
-# For QC and traceability, followed the FORTRAN code as closely as possible; not necessarily best R code
-# Converted to calc.temps function by M Dunbar, Environment Agency April 2018
+# For QC and traceability, followed the FORTRAN code as closely as possible; not
+# necessarily best R code Converted to calc.temps function by M Dunbar,
+# Environment Agency April 2018
 
 # Modified by T Loveday to avoid errors on east coast, Environment Agency May 2019
 ############################################
@@ -84,7 +160,7 @@ AVCALL <- function(ME1, ME2, MN1, MN2, KE, KN, air_temp_grid) {
 }
 
 # Program to calculate mean temperature and annual temperature
-calcTemps <- test1 <- function(coordinates) {
+calcTemps <- function(coordinates) {
   # coordinates is a data frame with three columns
   # SITE_ID
   # EASTING4
@@ -316,6 +392,7 @@ calcTemps <- test1 <- function(coordinates) {
     TempGrid_out <- rbind(TempGrid_out, cbind(coordinates[l, ], TMEAN, TRANGE))
   } # 0
   TempGrid_out <- as.data.frame(TempGrid_out)
-  # names(TempGrid_out)<-c("Site", "East", "North", "TMEAN", "TRANGE") # this line removed as it's stopping the function return working
-  # so we deal with the names back in the calling code
+  # names(TempGrid_out)<-c("Site", "East", "North", "TMEAN", "TRANGE") # this
+  # line removed as it's stopping the function return working so we deal with
+  # the names back in the calling code
 }

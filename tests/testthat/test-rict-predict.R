@@ -8,6 +8,11 @@ test_that("rict_predict for physical variables", {
     package = "rict"
   ))
 
+  # issue with rounding on LONGITUDE? Not real impact on prediction outputs
+  # so rounding both LONGITUDE to 6 digits
+  expected_predictions$LONGITUDE <- round(expected_predictions$LONGITUDE, 6)
+  predictions$LONGITUDE <- round(predictions$LONGITUDE, 6)
+
   expected_predictions$SuitCode <- as.factor(expected_predictions$SuitCode)
   names(expected_predictions)[17] <- "belongs_to_end_grp"
   expected_predictions$belongs_to_end_grp <- NULL

@@ -58,7 +58,7 @@ temperature_values <- function(coordinates) {
 
   # Add columns TEMPM & TEMPR identifying if sampling buffer square exactly
   # coincident with any temperature grid squares
-  one_square_buffer <- sf::st_join(one_square_buffer, air_temp_grid, st_equals)
+  one_square_buffer <- sf::st_join(one_square_buffer, air_temp_grid, sf::st_equals)
   one_square_buffer$coincident[!is.na(one_square_buffer$TEMPM)] <- TRUE
   one_square_buffer$coincident[is.na(one_square_buffer$TEMPM)] <- FALSE
   one_square_buffer$TEMPM <- NULL
@@ -79,7 +79,7 @@ temperature_values <- function(coordinates) {
 
       if (is.na(sample_point_buffer$coincident) == TRUE |
         length(sf::st_within(sample_point_buffer, air_temp_grid)[[1]]) == 2) {
-        return(sf::st_join(sample_point_buffer, air_temp_grid, st_within))
+        return(sf::st_join(sample_point_buffer, air_temp_grid, sf::st_within))
       }
 
       # Else expand search :
@@ -91,7 +91,7 @@ temperature_values <- function(coordinates) {
       #
 
       else if (length(sf::st_intersects(sample_point_buffer, air_temp_grid)[[1]]) > 3) {
-        return(sf::st_join(sample_point_buffer, air_temp_grid, st_intersects))
+        return(sf::st_join(sample_point_buffer, air_temp_grid, sf::st_intersects))
       }
 
       # Expand search to find intersects with 9 buffer squares
@@ -103,7 +103,7 @@ temperature_values <- function(coordinates) {
       #   + - - + -
       #
       else if (length(sf::st_intersects(nine_square_buffer, air_temp_grid)[[1]]) > 4) {
-        return(sf::st_join(nine_grid_squares, air_temp_grid, st_intersects))
+        return(sf::st_join(nine_grid_squares, air_temp_grid, sf::st_intersects))
       }
 
       # If < 5 hits:
@@ -115,7 +115,7 @@ temperature_values <- function(coordinates) {
       # Return zero values (will fail validation rules)
 
       else {
-        return(sf::st_join(sample_point_buffer, air_temp_grid, st_within))
+        return(sf::st_join(sample_point_buffer, air_temp_grid, sf::st_within))
       }
     }
   )

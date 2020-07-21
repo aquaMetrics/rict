@@ -29,13 +29,14 @@ Using this avoids direct dependency on rgdal package.
 }
 \examples{
 \dontrun{
-  # single entry
-  osg_parse(grid_refs = "TQ722213")
+# single entry
+osg_parse(grid_refs = "TQ722213")
 
-  # multiple entries
-  osg_parse(grid_refs = c("SN831869","SN829838"))
+# multiple entries
+osg_parse(grid_refs = c("SN831869", "SN829838"))
 }
 
+# Begin Exclude Linting
 }
 \author{
 Claudia Vitolo

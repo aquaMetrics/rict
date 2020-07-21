@@ -4,11 +4,13 @@
 \name{demo_eqr_values}
 \alias{demo_eqr_values}
 \title{Demo simulated eqr values for Model 1 test sites}
-\format{A data frame with 24 rows and 2 variables:
+\format{
+A data frame with 24 rows and 2 variables:
 \describe{
   \item{RESULT}{Result identifier for each Model 1 GB test site}
   \item{NTAXA_SPR}{Simulated EQR values for NTAXA SPR }
-}}
+}
+}
 \usage{
 demo_eqr_values
 }

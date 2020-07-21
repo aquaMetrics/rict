@@ -50,11 +50,11 @@ rict_validate <- function(data = NULL) {
     stop("You provided 'data' object with class '", class(data), "'.
        We expect 'data' to have class 'data.frame'
        Hint: Does your 'data' object contain your observed environmental
-       values?", call. = FALSE)
+       values? ", call. = FALSE)
   }
   # Load validation rules
   validation_rules <-
-    utils::read.csv(system.file("extdat", "validation-rules-2.csv", package = "rict"),
+    utils::read.csv(system.file("extdat", "validation-rules.csv", package = "rict"),
       stringsAsFactors = F
     )
   # Standardise all column names to uppercase
@@ -64,7 +64,7 @@ rict_validate <- function(data = NULL) {
   # Check data contains at least some required column names
   if (dplyr::filter(validation_rules, variable %in% names(data)) %>% nrow() < 1) {
     stop("The data provided contains none of the required column names
-          Hint: Double-check your data  contains correct column names", call. = FALSE)
+          Hint: Double-check your data  contains correct column names. ", call. = FALSE)
   }
   # Check if data contains variable names for more than one model type
   models <- c("gis", "physical")
@@ -93,7 +93,7 @@ rict_validate <- function(data = NULL) {
     if (length(data_present[data_present == T]) > 1) {
       stop("The data provided contains values for more than one model
         Hint: Check your data contains values for a single model type only: ",
-        paste(c(models), collapse = " or "),
+        paste(c(models), collapse = " or "), ". ",
         call. = FALSE
       )
     }
@@ -103,15 +103,14 @@ rict_validate <- function(data = NULL) {
   model <- model$models[model$data_present == T]
 
   # Display which model type has been detected
-  message("Variables for the '", model, "' model detected - applying relevant checks.")
+  message("Variables for the '", model, "' model detected - applying relevant checks. ")
 
-  data$NGR <- toupper(data$NGR)
   # Detect NI / GB grid references -----------------------------------------------------
-  areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", data$NGR), "gb", "ni"))
+  areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", toupper(data$NGR)), "gb", "ni"))
   if (length(areas) > 1) {
     stop("The data provided contains more than one area of the UK.
         Hint: Check your data contains NGR grid letters for either: ",
-      paste(c(toupper(areas)), collapse = " or "),
+      paste(c(toupper(areas)), collapse = " or "), ". ",
       call. = FALSE
     )
   } else {
@@ -162,7 +161,7 @@ rict_validate <- function(data = NULL) {
           return(paste0(
             "You provided column '", rule$variable,
             "' with class '", class(values),
-            "', we expect class '", rule$type, "'"
+            "', we expect class '", rule$type, "'. "
           ))
         }
       }
@@ -178,13 +177,13 @@ rict_validate <- function(data = NULL) {
     if (all(is.na(data$DISCHARGE)) &
       all(is.na(data$VELOCITY))) {
       stop("You provided empty VELOCITY and DISCHARGE values,
-          we expect values for at least one of these variables", call. = FALSE)
+          we expect values for at least one of these variables. ", call. = FALSE)
     }
 
     if (all(!is.na(data$DISCHARGE)) &
       all(!is.na(data$VELOCITY))) {
       warning("You provided both VELOCITY and DISCHARGE values,
-          DISCHARGE will be used by default", call. = FALSE)
+          DISCHARGE will be used by default. ", call. = FALSE)
       # remove VELOCITY from validation rules so no rule will be applied
       validation_rules <- validation_rules[validation_rules$variable != "VELOCITY", ]
       # remove VELOCITY from input data
@@ -199,31 +198,31 @@ rict_validate <- function(data = NULL) {
     all(is.na(data$ALKALINITY))
   ) {
     stop("You provided empty ALKALINITY, HARDNESS, CONDUCT and CALCIUM values,
-       we expect values for at least one of these variables", call. = FALSE)
+       we expect values for at least one of these variables. ", call. = FALSE)
   } else { # loop through rows and calculate Alkalinity
 
     alkalinity <- lapply(split(data, paste(data$SITE, data$YEAR)), function(data_row) {
       if (!any(is.null(data_row$HARDNESS)) && !any(is.na(data_row$HARDNESS))) {
         data_row$ALKALINITY <- 4.677 + 0.6393 * data_row$HARDNESS
-        message(paste(
-          "Using Hardness value to calculate Alkalinity at",
-          data_row$SITE, "-", data_row$YEAR
+        message(paste0(
+          "Using Hardness value to calculate Alkalinity at ",
+          data_row$SITE, " - ", data_row$YEAR, ". "
         ))
       }
       else
       if (!any(is.null(data_row$CALCIUM)) && !any(is.na(data_row$CALCIUM))) {
         data_row$ALKALINITY <- 14.552 + 1.7606 * data_row$CALCIUM
-        message(paste(
-          "Using Calcium value to calculate Alkalinity at",
-          data_row$SITE, "-", data_row$YEAR
+        message(paste0(
+          "Using Calcium value to calculate Alkalinity at ",
+          data_row$SITE, " - ", data_row$YEAR, ". "
         ))
       }
       else
       if (!any(is.null(data_row$CONDUCTIVITY)) && !any(is.na(data_row$CONDUCTIVITY))) {
         data_row$ALKALINITY <- 0.3201 * data_row$CONDUCTIVITY - 8.0593
-        message(paste(
-          "Using Conductivity value to calculate Alkalinity at",
-          data_row$SITE, "-", data_row$YEAR
+        message(paste0(
+          "Using Conductivity value to calculate Alkalinity at ",
+          data_row$SITE, " - ", data_row$YEAR, ". "
         ))
       }
       return(data_row)
@@ -238,7 +237,7 @@ rict_validate <- function(data = NULL) {
   discharge <- lapply(split(data, paste(data$SITE, data$YEAR)), function(data_row) {
     if (!any(is.null(data_row$VELOCITY)) && !any(is.na(data_row$VELOCITY))) {
       data_row$DISCHARGE <- data_row$MEAN_DEPTH / 100 * data_row$MEAN_WIDTH * data_row$VELOCITY / 100
-      message("Using velocity, width and depth to calculate discharge category")
+      message("Using velocity, width and depth to calculate discharge category. ")
     }
     # hack - to avoid errors if some VELOCITY rows are NA - but avoids velocity validation rules..
     data_row$VELOCITY <- NULL
@@ -254,11 +253,11 @@ rict_validate <- function(data = NULL) {
   data$NORTHING <- as.character(data$NORTHING)
 
   # Check NGR length
-  data$NGR <- toupper(as.character(data$NGR))
+  data$NGR <- as.character(data$NGR)
   data$NGR_LENGTH <- nchar(data$NGR)
   if (any(data$NGR_LENGTH > 2)) {
     stop("You provided an NGR with more than two letters,
-       Hint: Check your NGR variables have less than 3 three letters", call. = FALSE)
+       Hint: Check your NGR variables have less than 3 three letters. ", call. = FALSE)
   }
   # Check for length <5, add a "0" to get proper Easting/Northing 5 digit codes
   data$EASTING_LENGTH <- nchar(data$EASTING)
@@ -266,7 +265,7 @@ rict_validate <- function(data = NULL) {
   if (any(is.na(data$EASTING)) | any(is.na(data$NORTHING))) {
     stop("EASTING or NORTHING value(s) have not been supplied, we expect
        all rows to have Easting and Northing values.
-       Hint: Check all rows of input data have Easting and Northing values", call. = FALSE)
+       Hint: Check all rows of input data have Easting and Northing values. ", call. = FALSE)
   } else {
     data$EASTING[data$EASTING_LENGTH < 5] <- paste0("0", data$EASTING[data$EASTING_LENGTH < 5])
     data$NORTHING[data$NORTHING_LENGTH < 5] <- paste0("0", data$NORTHING[data$NORTHING_LENGTH < 5])
@@ -312,7 +311,7 @@ rict_validate <- function(data = NULL) {
       data$TMEAN <- data$MEAN.AIR.TEMP
       data$TRANGE <- data$AIR.TEMP.RANGE
       warning("Your input data file includes mean temperature and/or range (MEAN.AIR.TEMP & AIR.TEMP.RANGE).
-These values will be used instead of calculating them from Grid Reference values.")
+These values will be used instead of calculating them from Grid Reference values. ")
     }
   }
   # Total substrate
@@ -388,7 +387,7 @@ These values will be used instead of calculating them from Grid Reference values
               fails,
               paste0(
                 "You provided ", names(value)[1], ": ", value[, rule$variable],
-                ", expected max value: ", rule$greater_than_fail
+                ", expected max value: ", rule$greater_than_fail, ". "
               )
             )
           }
@@ -401,7 +400,7 @@ These values will be used instead of calculating them from Grid Reference values
               warns,
               paste0(
                 "You provided ", names(value)[1], ": ", value[, rule$variable],
-                ",  min value used to train model: ", rule$less_than_warn
+                ", min value used to train model: ", rule$less_than_warn, ". "
               )
             )
           }
@@ -413,7 +412,7 @@ These values will be used instead of calculating them from Grid Reference values
               warns,
               paste0(
                 "You provided ", names(value)[1], ": ", value[, rule$variable],
-                ", max value used to train model: ", rule$greater_than_warn
+                ", max value used to train model: ", rule$greater_than_warn, ". "
               )
             )
           }

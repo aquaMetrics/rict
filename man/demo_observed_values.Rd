@@ -4,7 +4,8 @@
 \name{demo_observed_values}
 \alias{demo_observed_values}
 \title{Demo observed values for physical model}
-\format{A data frame with 24 rows and 33 variables:
+\format{
+A data frame with 24 rows and 33 variables:
 \describe{
   \item{SITE}{Site identifier}
   \item{Waterbody}{Water body identifier}
@@ -43,7 +44,8 @@
   \item{\code{Aut_TL2_WHPT_ASPT (AbW,DistFam)}}{ASPT}
   \item{\code{Aut_TL2_WHPT_NTaxa (AbW,DistFam)}}{NTAXA}
   \item{Aut_Ntaxa_Bias}{bias}
-}}
+}
+}
 \usage{
 demo_observed_values
 }

@@ -21,7 +21,6 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
   # This is a hack - best to combine single year and multiple year into single
   # function? For now, I've just stuck the single year into a different
   # function until these can be merged
-
   area <- unique(data$area)
   if (year_type == "single") {
     classification_results <- singleYearClassification(data, store_eqrs, area = area)
@@ -248,6 +247,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
 
       # Get site out
       siteToProcess <- data[j, "SITE"]
+
       while ((data[j, "SITE"] == siteToProcess && j <= nrow(data))) {
         # print(c("Processing site j= ",j, " as ", as.character(data[j,"SITE"]), " and site j= ",j+1," as ",
         # as.character(data[j+1,"SITE"])))
@@ -308,6 +308,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
         if (k == nrow(data)) {
           lastSiteProcessed <- TRUE
         }
+
         # Part 1: Deal with NTAXA: observed and Expected Calculations
         obsIDX8r_spr <- getObsIDX8rB(obs_ntaxa_spr[k], getZObs_r_new(sdobs_ntaxa, n_runs))
         obsIDX8r_aut <- getObsIDX8rB(obs_ntaxa_aut[k], getZObs_r_new(sdobs_ntaxa, n_runs))

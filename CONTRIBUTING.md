@@ -12,14 +12,25 @@
 - It's usually helpful to include a worked example of the update or issue
 - If you are not a maintainer, wait for feedback and comments - maybe there are different approaches that need exploring
 
-#### Install software
+### Install software
 
+#### Cloud - *Quick and Easy!*
+- Sign-up to [R Studio Cloud](https://rstudio.cloud).
+- Click on New Project dropdown menu and select 'New Project from Git repo'.
+- Paste `https://github.com/aquaMetrics/rict`.
+- You can now make changes to the files - look in the 'Files' tab and look for 'R' folder where most R code is held.
+- Add `browser()` to the line above where you wish to  add a breakpoint in the code/function.
+- Now run the function, try typing in the console: `rict(observed_demo_values)` - this will run most functions in the package.
+- The code will break where you added the `browser()` and you can investigate the values and see what needs changing etc.
+- Make changes as required then 'Install and Restart'.
+- Once you are happy with the code run the test go to Create new branch section.
+
+#### Local machine
 - install [Git](https://git-scm.com/) on to your machine
 - install [R](https://cran.r-project.org/)
 - install [Rstudio](https://www.rstudio.com/) - recommended - other editors are available
 
-#### Create new branch
-
+### Create new branch
 
 If you have admin/contributor rights on aquaMetrics team, you can create a new branch there. Click 'Branch: ...' button on the main repository page. Then clone the repository to your local machine:
 ```

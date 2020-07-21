@@ -105,6 +105,7 @@ rict_validate <- function(data = NULL) {
   # Display which model type has been detected
   message("Variables for the '", model, "' model detected - applying relevant checks.")
 
+  data$NGR <- toupper(data$NGR)
   # Detect NI / GB grid references -----------------------------------------------------
   areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", data$NGR), "gb", "ni"))
   if (length(areas) > 1) {
@@ -212,7 +213,7 @@ rict_validate <- function(data = NULL) {
       else
       if (!any(is.null(data_row$CALCIUM)) && !any(is.na(data_row$CALCIUM))) {
         data_row$ALKALINITY <- 14.552 + 1.7606 * data_row$CALCIUM
-        paste(message(
+        message(paste(
           "Using Calcium value to calculate Alkalinity at",
           data_row$SITE, "-", data_row$YEAR
         ))
@@ -220,7 +221,7 @@ rict_validate <- function(data = NULL) {
       else
       if (!any(is.null(data_row$CONDUCTIVITY)) && !any(is.na(data_row$CONDUCTIVITY))) {
         data_row$ALKALINITY <- 0.3201 * data_row$CONDUCTIVITY - 8.0593
-        paste(message(
+        message(paste(
           "Using Conductivity value to calculate Alkalinity at",
           data_row$SITE, "-", data_row$YEAR
         ))
@@ -253,7 +254,7 @@ rict_validate <- function(data = NULL) {
   data$NORTHING <- as.character(data$NORTHING)
 
   # Check NGR length
-  data$NGR <- as.character(data$NGR)
+  data$NGR <- toupper(as.character(data$NGR))
   data$NGR_LENGTH <- nchar(data$NGR)
   if (any(data$NGR_LENGTH > 2)) {
     stop("You provided an NGR with more than two letters,

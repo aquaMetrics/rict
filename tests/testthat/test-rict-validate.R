@@ -27,6 +27,11 @@ test_that("sense-checks work", {
   test_data$NGR[1] <- NA
   expect_error(rict_validate(test_data), "The data provided contains more than one area of the UK.
         Hint: Check your data contains NGR grid letters for either: NI or GB")
+  # Check lower case NGR work - regex was not detecting lower case - fixed now.
+  test_data <- demo_gis_values_log
+  test_data$NGR <- as.character(test_data$NGR)
+  test_data$NGR[1] <- "se"
+  no_error <- rict_validate(test_data)
   # Check missing Easting and Northing will fail
   test_data <- demo_gis_values_log
   test_data$EASTING[1] <- NA

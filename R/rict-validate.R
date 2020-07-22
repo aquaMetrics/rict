@@ -296,14 +296,6 @@ rict_validate <- function(data = NULL) {
         Northing4 = bng$northing / 100,
         stringsAsFactors = FALSE
       ))
-      # test new temperature function
-      # Not working!
-      # my_temperatures2 <- temperature_values(data.frame(
-      #   Site_ID = as.character(data$SITE),
-      #   Easting4 = bng$easting / 100,
-      #   Northing4 = bng$northing / 100,
-      #   stringsAsFactors = FALSE
-      # ))
 
       # Add temp variables to data
       data <- dplyr::bind_cols(data, my_temperatures[, c("TMEAN", "TRANGE")])

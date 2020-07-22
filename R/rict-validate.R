@@ -232,12 +232,16 @@ rict_validate <- function(data = NULL) {
     data <- alkalinity[order(match(alkalinity[, "SITE"], data[, "SITE"])), ]
     row.names(data) <- seq_len(nrow(data))
   }
-
+  browser()
   # Calculate discharge category from velocity and width if required
+  discharge_categories <- c(0.31, 0.62, 1.25, 2.5, 5.0, 10.0, 20.0, 40.0, 80.0, 1000000)
+  velocity_categories <- c( 5.0, 17.5, 37.5, 75.0, 150.0, 1000000)
+
   discharge <- lapply(split(data, paste(data$SITE, data$YEAR)), function(data_row) {
     if (!any(is.null(data_row$VELOCITY)) && !any(is.na(data_row$VELOCITY))) {
-      data_row$DISCHARGE <- data_row$MEAN_DEPTH / 100 * data_row$MEAN_WIDTH * data_row$VELOCITY / 100
-      message("Using velocity, width and depth to calculate discharge category. ")
+      discharge_value <- data_row$MEAN_DEPTH / 100 * data_row$MEAN_WIDTH * velocity_categories[data_row$VELOCITY] / 100
+      data_row$DISCHARGE <- min(which(discharge_categories > discharge_value))
+      message("Using velocity, width and depth to calculate discharge category")
     }
     # hack - to avoid errors if some VELOCITY rows are NA - but avoids velocity validation rules..
     data_row$VELOCITY <- NULL
@@ -259,16 +263,19 @@ rict_validate <- function(data = NULL) {
     stop("You provided an NGR with more than two letters,
        Hint: Check your NGR variables have less than 3 three letters. ", call. = FALSE)
   }
+  # Convert to numeric in order to help validate them as numbers
+  data$EASTING <- as.numeric(data$EASTING)
+  data$NORTHING <- as.numeric(data$NORTHING)
   # Check for length <5, add a "0" to get proper Easting/Northing 5 digit codes
-  data$EASTING_LENGTH <- nchar(data$EASTING)
-  data$NORTHING_LENGTH <- nchar(data$NORTHING)
+  # data$EASTING_LENGTH <- nchar(data$EASTING)
+  # data$NORTHING_LENGTH <- nchar(data$NORTHING)
   if (any(is.na(data$EASTING)) | any(is.na(data$NORTHING))) {
     stop("EASTING or NORTHING value(s) have not been supplied, we expect
        all rows to have Easting and Northing values.
        Hint: Check all rows of input data have Easting and Northing values. ", call. = FALSE)
   } else {
-    data$EASTING[data$EASTING_LENGTH < 5] <- paste0("0", data$EASTING[data$EASTING_LENGTH < 5])
-    data$NORTHING[data$NORTHING_LENGTH < 5] <- paste0("0", data$NORTHING[data$NORTHING_LENGTH < 5])
+    data$EASTING <- as.character(formatC(round(data$EASTING), width = 5, format = "d", flag = "0"))
+    data$NORTHING <- as.character(formatC(round(data$NORTHING), width = 5, format = "d", flag = "0"))
   }
   # Calculate Longitude & Latitude
   if (area == "gb") {
@@ -290,7 +297,7 @@ rict_validate <- function(data = NULL) {
 
     if ((is.null(data$MEAN.AIR.TEMP) | is.null(data$AIR.TEMP.RANGE)) ||
       (any(is.na(data$MEAN.AIR.TEMP)) | any(is.na(data$AIR.TEMP.RANGE)))) {
-      my_temperatures <- calcTemps(data.frame(
+      my_temperatures <- calc_temps(data.frame(
         Site_ID = as.character(data$SITE),
         Easting4 = bng$easting / 100,
         Northing4 = bng$northing / 100,
@@ -309,7 +316,6 @@ These values will be used instead of calculating them from Grid Reference values
   # Total substrate
   if (model == "physical") {
     data$TOTSUB <- rowSums(data[, c("BOULDER_COBBLES", "PEBBLES_GRAVEL", "SILT_CLAY", "SAND")])
-
     data$MSUBST <- ((-7.75 * data$BOULDER_COBBLES) - (3.25 * data$PEBBLES_GRAVEL) +
       (2 * data$SAND) + (8 * data$SILT_CLAY)) / data$TOTSUB
     # re-assign substrate variable to match with prediction function requirements
@@ -427,26 +433,37 @@ These values will be used instead of calculating them from Grid Reference values
   })
 
   # Replace values if value is less than the ‘overall’ minimum value ---------------
-  if (any(data$ALTITUDE[!is.na(data$ALTITUDE)] == 0)) {
-    data$ALTITUDE[data$ALTITUDE == 0] <- 1
+  validation_rules_input <- validation_rules[validation_rules$source == "input" , ]
+  ALT_LIM <- validation_rules_input[validation_rules_input$variable == "ALTITUDE","replacement_limit"]
+  ALT_VAL <- validation_rules_input[validation_rules_input$variable == "ALTITUDE","replacement_val"]
+  if (any(data$ALTITUDE[!is.na(data$ALTITUDE)] == ALT_LIM)) {
+    data$ALTITUDE[data$ALTITUDE == ALT_LIM] <- ALT_VAL
   }
-  if (any(data$DIST_FROM_SOURCE[!is.na(data$DIST_FROM_SOURCE)] < 0.1)) {
-    data$DIST_FROM_SOURCE[data$DIST_FROM_SOURCE < 0.1] <- 0.1
+  DFS_LIM <- validation_rules_input[validation_rules_input$variable == "DIST_FROM_SOURCE","replacement_limit"]
+  if (any(data$DIST_FROM_SOURCE[!is.na(data$DIST_FROM_SOURCE)] < DFS_LIM)) {
+    data$DIST_FROM_SOURCE[data$DIST_FROM_SOURCE < DFS_LIM] <- DFS_LIM
   }
-  if (any(data$MEAN_WIDTH[!is.na(data$MEAN_WIDTH)] < 0.1)) {
-    data$MEAN_WIDTH[data$MEAN_WIDTH < 0.1] <- 0.1
+  MNW_LIM <- validation_rules_input[validation_rules_input$variable == "MEAN_WIDTH","replacement_limit"]
+  if (any(data$MEAN_WIDTH[!is.na(data$MEAN_WIDTH)] < MNW_LIM)) {
+    data$MEAN_WIDTH[data$MEAN_WIDTH < MNW_LIM] <- MNW_LIM
   }
-  if (any(data$MEAN_DEPTH[!is.na(data$MEAN_DEPTH)] < 1)) {
-    data$MEAN_DEPTH[data$MEAN_DEPTH < 1] <- 1
+  MND_LIM <- validation_rules_input[validation_rules_input$variable == "MEAN_DEPTH","replacement_limit"]
+  if (any(data$MEAN_DEPTH[!is.na(data$MEAN_DEPTH)] < MND_LIM)) {
+    data$MEAN_DEPTH[data$MEAN_DEPTH < MND_LIM] <- MND_LIM
   }
-  if (any(data$DISCHARGE[!is.na(data$DISCHARGE)] == 0)) {
-    data$DISCHARGE[data$DISCHARGE == 0] <- 1
+  DIS_LIM <- validation_rules_input[validation_rules_input$variable == "DISCHARGE","replacement_limit"]
+  DIS_VAL <- validation_rules_input[validation_rules_input$variable == "DISCHARGE","replacement_val"]
+  if (any(data$DISCHARGE[!is.na(data$DISCHARGE)] == DIS_LIM))  {
+    data$DISCHARGE[data$DISCHARGE ==DIS_LIM] <- DIS_VAL
   }
-  if (any(data$ALKALINITY[!is.na(data$ALKALINITY)] < 0.1)) {
-    data$ALKALINITY[data$ALKALINITY < 0.1] <- 0.1
+  ALK_LIM <- validation_rules_input[validation_rules_input$variable == "ALKALINITY","replacement_limit"]
+  if (any(data$ALKALINITY[!is.na(data$ALKALINITY)] < ALK_LIM)) {
+    data$ALKALINITY[data$ALKALINITY < ALK_LIM] <- ALK_LIM
   }
-  if (any(data$SLOPE[!is.na(data$SLOPE)] == 0)) {
-    data$SLOPE[data$SLOPE == 0] <- 0.1
+  SLP_LIM <- validation_rules_input[validation_rules_input$variable == "SLOPE","replacement_limit"]
+  SLP_VAL <- validation_rules_input[validation_rules_input$variable == "SLOPE","replacement_val"]
+  if (any(data$SLOPE[!is.na(data$SLOPE)] == SLP_LIM)) {
+    data$SLOPE[data$SLOPE == SLP_LIM] <- SLP_VAL
   }
 
   # Bind and format checks into data frame

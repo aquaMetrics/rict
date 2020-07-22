@@ -171,3 +171,27 @@ test_that("GIS variables classification against Ralph's output", {
   # write.csv(output, file = "r-output.csv")
   # write.csv(results, file = "r-output-standard.csv")
 })
+
+
+test_that("Site order does effect output results", {
+
+  # Original issue for reference:
+  # library(rict)
+  # setwd("~/Documents/projects/rict-test")
+  # test1 <- read.csv("airpt 4 sites 1yr & linkwd 3yrs input.csv", check.names = F)
+  # test2 <- read.csv("airpt 1 site 1yr & linkwd 3yrs input.csv", check.names = F)
+  # output1 <- rict(test1)
+  # output3 <- rict(dplyr::arrange(test1, SITE))
+  # output2 <- rict(test2)
+
+# five sites
+output1 <- rict(demo_observed_values)
+# Include only two sites from test1 dataframe: MYR-GB-01-R, MYR-GB-09-R and in different arrangement
+output2 <- rict(demo_observed_values[c(8:10,1:3), ])
+
+output1 <- output1[output1$SITE %in% output2$SITE, ]
+# expect_equal(output1[, 1:7], output2[, 1:7])
+
+
+})
+

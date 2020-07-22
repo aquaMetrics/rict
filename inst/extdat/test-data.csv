@@ -1,0 +1,9 @@
+sample_id,date_taken,location_code,location_description,water_body_id,water_body_name,analysis,determinand,value,ngr,northing,easting,altitude,slope,discharge_cat,velocity,dist_from_source,width,depth,alkalinity,boulders_cobbles,pebbles_gravel,sand,silt_clay,hardness,calcium,conductivity
+1,2016-11-02,MYR-GB-01-R,river,1,river,whpt_abundance,aspt,6.348,SE,94200,91000,60,2.7,2,,10,6.4,21.7,101.4,58,36,3,,,,
+1,2016-11-02,MYR-GB-01-R,river,1,river,whpt_abundance,ntaxa,27,SE,94200,91000,60,2.7,2,,10,6.4,21.7,101.4,58,36,3,,,,
+2,2016-03-01,MYR-GB-01-R,river,1,river,whpt_abundance,aspt,6.512,SE,94200,91000,60,2.7,2,,10,6.4,21.7,101.4,58,36,3,,,,
+2,2016-03-01,MYR-GB-01-R,river,1,river,whpt_abundance,ntaxa,24,SE,94200,91000,60,2.7,2,,10,6.4,21.7,101.4,58,36,3,,,,
+3,2017-11-01,MYR-GB-01-R,river,1,river,whpt_abundance,aspt,5.892,SE,94200,91000,60,2.7,2,,10,6.4,21.7,101.4,58,36,3,,,,
+3,2017-11-01,MYR-GB-01-R,river,1,river,whpt_abundance,ntaxa,25,SE,94200,91000,60,2.7,2,,10,6.4,21.7,101.4,58,36,3,,,,
+4,2017-03-01,MYR-GB-01-R,river,1,river,whpt_abundance,aspt,6.476,SE,94200,91000,60,2.7,2,,10,6.4,21.7,101.4,58,36,3,,,,
+4,2017-03-01,MYR-GB-01-R,river,1,river,whpt_abundance,ntaxa,25,SE,94200,91000,60,2.7,2,,10,6.4,21.7,101.4,58,36,3,,,,

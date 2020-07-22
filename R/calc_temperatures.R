@@ -1,6 +1,32 @@
-# Based on FORTRAN PROGRAM TEMPGRID
-# R version originally written by by C. Laize CEH in 2012
-# Amended by T. Loveday in 2019 - see mean_temp_function.R
+# R version originally written by by C. Laize CEH in early 2012 Based on FORTRAN
+# PROGRAM TEMPGRID For QC and traceability, followed the FORTRAN code as closely
+# as possible; not necessarily best R code Converted to calc.temps function by M
+# Dunbar, Environment Agency April 2018 Modified by T Loveday to avoid errors on
+# east coast, Environment Agency May 2019
+# -----------------------------------------------------------------------------
+
+# SUBROUTINE AVCALL
+# implemented in R as a function
+
+AVCALL <- function(ME1, ME2, MN1, MN2, KE, KN, air_temp_grid) {
+  np <- 0
+  tsum <- 0
+  rsum <- 0
+  smean <- 0.000000
+  srange <- 0.000000
+  subsetATG <- NULL
+  subsetATG <- subset(air_temp_grid, Easting >= ME1 & Easting <= ME2 & Northing >= MN1 & Northing <= MN2)
+
+  subsetATG$D <- (subsetATG$Easting - (KE + 25))^2 + (subsetATG$Northing - (KN + 25))^2
+
+  ifelse(subsetATG$D != 0.000000, subsetATG$DS <- 1 / subsetATG$D, subsetATG$DS <- 0.01)
+
+  smean <- sum(subsetATG$TEMPM / subsetATG$D) / sum(subsetATG$DS)
+  srange <- sum(subsetATG$TEMPR / subsetATG$D) / sum(subsetATG$DS)
+
+  np <- nrow(subsetATG)
+  c(np, smean, srange)
+}
 
 # Program to calculate mean temperature and annual temperature
 calcTemps <- function(coordinates) {

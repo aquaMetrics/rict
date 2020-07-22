@@ -60,7 +60,7 @@ rict_validate <- function(data = NULL) {
   # Standardise all column names to uppercase
   names(data) <- toupper(names(data))
   names(validation_rules$variable) <- toupper(validation_rules$variable)
-
+  browser()
   # Check data contains at least some required column names
   if (dplyr::filter(validation_rules, variable %in% names(data)) %>% nrow() < 1) {
     stop("The data provided contains none of the required column names
@@ -232,7 +232,7 @@ rict_validate <- function(data = NULL) {
     data <- alkalinity[order(match(alkalinity[, "SITE"], data[, "SITE"])), ]
     row.names(data) <- seq_len(nrow(data))
   }
-  browser()
+
   # Calculate discharge category from velocity and width if required
   discharge_categories <- c(0.31, 0.62, 1.25, 2.5, 5.0, 10.0, 20.0, 40.0, 80.0, 1000000)
   velocity_categories <- c( 5.0, 17.5, 37.5, 75.0, 150.0, 1000000)
@@ -297,7 +297,7 @@ rict_validate <- function(data = NULL) {
 
     if ((is.null(data$MEAN.AIR.TEMP) | is.null(data$AIR.TEMP.RANGE)) ||
       (any(is.na(data$MEAN.AIR.TEMP)) | any(is.na(data$AIR.TEMP.RANGE)))) {
-      my_temperatures <- calc_temps(data.frame(
+      my_temperatures <- calcTemps(data.frame(
         Site_ID = as.character(data$SITE),
         Easting4 = bng$easting / 100,
         Northing4 = bng$northing / 100,

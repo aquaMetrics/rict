@@ -1,8 +1,9 @@
 
-prediction <- function(data) {
+prediction <- function(data, predict_indices = NULL) {
   data <- utils::read.csv(system.file("extdat",
-                                      "test-data.csv",
-                                      package = "rict"))
+    "test-data.csv",
+    package = "rict"
+  ))
 
   # calc temp, lat, lon, logalt, logdist, logwith, logalk, log slope, mean_substrate - currently done in validation?
   data$temperature_range <- 15
@@ -16,7 +17,13 @@ prediction <- function(data) {
   data$log_slope <- log10(data$slope)
   data$lat <- rict::osg_parse(grid_refs = paste0(data$ngr, data$northing, data$easting))[[1]]
   data$long <- rict::osg_parse(grid_refs = paste0(data$ngr, data$northing, data$easting))[[2]]
-  data$mean_substrate <- rowMeans(data[, c('boulders_cobbles', 'silt_clay', 'pebbles_gravel')], na.rm = T)
+  data$mean_substrate <- rowMeans(data[, c("boulders_cobbles", "silt_clay", "pebbles_gravel")], na.rm = T)
+
+  data$season_code <- as.numeric(format.Date(data$date_taken, "%m"))
+  data$season_code[data$season_code %in% c(12, 1, 2)] <- 4
+  data$season_code[data$season_code %in% c(3, 4, 5)] <- 1
+  data$season_code[data$season_code %in% c(6, 7, 8)] <- 2
+  data$season_code[data$season_code %in% c(9, 10, 11)] <- 3
 
   # These should be binary data files?
   mean_end_group <-
@@ -35,305 +42,114 @@ prediction <- function(data) {
       as.is = TRUE
     )
 
-  coefficents$predictors <- c("lat",
-                              "long",
-                              "log_altitude",
-                              "log_dist_from_source",
-                              "log_width",
-                              "log_depth",
-                              "mean_substrate",
-                              "log_discharge",
-                              "alkalinity",
-                              "log_alkalinity",
-                              "log_slope",
-                              "temperature_mean",
-                              "temperature_range")
+  coefficents$predictors <- c(
+    "lat",
+    "long",
+    "log_altitude",
+    "log_dist_from_source",
+    "log_width",
+    "log_depth",
+    "mean_substrate",
+    "log_discharge",
+    "alkalinity",
+    "log_alkalinity",
+    "log_slope",
+    "temperature_mean",
+    "temperature_range"
+  )
   coefficents$V1 <- NULL
   # save coefficents as binary
 
-  # remove observed values - only need predictions for unique predictors (not unique determinands)
-  data <- select(data, -c(value, determinand)) %>%  unique()
+  # Remove observed values - only need unique site predictor variables and
+  # season to make predictions
+  data <- select(data, -c(value, determinand)) %>% unique()
 
-  # the names in the coefficients data to select the predictors
-  # non_predictors <- names(data[, ! names(data) %in% coefficents$predictors])
+  # Select the predictors based on on the names in the coefficients data and
+  # nest into a column called `predictors`
   data <- nest(data, predictors = c(coefficents$predictors))
 
-  # Multiple predictors and coefficients
+  # Loop through each row of the `predictors` variable saving the product of
+  # predictors * coefficients in `dfscore` variable
+
   data$df_scores <- map(data$predictors, function(predictors) {
     df_score <- data.frame(as.matrix(predictors) %*% as.matrix(select(coefficents, -predictors)))
   })
 
-  # Calculate the Mahanalobis distance from each site to reference groups means
-  data$mah_dist <- map(data$df_scores, function(df_score){
-    mah_dist <- map_df(1:nrow(mean_end_group), function(x){
+  # Calculate the Mahanalobis distance from each site to reference
+  # groups means
+  data$mah_dist <- map(data$df_scores, function(df_score) {
+    mah_dist <- map_df(1:nrow(mean_end_group), function(x) {
       data.frame(value = sum((df_score - mean_end_group[x, ])^2))
     })
     mah_dist <- as.data.frame(t(mah_dist))
   })
 
-  # Find which reference group is has shortest Mahanalobis distance from each site
-  data$min_mah_dist <-  map(data$mah_dist, `min`)
+  # Find which reference group is has shortest Mahanalobis distance from each
+  # site
+  data$min_mah_dist <- map(data$mah_dist, `min`)
 
   # Calculate the probability distributions
   # nr_efg_groups should be binary file?
-  nr_efg_groups <- utils::read.csv(system.file("extdat", "end-grp-assess-scores.csv", package = "rict"))
+  nr_efg_groups <- utils::read.csv(system.file("extdat",
+    "end-grp-assess-scores.csv",
+    package = "rict"
+  ))
   nr_efg_groups <- nr_efg_groups %>% select(-EndGrpNo)
 
+  # Calculate probability distribution of belonging to each end group
   data$prob_distribution <- map(data$mah_dist, function(mah_dist) {
-      endGrp_Score <- as.matrix(rowSums(nr_efg_groups)) %*% as.matrix(exp(-mah_dist / 2))
+    endGrp_Score <- as.matrix(rowSums(nr_efg_groups)) %*% as.matrix(exp(-mah_dist / 2))
   })
 
+  # Calculate total probability distribution of belonging to each end group
   data$prob_distribution_total <- map(data$prob_distribution, function(prob_distribution) {
     return(cbind(prob_distribution / rowSums(prob_distribution), rowSums(prob_distribution)))
   })
 
- # Suitability code
- data$suit_codes  <- map(data$min_mah_dist, function(min_mah_dist) {
-   chi_square_vals <- data.frame(
-     CQ1 = c(21.02606, 18.30700),
-     CQ2 = c(24.05393, 21.16080),
-     CQ3 = c(26.21696, 23.20930),
-     CQ4 = c(32.90923, 29.58830)
-   )
-   chi_square_vals <- chi_square_vals[1, ]
-      if (min_mah_dist < chi_square_vals[, "CQ1"]) {
-        suit_frame <- c(1, ">5%")
-      } else if (chi_square_vals[, "CQ1"] <= min_mah_dist &
-            chi_square_vals[, "CQ2"] > min_mah_dist) {
-          suit_frame <- c(2, "<5%")
-        } else if ((chi_square_vals[, "CQ2"] <= min_mah_dist) &
-              (min_mah_dist < chi_square_vals[, "CQ3"])) {
-            suit_frame <- c(3, "<2%")
-          } else if (chi_square_vals[, "CQ3"] <= min_mah_dist &
-                min_mah_dist < chi_square_vals[, "CQ4"]) {
-              suit_frame <- c(4,"<1%")
-            } else  {
-                suit_frame <- c(5, "<0.1%")
-            }
-    return(data.frame(suit_code = suit_frame[1], suit_text = suit_frame[2]))
+  # Load end group means
+  end_group_index <- utils::read.csv(system.file("extdat", "x-103-end-group-means.csv", package = "rict"))
+  end_group_index$season_code <- end_group_index$Season.Code
+  # Get predicted end group mean scores based on season and metric
+  data$end_group_index <- map(split(data, data$sample_id), function(site) {
+    # nr_efg_groups should be binary file?
+
+    end_group_index <- filter(end_group_index, season_code == site$season_code)
+    end_group_index$season_code <- NULL
+    return(end_group_index)
   })
 
- # Calculate predicted scores
- getSeasonIndexScores <- map(data$prob_distribution_total) {
+  # Predict the indices by multiplying the end group score means by the probability
+  # of end group membership
+  data$prediction <- map(split(data, data$sample_id), function(site) {
+    # Identify which indices to predict or predict all indices
+    if (!is.null(predict_indices)) {
+      predict_indices <- names(site$end_group_index[[1]])
+    }
+    prediction <- map_df(predict_indices, function(name) {
+      return(as.data.frame(
+        indice = name, prediction =
+          as.matrix(site$prob_distribution_total) %*% as.matrix(site$end_group_index[, name])
+      ))
+    })
+  })
 
-   end_group_index <- utils::read.csv(system.file("extdat", "x-103-end-group-means.csv", package = "rict"))
+  # Suitability codes
+  suitability_codes <- data.frame(
+    suit_code = c(1, 2, 3, 4, 5),
+    suit_text = c(">5%", "<5%", "<2%", "<1%", "<0.1%")
+  )
+  chi_square_vals <- data.frame(
+    chi_square_vals_1 = c(-Inf, 21.02606, 24.05393, 26.21696, 32.90923, Inf),
+    chi_square_vals_2 = c(-Inf, 18.30700, 21.16080, 23.20930, 29.58830, Inf) # are these required?
+  )
+  data$suit_codes <- map(data$min_mah_dist, function(min_mah_dist) {
 
+    suit_code <- as.numeric(cut(min_mah_dist, c(chi_square_vals$chi_square_vals_1)))
+    return(suitability_codes[suit_code, ])
+  })
 
-   if (1 %in% end_group_IndexDFrame$SeasonCode) {
-     spring_whpt_all <- dplyr::filter(end_group_IndexDFrame, .data$SeasonCode == 1)
-     spring_whpt_all <- spring_whpt_all[seq_len(length(DistNames)), ]
-     # Check what index iit is you want , and getProbScores
-     if ("TL2_WHPT_NTAXA_AbW_DistFam" %in% colnames(end_group_IndexDFrame)) { # column exists
-       spring_whpt_ntaxa_Abw_Dist <- as.data.frame(getProbScores(
-         Proball = data_to_bindTo[, DistNames],
-         IDXMean = dplyr::select(
-           spring_whpt_all,
-           .data$TL2_WHPT_NTAXA_AbW_DistFam
-         )
-       ))
-       colnames(spring_whpt_ntaxa_Abw_Dist) <- c("TL2_WHPT_NTAXA_AbW_DistFam_spr")
-       # print(nrow(spring_whpt_ntaxa_Abw_Dist))
-       # print(spring_whpt_ntaxa_Abw_Dist)
-     }
-
-     if ("TL2_WHPT_ASPT_AbW_DistFam" %in% colnames(end_group_IndexDFrame)) { # column exists
-       spring_whpt_aspt_Abw_Dist <- as.data.frame(getProbScores(
-         data_to_bindTo[, DistNames],
-         dplyr::select(
-           spring_whpt_all,
-           .data$TL2_WHPT_ASPT_AbW_DistFam
-         )
-       ))
-       colnames(spring_whpt_aspt_Abw_Dist) <- c("TL2_WHPT_ASPT_AbW_DistFam_spr")
-       # print(nrow(spring_whpt_aspt_Abw_Dist))
-       # print(spring_whpt_aspt_Abw_Dist)
-     }
-
-     if ("TL2_WHPT_NTAXA_AbW_CompFam" %in% colnames(end_group_IndexDFrame)) { # column exists
-       spring_whpt_ntaxa_Abw_CompFam <- as.data.frame(getProbScores(
-         data_to_bindTo[, DistNames],
-         dplyr::select(
-           spring_whpt_all,
-           .data$TL2_WHPT_NTAXA_AbW_CompFam
-         )
-       ))
-       colnames(spring_whpt_ntaxa_Abw_CompFam) <- c("TL2_WHPT_NTAXA_AbW_CompFam_spr")
-       # print(nrow(spring_whpt_ntaxa_Abw_CompFam))
-       # print(spring_whpt_ntaxa_Abw_CompFam)
-     }
-
-     if ("TL2_WHPT_ASPT_AbW_CompFam" %in% colnames(end_group_IndexDFrame)) { # column exists
-       spring_whpt_aspt_Abw_CompFam <- as.data.frame(getProbScores(
-         data_to_bindTo[, DistNames],
-         dplyr::select(
-           spring_whpt_all,
-           .data$TL2_WHPT_ASPT_AbW_CompFam
-         )
-       ))
-       colnames(spring_whpt_aspt_Abw_CompFam) <- c("TL2_WHPT_NTAXA_ASPT_CompFam_spr")
-       # print(nrow(spring_whpt_aspt_Abw_CompFam))
-       # print(spring_whpt_aspt_Abw_CompFam)
-       # Change column_name to include spring
-     }
-   }
-
-   # filter for autumn, SeasonCode == 3, if exists
-   autumn_whpt_ntaxa_Abw_Dist <- NULL
-   autumn_whpt_aspt_Abw_Dist <- NULL
-   autumn_whpt_ntaxa_Abw_CompFam <- NULL
-   autumn_whpt_aspt_Abw_CompFam <- NULL
-
-   if (3 %in% end_group_IndexDFrame$SeasonCode) {
-     autumn_whpt_all <- dplyr::filter(end_group_IndexDFrame, .data$SeasonCode == 3)
-     autumn_whpt_all <- autumn_whpt_all[seq_len(length(DistNames)), ]
-     # Check what index iit is you want , and getProbScores
-     if ("TL2_WHPT_NTAXA_AbW_DistFam" %in% colnames(end_group_IndexDFrame)) { # column exists
-       autumn_whpt_ntaxa_Abw_Dist <- as.data.frame(getProbScores(
-         data_to_bindTo[, DistNames],
-         dplyr::select(
-           autumn_whpt_all,
-           .data$TL2_WHPT_NTAXA_AbW_DistFam
-         )
-       ))
-       colnames(autumn_whpt_ntaxa_Abw_Dist) <- c("TL2_WHPT_NTAXA_AbW_DistFam_aut")
-       # print(nrow(autumn_whpt_ntaxa_Abw_Dist))
-       # print(autumn_whpt_ntaxa_Abw_Dist)
-     }
-
-     if ("TL2_WHPT_ASPT_AbW_DistFam" %in% colnames(end_group_IndexDFrame)) { # column exists
-       autumn_whpt_aspt_Abw_Dist <- as.data.frame(getProbScores(
-         data_to_bindTo[, DistNames],
-         dplyr::select(
-           autumn_whpt_all,
-           .data$TL2_WHPT_ASPT_AbW_DistFam
-         )
-       ))
-       colnames(autumn_whpt_aspt_Abw_Dist) <- c("TL2_WHPT_ASPT_AbW_DistFam_aut")
-       # print(nrow(autumn_whpt_aspt_Abw_Dist))
-       # print(autumn_whpt_aspt_Abw_Dist)
-     }
-
-     if ("TL2_WHPT_NTAXA_AbW_CompFam" %in% colnames(end_group_IndexDFrame)) { # column exists
-       autumn_whpt_ntaxa_Abw_CompFam <- as.data.frame(getProbScores(
-         data_to_bindTo[, DistNames],
-         dplyr::select(
-           autumn_whpt_all,
-           .data$TL2_WHPT_NTAXA_AbW_CompFam
-         )
-       ))
-       colnames(autumn_whpt_ntaxa_Abw_CompFam) <- c("TL2_WHPT_NTAXA_AbW_CompFam_aut")
-       # print(nrow(autumn_whpt_ntaxa_Abw_CompFam))
-       # print(autumn_whpt_ntaxa_Abw_CompFam)
-     }
-
-     if ("TL2_WHPT_ASPT_AbW_CompFam" %in% colnames(end_group_IndexDFrame)) { # column exists
-       autumn_whpt_aspt_Abw_CompFam <- as.data.frame(getProbScores(
-         data_to_bindTo[, DistNames],
-         dplyr::select(
-           autumn_whpt_all,
-           .data$TL2_WHPT_ASPT_AbW_CompFam
-         )
-       ))
-       colnames(autumn_whpt_aspt_Abw_CompFam) <- c("TL2_WHPT_ASPT_AbW_CompFam_aut")
-       # print(nrow(autumn_whpt_aspt_Abw_CompFam))
-       # print(autumn_whpt_aspt_Abw_CompFam)
-     }
-   }
-
-   # filter for summer, SeasonCode == 2, if exists
-   summer_whpt_ntaxa_Abw_Dist <- NULL
-   summer_whpt_aspt_Abw_Dist <- NULL
-   summer_whpt_ntaxa_Abw_CompFam <- NULL
-   summer_whpt_aspt_Abw_CompFam <- NULL
-
-   if (2 %in% end_group_IndexDFrame$SeasonCode) {
-     summer_whpt_all <- dplyr::filter(end_group_IndexDFrame, .data$SeasonCode == 2)
-     summer_whpt_all <- summer_whpt_all[seq_len(length(DistNames)), ]
-     # Check what index iit is you want , and getProbScores
-     if ("TL2_WHPT_NTAXA_AbW_DistFam" %in% colnames(end_group_IndexDFrame)) { # column exists
-       summer_whpt_ntaxa_Abw_Dist <- as.data.frame(getProbScores(
-         data_to_bindTo[, DistNames],
-         dplyr::select(
-           summer_whpt_all,
-           .data$TL2_WHPT_NTAXA_AbW_DistFam
-         )
-       ))
-       colnames(summer_whpt_ntaxa_Abw_Dist) <- c("TL2_WHPT_NTAXA_AbW_DistFam_sum")
-       # print(nrow(autumn_whpt_ntaxa_Abw_Dist))
-       # print(autumn_whpt_ntaxa_Abw_Dist)
-     }
-
-     if ("TL2_WHPT_ASPT_AbW_DistFam" %in% colnames(end_group_IndexDFrame)) { # column exists
-       summer_whpt_aspt_Abw_Dist <- as.data.frame(getProbScores(
-         data_to_bindTo[, DistNames],
-         dplyr::select(
-           summer_whpt_all,
-           .data$TL2_WHPT_ASPT_AbW_DistFam
-         )
-       ))
-       colnames(summer_whpt_aspt_Abw_Dist) <- c("TL2_WHPT_ASPT_AbW_DistFam_sum")
-       # print(nrow(autumn_whpt_aspt_Abw_Dist))
-       # print(autumn_whpt_aspt_Abw_Dist)
-     }
-
-     if ("TL2_WHPT_NTAXA_AbW_CompFam" %in% colnames(end_group_IndexDFrame)) { # column exists
-       summer_whpt_ntaxa_Abw_CompFam <- as.data.frame(getProbScores(
-         data_to_bindTo[, DistNames],
-         dplyr::select(
-           summer_whpt_all,
-           .data$TL2_WHPT_NTAXA_AbW_CompFam
-         )
-       ))
-       colnames(summer_whpt_ntaxa_Abw_CompFam) <- c("TL2_WHPT_NTAXA_AbW_CompFam_sum")
-       # print(nrow(autumn_whpt_ntaxa_Abw_CompFam))
-       # print(autumn_whpt_ntaxa_Abw_CompFam)
-     }
-
-     if ("TL2_WHPT_ASPT_AbW_CompFam" %in% colnames(end_group_IndexDFrame)) { # column exists
-       summer_whpt_aspt_Abw_CompFam <- as.data.frame(getProbScores(
-         data_to_bindTo[, DistNames],
-         dplyr::select(
-           summer_whpt_all,
-           .data$TL2_WHPT_ASPT_AbW_CompFam
-         )
-       ))
-       colnames(summer_whpt_aspt_Abw_CompFam) <- c("TL2_WHPT_ASPT_AbW_CompFam_sum")
-       # print(nrow(autumn_whpt_aspt_Abw_CompFam))
-       # print(autumn_whpt_aspt_Abw_CompFam)
-     }
-   }
-
-   # Spring Dist
-   bind_all <- cbind(data_to_bindTo, spring_whpt_ntaxa_Abw_Dist)
-   bind_all <- cbind(bind_all, spring_whpt_aspt_Abw_Dist)
-
-   # Autumn Dist
-   bind_all <- cbind(bind_all, autumn_whpt_ntaxa_Abw_Dist)
-   bind_all <- cbind(bind_all, autumn_whpt_aspt_Abw_Dist)
-
-   # Spring CompFam
-   bind_all <- cbind(bind_all, spring_whpt_ntaxa_Abw_CompFam)
-   bind_all <- cbind(bind_all, spring_whpt_aspt_Abw_CompFam)
-
-   # Autumn CompFam
-   bind_all <- cbind(bind_all, autumn_whpt_ntaxa_Abw_CompFam)
-   bind_all <- cbind(bind_all, autumn_whpt_aspt_Abw_CompFam)
-
-   # Summer Dist
-   if (!is.null(summer_whpt_ntaxa_Abw_Dist)) {
-     bind_all <- cbind(bind_all, summer_whpt_ntaxa_Abw_Dist)
-     bind_all <- cbind(bind_all, summer_whpt_aspt_Abw_Dist)
-     # Summer CompFam
-     bind_all <- cbind(bind_all, summer_whpt_ntaxa_Abw_CompFam)
-     bind_all <- cbind(bind_all, summer_whpt_aspt_Abw_CompFam)
-   }
-   return(bind_all)
- }
-
-
- test <- data %>% select(-prob_distribution,-prob_distribution_total) %>% unnest()
- data <-  unique(data)
+  test <- data %>%
+    select(-prob_distribution, -prob_distribution_total) %>%
+    unnest()
+  data <- unique(data)
 }
-
-
-

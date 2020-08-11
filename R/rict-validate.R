@@ -60,7 +60,7 @@ rict_validate <- function(data = NULL) {
   # Standardise all column names to uppercase
   names(data) <- toupper(names(data))
   names(validation_rules$variable) <- toupper(validation_rules$variable)
-  browser()
+
   # Check data contains at least some required column names
   if (dplyr::filter(validation_rules, variable %in% names(data)) %>% nrow() < 1) {
     stop("The data provided contains none of the required column names
@@ -235,7 +235,7 @@ rict_validate <- function(data = NULL) {
 
   # Calculate discharge category from velocity and width if required
   discharge_categories <- c(0.31, 0.62, 1.25, 2.5, 5.0, 10.0, 20.0, 40.0, 80.0, 1000000)
-  velocity_categories <- c( 5.0, 17.5, 37.5, 75.0, 150.0, 1000000)
+  velocity_categories <- c(5.0, 17.5, 37.5, 75.0, 150.0, 1000000)
 
   discharge <- lapply(split(data, paste(data$SITE, data$YEAR)), function(data_row) {
     if (!any(is.null(data_row$VELOCITY)) && !any(is.na(data_row$VELOCITY))) {
@@ -433,35 +433,35 @@ These values will be used instead of calculating them from Grid Reference values
   })
 
   # Replace values if value is less than the ‘overall’ minimum value ---------------
-  validation_rules_input <- validation_rules[validation_rules$source == "input" , ]
-  ALT_LIM <- validation_rules_input[validation_rules_input$variable == "ALTITUDE","replacement_limit"]
-  ALT_VAL <- validation_rules_input[validation_rules_input$variable == "ALTITUDE","replacement_val"]
+  validation_rules_input <- validation_rules[validation_rules$source == "input", ]
+  ALT_LIM <- validation_rules_input[validation_rules_input$variable == "ALTITUDE", "replacement_limit"]
+  ALT_VAL <- validation_rules_input[validation_rules_input$variable == "ALTITUDE", "replacement_val"]
   if (any(data$ALTITUDE[!is.na(data$ALTITUDE)] == ALT_LIM)) {
     data$ALTITUDE[data$ALTITUDE == ALT_LIM] <- ALT_VAL
   }
-  DFS_LIM <- validation_rules_input[validation_rules_input$variable == "DIST_FROM_SOURCE","replacement_limit"]
+  DFS_LIM <- validation_rules_input[validation_rules_input$variable == "DIST_FROM_SOURCE", "replacement_limit"]
   if (any(data$DIST_FROM_SOURCE[!is.na(data$DIST_FROM_SOURCE)] < DFS_LIM)) {
     data$DIST_FROM_SOURCE[data$DIST_FROM_SOURCE < DFS_LIM] <- DFS_LIM
   }
-  MNW_LIM <- validation_rules_input[validation_rules_input$variable == "MEAN_WIDTH","replacement_limit"]
+  MNW_LIM <- validation_rules_input[validation_rules_input$variable == "MEAN_WIDTH", "replacement_limit"]
   if (any(data$MEAN_WIDTH[!is.na(data$MEAN_WIDTH)] < MNW_LIM)) {
     data$MEAN_WIDTH[data$MEAN_WIDTH < MNW_LIM] <- MNW_LIM
   }
-  MND_LIM <- validation_rules_input[validation_rules_input$variable == "MEAN_DEPTH","replacement_limit"]
+  MND_LIM <- validation_rules_input[validation_rules_input$variable == "MEAN_DEPTH", "replacement_limit"]
   if (any(data$MEAN_DEPTH[!is.na(data$MEAN_DEPTH)] < MND_LIM)) {
     data$MEAN_DEPTH[data$MEAN_DEPTH < MND_LIM] <- MND_LIM
   }
-  DIS_LIM <- validation_rules_input[validation_rules_input$variable == "DISCHARGE","replacement_limit"]
-  DIS_VAL <- validation_rules_input[validation_rules_input$variable == "DISCHARGE","replacement_val"]
+  DIS_LIM <- validation_rules_input[validation_rules_input$variable == "DISCHARGE", "replacement_limit"]
+  DIS_VAL <- validation_rules_input[validation_rules_input$variable == "DISCHARGE", "replacement_val"]
   if (any(data$DISCHARGE[!is.na(data$DISCHARGE)] == DIS_LIM))  {
-    data$DISCHARGE[data$DISCHARGE ==DIS_LIM] <- DIS_VAL
+    data$DISCHARGE[data$DISCHARGE == DIS_LIM] <- DIS_VAL
   }
-  ALK_LIM <- validation_rules_input[validation_rules_input$variable == "ALKALINITY","replacement_limit"]
+  ALK_LIM <- validation_rules_input[validation_rules_input$variable == "ALKALINITY", "replacement_limit"]
   if (any(data$ALKALINITY[!is.na(data$ALKALINITY)] < ALK_LIM)) {
     data$ALKALINITY[data$ALKALINITY < ALK_LIM] <- ALK_LIM
   }
-  SLP_LIM <- validation_rules_input[validation_rules_input$variable == "SLOPE","replacement_limit"]
-  SLP_VAL <- validation_rules_input[validation_rules_input$variable == "SLOPE","replacement_val"]
+  SLP_LIM <- validation_rules_input[validation_rules_input$variable == "SLOPE", "replacement_limit"]
+  SLP_VAL <- validation_rules_input[validation_rules_input$variable == "SLOPE", "replacement_val"]
   if (any(data$SLOPE[!is.na(data$SLOPE)] == SLP_LIM)) {
     data$SLOPE[data$SLOPE == SLP_LIM] <- SLP_VAL
   }

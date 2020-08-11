@@ -501,8 +501,9 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
       }
 
       # Move the pointer k to new adjusted position for j - whether multiple or not
-      if(multipleSite_encoutered) {
-      k <- j} else {
+      if (multipleSite_encoutered) {
+      k <- j
+      } else {
       k  <- j
       }
 

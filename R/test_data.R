@@ -78,7 +78,7 @@ prediction <- function(data, predict_indices = NULL) {
   # Calculate the Mahanalobis distance from each site to reference
   # groups means
   data$mah_dist <- map(data$df_scores, function(df_score) {
-    mah_dist <- map_df(1:nrow(mean_end_group), function(x) {
+    mah_dist <- map_df(seq_len(mean_end_group), function(x) {
       data.frame(value = sum((df_score - mean_end_group[x, ])^2))
     })
     mah_dist <- as.data.frame(t(mah_dist))

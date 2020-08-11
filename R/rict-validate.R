@@ -251,7 +251,9 @@ rict_validate <- function(data = NULL) {
   # Keep order and row.names the same as original input data for consistent output
   data <- discharge[order(match(discharge[, "SITE"], data[, "SITE"])), ]
   row.names(data) <- seq_len(nrow(data))
-
+  # If model GIS - then NGR easting and northing maybe not be provided. So only calculate
+  # Easting and Northings for physical data.
+  if (model == "physical") {
   # Convert to character as required by specification
   data$EASTING <- as.character(data$EASTING)
   data$NORTHING <- as.character(data$NORTHING)
@@ -277,24 +279,46 @@ rict_validate <- function(data = NULL) {
     data$EASTING <- as.character(formatC(round(data$EASTING), width = 5, format = "d", flag = "0"))
     data$NORTHING <- as.character(formatC(round(data$NORTHING), width = 5, format = "d", flag = "0"))
   }
+  }
   # Calculate Longitude & Latitude
-  if (area == "gb") {
+  if (area == "gb" & model == "physical") {
     lat_long <- with(data, getLatLong(NGR, EASTING, NORTHING, "WGS84", area))
     data$LONGITUDE <- lat_long$lon
     data$LATITUDE <- lat_long$lat
-  } else {
+  }
+  if (area == "ni" & model == "physical") {
     lat_long <- with(data, getLatLong_NI(EASTING, NORTHING))
     data$LONGITUDE <- lat_long$Longitude
     data$LATITUDE <- lat_long$Latitude
   }
 
+  if(area == "gb" & model == "gis") {
+    coords <- sf::st_as_sf(data[,c("SX", "SY")], coords = c("SX", "SY"), crs = 27700)
+    coords <- sf::st_transform(coords, crs = 4326)
+    data$LATITUDE <-  unlist(purrr::map(coords$geometry, 2))
+    data$LONGITUDE <-   unlist(purrr::map(coords$geometry, 1))
+  }
+
+  if(area == "ni" & model == "gis") {
+    coords <- sf::st_as_sf(data[,c("SX", "SY")], coords = c("SX", "SY"), crs = 29903)
+    coords <- sf::st_transform(coords, crs = 4326)
+    data$LATITUDE <- unlist(purrr::map(coords$geometry, 2))
+    data$LONGITUDE <- unlist(purrr::map(coords$geometry, 1))
+  }
+
   if (area == "gb") {
     # Calculate Lat/Long using bng (British National Grid) - temperate lookup needs BNG
+    if (model == "physical") {
     bng <- with(data, getBNG(NGR, EASTING, NORTHING, "BNG"))
-
+    }
+    if (model == "gis") {
+      bng <- data.frame(
+        "easting" = data$SX,
+        "northing" = data$SY
+      )
+    }
     # Calculate mean temperature (TMEAN), range temperature (TRANGE) only if
     # users have not provided temperatures e.g. could be studying climate change etc...
-
     if ((is.null(data$MEAN.AIR.TEMP) | is.null(data$AIR.TEMP.RANGE)) ||
       (any(is.na(data$MEAN.AIR.TEMP)) | any(is.na(data$AIR.TEMP.RANGE)))) {
       my_temperatures <- calcTemps(data.frame(
@@ -324,7 +348,7 @@ These values will be used instead of calculating them from Grid Reference values
 
   # convert metres to km in Distance from source GIS attribute
   if (model == "gis") {
-    data$DISTANCE_FROM_SOURCE <- data$DISTANCE_FROM_SOURCE / 1000
+    data$D_F_SOURCE <- data$D_F_SOURCE / 1000
   }
 
   # Add log10 values where required
@@ -439,7 +463,7 @@ These values will be used instead of calculating them from Grid Reference values
   if (any(data$ALTITUDE[!is.na(data$ALTITUDE)] == ALT_LIM)) {
     data$ALTITUDE[data$ALTITUDE == ALT_LIM] <- ALT_VAL
   }
-  DFS_LIM <- validation_rules_input[validation_rules_input$variable == "DIST_FROM_SOURCE", "replacement_limit"]
+  DFS_LIM <- validation_rules_input[validation_rules_input$variable %in% c("DIST_FROM_SOURCE","D_F_SOURCE"), "replacement_limit"]
   if (any(data$DIST_FROM_SOURCE[!is.na(data$DIST_FROM_SOURCE)] < DFS_LIM)) {
     data$DIST_FROM_SOURCE[data$DIST_FROM_SOURCE < DFS_LIM] <- DFS_LIM
   }
@@ -451,8 +475,8 @@ These values will be used instead of calculating them from Grid Reference values
   if (any(data$MEAN_DEPTH[!is.na(data$MEAN_DEPTH)] < MND_LIM)) {
     data$MEAN_DEPTH[data$MEAN_DEPTH < MND_LIM] <- MND_LIM
   }
-  DIS_LIM <- validation_rules_input[validation_rules_input$variable == "DISCHARGE", "replacement_limit"]
-  DIS_VAL <- validation_rules_input[validation_rules_input$variable == "DISCHARGE", "replacement_val"]
+  DIS_LIM <- validation_rules_input[validation_rules_input$variable %in% c("DISCHARGE","DISCH_CAT"), "replacement_limit"]
+  DIS_VAL <- validation_rules_input[validation_rules_input$variable %in% c("DISCHARGE","DISCH_CAT"), "replacement_val"]
   if (any(data$DISCHARGE[!is.na(data$DISCHARGE)] == DIS_LIM))  {
     data$DISCHARGE[data$DISCHARGE == DIS_LIM] <- DIS_VAL
   }

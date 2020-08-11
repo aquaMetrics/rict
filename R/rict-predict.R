@@ -166,17 +166,18 @@ rict_predict <- function(data = NULL) {
       "ALKALINITY"               =  final_predictors_one$ALKALINITY,
       "LgAlk"                    =  final_predictors_one$LgAlk,
       "LgArea_CEH"               =  final_predictors_one$LOG_AREA,
-      "LgAltBar_CEH"             =  final_predictors_one$LOG_CATCHMENT_ALTITUDE,
+      "LgAltBar_CEH"             =  final_predictors_one$LOGALTBAR,
       "LgAlt_CEH"                =  final_predictors_one$LgAlt_CEH,
       "LgDFS_CEH"                =  final_predictors_one$LgDFS_CEH,
       "LgSlope_CEH"              =  final_predictors_one$LgSlope_CEH,
-      "QCat_CEH"                 =  final_predictors_one$DISCHARGE_CATEGORY,
+      "QCat_CEH"                 =  final_predictors_one$DISCH_CAT,
       "Peat_CEH"                 =  final_predictors_one$PEAT,
       "Chalk_O1_CEH"             =  final_predictors_one$CHALK,
       "Clay_O1_CEH"              =  final_predictors_one$CLAY,
       "Hardrock_O1_CEH"          =  final_predictors_one$HARDROCK,
       "Limestone_O1_CEH"         =  final_predictors_one$LIMESTONE
     )
+    browser()
     # convert proportions to percentage for geology variables
     final_predictors[, 14:18] <- final_predictors[, 14:18] * 100
   }

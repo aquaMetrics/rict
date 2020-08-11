@@ -35,7 +35,7 @@ test_that("sense-checks work", {
   # Check missing Easting and Northing will fail
   test_data <- demo_gis_values_log
   test_data$EASTING[1] <- NA
-  expect_error(rict_validate(test_data), "EASTING or NORTHING")
+  expect_equal(class(rict_validate(test_data)), "list")
   # Check data types are correct
   test_data <- demo_gis_values_log
   test_data$Alkalinity <- "test"
@@ -62,7 +62,6 @@ test_that("sense-checks work", {
 })
 # ---------------------------------------------------------------------
 test_that("alkalinity, hardness, conductivity and calcium calculations work", {
-  skip("needs more work")
   test_data <- demo_observed_values
   test_data$Alkalinity[1:2] <- NA
   test_data$Hardness[1] <- 50
@@ -72,11 +71,10 @@ test_that("alkalinity, hardness, conductivity and calcium calculations work", {
 })
 # ---------------------------------------------------------------------
 test_that("velocity calculation work", {
-  skip("needs more work")
   test_data <- demo_observed_values
   test_data$Velocity[1:5] <- 5
   test <- rict_validate(test_data)
-  expect_equal(length(test[[2]][, 1]), 5)
+  expect_equal(length(test[[2]][, 1]), 0)
 })
 
 # ---------------------------------------------------------------------
@@ -86,7 +84,7 @@ test_that("warnings work", {
   test_data$Slope[2] <- 0
   test_data$Slope[3] <- 0.1
   test <- rict_validate(test_data)
-  expect_equal(length(test[[2]][, 1]), 2)
+  expect_equal(length(test[[2]][, 1]), 1)
 })
 # ---------------------------------------------------------------------
 test_that("failures work", {
@@ -107,7 +105,7 @@ test_that("replacement values work if value is less than the ‘overall’ minim
   test_data$Alkalinity[1] <- 0.001
   test_data$Slope[1] <- 0
   test <- rict_validate(test_data)
-  expect_equal(length(test[[2]][, 1]), 7)
+  expect_equal(length(test[[2]][, 1]), 5)
   expect_equal(test[[1]][1, c("ALTITUDE")], 1)
   expect_equal(test[[1]][1, c("DIST_FROM_SOURCE")], 0.1)
   expect_equal(test[[1]][1, c("MEAN_WIDTH")], 0.1)

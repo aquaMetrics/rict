@@ -119,14 +119,16 @@ rict_compare <- function(results_a = NULL, results_b = NULL) {
     # Loop through all unique results in 'a'
     comparison <- lapply(split(eqr_metric, eqr_metric$ID), function(a) {
       # Find matching b results EQRs to compare
-       b <- results_b[results_b$ID == unique(a$ID) &
+      b <- results_b[results_b$ID == unique(a$ID) &
         results_b$`EQR Metrics` == unique(a$`EQR Metrics`), ]
 
-      compare_probability <- compare_probability(a = a$EQR,
-                                                 b = b$EQR,
-                                                 eqr_bands = eqr_bands,
-                                                 cap_eqrs = cap_eqrs,
-                                                 labels = labels)
+      compare_probability <- compare_probability(
+        a = a$EQR,
+        b = b$EQR,
+        eqr_bands = eqr_bands,
+        cap_eqrs = cap_eqrs,
+        labels = labels
+      )
       compare_test <- compare_test(a = a$EQR, b = b$EQR)
 
       compare_output <- cbind(

@@ -353,7 +353,7 @@ singleYearClassification <- function(predictions, store_eqrs = F, area = NULL) {
 
 
     ########  Calculate the MINTA - worse class = 5 i.e. max of class from NTAXA and ASPT ######
-     matrix_ntaxa_spr <- as.matrix(classArray_siteOne_spr_ntaxa)
+    matrix_ntaxa_spr <- as.matrix(classArray_siteOne_spr_ntaxa)
     matrix_aspt_spr <- as.matrix(classArray_siteOne_spr_aspt)
     minta_ntaxa_aspt_spr <- getMINTA_ntaxa_aspt(
       as.matrix(classArray_siteOne_spr_ntaxa),
@@ -426,39 +426,39 @@ singleYearClassification <- function(predictions, store_eqrs = F, area = NULL) {
     ##### MINTA ENDS HERE  #######
 
     #### Store EQRs in list
-      if (store_eqrs == T) {
-       # Create variable to store list of simulated EQRs for each metric
-       eqrs <- list(
-         EQR_aspt_avg, EQR_ntaxa_avg,
-         EQR_aspt_spr, EQR_ntaxa_spr,
-         EQR_aspt_aut, EQR_ntaxa_aut,
-         data.frame(minta_ntaxa_aspt_spr),
-         data.frame(minta_ntaxa_aspt_aut),
-         data.frame(minta_ntaxa_aspt_spr_aut))
-       # Create variable to store list of 'pretty' names for eqr metrics
-       eqr_names <- list(
-         "AVG_ASPT", "AVG_NTAXA",
-         "SPR_ASPT", "SPR_NTAXA",
-         "AUT_ASPT", "AUT_NTAXA",
-         "MINTA_SPR",
-         "MINTA_AUT",
-         "MINTA"
-       )
-       # To make it easier to merge and process simulated EQRs and
-       # classification results, bind all simluated EQRs into single dataframe
-       # with a 'pretty' name for later manipulation
-       eqrs <- lapply(seq_len(length(eqrs)), function(n) {
-         df <- eqrs[[n]]
-         eqr <- cbind(df, eqr_names[n], k)
-         names(eqr) <- c("EQR", "EQR Metrics", "ID")
-         return(eqr)
-       })
-       eqrs <- do.call("rbind", eqrs)
-       # Bind eqrs into list on each iteration (this is much faster than rbind-ing
-       # into a big dataframe)
-       eqr_metrics <- c(eqr_metrics, list(eqrs))
-      }
-
+    if (store_eqrs == T) {
+      # Create variable to store list of simulated EQRs for each metric
+      eqrs <- list(
+        EQR_aspt_avg, EQR_ntaxa_avg,
+        EQR_aspt_spr, EQR_ntaxa_spr,
+        EQR_aspt_aut, EQR_ntaxa_aut,
+        data.frame(minta_ntaxa_aspt_spr),
+        data.frame(minta_ntaxa_aspt_aut),
+        data.frame(minta_ntaxa_aspt_spr_aut)
+      )
+      # Create variable to store list of 'pretty' names for eqr metrics
+      eqr_names <- list(
+        "AVG_ASPT", "AVG_NTAXA",
+        "SPR_ASPT", "SPR_NTAXA",
+        "AUT_ASPT", "AUT_NTAXA",
+        "MINTA_SPR",
+        "MINTA_AUT",
+        "MINTA"
+      )
+      # To make it easier to merge and process simulated EQRs and
+      # classification results, bind all simluated EQRs into single dataframe
+      # with a 'pretty' name for later manipulation
+      eqrs <- lapply(seq_len(length(eqrs)), function(n) {
+        df <- eqrs[[n]]
+        eqr <- cbind(df, eqr_names[n], k)
+        names(eqr) <- c("EQR", "EQR Metrics", "ID")
+        return(eqr)
+      })
+      eqrs <- do.call("rbind", eqrs)
+      # Bind eqrs into list on each iteration (this is much faster than rbind-ing
+      # into a big dataframe)
+      eqr_metrics <- c(eqr_metrics, list(eqrs))
+    }
   } # END of FOR LOOP
 
   # MINTA outputs
@@ -529,8 +529,10 @@ singleYearClassification <- function(predictions, store_eqrs = F, area = NULL) {
     eqr_metrics <- dplyr::bind_rows(eqr_metrics)
     # Merge simluated eqrs with classification results based on 'ID' (row number)
     allResults_ntaxa_aspt_minta_combined$ID <- seq_len(nrow(allResults_ntaxa_aspt_minta_combined))
-    allResults_ntaxa_aspt_minta_combined <- merge(allResults_ntaxa_aspt_minta_combined,
-                                                  eqr_metrics)
+    allResults_ntaxa_aspt_minta_combined <- merge(
+      allResults_ntaxa_aspt_minta_combined,
+      eqr_metrics
+    )
   }
 
   return(allResults_ntaxa_aspt_minta_combined)

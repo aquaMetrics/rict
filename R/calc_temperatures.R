@@ -1,64 +1,9 @@
-temperature_values <- function(coordinates) {
-  # Load temperture grid .csv
-  air_temp_grid <- read.csv(system.file("extdat",
-    "air-temp-grid.csv",
-    package = "rict"
-  ))
-  air_temp_grid <- sf::st_as_sf(air_temp_grid,
-    coords = c("Easting", "Northing")
-  )
-  # Set coordinate system to British National Grid
-  sf::st_crs(air_temp_grid) <- 27700
-  # Convert temperature grid to spatial object:
-  grid <- sf::st_make_grid(air_temp_grid,
-    what = "polygons",
-    cellsize = 50,
-    offset = c(12.5, 12.5)
-  )
-  grid <- sf::st_as_sf(grid)
-  # Set coordinate system to British National Grid
-  sf::st_crs(grid) <- 27700
-  grid_temps <- sf::st_join(grid, air_temp_grid)
-
-  # Format coordinates of sampling point into spatial object
-  sampling_points <- data.frame(
-    "site_id" = coordinates$Site_ID,
-    "easting" = coordinates$Easting4,
-    "northing" = coordinates$Northing4
-  )
-
-  sampling_points <- sf::st_as_sf(sampling_points, coords = c("easting", "northing"))
-  sf::st_crs(sampling_points) <- 27700 # set coordinate system to British National Grid
-
-  sampling_points <- sf::st_buffer(sampling_points, 51)
-
-  test <- sf::st_join(grid_temps, sampling_points)
-
-  temps <- test %>%
-    dplyr::filter(!is.na(site_id)) %>%
-    dplyr::group_by(site_id) %>%
-    dplyr::summarize(
-      "TMEAN" = mean(TEMPM, na.rm = T),
-      "TRANGE" = mean(TEMPR, na.rm = T)
-    )
-
-  sf::st_geometry(temps) <- NULL
-  # Find nearest feature and return temperatures range and mean and site_id
-  temperatures <- dplyr::inner_join(sampling_points, temps)
-  return(temperatures)
-}
-
-#
-#
-# R version originally written by by C. Laize CEH in early 2012
-# Based on FORTRAN PROGRAM TEMPGRID
-# For QC and traceability, followed the FORTRAN code as closely as possible; not necessarily best R code
-# Converted to calc.temps function by M Dunbar, Environment Agency April 2018
-
-# Modified by T Loveday to avoid errors on east coast, Environment Agency May 2019
-############################################
-#
-
+# R version originally written by by C. Laize CEH in early 2012 Based on FORTRAN
+# PROGRAM TEMPGRID For QC and traceability, followed the FORTRAN code as closely
+# as possible; not necessarily best R code Converted to calc.temps function by M
+# Dunbar, Environment Agency April 2018 Modified by T Loveday to avoid errors on
+# east coast, Environment Agency May 2019
+# -----------------------------------------------------------------------------
 
 # SUBROUTINE AVCALL
 # implemented in R as a function
@@ -84,7 +29,7 @@ AVCALL <- function(ME1, ME2, MN1, MN2, KE, KN, air_temp_grid) {
 }
 
 # Program to calculate mean temperature and annual temperature
-calcTemps <- test1 <- function(coordinates) {
+calcTemps <- function(coordinates) {
   # coordinates is a data frame with three columns
   # SITE_ID
   # EASTING4
@@ -92,7 +37,7 @@ calcTemps <- test1 <- function(coordinates) {
 
   # load air temp grid - required for validation
   air_temp_grid <- utils::read.csv(system.file("extdat", "air-temp-grid.csv",
-    package = "rict"
+                                               package = "rict"
   ))
 
   NP <- NULL
@@ -316,6 +261,7 @@ calcTemps <- test1 <- function(coordinates) {
     TempGrid_out <- rbind(TempGrid_out, cbind(coordinates[l, ], TMEAN, TRANGE))
   } # 0
   TempGrid_out <- as.data.frame(TempGrid_out)
-  # names(TempGrid_out)<-c("Site", "East", "North", "TMEAN", "TRANGE") # this line removed as it's stopping the function return working
-  # so we deal with the names back in the calling code
+  # names(TempGrid_out)<-c("Site", "East", "North", "TMEAN", "TRANGE") # this
+  # line removed as it's stopping the function return working so we deal with
+  # the names back in the calling code
 }

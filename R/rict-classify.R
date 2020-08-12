@@ -22,14 +22,14 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
   # function? For now, I've just stuck the single year into a different
   # function until these can be merged
   area <- unique(data$area)
+  data <- dplyr::arrange(data, SITE, YEAR)
   if (year_type == "single") {
     classification_results <- singleYearClassification(data, store_eqrs, area = area)
     return(classification_results)
   } else {
     # set global random seed for rnorm functions etc
-    set.seed(1234)
+    # set.seed(1234)
     # Part 1: This Script reads all prediction indices for classification
-
     gb685_assess_score <- utils::read.csv(system.file("extdat",
       "end-grp-assess-scores.csv",
       package = "rict"
@@ -247,10 +247,9 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
 
       # Get site out
       siteToProcess <- data[j, "SITE"]
+      # Loop through rows with same "site" for multiple years creating multi-year averages
       while ((data[j, "SITE"] == siteToProcess && j <= nrow(data))) {
-        # print(c("Processing site j= ",j, " as ", as.character(data[j,"SITE"]), " and site j= ",j+1," as ",
-        # as.character(data[j+1,"SITE"])))
-
+        set.seed(1234)
         # Part 1: Deal with NTAXA: observed and Expected Calculations
         obsIDX8r_spr <- getObsIDX8rB(obs_ntaxa_spr[j], getZObs_r_new(sdobs_ntaxa, n_runs))
         obsIDX8r_aut <- getObsIDX8rB(obs_ntaxa_aut[j], getZObs_r_new(sdobs_ntaxa, n_runs))
@@ -307,6 +306,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
         if (k == nrow(data)) {
           lastSiteProcessed <- TRUE
         }
+
         # Part 1: Deal with NTAXA: observed and Expected Calculations
         obsIDX8r_spr <- getObsIDX8rB(obs_ntaxa_spr[k], getZObs_r_new(sdobs_ntaxa, n_runs))
         obsIDX8r_aut <- getObsIDX8rB(obs_ntaxa_aut[k], getZObs_r_new(sdobs_ntaxa, n_runs))
@@ -352,7 +352,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
           lastSiteProcessed <- TRUE
         }
         # Move to current record just processed
-        j <- j - 1
+        #j <- j - 1
         # ******************************************
         # Part 1.1: for "Spring" - DO FOR NTAXA
         # Combined ntaxa spr-aut
@@ -403,7 +403,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
       probabilityClass <- getProbClassLabelFromEQR()
       a_ntaxa_spr_aut <- t(probClass_spr) # spr, need a_ntaxa_spr
       colnames(a_ntaxa_spr_aut) <- getProbClassLabelFromEQR()[, 1]
-      rownames(a_ntaxa_spr_aut) <- as.character(data[j, "SITE"]) # c(paste0("TST-",j))
+      rownames(a_ntaxa_spr_aut) <- as.character(data[k, "SITE"]) # c(paste0("TST-",j))
 
       # Find most probable class, i.e the maximum, and add it to the site
       mostProb <- getMostProbableClass(a_ntaxa_spr_aut)
@@ -433,7 +433,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
       a_aspt_spr_aut <- t(probClass_spr) # spr
       colnames(a_aspt_spr_aut) <- getProbClassLabelFromEQR()[, 1]
       # print(c(" j =",j," site = ",as.character(data[j,"SITE"]), "pated TST = ",paste0("TST-",j)))
-      rownames(a_aspt_spr_aut) <- as.character(data[j, "SITE"]) # c(paste0("TST-",j))
+      rownames(a_aspt_spr_aut) <- as.character(data[k, "SITE"]) # c(paste0("TST-",j))
 
       # Find most probable class, i.e the maximum, and add it to the site
       mostProb <- getMostProbableClass(a_aspt_spr_aut)
@@ -462,7 +462,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
       # probabilityClass <- getProbClassLabelFromEQR()
       aa <- t(minta_probClass_spr_aut) # spr
       colnames(aa) <- getProbClassLabelFromEQR()[, 1]
-      rownames(aa) <- as.character(data[j, "SITE"]) # c(paste0("TST-",j))
+      rownames(aa) <- as.character(data[k, "SITE"]) # c(paste0("TST-",j))
       # Find most probable MINTA class, i.e the maximum, and add it to the site
       mostProb <- getMostProbableClass(aa)
       aa <- data.frame(cbind(aa, mostProb))
@@ -478,9 +478,11 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
       #### Store EQRs in list
       if (store_eqrs == T) {
         # Create variable to store list of simulated EQRs for each metric
-          eqrs <- list(multiYear_EQRAverages_aspt_spr_aut,
-                         multiYear_EQRAverages_ntaxa_spr_aut,
-                         data.frame(minta_ntaxa_aspt_spr_aut))
+        eqrs <- list(
+          multiYear_EQRAverages_aspt_spr_aut,
+          multiYear_EQRAverages_ntaxa_spr_aut,
+          data.frame(minta_ntaxa_aspt_spr_aut)
+        )
         # Create variable to store list of 'pretty' names for eqr metrics
         eqr_names <- list("AVG_ASPT", "AVG_NTAXA", "MINTA")
         # To make it easier to merge and process simulated EQRs and
@@ -499,7 +501,11 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
       }
 
       # Move the pointer k to new adjusted position for j - whether multiple or not
-      k <- j + 1
+      if (multipleSite_encoutered) {
+      k <- j
+      } else {
+      k  <- j
+      }
 
     } # END of FOR LOOP
 

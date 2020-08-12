@@ -4,7 +4,8 @@
 \name{demo_gis_values}
 \alias{demo_gis_values}
 \title{Demo observed values for gis model}
-\format{A data frame with 12 rows and 18 variables:
+\format{
+A data frame with 12 rows and 18 variables:
 \describe{
   \item{...}{DOCUMENT modelled varibales here!!!}
   \item{SITE}{Site identifier}
@@ -25,7 +26,8 @@
   \item{\code{Aut_TL2_WHPT_ASPT (AbW,DistFam)}}{ASPT}
   \item{\code{Aut_TL2_WHPT_NTaxa (AbW,DistFam)}}{NTAXA}
   \item{Aut_Ntaxa_Bias}{bias}
-}}
+}
+}
 \usage{
 demo_gis_values
 }

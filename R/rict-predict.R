@@ -177,7 +177,8 @@ rict_predict <- function(data = NULL) {
       "Hardrock_O1_CEH"          =  final_predictors_one$HARDROCK,
       "Limestone_O1_CEH"         =  final_predictors_one$LIMESTONE
     )
-    browser()
+   # browser("check lat/lon conversion using st_transform Vs parse_osg?
+  #          - check this is the problem first?")
     # convert proportions to percentage for geology variables
     final_predictors[, 14:18] <- final_predictors[, 14:18] * 100
   }

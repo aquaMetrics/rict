@@ -292,15 +292,15 @@ rict_validate <- function(data = NULL) {
     data$LATITUDE <- lat_long$Latitude
   }
 
-  if(area == "gb" & model == "gis") {
-    coords <- sf::st_as_sf(data[,c("SX", "SY")], coords = c("SX", "SY"), crs = 27700)
+  if (area == "gb" & model == "gis") {
+    coords <- sf::st_as_sf(data[, c("SX", "SY")], coords = c("SX", "SY"), crs = 27700)
     coords <- sf::st_transform(coords, crs = 4326)
     data$LATITUDE <-  unlist(purrr::map(coords$geometry, 2))
     data$LONGITUDE <-   unlist(purrr::map(coords$geometry, 1))
   }
 
-  if(area == "ni" & model == "gis") {
-    coords <- sf::st_as_sf(data[,c("SX", "SY")], coords = c("SX", "SY"), crs = 29903)
+  if (area == "ni" & model == "gis") {
+    coords <- sf::st_as_sf(data[, c("SX", "SY")], coords = c("SX", "SY"), crs = 29903)
     coords <- sf::st_transform(coords, crs = 4326)
     data$LATITUDE <- unlist(purrr::map(coords$geometry, 2))
     data$LONGITUDE <- unlist(purrr::map(coords$geometry, 1))
@@ -387,6 +387,7 @@ These values will be used instead of calculating them from Grid Reference values
           "YEAR" = "",
           "FAIL" = "",
           "WARNING" = "",
+          "REPLACEMENT" = "",
           stringsAsFactors = F
         )
         # if value not NA check for less than fails
@@ -439,6 +440,33 @@ These values will be used instead of calculating them from Grid Reference values
             )
           }
         }
+        # check for replacement
+
+        replacem <- ""
+        if (is.na(rule$replacement) == FALSE) {
+          if (!is.na(value[, rule$variable]) & rule$replacement_cond == "lessthan" &
+              value[, rule$variable] <= rule$replacement_limit) {
+            replacem <- c(
+              replacem,
+              paste0(
+                "You provided ", names(value)[1], ": ", value[, rule$variable],
+                ", value replaced with: ", rule$replacement_val
+              )
+            )
+          }
+          if (!is.na(value[, rule$variable]) & rule$replacement_cond == "equals" &
+              value[, rule$variable] == rule$replacement_limit) {
+            replacem <- c(
+              replacem,
+              paste0(
+                "You provided ", names(value)[1], ": ", value[, rule$variable],
+                ", value replaced: ", rule$replacement_val
+              )
+            )
+          }
+
+        }
+
         # bind all checks and warnings into data frame
         checks <- dplyr::bind_rows(
           check,
@@ -447,6 +475,7 @@ These values will be used instead of calculating them from Grid Reference values
             "YEAR" = as.character(value$YEAR),
             "FAIL" = fails,
             "WARNING" = warns,
+            "REPLACEMENT" = replacem,
             stringsAsFactors = F
           )
         )
@@ -463,7 +492,8 @@ These values will be used instead of calculating them from Grid Reference values
   if (any(data$ALTITUDE[!is.na(data$ALTITUDE)] == ALT_LIM)) {
     data$ALTITUDE[data$ALTITUDE == ALT_LIM] <- ALT_VAL
   }
-  DFS_LIM <- validation_rules_input[validation_rules_input$variable %in% c("DIST_FROM_SOURCE","D_F_SOURCE"), "replacement_limit"]
+  DFS_LIM <- validation_rules_input[validation_rules_input$variable %in%
+                                      c("DIST_FROM_SOURCE", "D_F_SOURCE"), "replacement_limit"]
   if (any(data$DIST_FROM_SOURCE[!is.na(data$DIST_FROM_SOURCE)] < DFS_LIM)) {
     data$DIST_FROM_SOURCE[data$DIST_FROM_SOURCE < DFS_LIM] <- DFS_LIM
   }
@@ -475,8 +505,10 @@ These values will be used instead of calculating them from Grid Reference values
   if (any(data$MEAN_DEPTH[!is.na(data$MEAN_DEPTH)] < MND_LIM)) {
     data$MEAN_DEPTH[data$MEAN_DEPTH < MND_LIM] <- MND_LIM
   }
-  DIS_LIM <- validation_rules_input[validation_rules_input$variable %in% c("DISCHARGE","DISCH_CAT"), "replacement_limit"]
-  DIS_VAL <- validation_rules_input[validation_rules_input$variable %in% c("DISCHARGE","DISCH_CAT"), "replacement_val"]
+  DIS_LIM <- validation_rules_input[validation_rules_input$variable %in%
+                                      c("DISCHARGE", "DISCH_CAT"), "replacement_limit"]
+  DIS_VAL <- validation_rules_input[validation_rules_input$variable %in%
+                                      c("DISCHARGE", "DISCH_CAT"), "replacement_val"]
   if (any(data$DISCHARGE[!is.na(data$DISCHARGE)] == DIS_LIM))  {
     data$DISCHARGE[data$DISCHARGE == DIS_LIM] <- DIS_VAL
   }
@@ -492,10 +524,11 @@ These values will be used instead of calculating them from Grid Reference values
 
   # Bind and format checks into data frame
   checks <- dplyr::bind_rows(checks)
-  checks <- checks[checks$FAIL != "" | checks$WARN != "", ]
+  checks <- checks[checks$FAIL != "" | checks$WARNING != "" | checks$REPLACEMENT != "", ]
   # if both fail and warn - then only return fail
-  checks$WARN[checks$FAIL != "" & checks$WARN != ""] <- "---"
+  checks$WARNING[checks$FAIL != "" & checks$WARNING != ""] <- "---"
   checks$WARNING[checks$WARNING == ""] <- "---"
+  checks$REPLACEMENT[checks$REPLACEMENT == ""] <- "---"
   checks$FAIL[checks$FAIL == ""] <- "---"
   # Print warnings and failures
   if (nrow(checks) > 0) {

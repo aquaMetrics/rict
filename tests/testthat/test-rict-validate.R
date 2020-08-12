@@ -39,10 +39,11 @@ test_that("sense-checks work", {
   # Check data types are correct
   test_data <- demo_gis_values_log
   test_data$Alkalinity <- "test"
+  expect_error(rict_validate(test_data),
+    "You provided column 'ALKALINITY' with class 'character', we expect class 'numeric'.")
   test_data$NGR <- 1
-  expect_error(
-    rict_validate(test_data),
-    "You provided column 'ALKALINITY' with class 'character', we expect class 'numeric'. You provided column 'NGR' with class 'numeric', we expect class 'character'. ")
+  expect_error(rict_validate(test_data),
+     "You provided column 'NGR' with class 'numeric', we expect class 'character'. ")
   # Check optional columns where one or the other column must be provided
   test_data <- demo_observed_values
   test_data$Velocity <- NA
@@ -84,7 +85,7 @@ test_that("warnings work", {
   test_data$Slope[2] <- 0
   test_data$Slope[3] <- 0.1
   test <- rict_validate(test_data)
-  expect_equal(length(test[[2]][, 1]), 1)
+  expect_equal(length(test[[2]][, 1]), 2)
 })
 # ---------------------------------------------------------------------
 test_that("failures work", {
@@ -105,7 +106,7 @@ test_that("replacement values work if value is less than the ‘overall’ minim
   test_data$Alkalinity[1] <- 0.001
   test_data$Slope[1] <- 0
   test <- rict_validate(test_data)
-  expect_equal(length(test[[2]][, 1]), 5)
+  expect_equal(length(test[[2]][, 1]), 7)
   expect_equal(test[[1]][1, c("ALTITUDE")], 1)
   expect_equal(test[[1]][1, c("DIST_FROM_SOURCE")], 0.1)
   expect_equal(test[[1]][1, c("MEAN_WIDTH")], 0.1)
@@ -120,5 +121,5 @@ test_that("user supplied temperatures override calculate temperatures", {
   test_data$MEAN.AIR.TEMP <- 15
   test_data$AIR.TEMP.RANGE <- 36
   data <- rict_validate(test_data)
-  expect_equal(is.na(length(data[["checks"]]$WARN)), FALSE)
+  expect_equal(is.na(length(data[["checks"]]$WARNING)), FALSE)
 })

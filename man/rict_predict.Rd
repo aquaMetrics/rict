@@ -4,7 +4,13 @@
 \alias{rict_predict}
 \title{Calculate River Invertebrate Classification Tool (RICT) predictions}
 \usage{
-rict_predict(data = NULL, all_indices = FALSE, taxa = FALSE)
+rict_predict(
+  data = NULL,
+  all_indices = FALSE,
+  taxa = FALSE,
+  taxa_list = c("TL1", "TL2", "TL3", "TL4", "TL5"),
+  rows = NULL
+)
 }
 \arguments{
 \item{data}{Dataframe of predictive environmental values
@@ -20,6 +26,10 @@ rict_predict(data = NULL, all_indices = FALSE, taxa = FALSE)
 \item{all_indices}{Return all indices in output (default only returns WHPT indices).}
 
 \item{taxa}{Return taxa predictions (default  returns indices).}
+
+\item{taxa_list}{Vector of taxa lists to predict default all lists i.e. c("TL1", "TL2", "TL3", "TL4", "TL5").}
+
+\item{rows}{Number (integer) of rows (one site per row) to predict taxa. Default is all rows.}
 }
 \value{
 Dataframe of predicted biotic scores and probability of observed values

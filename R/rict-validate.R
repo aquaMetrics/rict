@@ -114,8 +114,10 @@ rict_validate <- function(data = NULL) {
   # Display which model type has been detected
   message("Variables for the '", model, "' model detected - applying relevant checks. ")
 
+  if(model == "physical") {
   # Detect NI / GB grid references -----------------------------------------------------
   areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", toupper(data$NGR)), "gb", "ni"))
+
   if (length(areas) > 1) {
     stop("The data provided contains more than one area of the UK.
         Hint: Check your data contains NGR grid letters for either: ",
@@ -124,6 +126,9 @@ rict_validate <- function(data = NULL) {
     )
   } else {
     area <- areas
+  }
+  } else {
+    area <- "gb" # model 44 currently always "gb" but could change in future
   }
 
   # Display which model area has been detected
@@ -289,6 +294,7 @@ rict_validate <- function(data = NULL) {
     data$NORTHING <- as.character(formatC(round(data$NORTHING), width = 5, format = "d", flag = "0"))
   }
   }
+
   # Calculate Longitude & Latitude
   if (area == "gb" & model == "physical") {
     lat_long <- with(data, getLatLong(NGR, EASTING, NORTHING, "WGS84", area))
@@ -301,18 +307,11 @@ rict_validate <- function(data = NULL) {
     data$LATITUDE <- lat_long$Latitude
   }
 
-  if (area == "gb" & model == "gis") {
+  if (model == "gis") {
     coords <- st_as_sf(data[, c("SX", "SY")], coords = c("SX", "SY"), crs = 27700)
     coords <- st_transform(coords, crs = 4326)
     data$LATITUDE <-  unlist(map(coords$geometry, 2))
     data$LONGITUDE <-   unlist(map(coords$geometry, 1))
-  }
-
-  if (area == "ni" & model == "gis") {
-    coords <- st_as_sf(data[, c("SX", "SY")], coords = c("SX", "SY"), crs = 29903)
-    coords <- st_transform(coords, crs = 4326)
-    data$LATITUDE <- unlist(map(coords$geometry, 2))
-    data$LONGITUDE <- unlist(map(coords$geometry, 1))
   }
 
   if (area == "gb") {
@@ -320,12 +319,12 @@ rict_validate <- function(data = NULL) {
     if (model == "physical") {
     bng <- with(data, getBNG(NGR, EASTING, NORTHING, "BNG"))
     }
-    if (model == "gis") {
+  if (model == "gis") {
       bng <- data.frame(
         "easting" = data$SX,
         "northing" = data$SY
       )
-    }
+  }
     # Calculate mean temperature (TMEAN), range temperature (TRANGE) only if
     # users have not provided temperatures e.g. could be studying climate change etc...
     if ((is.null(data$MEAN.AIR.TEMP) | is.null(data$AIR.TEMP.RANGE)) ||

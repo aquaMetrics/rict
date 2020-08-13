@@ -9,6 +9,9 @@ test_that("sense-checks work", {
   expect_error(rict_validate(cbind(demo_observed_values, demo_gis_values_log[, 14:17])))
   # Data from GB and NI in input dataset
   test_data <- demo_gis_values_log
+  test_data$NGR <- "S"
+  expect_equal(nrow(rict_validate(test_data)[["checks"]]), 0)
+  test_data <- demo_observed_values
   test_data$NGR <- as.character(test_data$NGR)
   test_data$NGR[1] <- "S"
   expect_error(rict_validate(test_data))
@@ -23,12 +26,12 @@ test_that("sense-checks work", {
   test <- rict_validate(test_data)
   expect_equal(length(test[[2]][, 1]), 2)
   # Check NA in NGR will fail
-  test_data <- demo_gis_values_log
+  test_data <- demo_observed_values
   test_data$NGR[1] <- NA
   expect_error(rict_validate(test_data), "The data provided contains more than one area of the UK.
         Hint: Check your data contains NGR grid letters for either: NI or GB. ")
   # Check lower case NGR work - regex was not detecting lower case - fixed now.
-  test_data <- demo_gis_values_log
+  test_data <- demo_observed_values
   test_data$NGR <- as.character(test_data$NGR)
   test_data$NGR[1] <- "se"
   no_error <- rict_validate(test_data)

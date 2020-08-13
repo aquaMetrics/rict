@@ -11,6 +11,8 @@
 #' }
 #' @param all_indices Return all indices in output (default only returns WHPT indices).
 #' @param taxa Return taxa predictions (default  returns indices).
+#' @param taxa_list Vector of taxa lists to predict default all lists i.e. c("TL1", "TL2", "TL3", "TL4", "TL5").
+#' @param rows Number (integer) of rows (one site per row) to predict taxa. Default is all rows.
 #' @return Dataframe of predicted biotic scores and probability of observed values
 #' falling into each statistical grouping of rivers.
 #' @export
@@ -20,7 +22,9 @@
 #' \dontrun{
 #' predictions <- rict_predict(demo_observed_values)
 #' }
-rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE) {
+rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
+                         taxa_list = c("TL1", "TL2", "TL3", "TL4", "TL5"),
+                         rows = NULL) {
   # Validate predictive input data
 
   all_validation <- rict_validate(data)
@@ -330,16 +334,23 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE) {
     # Use complete cases removing null values
     taxa.input.data <- taxa.input.data[complete.cases(taxa.input.data),]
     nsites <- nrow(final_predictors_try2)
+    if(is.null(rows)) {
     chooseSite <- seq_len(nsites)
-    taxa.input.data$EndGrp_Probs <- taxa.input.data$End.Group
+    } else {
+      chooseSite <- seq_len(rows)
+    }
 
+    taxa.input.data$EndGrp_Probs <- taxa.input.data$End.Group
+     taxa.input.data <- taxa.input.data[taxa.input.data$TL %in% taxa_list, ]
     # EndGrpProb_Replacement - function inputs x endgroups, any of 1-43, and appends a 'p' to make p1,p2,..,p43
     # It then selects the probabilities pi = p1,p2,p3, .. from any SITE i of the predicted values y[i,pi] = final.predictionsxxx dataframe[i,pi]
     # usage : site1 <- EndGrpProb_Replacement (a$EndGrp_Probs,final.predictors_try2, 1) # for site k=1
 
     EndGrpProb_Replacement <- function(x,final_data,k) {
-      allprobss <- sapply(x, function (x)  ifelse(x==x,paste0("p",x), 0)) # apply to all values in EndGroup
-      #allprobss <- noquote(allprobss)
+      allprobss <- sapply(x, function (x){
+        ifelse(x==x,paste0("p",x), 0) # apply to all values in EndGroup
+        return(x)
+      })
       c <- as.double(unname(final_data[k,c(allprobss)]))
       return (c) # How do you select with duplicates included???
     }

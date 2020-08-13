@@ -2,9 +2,9 @@ variable,pretty_name,units,area,models,shared,optional,source,type,fall_back_typ
 SITE,Site,,all,all,TRUE,FALSE,input,character,factor,0,,,,,,,,FALSE,,,,
 WATERBODY,Waterbody,,all,all,TRUE,FALSE,input,character,factor,0,,,,,,,,FALSE,,,,
 YEAR,Year,Year,all,all,TRUE,FALSE,input,integer,integer,0,,,,,,,,FALSE,,,,
-NGR,National Grid Reference,NGR,all,all,TRUE,FALSE,input,character,factor,,,,,,,,,FALSE,,"Must be 5 digits; text not number, to retain leading zeros (input file screening). In R Code: If less than 5 digits leading zeros have been added",,
-EASTING,Easting,Easting,all,all,TRUE,FALSE,input,character,integer,,,,,,,,,FALSE,,"Must be 5 digits; text not number, to retain leading zeros (input file screening). In R Code: If less than 5 digits leading zeros have been added",,
-NORTHING,Northing,Northing,all,all,TRUE,FALSE,input,character,integer,,,,,,,,,FALSE,,"Must be 5 digits; text not number, to retain leading zeros (input file screening). In R Code: If less than 5 digits leading zeros have been added",,
+NGR,National Grid Reference,NGR,all,physical,TRUE,FALSE,input,character,factor,,,,,,,,,FALSE,,"Must be 5 digits; text not number, to retain leading zeros (input file screening). In R Code: If less than 5 digits leading zeros have been added",,
+EASTING,Easting,Easting,all,physical,TRUE,FALSE,input,character,integer,,,,,,,,,FALSE,,"Must be 5 digits; text not number, to retain leading zeros (input file screening). In R Code: If less than 5 digits leading zeros have been added",,
+NORTHING,Northing,Northing,all,physical,TRUE,FALSE,input,character,integer,,,,,,,,,FALSE,,"Must be 5 digits; text not number, to retain leading zeros (input file screening). In R Code: If less than 5 digits leading zeros have been added",,
 LATITUDE,Latitude,Latitude,gb,all,TRUE,FALSE,calculated,numeric,integer,49,71,49.9978431,60.8034893,,,,,FALSE,,,,Calculated within RICT2 code from the grid reference columns provided in the user input spreadsheet.
 LATITUDE,Latitude,Latitude,ni,all,TRUE,FALSE,calculated,numeric,integer,49,71,54,55.2,,,,,FALSE,,,,Calculated within RICT2 code from the grid reference columns provided in the user input spreadsheet.
 LONGITUDE,Longitude,Longitude,gb,all,TRUE,FALSE,calculated,numeric,integer,-11,2,-7.3651894,1.3560119,,,,,FALSE,,,,Calculated within RICT2 code from the grid reference columns provided in the user input spreadsheet.

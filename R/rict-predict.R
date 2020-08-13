@@ -9,6 +9,8 @@
 #'   \item{AUT_SEASON_ID}{Aut ID}
 #'   \item{...}{etc}
 #' }
+#' @param all_indices Return all indices in output (default only returns WHPT indices).
+#' @param taxa Return taxa predictions (default  returns indices).
 #' @return Dataframe of predicted biotic scores and probability of observed values
 #' falling into each statistical grouping of rivers.
 #' @export
@@ -18,7 +20,7 @@
 #' \dontrun{
 #' predictions <- rict_predict(demo_observed_values)
 #' }
-rict_predict <- function(data = NULL) {
+rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE) {
   # Validate predictive input data
 
   all_validation <- rict_validate(data)
@@ -26,11 +28,28 @@ rict_predict <- function(data = NULL) {
   area <- all_validation[["area"]] # returns area based on NGR
   # Change all column names to uppercase
   names(data) <- toupper(names(data))
-  # load supporting tables
 
-  taxa_average_abundance <-
-    utils::read.csv(system.file("extdat", "taxxaab.csv", package = "rict"))
-  end_group_index <- utils::read.csv(system.file("extdat", "x-103-end-group-means.csv", package = "rict"))
+  ## load supporting tables ---------------------------------------------------
+
+  if(taxa == TRUE) {
+    taxa.input.data <- utils::read.csv(system.file("extdat",
+                                                   "TAXA_AB_APR_PRAB.csv",
+                                                   package = "rict"),
+                                       stringsAsFactors = TRUE,
+                                       skip = 1)
+    model_type <- ifelse(area == "gb", 1, 2)
+    taxa.input.data <- dplyr::filter(taxa.input.data, Model == model_type)
+
+  }
+
+  end_group_index <- utils::read.csv(system.file("extdat",
+                                                 "x-103-end-group-means.csv",
+                                                 package = "rict"),
+                                     check.names = F)
+  names(end_group_index) <- trimws(names(end_group_index))
+  names(end_group_index) <- gsub("[()]", "", names(end_group_index))
+  names(end_group_index) <- gsub(",", "_", names(end_group_index))
+  names(end_group_index) <- gsub(" ", "_", names(end_group_index))
   nr_efg_groups <- utils::read.csv(system.file("extdat", "end-grp-assess-scores.csv", package = "rict"))
 
   if (model == "physical" & area == "gb") {
@@ -261,25 +280,30 @@ rict_predict <- function(data = NULL) {
   # #4 Prediction: WE1.5 Algorithms for prediction of expected values of any index based on probability of end group
   # # membership and average values of the index amongst reference sites in each end group.
   # We predict WHPT NTAXA, and WHPT ASP
-  getEndGroupMeansColsNeeded <- function(dframe, area) {
-    # Don't select RIVAPCSMODEL since we know model what we are processing
-    filtered_dframe <- dframe[grep(area, dframe$RIVPACS.Model, ignore.case = T), ]
-    dplyr::select(
-      filtered_dframe, .data$`End.Group`, .data$`Season.Code`,
-      .data$`Season`,
-      .data$`TL2.WHPT.NTAXA..AbW.DistFam.`,
-      .data$`TL2.WHPT.ASPT..AbW.DistFam.`,
-      .data$`TL2.WHPT.NTAXA..AbW.CompFam.`,
-      .data$`TL2.WHPT.ASPT..AbW.CompFam.`
-    )
-  }
 
-  endgroup_index_frame <- getEndGroupMeansColsNeeded(end_group_index, area)
-  colnames(endgroup_index_frame) <- c(
-    "EndGrp", "SeasonCode", "Season",
-    "TL2_WHPT_NTAXA_AbW_DistFam", "TL2_WHPT_ASPT_AbW_DistFam",
-    "TL2_WHPT_NTAXA_AbW_CompFam", "TL2_WHPT_ASPT_AbW_CompFam"
-  )
+  # getEndGroupMeansColsNeeded <- function(dframe, area) {
+  #   # Don't select RIVAPCSMODEL since we know model what we are processing
+  #   filtered_dframe <- dframe[grep(area, dframe$RIVPACS.Model, ignore.case = T), ]
+  #   dplyr::select(
+  #     filtered_dframe, .data$`End.Group`, .data$`Season.Code`,
+  #     .data$`Season`,
+  #     .data$`TL2.WHPT.NTAXA..AbW.DistFam.`,
+  #     .data$`TL2.WHPT.ASPT..AbW.DistFam.`,
+  #     .data$`TL2.WHPT.NTAXA..AbW.CompFam.`,
+  #     .data$`TL2.WHPT.ASPT..AbW.CompFam.`
+  #   )
+  # }
+
+ # endgroup_index_frame <- getEndGroupMeansColsNeeded(end_group_index, area)
+ endgroup_index_frame <- end_group_index[grep(area, end_group_index$RIVPACS_Model, ignore.case = T), ]
+  endgroup_index_frame <- dplyr::select(endgroup_index_frame, -RIVPACS_Model)
+  endgroup_index_frame <- dplyr::rename(endgroup_index_frame, EndGrp = End_Group,
+                                 SeasonCode = Season_Code)
+  # colnames(endgroup_index_frame) <- c(
+  #   "EndGrp", "SeasonCode", "Season",
+  #   "TL2_WHPT_NTAXA_AbW_DistFam", "TL2_WHPT_ASPT_AbW_DistFam",
+  #   "TL2_WHPT_NTAXA_AbW_CompFam", "TL2_WHPT_ASPT_AbW_CompFam"
+  # )
   # Sort by the columns "EndGrp", "SeasonCode"
   endgroup_index_frame <- dplyr::arrange(endgroup_index_frame, .data$EndGrp, .data$SeasonCode)
 
@@ -297,13 +321,86 @@ rict_predict <- function(data = NULL) {
 
   # Run the index Scores
   seasons_to_run <- seasons_to_run[!is.na(seasons_to_run)]
+
+  if(taxa == TRUE) {
+
+    # Declare a variable where we append all sites
+    AllSites <- list()
+
+    # Use complete cases removing null values
+    taxa.input.data <- taxa.input.data[complete.cases(taxa.input.data),]
+    nsites <- nrow(final_predictors_try2)
+    chooseSite <- seq_len(nsites)
+    taxa.input.data$EndGrp_Probs <- taxa.input.data$End.Group
+
+    # EndGrpProb_Replacement - function inputs x endgroups, any of 1-43, and appends a 'p' to make p1,p2,..,p43
+    # It then selects the probabilities pi = p1,p2,p3, .. from any SITE i of the predicted values y[i,pi] = final.predictionsxxx dataframe[i,pi]
+    # usage : site1 <- EndGrpProb_Replacement (a$EndGrp_Probs,final.predictors_try2, 1) # for site k=1
+
+    EndGrpProb_Replacement <- function(x,final_data,k) {
+      allprobss <- sapply(x, function (x)  ifelse(x==x,paste0("p",x), 0)) # apply to all values in EndGroup
+      #allprobss <- noquote(allprobss)
+      c <- as.double(unname(final_data[k,c(allprobss)]))
+      return (c) # How do you select with duplicates included???
+    }
+
+    # groupSitesFunction - Calculates endgroup probabilities with index values per group of similar site, taxa level, season code and furse_Code
+    # returns a site with calculated site index, and binds to the whole site in main data frame when called
+
+    groupSitesFunction <- function (allSites, k, siteindex, b1) {
+      perGroupSite  <- b1[allSites[k,1:5]$Season_Code==b1$Season_Code & allSites[k,1:5]$TL==b1$TL & allSites[k,1:5]$Furse_Code==b1$Furse_Code,]
+      a             <-  data.frame(t(colSums(perGroupSite$mlist_endGrps[[1]]*perGroupSite[,11:18])))
+      siteName      <- paste0("TST-", paste0(siteindex,"-R"))
+      siteX         <- cbind(data.frame(siteName,perGroupSite[1,1:10]),a) # #Add this site to AllSites - for final putput
+      return (siteX)
+    }
+
+    #taxa.input.data <- data.table::data.table(taxa.input.data)
+    ###### Loop for each SITE
+    #foreach(i = 1:nsites, .combine=rbind)  %dopar% {
+    #for (i in 1:nsites){
+    for (i in chooseSite) {
+      site1 <- taxa.input.data
+      siteIndex <- ifelse(i<10,paste0("0",i),i)
+
+      measuredColumns <- site1[,c("Average_Numerical_Abundance", "Average_Log10_Abundance", "Prob_Occurrence","Prob_Log1","Prob_Log2","Prob_Log3","Prob_Log4","Prob_Log5")]
+      names_measuredColumns <- names(measuredColumns)
+      #site1$EndGrp_Probs <- EngGrpFuncCmp (site1$EndGrp_Probs,final.predictors_try2, i) #
+      site1$EndGrp_Probs <- EndGrpProb_Replacement(site1$EndGrp_Probs,final_predictors_try3, which(chooseSite==i))
+      b1 <- site1 %>% dplyr::group_by(Season_Code, TL, Furse_Code) %>%
+        dplyr::mutate(count = dplyr::n(), mlist_endGrps = list(EndGrp_Probs)) # `End Group`
+
+      allUniqueSites <- unique(b1[,c(4,3,5,6,7,20,21)]) # gives 3,522 rows.or unique b1 Multiply by 12 sites gives us 3,532x12 = 42,384 groups in TOTAL.
+      print(i)
+      #print(tail(allUniqueSites))
+      for (k in 1:nrow(allUniqueSites)) { ### loop over these unique rows per SITE
+        # sitex   <- myFuncCmp (allUniqueSites, k, siteIndex, b1)
+        sitex    <- groupSitesFunction(allUniqueSites, k, siteIndex, b1)
+        #print(head(sitex))
+        AllSites[[k]] <- sitex
+      }# foreack k
+
+    }# for i
+
+    AllSites <- do.call("rbind", AllSites)
+    AllSites <- data.frame(AllSites)
+    #Remove the "End.Group" column
+    AllSites$`End.Group` <- NULL
+    # Arrange the sites by siteName, TL, Season_Code, Furse_code
+    arrange(AllSites,siteName, TL, Season_Code, Furse_Code)
+
+    return(AllSites)
+
+  }
+
   # data_to_bindTo, season_to_run, index_id, end_group_IndexDFrame
   mainData <- getSeasonIndexScores(
     data_to_bindTo = final_predictors_try3,
     season_to_run = seasons_to_run,
     index_id = indices_to_run,
     end_group_IndexDFrame = endgroup_index_frame,
-    DistNames = DistNames
+    DistNames = DistNames,
+    all_indices
   )
 
   # Append the biological data to the main output dataframe

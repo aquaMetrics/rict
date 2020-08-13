@@ -33,6 +33,8 @@
 #' @importFrom rlang .data
 #' @importFrom stats na.omit
 #' @importFrom magrittr "%>%"
+#' @importFrom purrr map
+#' @importFrom sf st_as_sf st_transform
 #'
 #' @examples
 #' \dontrun{
@@ -98,10 +100,17 @@ rict_validate <- function(data = NULL) {
       )
     }
   }
+
   # Create variable for data model detected  --------------------------------------------
   model <- data.frame(cbind(models, data_present))
   model <- model$models[model$data_present == T]
-
+  # If model not detected
+  if (model == "") {
+    stop("You provided data with columns that don't match either Model 1 or Model 44:", paste("\n", names(data)),
+         paste("\n", "Hint: Check input dataset columns match either Model 1 or Model 44 input variables"),
+         call. = FALSE
+    )
+  }
   # Display which model type has been detected
   message("Variables for the '", model, "' model detected - applying relevant checks. ")
 
@@ -293,17 +302,17 @@ rict_validate <- function(data = NULL) {
   }
 
   if (area == "gb" & model == "gis") {
-    coords <- sf::st_as_sf(data[, c("SX", "SY")], coords = c("SX", "SY"), crs = 27700)
-    coords <- sf::st_transform(coords, crs = 4326)
-    data$LATITUDE <-  unlist(purrr::map(coords$geometry, 2))
-    data$LONGITUDE <-   unlist(purrr::map(coords$geometry, 1))
+    coords <- st_as_sf(data[, c("SX", "SY")], coords = c("SX", "SY"), crs = 27700)
+    coords <- st_transform(coords, crs = 4326)
+    data$LATITUDE <-  unlist(map(coords$geometry, 2))
+    data$LONGITUDE <-   unlist(map(coords$geometry, 1))
   }
 
   if (area == "ni" & model == "gis") {
-    coords <- sf::st_as_sf(data[, c("SX", "SY")], coords = c("SX", "SY"), crs = 29903)
-    coords <- sf::st_transform(coords, crs = 4326)
-    data$LATITUDE <- unlist(purrr::map(coords$geometry, 2))
-    data$LONGITUDE <- unlist(purrr::map(coords$geometry, 1))
+    coords <- st_as_sf(data[, c("SX", "SY")], coords = c("SX", "SY"), crs = 29903)
+    coords <- st_transform(coords, crs = 4326)
+    data$LATITUDE <- unlist(map(coords$geometry, 2))
+    data$LONGITUDE <- unlist(map(coords$geometry, 1))
   }
 
   if (area == "gb") {

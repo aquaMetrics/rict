@@ -4,7 +4,7 @@
 \alias{rict_predict}
 \title{Calculate River Invertebrate Classification Tool (RICT) predictions}
 \usage{
-rict_predict(data = NULL)
+rict_predict(data = NULL, all_indices = FALSE, taxa = FALSE)
 }
 \arguments{
 \item{data}{Dataframe of predictive environmental values
@@ -16,6 +16,10 @@ rict_predict(data = NULL)
   \item{AUT_SEASON_ID}{Aut ID}
   \item{...}{etc}
 }}
+
+\item{all_indices}{Return all indices in output (default only returns WHPT indices).}
+
+\item{taxa}{Return taxa predictions (default  returns indices).}
 }
 \value{
 Dataframe of predicted biotic scores and probability of observed values

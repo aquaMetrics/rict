@@ -41,9 +41,6 @@ test_that("sense-checks work", {
   test_data$Alkalinity <- "test"
   expect_error(rict_validate(test_data),
     "You provided column 'ALKALINITY' with class 'character', we expect class 'numeric'.")
-  test_data$NGR <- 1
-  expect_error(rict_validate(test_data),
-     "You provided column 'NGR' with class 'numeric', we expect class 'character'. ")
   # Check optional columns where one or the other column must be provided
   test_data <- demo_observed_values
   test_data$Velocity <- NA

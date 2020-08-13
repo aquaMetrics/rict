@@ -20,7 +20,7 @@ Imports:
  dplyr,
  purrr,
  magrittr, 
- plyr, 
+ data.table,
  httr, 
  xml2, 
  xts, 

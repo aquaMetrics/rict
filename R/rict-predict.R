@@ -392,7 +392,7 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
     # Remove the "End.Group" column
     AllSites$End.Group <- NULL
     # Arrange the sites by siteName, TL, Season_Code, Furse_code
-    arrange(AllSites, siteName, TL, Season_Code, Furse_Code)
+    dplyr::arrange(AllSites, siteName, TL, Season_Code, Furse_Code)
 
     return(AllSites)
 

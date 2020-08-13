@@ -332,7 +332,7 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
     AllSites <- list()
 
     # Use complete cases removing null values
-    taxa.input.data <- taxa.input.data[complete.cases(taxa.input.data),]
+    taxa.input.data <- taxa.input.data[complete.cases(taxa.input.data), ]
     nsites <- nrow(final_predictors_try2)
     if(is.null(rows)) {
     chooseSite <- seq_len(nsites)
@@ -346,59 +346,53 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
     # It then selects the probabilities pi = p1,p2,p3, .. from any SITE i of the predicted values y[i,pi] = final.predictionsxxx dataframe[i,pi]
     # usage : site1 <- EndGrpProb_Replacement (a$EndGrp_Probs,final.predictors_try2, 1) # for site k=1
 
-    EndGrpProb_Replacement <- function(x,final_data,k) {
-      allprobss <- sapply(x, function (x){
-        ifelse(x==x,paste0("p",x), 0) # apply to all values in EndGroup
+    EndGrpProb_Replacement <- function(x, final_data, k) {
+      allprobss <- sapply(x, function(x){
+        ifelse(x==x, paste0("p", x), 0) # apply to all values in EndGroup
         return(x)
       })
       c <- as.double(unname(final_data[k,c(allprobss)]))
-      return (c) # How do you select with duplicates included???
+      return(c) # How do you select with duplicates included???
     }
 
     # groupSitesFunction - Calculates endgroup probabilities with index values per group of similar site, taxa level, season code and furse_Code
     # returns a site with calculated site index, and binds to the whole site in main data frame when called
 
     groupSitesFunction <- function (allSites, k, siteindex, b1) {
-      perGroupSite  <- b1[allSites[k,1:5]$Season_Code==b1$Season_Code & allSites[k,1:5]$TL==b1$TL & allSites[k,1:5]$Furse_Code==b1$Furse_Code,]
-      a             <-  data.frame(t(colSums(perGroupSite$mlist_endGrps[[1]]*perGroupSite[,11:18])))
-      siteName      <- paste0("TST-", paste0(siteindex,"-R"))
-      siteX         <- cbind(data.frame(siteName,perGroupSite[1,1:10]),a) # #Add this site to AllSites - for final putput
+      perGroupSite  <- b1[allSites[k, 1:5]$Season_Code==b1$Season_Code &
+                          allSites[k, 1:5]$TL == b1$TL &
+                          allSites[k, 1:5]$Furse_Code==b1$Furse_Code, ]
+      a             <-  data.frame(t(colSums(perGroupSite$mlist_endGrps[[1]] * perGroupSite[, 11:18])))
+      siteName      <- paste0("TST-", paste0(siteindex, "-R"))
+      siteX         <- cbind(data.frame(siteName,perGroupSite[1, 1:10]), a) # #Add this site to AllSites - for final putput
       return (siteX)
     }
 
-    #taxa.input.data <- data.table::data.table(taxa.input.data)
     ###### Loop for each SITE
-    #foreach(i = 1:nsites, .combine=rbind)  %dopar% {
-    #for (i in 1:nsites){
     for (i in chooseSite) {
       site1 <- taxa.input.data
       siteIndex <- ifelse(i<10,paste0("0",i),i)
-
       measuredColumns <- site1[,c("Average_Numerical_Abundance", "Average_Log10_Abundance", "Prob_Occurrence","Prob_Log1","Prob_Log2","Prob_Log3","Prob_Log4","Prob_Log5")]
       names_measuredColumns <- names(measuredColumns)
-      #site1$EndGrp_Probs <- EngGrpFuncCmp (site1$EndGrp_Probs,final.predictors_try2, i) #
       site1$EndGrp_Probs <- EndGrpProb_Replacement(site1$EndGrp_Probs,final_predictors_try3, which(chooseSite==i))
       b1 <- site1 %>% dplyr::group_by(Season_Code, TL, Furse_Code) %>%
-        dplyr::mutate(count = dplyr::n(), mlist_endGrps = list(EndGrp_Probs)) # `End Group`
+        dplyr::mutate(count = n(), mlist_endGrps = list(EndGrp_Probs)) # `End Group`
 
-      allUniqueSites <- unique(b1[,c(4,3,5,6,7,20,21)]) # gives 3,522 rows.or unique b1 Multiply by 12 sites gives us 3,532x12 = 42,384 groups in TOTAL.
+      # gives 3,522 rows.or unique b1 Multiply by 12 sites gives us 3,532x12 = 42,384 groups in TOTAL.
+      allUniqueSites <- unique(b1[,c(4, 3, 5, 6, 7, 20, 21)])
       print(i)
-      #print(tail(allUniqueSites))
       for (k in 1:nrow(allUniqueSites)) { ### loop over these unique rows per SITE
-        # sitex   <- myFuncCmp (allUniqueSites, k, siteIndex, b1)
         sitex    <- groupSitesFunction(allUniqueSites, k, siteIndex, b1)
-        #print(head(sitex))
         AllSites[[k]] <- sitex
-      }# foreack k
-
+      } # for k
     }# for i
 
     AllSites <- do.call("rbind", AllSites)
     AllSites <- data.frame(AllSites)
-    #Remove the "End.Group" column
-    AllSites$`End.Group` <- NULL
+    # Remove the "End.Group" column
+    AllSites$End.Group <- NULL
     # Arrange the sites by siteName, TL, Season_Code, Furse_code
-    arrange(AllSites,siteName, TL, Season_Code, Furse_Code)
+    arrange(AllSites, siteName, TL, Season_Code, Furse_Code)
 
     return(AllSites)
 

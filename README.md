@@ -47,7 +47,7 @@ results <- rict_classify(predictions)
 See [documentation](https://aquametrics.github.io/rict/) for further usage details. For example, how to change the default `year_type` from multi-year to single year classification:
 
 ```
-results <- rict(demo_gis_values, year_type = "single")
+results <- rict(demo_gis_values_log, year_type = "single")
 ```
 ## Contributing 
 

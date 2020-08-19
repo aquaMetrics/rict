@@ -1,7 +1,7 @@
 #' A Statistical Test to Compare Two Results
 #'
 #' @param a numeric results 'a'
-#' @param b numeric reuslts 'b'
+#' @param b numeric results 'b'
 #'
 #' @return dataframe containing stats
 #' @export

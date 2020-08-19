@@ -1,10 +1,12 @@
 ---
 title: "Technical specification"
+author: "Tim Foster"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{technical-specification}
+  %\VignetteIndexEntry{Technical specification}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
 ---
 
 ```{r, include = FALSE}
@@ -66,7 +68,7 @@ kable(demo_observed_values[1, ],)
 
 Example GIS input:
 ```{r}
-kable(demo_gis_values[1, ],)
+kable(demo_gis_values_log[1, ],)
 ```
 
 ## Validate observed values

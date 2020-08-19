@@ -21,6 +21,6 @@
 #' @format A data frame with 24 rows and 2 variables:
 #' \describe{
 #'   \item{RESULT}{Result identifier for each Model 1 GB test site}
-#'   \item{NTAXA_SPR}{Simulated EQR values for NTAXA SPR }
+#'   \item{NTAXA EQR}{Simulated EQR values for NTAXA SPR }
 #' }
 "demo_eqr_values"

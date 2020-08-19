@@ -1,24 +1,16 @@
+# Prediction helper functions
 
-# Begin Exclude Linting
-
-# 1. getDFScores: Make sure the dimensions DFcoeff (m x n) maps to dimensions of EnvValues (n x k), result will be (m x k)
+# getDFScores: Make sure the dimensions DFcoeff (m x n) maps to dimensions of EnvValues (n x k), result will be (m x k)
 # Convert DFCoeff and EnvValues to matrix, finalCopy <- as.matrix(final.predictors[,-c(1)]), removing first and last column
 # Similarly newDFcoeff <- as.matrix(DFCoeff_gb685[,-1])
 # Return finalCopy %*% newDFcoeff
-
 getDFScores <- function(EnvValues, DFCoeff) {
   Env_i <- as.matrix(EnvValues[, -c(1)])
   Coeff_j <- as.matrix(DFCoeff[, -1])
   return(Env_i %*% Coeff_j)
 }
 
-# 2. getDFScoresTotal: Returns the sums of all DFscores per site g
-getDFScoresTotal <- function(EnvValues, DFCoeff) {
-  return(rowSums(getDFScores(EnvValues, DFCoeff)))
-}
-
-# 3. getMahdist: Calculate the Mahanalobis distance of point x from site g
-
+# getMahdist: Calculate the Mahanalobis distance of point x from site g
 getMahDist <- function(DFscore, meanvalues) {
   meanvalues <- as.matrix(meanvalues)
   DFscore <- as.matrix(DFscore)
@@ -30,34 +22,31 @@ getMahDist <- function(DFscore, meanvalues) {
       # apply rowSums() or sum()
     }
   }
-  # l_mah_dist <- (meansA-valuesB)^2
   return(mah_Score)
 }
 
-# 4.getMahDist_min:  Calculate the minimum Mahanalobis distance of point x from site g
+# getMahDist_min: Calculate the minimum Mahanalobis distance of point x from site g
 getMahDist_min <- function(DFscore, meanvalues) {
   mahdist_min <- getMahDist(DFscore, meanvalues)
   toappend <- data.frame(min = c())
   for (i in 1:nrow(mahdist_min)) {
     toappend <- rbind(toappend, min(mahdist_min[i, ]))
   }
-  # Bind the result to the last column of input file "mahdist_min". No need to change "toappend1 to character as all are to be numeric
+  # Bind the result to the last column of input file "mahdist_min". No need to
+  # change "toappend1 to character as all are to be numeric
   names(toappend) <- c("minMah")
   return(cbind(mahdist_min, toappend))
 }
 
-# 5. getProbScores: Multiply end-group probabilities with IDXmean, Taxapr, Taxaab,
+# getProbScores: Multiply end-group probabilities with IDXmean, Taxapr, Taxaab,
 # Similar to DFScores() - combine them
-
 getProbScores <- function(Proball, IDXMean) {
   Env_i <- as.matrix(Proball)
   Coeff_j <- as.matrix(IDXMean)
   return(Env_i %*% Coeff_j)
 }
 
-
-# 6.PDist: Calculate the Probability distribution PDist_g for each site
-# 6.PDist: Calculate the Probability distribution PDist_g for each site
+# PDist: Calculate the Probability distribution PDist_g for each site
 PDist <- function(nmref_sites, mahdist) {
   endGrp_Score <- matrix(0, nrow = nrow(mahdist), ncol = ncol(mahdist))
   for (i in 1:nrow(mahdist)) {
@@ -66,17 +55,12 @@ PDist <- function(nmref_sites, mahdist) {
   return(endGrp_Score)
 }
 
-PDist_old <- function(nmref_sites, mahdist) {
-  return(nmref_sites * exp(-mahdist / 2))
-}
-
-# 7. PDistTotal: Calculate Total probabilities of all sites, bind the row sums to the last column
-
+# PDistTotal: Calculate Total probabilities of all sites, bind the row sums to the last column
 PDistTotal <- function(distr_g) {
   return(cbind(distr_g / rowSums(distr_g), rowSums(distr_g)))
 }
 
-# 8.getSuitabilityCode: Suitability code - input from getMahDist_min, and suitability codes
+# getSuitabilityCode: Suitability code - input from getMahDist_min, and suitability codes
 getSuitabilityCode <- function(minMahDist, suitCodes) {
   suit_frame <- as.character(data.frame(c(), c())) # Note rbind works with character data.frames
   for (i in 1:nrow(minMahDist)) { # Case 1
@@ -85,16 +69,19 @@ getSuitabilityCode <- function(minMahDist, suitCodes) {
       suit_frame <- rbind(suit_frame, c(1, ">5%"))
     } # endif
     else { # Case 2
-      if ((suitCodes[1, "CQ1"] <= minMahDist[i, ncol(minMahDist)]) & (minMahDist[i, ncol(minMahDist)] < suitCodes[1, "CQ2"])) { # for GB, row = 1
+      if ((suitCodes[1, "CQ1"] <= minMahDist[i, ncol(minMahDist)]) &
+        (minMahDist[i, ncol(minMahDist)] < suitCodes[1, "CQ2"])) { # for GB, row = 1
         # print(c("Here in loop case 2, row =",i))
         suit_frame <- rbind(suit_frame, c(2, "<5%"))
       } # endif
       else { # Case 3
-        if ((suitCodes[1, "CQ2"] <= minMahDist[i, ncol(minMahDist)]) & (minMahDist[i, ncol(minMahDist)] < suitCodes[1, "CQ3"])) { # for GB, row = 1
+        if ((suitCodes[1, "CQ2"] <= minMahDist[i, ncol(minMahDist)]) &
+          (minMahDist[i, ncol(minMahDist)] < suitCodes[1, "CQ3"])) { # for GB, row = 1
           suit_frame <- rbind(suit_frame, c(3, "<2%"))
         } # endif
         else { # Case 4
-          if ((suitCodes[1, "CQ3"] <= minMahDist[i, ncol(minMahDist)]) & (minMahDist[i, ncol(minMahDist)] < suitCodes[1, "CQ4"])) { # for GB, row = 1
+          if ((suitCodes[1, "CQ3"] <= minMahDist[i, ncol(minMahDist)]) &
+            (minMahDist[i, ncol(minMahDist)] < suitCodes[1, "CQ4"])) { # for GB, row = 1
             suit_frame <- rbind(suit_frame, c(4, "<1%"))
           } # endif
           else { # last case - no need for "if"
@@ -110,9 +97,8 @@ getSuitabilityCode <- function(minMahDist, suitCodes) {
   return(suit_frame) # Return both message and log value
 }
 
-
-# 9. Get End group means from excel/csv file, filter only IV GB Model and rename column names and select the few columns
-
+# Get End group means from excel/csv file, filter only IV GB Model and rename
+# column names and select the few columns
 getEndGroupMeans_xlsx <- function(filepathname) {
   file <- readxl::read_excel(filepathname)
   file <- dplyr::rename(file, RIVPACSMODEL = .data$`RIVPACS Model`)
@@ -136,7 +122,6 @@ getEndGroupMeans_xlsx <- function(filepathname) {
 }
 
 # csv read version of getEndGroupMeans()
-
 getEndGroupMeans <- function(filepathname) {
   end_group_means <- utils::read.csv(filepathname, header = TRUE)
   end_group_means <- dplyr::rename(end_group_means, RIVPACSMODEL = .data$`RIVPACS.Model`)
@@ -157,113 +142,132 @@ getEndGroupMeans <- function(filepathname) {
   return(end_group_means)
 }
 
-
-# Uses data.table fread. Used in AZURE and R Studio codes for consistency.
 # This particular function is for all 80 indices, and removes unwanted characters in column names
+rename_end_group_means <- function(data) {
+  names(data) <- gsub("%", "perc", names(data))
+  names(data) <- gsub("/", "", names(data))
+  names(data) <- gsub("&", "", names(data))
 
-getEndGroupMeans_dtableCopy <- function(filepathname, model) {
-
-  infile <- readCSVFile(filepathname)
-  names(infile) <-str_replace_all(names(infile), c( "%" = "perc", "/"="", "&" = "" ))
-  #print(colnames(infile))
-  infile%>%
-    rename(RIVPACSMODEL = `RIVPACS Model`) %>%
-    rename(EndGrp = `End Group`) %>%
-    rename(SeasonCode = `Season Code`) %>%
-    rename(Season = `Season`)%>%
-    rename(TL1_BMWP = `TL1 BMWP`)%>%
-    rename(TL1_NTAXA = `TL1 NTAXA`)%>%
-    rename(TL1_ASPT = `TL1 ASPT`)%>%
-    rename(TL2_WHPT_Score_nonAb_DistFam      = `TL2 WHPT Score (nonAb,DistFam)`)%>%
-    rename(TL2_WHPT_NTAXA_nonAb_DistFam      = `TL2 WHPT NTAXA (nonAb,DistFam)`)%>%
-    rename(TL2_WHPT_ASPT_nonAb_DistFam       = `TL2 WHPT ASPT (nonAb,DistFam)`)%>%
-    rename(TL2_WHPT_Score_nonAb_CompFam      = `TL2 WHPT Score (nonAb,CompFam)`)%>%
-    rename(TL2_WHPT_NTAXA_nonAb_CompFam      = `TL2 WHPT NTAXA (nonAb,CompFam)`)%>%
-    rename(TL2_WHPT_ASPT_nonAb_CompFam       = `TL2 WHPT ASPT (nonAb,CompFam)`)%>%
-    rename(TL2_WHPT_Score_AbW_DistFam        = `TL2 WHPT Score (AbW,DistFam)`)%>%
-    rename(TL2_WHPT_NTAXA_AbW_DistFam        = `TL2 WHPT NTAXA (AbW,DistFam)`)%>%
-    rename(TL2_WHPT_ASPT_AbW_DistFam         = `TL2 WHPT ASPT (AbW,DistFam)`)%>%
-    rename(TL2_WHPT_Score_AbW_CompFam        = `TL2 WHPT Score (AbW,CompFam)`)%>%
-    rename(TL2_WHPT_NTAXA_AbW_CompFam        = `TL2 WHPT NTAXA (AbW,CompFam)`)%>%
-    rename(TL2_WHPT_ASPT_AbW_CompFam         = `TL2 WHPT ASPT (AbW,CompFam)`)%>%
-    rename(TL1_AWIC_Fam                      = `TL1 AWIC(Fam)`)%>%
-    rename(TL4_AWIC_Sp_Murphy                = `TL4 AWIC(Sp) Murphy`)%>%
-    rename(TL5_AWIC_Sp_Murphy                = `TL5 AWIC(Sp) Murphy`)%>%
-    rename(TL4_WFD_AWIC_Sp_McFarland         = `TL4 WFD AWIC(Sp) McFarland`)%>%
-    rename(TL5_WFD_AWIC_Sp_McFarland         = `TL5 WFD AWIC(Sp) McFarland`)%>%
-    rename(TL4_Raddum                        = `TL4 Raddum`)%>%
-    rename(TL5_Raddum                        = `TL5 Raddum`)%>%
-    rename(TL4_SEPA_per_Acid_Sensitive_Taxa  = `TL4 SEPA perc Acid Sensitive Taxa`)%>%
-    rename(TL5_SEPA_perc_Acid_Sensitive_Taxa = `TL5 SEPA perc Acid Sensitive Taxa`)%>%
-    rename(TL4_MetTol                        = `TL4 MetTol`)%>%
-    rename(TL5_MetTol                        = `TL5 MetTol`)%>%
-    rename(TL1_2_LIFE_Fam_CompFam            = `TL12 LIFE(Fam) (CompFam)`)%>%
-    rename(TL2_LIFE_Fam_DistFam              = `TL2 LIFE(Fam) (DistFam)`)%>%
-    rename(TL3_LIFE_Fam_DistFam              = `TL3 LIFE(Fam) (DistFam)`)%>%
-    rename(TL4_LIFE_Sp                       = `TL4 LIFE(Sp)`)%>%
-    rename(TL5_LIFE_Sp                       = `TL5 LIFE(Sp)`)%>%
-    rename(TL3_PSI_Fam                       = `TL3 PSI(Fam)`)%>%
-    rename(TL4_PSI_Sp                        = `TL4 PSI(Sp)`)%>%
-    rename(TL5_PSI_Sp                        = `TL5 PSI(Sp)`)%>%
-    rename(TL3_E_PSI_fam69                   = `TL3 E-PSI(fam69)`)%>%
-    rename(TL4_E_PSI_mixed_level             = `TL4 E-PSI(mixed level)`)%>%
-    rename(TL5_E_PSI_mixed_level             = `TL5 E-PSI(mixed level)`)%>%
-    rename(TL4_oFSIsp                        = `TL4 oFSIsp` )%>%
-    rename(TL5_oFSIsp                        = `TL5 oFSIsp`)%>%
-    rename(TL4_ToFSIsp                       = `TL4 ToFSIsp`)%>%
-    rename(TL5_ToFSIsp                       = `TL5 ToFSIsp`)%>%
-    rename(TL4_CoFSIsp                       = `TL4 CoFSIsp`)%>%
-    rename(TL5_CoFSIsp                       = `TL5 CoFSIsp`)%>%
-    rename(TL4_GSFI_FI05                     = `TL4 GSFI FI05`)%>%
-    rename(TL5_GSFI_FI05                     = `TL5 GSFI FI05`)%>%
-    rename(TL4_GSFI_FI09                     = `TL4 GSFI FI09`)%>%
-    rename(TL5_GSFI_FI09                     = `TL5 GSFI FI09`)%>%
-    rename(TL4_GSFI_FI091                    = `TL4 GSFI FI091`)%>%
-    rename(TL5_GSFI_FI091                    = `TL5 GSFI FI091`)%>%
-    rename(TL4_GSFI_FI091_K                  = `TL4 GSFI FI091_K`)%>%
-    rename(TL5_GSFI_FI091_K                  = `TL5 GSFI FI091_K`)%>%
-    rename(TL4_GSFI_FI092                    = `TL4 GSFI FI092`)%>%
-    rename(TL5_GSFI_FI092                    = `TL5 GSFI FI092`)%>%
-    rename(TL4_GSFI_FI11_12                  = `TL4 GSFI FI11_12`)%>%
-    rename(TL5_GSFI_FI11_12                  = `TL5 GSFI FI11_12`)%>%
-    rename(TL4_GSFI_FI14_16                  = `TL4 GSFI FI14_16`)%>%
-    rename(TL5_GSFI_FI14_16                  = `TL5 GSFI FI14_16`)%>%
-    rename(TL4_GSFI_FI15_17                  = `TL4 GSFI FI15_17`)%>%
-    rename(TL5_GSFI_FI15_17                  = `TL5 GSFI FI15_17`)%>%
-    rename(TL4_GSFI_FI152                    = `TL4 GSFI FI152`)%>%
-    rename(TL5_GSFI_FI152                    = `TL5 GSFI FI152`)%>%
-    rename(TL2_SPEAR_Fam_perc                = `TL2 SPEAR(Fam) perc`)%>%
-    rename(TL4_SPEAR_Sp_perc                 = `TL4 SPEAR(Sp) perc`)%>%
-    rename(TL5_SPEAR_Sp_perc                 = `TL5 SPEAR(Sp) perc`)%>%
-    rename(SPEAR_pesticides_TL2_fam_Knillmann_2018  = `SPEAR(pesticides) TL2 fam Knillmann 2018`)%>%
-    rename(SPEAR_refuge_TL2_fam_Knillmann_2018      = `SPEAR(refuge) TL2 fam Knillmann 2018`)%>%
-    rename(SPEAR_pesticides_TL4_sp_Knillmann_2018   = `SPEAR(pesticides) TL4 sp Knillmann 2018`)%>%
-    rename(SPEAR_refuge_TL4_sp_Knillmann_2018       = `SPEAR(refuge) TL4 sp Knillmann 2018`)%>%
-    rename(SPEAR_pesticides_TL5_sp_Knillmann_2018   = `SPEAR(pesticides) TL5 sp Knillmann 2018`)%>%
-    rename(SPEAR_refuge_TL5_sp_Knillmann_2018       = `SPEAR(refuge) TL5 sp Knillmann 2018`)%>%
-    rename(TL4_CCI                           = `TL4 CCI`)%>%
-    rename(TL5_CCI                           = `TL5 CCI`)%>%
-    rename(TL2_08_Group_ARMI_NTaxa           = `TL2 08 Group ARMI NTaxa`)%>%
-    rename(TL2_08_Group_ARMI_Score           = `TL2 08 Group ARMI Score`)%>%
-    rename(TL2_33_Group_ARMI_NTaxa           = `TL2 33 Group ARMI NTaxa`)%>%
-    rename(TL2_33_Group_ARMI_Score           = `TL2 33 Group ARMI Score`)%>%
-    rename(TL2_33_Group_Flow_Silt_NTaxa      =`TL2 33 Group Flow  Silt NTaxa`)%>%
-    rename(TL2_33_Group_Flow_Silt_Score      = `TL2 33 Group Flow  Silt Score`)%>%
-    rename(TL2_14_Group_Urban_NTaxa          = `TL2 14 Group Urban NTaxa`)%>%
-    rename(TL2_14_Group_Urban_Score          = `TL2 14 Group Urban Score`)%>%
-    filter(RIVPACSMODEL == model) %>%
-    # Dont select RIVAPCSMODEL since we know model what we are processing. Remove column 1 = RIVPACSMODEL
-    #select(`EndGrp`, `SeasonCode`,`Season`,`TL2_WHPT_NTAXA_AbW_DistFam`,`TL2_WHPT_ASPT_AbW_DistFam`,`TL2_WHPT_NTAXA_AbW_CompFam`,`TL2_WHPT_ASPT_AbW_CompFam`)
-    select(-1)
+  data <-
+    data.frame(
+      "RIVPACS_Model" = data$`RIVPACS Model`,
+      "End_Group" = data$`End Group`,
+      "Season_Code" = data$`Season Code`,
+      "Season" = data$`Season`,
+      "TL1_BMWP" = data$`TL1 BMWP`,
+      "TL1_NTAXA" = data$`TL1 NTAXA`,
+      "TL1_ASPT" = data$`TL1 ASPT`,
+      "TL2_WHPT_Score_nonAb_DistFam" = data$`TL2 WHPT Score (nonAb,DistFam)`,
+      "TL2_WHPT_NTAXA_nonAb_DistFam" = data$`TL2 WHPT NTAXA (nonAb,DistFam)`,
+      "TL2_WHPT_ASPT_nonAb_DistFam" = data$`TL2 WHPT ASPT (nonAb,DistFam)`,
+      "TL2_WHPT_Score_nonAb_CompFam" = data$`TL2 WHPT Score (nonAb,CompFam)`,
+      "TL2_WHPT_NTAXA_nonAb_CompFam" = data$`TL2 WHPT NTAXA (nonAb,CompFam)`,
+      "TL2_WHPT_ASPT_nonAb_CompFam" = data$`TL2 WHPT ASPT (nonAb,CompFam)`,
+      "TL2_WHPT_Score_AbW_DistFam" = data$`TL2 WHPT Score (AbW,DistFam)`,
+      "TL2_WHPT_NTAXA_AbW_DistFam" = data$`TL2 WHPT NTAXA (AbW,DistFam)`,
+      "TL2_WHPT_ASPT_AbW_DistFam" = data$`TL2 WHPT ASPT (AbW,DistFam)`,
+      "TL2_WHPT_Score_AbW_CompFam" = data$`TL2 WHPT Score (AbW,CompFam)`,
+      "TL2_WHPT_NTAXA_AbW_CompFam" = data$`TL2 WHPT NTAXA (AbW,CompFam)`,
+      "TL2_WHPT_ASPT_AbW_CompFam" = data$`TL2 WHPT ASPT (AbW,CompFam)`,
+      "TL1_AWIC_Fam" = data$`TL1 AWIC(Fam)`,
+      "TL4_AWIC_Sp_Murphy" = data$`TL4 AWIC(Sp) Murphy`,
+      "TL5_AWIC_Sp_Murphy" = data$`TL5 AWIC(Sp) Murphy`,
+      "TL4_WFD_AWIC_Sp_McFarland" = data$`TL4 WFD AWIC(Sp) McFarland`,
+      "TL5_WFD_AWIC_Sp_McFarland" = data$`TL5 WFD AWIC(Sp) McFarland`,
+      "TL4_Raddum" = data$`TL4 Raddum`,
+      "TL5_Raddum" = data$`TL5 Raddum`,
+      "TL4_SEPA_per_Acid_Sensitive_Taxa" = data$`TL4 SEPA perc Acid Sensitive Taxa`,
+      "TL5_SEPA_perc_Acid_Sensitive_Taxa" = data$`TL5 SEPA perc Acid Sensitive Taxa`,
+      "TL4_MetTol" = data$`TL4 MetTol`,
+      "TL5_MetTol" = data$`TL5 MetTol`,
+      "TL1_2_LIFE_Fam_CompFam" = data$`TL12 LIFE(Fam) (CompFam)`,
+      "TL2_LIFE_Fam_DistFam" = data$`TL2 LIFE(Fam) (DistFam)`,
+      "TL3_LIFE_Fam_DistFam" = data$`TL3 LIFE(Fam) (DistFam)`,
+      "TL4_LIFE_Sp" = data$`TL4 LIFE(Sp)`,
+      "TL5_LIFE_Sp" = data$`TL5 LIFE(Sp)`,
+      "TL3_PSI_Fam" = data$`TL3 PSI(Fam)`,
+      "TL4_PSI_Sp" = data$`TL4 PSI(Sp)`,
+      "TL5_PSI_Sp" = data$`TL5 PSI(Sp)`,
+      "TL3_E_PSI_fam69" = data$`TL3 E-PSI(fam69)`,
+      "TL4_E_PSI_mixed_level" = data$`TL4 E-PSI(mixed level)`,
+      "TL5_E_PSI_mixed_level" = data$`TL5 E-PSI(mixed level)`,
+      "TL4_oFSIsp" = data$`TL4 oFSIsp`,
+      "TL5_oFSIsp" = data$`TL5 oFSIsp`,
+      "TL4_ToFSIsp" = data$`TL4 ToFSIsp`,
+      "TL5_ToFSIsp" = data$`TL5 ToFSIsp`,
+      "TL4_CoFSIsp" = data$`TL4 CoFSIsp`,
+      "TL5_CoFSIsp" = data$`TL5 CoFSIsp`,
+      "TL4_GSFI_FI05" = data$`TL4 GSFI FI05`,
+      "TL5_GSFI_FI05" = data$`TL5 GSFI FI05`,
+      "TL4_GSFI_FI09" = data$`TL4 GSFI FI09`,
+      "TL5_GSFI_FI09" = data$`TL5 GSFI FI09`,
+      "TL4_GSFI_FI091" = data$`TL4 GSFI FI091`,
+      "TL5_GSFI_FI091" = data$`TL5 GSFI FI091`,
+      "TL4_GSFI_FI091_K" = data$`TL4 GSFI FI091_K`,
+      "TL5_GSFI_FI091_K" = data$`TL5 GSFI FI091_K`,
+      "TL4_GSFI_FI092" = data$`TL4 GSFI FI092`,
+      "TL5_GSFI_FI092" = data$`TL5 GSFI FI092`,
+      "TL4_GSFI_FI11_12" = data$`TL4 GSFI FI11_12`,
+      "TL5_GSFI_FI11_12" = data$`TL5 GSFI FI11_12`,
+      "TL4_GSFI_FI14_16" = data$`TL4 GSFI FI14_16`,
+      "TL5_GSFI_FI14_16" = data$`TL5 GSFI FI14_16`,
+      "TL4_GSFI_FI15_17" = data$`TL4 GSFI FI15_17`,
+      "TL5_GSFI_FI15_17" = data$`TL5 GSFI FI15_17`,
+      "TL4_GSFI_FI152" = data$`TL4 GSFI FI152`,
+      "TL5_GSFI_FI152" = data$`TL5 GSFI FI152`,
+      "TL2_SPEAR_Fam_perc" = data$`TL2 SPEAR(Fam) perc`,
+      "TL4_SPEAR_Sp_perc" = data$`TL4 SPEAR(Sp) perc`,
+      "TL5_SPEAR_Sp_perc" = data$`TL5 SPEAR(Sp) perc`,
+      "SPEAR_pesticides_TL2_fam_Knillmann_2018" = data$`SPEAR(pesticides) TL2 fam Knillmann 2018`,
+      "SPEAR_refuge_TL2_fam_Knillmann_2018" = data$`SPEAR(refuge) TL2 fam Knillmann 2018`,
+      "SPEAR_pesticides_TL4_sp_Knillmann_2018" = data$`SPEAR(pesticides) TL4 sp Knillmann 2018`,
+      "SPEAR_refuge_TL4_sp_Knillmann_2018" = data$`SPEAR(refuge) TL4 sp Knillmann 2018`,
+      "SPEAR_pesticides_TL5_sp_Knillmann_2018" = data$`SPEAR(pesticides) TL5 sp Knillmann 2018`,
+      "SPEAR_refuge_TL5_sp_Knillmann_2018" = data$`SPEAR(refuge) TL5 sp Knillmann 2018`,
+      "TL4_CCI" = data$`TL4 CCI`,
+      "TL5_CCI" = data$`TL5 CCI`,
+      "TL2_08_Group_ARMI_NTaxa" = data$`TL2 08 Group ARMI NTaxa`,
+      "TL2_08_Group_ARMI_Score" = data$`TL2 08 Group ARMI Score`,
+      "TL2_33_Group_ARMI_NTaxa" = data$`TL2 33 Group ARMI NTaxa`,
+      "TL2_33_Group_ARMI_Score" = data$`TL2 33 Group ARMI Score`,
+      "TL2_33_Group_Flow_Silt_NTaxa" = data$`TL2 33 Group Flow  Silt NTaxa`,
+      "TL2_33_Group_Flow_Silt_Score" = data$`TL2 33 Group Flow  Silt Score`,
+      "TL2_14_Group_Urban_NTaxa" = data$`TL2 14 Group Urban NTaxa`,
+      "TL2_14_Group_Urban_Score" = data$`TL2 14 Group Urban Score`
+    )
 }
-# 10.getSeasonIndexScores: Calculate predictions of probability scores for indices WHPT, given season ids,
-# whpt values. Use "getProbScores()"
-getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_group_IndexDFrame, DistNames, all_indices) {
-  # Declare a matrix of zeros, with nrow, ncol dimensions
-  # index_Score <- matrix(0, nrow=nrow(end_group_IndexDFrame), ncol = nrow(end_group_IndexDFrame))
-  # mainDFrame <- data_to_bindTo
 
-  # filter for Spring, SeasonCode==1, if exists
+# EndGrpProb_Replacemen): - function inputs x endgroups, any of 1-43, and
+# appends a 'p' to make p1,p2,..,p43. It then selects the probabilities pi =
+# p1,p2,p3, .. from any SITE i of the predicted values y[i,pi] =
+# final.predictionsxxx dataframe[i,pi] usage: site1 <- EndGrpProb_Replacement
+# (a$EndGrp_Probs,final.predictors_try2, 1) # for site k=1
+EndGrpProb_Replacement <- function(x, final_data, k) {
+  allprobss <- sapply(x, function (x)  ifelse(x==x,paste0("p",x), 0)) # apply to all values in EndGroup
+  #allprobss <- noquote(allprobss)
+  c <- as.double(unname(final_data[k,c(allprobss)]))
+  return (c) # How do you select with duplicates included???
+}
+
+# groupSitesFunction: Calculates endgroup probabilities with index values per
+# group of similar site, taxa level, season code and furse_Code returns a site
+# with calculated site index, and binds to the whole site in main data frame
+# when called.
+groupSitesFunction <- function(allSites, k, siteindex, b1) {
+  perGroupSite <- b1[allSites[k, 1:5]$Season_Code == b1$Season_Code &
+    allSites[k, 1:5]$TL == b1$TL &
+    allSites[k, 1:5]$Furse_Code == b1$Furse_Code, ]
+  a <- data.frame(t(colSums(perGroupSite$mlist_endGrps[[1]] * perGroupSite[, 11:18])))
+  siteName <- paste0("TST-", paste0(siteindex, "-R"))
+  siteX <- cbind(data.frame(siteName, perGroupSite[1, 1:10]), a) # Add this site to AllSites - for final output
+  return(siteX)
+}
+
+# getSeasonIndexScores: Calculate predictions of probability scores for indices WHPT, given season ids,
+# whpt values. Use "getProbScores()"
+getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id,
+                                 end_group_IndexDFrame, DistNames, all_indices) {
+  # variables for storing Spring results
   spring_whpt_ntaxa_Abw_Dist <- NULL
   spring_whpt_aspt_Abw_Dist <- NULL
   spring_whpt_ntaxa_Abw_CompFam <- NULL
@@ -271,19 +275,24 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
 
   end_groups <- end_group_IndexDFrame %>% dplyr::filter(SeasonCode %in% season_to_run)
 
-  if(all_indices == TRUE) {
-  end_groups <- as.matrix(dplyr::select(end_groups,-EndGrp, -SeasonCode, -Season))
-  end_groups <- end_groups[seq_len(length(DistNames)), ]
-  probabilities <- as.matrix(data_to_bindTo[, DistNames])
-  all <- as.matrix(probabilities) %*%  as.matrix(end_groups)
-  all <- as.data.frame(all)
-  all <- cbind(data_to_bindTo, all)
-  return(all)
+  if (all_indices == TRUE) {
+   predictions <- purrr::map_df(c(1, 2, 3), function(season) {
+      end_groups <- end_groups[end_groups$SeasonCode == season,]
+      end_groups <- as.matrix(dplyr::select(end_groups, -EndGrp, -SeasonCode, -Season))
+      end_groups <- end_groups[seq_len(length(DistNames)), ]
+      probabilities <- as.matrix(data_to_bindTo[, DistNames])
+      all <- as.matrix(probabilities) %*% as.matrix(end_groups)
+      all <- as.data.frame(all)
+      all$SEASON <- season
+      all <- cbind(data_to_bindTo, all)
+    })
+   return(predictions)
   }
+  # Filter for Spring, SeasonCode==1, if exists
   if (1 %in% end_group_IndexDFrame$SeasonCode) {
     spring_whpt_all <- dplyr::filter(end_group_IndexDFrame, .data$SeasonCode == 1)
     spring_whpt_all <- spring_whpt_all[seq_len(length(DistNames)), ]
-    # Check what index iit is you want , and getProbScores
+    # Check what index it is you want, and getProbScores
     if ("TL2_WHPT_NTAXA_AbW_DistFam" %in% colnames(end_group_IndexDFrame)) { # column exists
       spring_whpt_ntaxa_Abw_Dist <- as.data.frame(getProbScores(
         Proball = data_to_bindTo[, DistNames],
@@ -293,8 +302,6 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
         )
       ))
       colnames(spring_whpt_ntaxa_Abw_Dist) <- c("TL2_WHPT_NTAXA_AbW_DistFam_spr")
-      # print(nrow(spring_whpt_ntaxa_Abw_Dist))
-      # print(spring_whpt_ntaxa_Abw_Dist)
     }
 
     if ("TL2_WHPT_ASPT_AbW_DistFam" %in% colnames(end_group_IndexDFrame)) { # column exists
@@ -306,8 +313,6 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
         )
       ))
       colnames(spring_whpt_aspt_Abw_Dist) <- c("TL2_WHPT_ASPT_AbW_DistFam_spr")
-      # print(nrow(spring_whpt_aspt_Abw_Dist))
-      # print(spring_whpt_aspt_Abw_Dist)
     }
 
     if ("TL2_WHPT_NTAXA_AbW_CompFam" %in% colnames(end_group_IndexDFrame)) { # column exists
@@ -319,8 +324,6 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
         )
       ))
       colnames(spring_whpt_ntaxa_Abw_CompFam) <- c("TL2_WHPT_NTAXA_AbW_CompFam_spr")
-      # print(nrow(spring_whpt_ntaxa_Abw_CompFam))
-      # print(spring_whpt_ntaxa_Abw_CompFam)
     }
 
     if ("TL2_WHPT_ASPT_AbW_CompFam" %in% colnames(end_group_IndexDFrame)) { # column exists
@@ -332,8 +335,6 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
         )
       ))
       colnames(spring_whpt_aspt_Abw_CompFam) <- c("TL2_WHPT_NTAXA_ASPT_CompFam_spr")
-      # print(nrow(spring_whpt_aspt_Abw_CompFam))
-      # print(spring_whpt_aspt_Abw_CompFam)
       # Change column_name to include spring
     }
   }
@@ -491,19 +492,19 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id, end_gr
   return(bind_all)
 }
 
-getSeasonIndexScores_new <- function (data_to_bindTo, season_to_run, index_id, end_group_IndexDFrame, model){
-  #index_Score <- matrix(0, nrow=nrow(end_group_IndexDFrame), ncol = nrow(end_group_IndexDFrame) ) # Declare a matrix of zeros, with nrow, ncol dimensions
-
+getSeasonIndexScores_new <- function(data_to_bindTo, season_to_run, index_id, end_group_IndexDFrame, model) {
   # NOTE: GB model takes c(15:57), while NI model takes c(13:23)
-  probScores <- if (model=="RIVPACS IV GB") c(15:57) else { c(13:23) } # GB, NI model
+  probScores <- if (model == "RIVPACS IV GB") {
+    c(15:57)
+  } else {
+    c(13:23)
+  } # GB, NI model
 
-  #print( end_group_IndexDFrame$SeasonCode)
-
-  #filter for Spring, SeasonCode==1, if exists
-  spring_whpt_ntaxa_Abw_Dist    <- NULL
-  spring_whpt_aspt_Abw_Dist     <- NULL
+  # filter for Spring, SeasonCode==1, if exists
+  spring_whpt_ntaxa_Abw_Dist <- NULL
+  spring_whpt_aspt_Abw_Dist <- NULL
   spring_whpt_ntaxa_Abw_CompFam <- NULL
-  spring_whpt_aspt_Abw_CompFam  <- NULL
+  spring_whpt_aspt_Abw_CompFam <- NULL
 
   # Declare score variales for all seasons
   spring_allIndices_SCores <- NULL
@@ -513,175 +514,59 @@ getSeasonIndexScores_new <- function (data_to_bindTo, season_to_run, index_id, e
   # Bind these to input dataframe and output them
   bind_all <- NULL
 
-  if(1 %in% end_group_IndexDFrame$SeasonCode ) {
+  if (1 %in% end_group_IndexDFrame$SeasonCode) {
     print("Processing Spring")
 
     # Check index, and getProbScores
     # Filter season and index together for all the indices
-    spr_all <- select (filter(end_group_IndexDFrame,SeasonCode==1),everything())[,c(-1,-2, -3)] # All indices, removes " EndGrp, SeasonCode", "Season"
-    spring_allIndices_Scores <- as.data.frame(getProbScores(data_to_bindTo[,probScores], select(spr_all, everything()) )) #LEave Season when multiplying out
-    spr <- data.frame(Season = rep("Spring",nrow(spring_allIndices_Scores)))
-    #print("bind_all")
-    bind_all <- rbind(bind_all,cbind(spr,spring_allIndices_Scores))
-    #print(bind_all)
+    spr_all <- select(filter(end_group_IndexDFrame, SeasonCode == 1), everything())[, c(-1, -2, -3)] # All indices, removes " EndGrp, SeasonCode", "Season"
+    spring_allIndices_Scores <- as.data.frame(getProbScores(data_to_bindTo[, probScores], select(spr_all, everything()))) # LEave Season when multiplying out
+    spr <- data.frame(Season = rep("Spring", nrow(spring_allIndices_Scores)))
+    # print("bind_all")
+    bind_all <- rbind(bind_all, cbind(spr, spring_allIndices_Scores))
+    # print(bind_all)
   }
 
-  #filter for Summer, SeasonCode==2, if exists
-  summer_whpt_ntaxa_Abw_Dist      <- NULL
-  summer_whpt_aspt_Abw_Dist       <- NULL
-  summer_whpt_ntaxa_Abw_CompFam   <- NULL
-  summer_whpt_aspt_Abw_CompFam    <- NULL
+  # filter for Summer, SeasonCode==2, if exists
+  summer_whpt_ntaxa_Abw_Dist <- NULL
+  summer_whpt_aspt_Abw_Dist <- NULL
+  summer_whpt_ntaxa_Abw_CompFam <- NULL
+  summer_whpt_aspt_Abw_CompFam <- NULL
 
-  if(2 %in% end_group_IndexDFrame$SeasonCode ) {
-    summer_whpt_all <- filter(end_group_IndexDFrame,SeasonCode==2)
-    #print (summer_whpt_all)
+  if (2 %in% end_group_IndexDFrame$SeasonCode) {
+    summer_whpt_all <- filter(end_group_IndexDFrame, SeasonCode == 2)
+    # print (summer_whpt_all)
     print("Processing summer")
 
     # Filter season and index together for all the indices
-    sum_all <- select (filter(end_group_IndexDFrame,SeasonCode==2),everything())[,c(-1,-2, -3)] # all indices
-    summer_allIndices_Scores <- as.data.frame(getProbScores(data_to_bindTo[,probScores], select(sum_all, everything())))
-    summ <- data.frame(Season = rep("Summer",nrow(summer_allIndices_Scores)))
-    #print(summer_allIndices_Scores)
-    bind_all <- rbind(bind_all, cbind(summ,summer_allIndices_Scores)) # Remove row 1
-    #print(bind_all)
+    sum_all <- select(filter(end_group_IndexDFrame, SeasonCode == 2), everything())[, c(-1, -2, -3)] # all indices
+    summer_allIndices_Scores <- as.data.frame(getProbScores(data_to_bindTo[, probScores], select(sum_all, everything())))
+    summ <- data.frame(Season = rep("Summer", nrow(summer_allIndices_Scores)))
+    # print(summer_allIndices_Scores)
+    bind_all <- rbind(bind_all, cbind(summ, summer_allIndices_Scores)) # Remove row 1
+    # print(bind_all)
   }
 
-  #filter for autumn, SeasonCode==3, if exists
-  autumn_whpt_ntaxa_Abw_Dist    <- NULL
-  autumn_whpt_aspt_Abw_Dist     <- NULL
+  # filter for autumn, SeasonCode==3, if exists
+  autumn_whpt_ntaxa_Abw_Dist <- NULL
+  autumn_whpt_aspt_Abw_Dist <- NULL
   autumn_whpt_ntaxa_Abw_CompFam <- NULL
-  autumn_whpt_aspt_Abw_CompFam  <- NULL
+  autumn_whpt_aspt_Abw_CompFam <- NULL
 
-  if(3 %in% end_group_IndexDFrame$SeasonCode ) {
+  if (3 %in% end_group_IndexDFrame$SeasonCode) {
     print("Processing autumn")
     # Filter season and index together for all the indices
-    aut_all <- select (filter(end_group_IndexDFrame,SeasonCode==3),everything())[,c(-1,-2, -3)] # all indices
-    autumn_allIndices_Scores <- as.data.frame(getProbScores(data_to_bindTo[,probScores], select(aut_all, everything())))
-    aut <- data.frame(Season = rep("Autumn",nrow(autumn_allIndices_Scores)))
+    aut_all <- select(filter(end_group_IndexDFrame, SeasonCode == 3), everything())[, c(-1, -2, -3)] # all indices
+    autumn_allIndices_Scores <- as.data.frame(getProbScores(data_to_bindTo[, probScores], select(aut_all, everything())))
+    aut <- data.frame(Season = rep("Autumn", nrow(autumn_allIndices_Scores)))
     print("Autum scores -->")
-    #print(autumn_allIndices_Scores)
-    bind_all <- rbind(bind_all,cbind(aut,autumn_allIndices_Scores)) # remove row 1
+    # print(autumn_allIndices_Scores)
+    bind_all <- rbind(bind_all, cbind(aut, autumn_allIndices_Scores)) # remove row 1
   }
 
-  #Add more seasons 4,5,6,7 etc
-
-  #Add it to main Data input
+  # Add more seasons 4,5,6,7 etc
+  # Add it to main Data input
   bind_all <- cbind(data_to_bindTo, bind_all)
 
   return(bind_all)
-
-}# new
-
-# getSeasonIndexScores_old <- function (data_to_bindTo, season_to_run, index_id,
-#                                       end_group_IndexDFrame, final.predictors_try){
-#   #index_Score <- matrix(0, nrow=nrow(end_group_IndexDFrame), ncol = nrow(end_group_IndexDFrame) )
-#   # Declare a matrix of zeros, with nrow, ncol dimensions
-#   mainDFrame <- data_to_bindTo
-#
-#   # for each index you get, and for each season, produce a probability  score and add to the main dataset
-#   for (i in 1:length(index_id)) {
-#     # Choose all seasons, index_id==1
-#     season_run <- end_group_IndexDFrame[(end_group_IndexDFrame$season_id %in% season_to_run)
-#                                       & end_group_IndexDFrame$index_id == index_id[i], ]
-#     #Group by end_group, season_id, value
-#     season_all_grp <- season_run[, -c(1)] # Remove the index_id, leave "end_group", "season_id"", and "value"
-#       season_grp <- dplyr::group_by(season_all_grp, .data$end_group, .data$season_id, .data$value)
-#       dplyr::arrange(season_grp, .data$end_group)
-#     #Remove any values with NA, if any occur
-#     season_all_grp <- season_all_grp[stats::complete.cases(season_all_grp), ]
-#
-#     for(j in 1:length(season_to_run)) {
-#       season_1 <- season_all_grp[season_all_grp$season_id == season_to_run[j], ]
-#       season_1_pred <- season_1[!duplicated(season_1$end_group), ]
-#       idx_mean_1 <- getProbScores(final.predictors_try[, 15:57], season_1_pred[, 3])
-#       # 15:57 are probability columns * season_value
-#       # Name columns according to the index_id and seasons here
-#
-#       if(index_id[i]==111 & season_to_run[j]==1)
-#         colnames(idx_mean_1) <- c("TL2_WHPT_NTAXA_Abw_DistFam_Spring")
-#       if(index_id[i]==111 & season_to_run[j]==3)
-#         colnames(idx_mean_1) <- c("TL2_WHPT_NTAXA_Abw_DistFam_Autumn")
-#       if(index_id[i]==112 & season_to_run[j]==1)
-#         colnames(idx_mean_1) <- c("TL2_WHPT_ASPT_Abw_DistFam_Spring")
-#       if(index_id[i]==112 & season_to_run[j]==3)
-#         colnames(idx_mean_1) <- c("TL2_WHPT_ASPT_Abw_DistFam_Autumn")
-#       ###
-#       if(index_id[i]==114 & season_to_run[j]==1)
-#         colnames(idx_mean_1) <- c("TL2_WHPT_NTAXA_Abw_CompFam_Spring") # Current uses 115 index - wrong use!!
-#       if(index_id[i]==114 & season_to_run[j]==3)
-#         colnames(idx_mean_1) <- c("TL2_WHPT_NTAXA_Abw_CompFam_Autumn")
-#       ###
-#       if(index_id[i]==115 & season_to_run[j]==1)
-#         colnames(idx_mean_1) <- c("TL2_WHPT_ASPT_Abw_CompFam_Spring") # Current uses 115 index - wrong use!!
-#       if(index_id[i]==115 & season_to_run[j]==3)
-#         colnames(idx_mean_1) <- c("TL2_WHPT_ASPT_Abw_CompFam_Autumn")
-#
-#
-#       # bind to the maindataframe
-#       mainDFrame <- cbind(mainDFrame, idx_mean_1)
-#
-#     }
-#   }
-#
-#   return (mainDFrame)
-# }
-
-## -------------------------------------------- old functions --------------
-
-# Calculate the function scores, DFScore
-getDFScore_old <- function(DFCoeff, EnvValues) {
-  DFScore_d <- data.frame(matrix(0, nrow = nrow(EnvValues)))
-  # print( c("outloop, ",nrow(EnvValues)))
-  for (i in 1:nrow(EnvValues)) {
-    # print(c("Dcoeff= ",as.numeric(DFCoeff[,-1][,1])))
-    # print(c("Env = ",EnvValues[i,-1]))
-    DFScore_d[i] <- (sum(as.numeric(DFCoeff[, -1][, 1]) * EnvValues[i, -1])) # I thin use just one column , column==1, of ceofficients for all Env variables
-    # print(c(" in loop, DFScore = ", DFScore_d[i]))
-  }
-  # Use only numeric  return of rows equivalent to number of instances
-  DFScores <- as.numeric(DFScore_d[1, ])
-  DFScores <- as.data.frame(DFScores)
-  return(DFScores) # gives mutlipel values, only get row one, not nrows
-} # Done, cbind this to original dataset
-
-# Calculate Probabilities of Endgroup
-# getProbEndGroup_old <- function (DFCoeff, EnvValues, DFMean, NRef_g) {
-#   DFScore_d <- data.frame(matrix(0, nrow=nrow(DFCoeff) )) # make a dataframe
-#   MahDist_g <- data.frame(matrix(0, nrow=nrow(DFCoeff) ))
-#   PDist_g   <- data.frame(matrix(0, nrow=nrow(DFCoeff) ))
-#   Prob_g    <-  data.frame(matrix(0, nrow=nrow(DFCoeff) ))
-#   for(j in 2:nrow(DFCoeff)) {
-#     DFScore_d [j-1,] <- sum(DFCoeff[,i] * EnvValues[i,-1])
-#     MahDist_g [j-1,] <- sum((DFScore_d[,i]-DFMean[i,])^2)
-#   }
-#   #All should be in loop of end group = g
-#   MahDist_min <- min(MahDist_g)
-#   PDist_g     <- NRef_g*exp(-MahDist_g/2)
-#   PDist_total <-  sum(PDist_g)
-#   Prob_g      <- PDist_g/PDist_total
-#   return (0)
-# }
-
-# Calculate the minimum Mahanalobis distance of point x from site g
-
-getMahDist_min_old <- function(DFscore, meanvalues) {
-  mah_Score <- matrix(0, nrow = nrow(DFscore), ncol = nrow(meanvalues))
-  for (row_dfscore in 1:nrow(DFscore)) {
-    for (row_means in 1:nrow(meanvalues)) {
-      mah_Score[row_dfscore, row_means] <- min((DFscore[row_dfscore, ] - meanvalues[row_means, ])^2) # apply rowSums() or sum()
-    }
-  }
-  return(mah_Score)
-}
-
-# Calculate Mahalabois distance
-# getMahDist_old <- function (meansA, valuesB) {
-#   l_mah_dist <- 0
-#   for (i in 1: ncol(meansA)) {
-#     l_mah_dist <- l_mah_dist + (valuesB - meansA)^2;
-#     l_pDist    <- l_NRef * exp( (-1*l_mah_dist) /2);
-#   }
-#   return (l_mah_dist)
-# }
-
-# End Exclude Linting
+} # new

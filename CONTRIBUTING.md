@@ -14,7 +14,7 @@
 
 ### Install software
 
-#### Cloud - *Quick and Easy!*
+#### Via the "Cloud" - *Quick and Easy!*
 - Sign-up to [R Studio Cloud](https://rstudio.cloud).
 - Click on New Project dropdown menu and select 'New Project from Git repo'.
 - Paste `https://github.com/aquaMetrics/rict`.
@@ -38,9 +38,9 @@ git clone https://github.com/aquaMetrics/rict
 cd phytobenthosMetrics/
 git checkout -b issue-??
 ```
-(Replacing `??` with the issue number found on Github)
+(Replacing `??` with the issue number found on Github issue you created)
 
-The first two lines above will clone the repository and open the directory where the files have been copied to. The last line will 'checkout' and create new branch called issue-...so you can now start work editing your new branch.
+The first two lines above will clone the repository and open the directory where the files have been copied to. The last line will 'checkout' and create new branch called issue-??. Now you can start work editing your new branch.
 
 Or using RStudio, use open > new project > version control > paste url:
 
@@ -53,23 +53,23 @@ Or using RStudio, use open > new project > version control > paste url:
 - Do some coding and/or write documentation etc
 - Add comments as required to explain the *why* rather than the *how*
 - Not every line needs comments - but any large or unusual sections
-- Document code and follow standard CRAN checks and file structure
-- [R Package](http://r-pkgs.had.co.nz/) guidance is a very useful resource
-- Run checks and tests locally - before commit `devtools::test()`
+- [R Package](http://r-pkgs.had.co.nz/) guidance is a very useful resource\
+- Document code and follow standard CRAN checks and file structure `devtools::check()`
+- Run checks and tests locally - before commit `devtools::check()`
 - Testing allows check coding 'style' with rules from [lintr](https://github.com/jimhester/lintr) package
-- See .lintr file for exact linting rules applied during testing
+- See .lintr file for exact linting rules applied during testing.
 
 #### Commit
 
-- Commit message should reference the issue number e.g. 'docs: closes #1'- the '#1' is the issue number 
-- Not sure how to write a commit message? Try to use this [commit message guidance](https://gist.github.com/stephenparish/9941e89d80e2bc58a153#subject-line), although this is not enforced.
-- Push changes to remote branch
+- Commit message should reference the issue number e.g. 'docs: closes #1'- the '#1' is the issue number
+- Not sure how to write a commit message? Try to use this [commit message guidance](https://gist.github.com/stephenparish/9941e89d80e2bc58a153#subject-line), although this is not enforced
+- Push changes to remote branch.
 
 #### Pull request
 
 - On Github create a Pull Request to master branch from your issue-?? branch
-- Wait for a maintainer to review, they will check no tests break, and the code has been tested if required
-- Changes are merged to master and the 'test-1' branch deleted.
+- Wait for a maintainer to review, they will check no tests break, and the code has been tested as required
+- Changes are merged to master and the 'test-1' branch deleted
 
 #### All Done! ☺
 

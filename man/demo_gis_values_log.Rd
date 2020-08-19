@@ -7,13 +7,26 @@
 \format{
 A data frame with 12 rows and 18 variables:
 \describe{
-  \item{...}{DOCUMENT modelled varibales here!!!}
   \item{SITE}{Site identifier}
   \item{WATERBODY}{Water body identifier}
   \item{Year}{Year of sampling}
-  \item{NGR}{National grid letters}
-  \item{Easting}{Easting co-ordinate}
-  \item{Northing}{Northing co-ordinate}
+  \item{SX}{Sampling site X coordinate (British National Grid)}
+  \item{SY}{Sampling site Y coordinate (British National Grid)}
+  \item{EX}{Nearest X grid coordinate used for predictive variables}
+  \item{EY}{Nearest Y grid coordinate used for predictive variables}
+  \item{shape_Length}{shape_Length}
+  \item{Alkalinity}{Alkalinity}
+  \item{altitude}{altitude}
+  \item{d_f_source}{d_f_source}
+  \item{logaltbar}{logaltbar}
+  \item{log_area}{log_area}
+  \item{chalk}{chalk}
+  \item{clay}{clay}
+  \item{hardrock}{hardrock}
+  \item{limestone}{limestone}
+  \item{peat}{peat}
+  \item{disch_cat}{Discharge category}
+  \item{slope}{slope}
   \item{Spr_Season_ID}{season ID}
   \item{\code{Spr_TL2_WHPT_ASPT (AbW,DistFam)}}{ASPT}
   \item{\code{Spr_TL2_WHPT_NTaxa (AbW,DistFam)}}{NTAXA}
@@ -32,9 +45,10 @@ A data frame with 12 rows and 18 variables:
 demo_gis_values_log
 }
 \description{
-A dataset containing demo observed gis values. Stored as .csv
-    demo_gis_values_log <- utils::read.csv(
-     system.file("extdat", "environmental-test-data-model-44-log.csv",
-             package = "rict"), check.names = F)
+A dataset containing demo observed log transformedgis values for model 44.
+Stored as .csv.
+demo_gis_values_log <- utils::read.csv( system.file("extdat",
+"environmental-test-data-model-44-log.csv", package = "rict"), check.names =
+F )
 }
 \keyword{datasets}

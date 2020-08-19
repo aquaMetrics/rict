@@ -172,3 +172,11 @@ test_that("GIS variables classification against Ralph's output", {
   # write.csv(output, file = "r-output.csv")
   # write.csv(results, file = "r-output-standard.csv")
 })
+
+
+test_that("Dynamically changing output depending on data provided", {
+  skip("work in progress")
+  remove_cols <- grep("Sum_Ntaxa|Spr_Ntaxa", names(demo_observed_values))
+  demo_observed_values[, remove_cols] <- NA
+  test <- rict(demo_observed_values, year_type = "single")
+})

@@ -27,7 +27,7 @@ compare_probability(
 returns dataframe
 }
 \description{
-Compares proportion of results 'a' falling into the same of different class
+Compares proportion of results 'a' falling into the same or different class
 as results 'b'. Designed for comparing simulated Enironmental Quality Ratios (EQR).
 }
 \examples{

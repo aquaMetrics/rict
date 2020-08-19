@@ -7,11 +7,11 @@
 rict_compare(results_a = NULL, results_b = NULL)
 }
 \arguments{
-\item{results_a}{Data frame output from `rict(store_eqrs = T)`. The
+\item{results_a}{Dataframe output from `rict(store_eqrs = T)`. The
 `results_b` and `results_b` input  dataframes must have the same number of
 rows}
 
-\item{results_b}{Data frame output from `rict(store_eqrs = T)`. The
+\item{results_b}{Dataframe output from `rict(store_eqrs = T)`. The
 `results_b` and `results_b` input  dataframes must have the same number of
 rows}
 }
@@ -20,7 +20,11 @@ Dataframe of compare results with 44 variables see `technical
 specifications` for details. Returns output of results the same length as
 the input files.
 \describe{
-  \item{EQR metric compared}{EQR metric from Result A which is being compared}
+  \item{EQR metric compared}{EQR metric from Result A which is being compared
+  ("Vs") the metric in Result B for example SUM_ASPT Vs SUM_ASPT - this row
+  is comparing Summer ASPT results A to Summer ASPT in results B. Note, if
+  only one season is calculated, the "AVG_"... EQR metric (average) will have
+  the same value as the season EQR value}
   \item{Result A}{Concatennated results name of Year and Site}
   \item{Result B}{Concatennated results name of Year and Site}
   \item{Average EQR for Result A}{Average EQR}
@@ -72,15 +76,13 @@ difference in EQR values and/or status class between a pair of results and/or
 sites and/or time periods.
 }
 \details{
-The `rict_compare` function controls RICT specific use of the lower level
-compare functions: `compare_test` and `compare_probability`. For instance,
-special handling of the 'MINTA' outputs from RICT classification.
+The `rict_compare` makes use of two lower level functions: `compare_test` and
+`compare_probability`. And adds special handling, for instance of the 'MINTA'
+outputs from RICT classification.
 }
 \examples{
-\dontrun{
 results_a <- rict(demo_observed_values[1, ], store_eqrs = T, year_type = "single")
-results_b <- rict(demo_gis_values[2, ], store_eqrs = T, year_type = "single", model = "gis")
+results_b <- rict(demo_gis_values_log[2, ], store_eqrs = T, year_type = "single")
 compare <- rict_compare(results_a, results_b)
-}
 
 }

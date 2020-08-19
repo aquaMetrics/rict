@@ -31,6 +31,7 @@
 #'
 #' # Begin Exclude Linting
 osg_parse <- function(grid_refs, coord_system = c("BNG", "WGS84")) {
+
   gridRefs <- toupper(as.character(grid_refs))
   CoordSystem <- match.arg(coord_system)
   epsg.out <- unname(c(BNG = 27700, WGS84 = 4326)[CoordSystem])

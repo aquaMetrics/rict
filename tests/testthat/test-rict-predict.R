@@ -70,7 +70,48 @@ test_that("NI predictions", {
     utils::read.csv(system.file("extdat",
       "ni-model-1-test-data.csv",
       package = "rict"
-    ), check.names = F)
+    ), check.names = FALSE)
 
   test <- rict(ni_data, year_type = "single")
 })
+
+test_that("all_indices predictions work", {
+  demo_observed_values <-
+    utils::read.csv(system.file("extdat",
+                                "test-data-model-1.csv",
+                                package = "rict"
+    ), check.names = FALSE)
+
+  indices_prediction <- rict_predict(demo_observed_values[1:12, ], all_indices = TRUE)
+  verified_predictions <-
+    utils::read.csv(system.file("extdat",
+                                "rict-all-indices-predictions.csv",
+                                package = "rict"
+    ), check.names = FALSE)
+
+  indices_prediction <- indices_prediction[, names(indices_prediction) %in% names(verified_predictions)]
+  verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(indices_prediction)]
+  expect_equal(indices_prediction[60:135], verified_predictions[60:135])
+})
+
+
+test_that("taxa predictions work", {
+  demo_observed_values <-
+    utils::read.csv(system.file("extdat",
+                                "test-data-model-1.csv",
+                                package = "rict"
+    ), check.names = FALSE)
+
+  indices_prediction <- rict_predict(demo_observed_values[1, ], taxa = TRUE)
+  verified_predictions <-
+    utils::read.csv(system.file("extdat",
+                                "rict-gb-taxa-prediction.csv",
+                                package = "rict"
+    ), check.names = FALSE, stringsAsFactors = T)
+
+  indices_prediction <- indices_prediction[, names(indices_prediction) %in% names(verified_predictions)]
+  verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(indices_prediction)]
+  expect_equal(indices_prediction$Average_Numerical_Abundance, verified_predictions$Average_Numerical_Abundance)
+})
+
+

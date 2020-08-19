@@ -9,7 +9,7 @@ compare_test(a, b)
 \arguments{
 \item{a}{numeric results 'a'}
 
-\item{b}{numeric reuslts 'b'}
+\item{b}{numeric results 'b'}
 }
 \value{
 dataframe containing stats

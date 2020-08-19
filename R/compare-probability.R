@@ -1,6 +1,6 @@
 #' Compare Proportion of Results in each Class
 #'
-#' Compares proportion of results 'a' falling into the same of different class
+#' Compares proportion of results 'a' falling into the same or different class
 #' as results 'b'. Designed for comparing simulated Enironmental Quality Ratios (EQR).
 #'
 #' @param a numeric list of results 'a'

@@ -57,7 +57,7 @@ rict_validate <- function(data = NULL) {
   # Load validation rules
   validation_rules <-
     utils::read.csv(system.file("extdat", "validation-rules.csv", package = "rict"),
-      stringsAsFactors = F
+      stringsAsFactors = FALSE
     )
   # Standardise all column names to uppercase
   names(data) <- toupper(names(data))
@@ -78,13 +78,13 @@ rict_validate <- function(data = NULL) {
   # Predictor variables provided for more than one model? --------------------------------------
   # For example, input data has columns for GIS and Physical models
   # check if variables contain values or are empty
-  if (length(check_models[check_models == T]) > 1) {
+  if (length(check_models[check_models == TRUE]) > 1) {
     data_present <- lapply(models, function(model) {
       model_variables <- validation_rules$variable[
         validation_rules$models %in% model &
           validation_rules$source == "input" &
-          validation_rules$optional == F &
-          validation_rules$shared == F
+          validation_rules$optional == FALSE &
+          validation_rules$shared == FALSE
       ]
 
       model_data <- suppressWarnings(dplyr::select(data, dplyr::one_of(toupper(model_variables))))
@@ -92,7 +92,7 @@ rict_validate <- function(data = NULL) {
       ifelse(nrow(model_data %>% na.omit()) > 0 & ncol(model_data %>% na.omit()) > 0, TRUE, FALSE)
     })
     # If values provided for more than one model then stop.
-    if (length(data_present[data_present == T]) > 1) {
+    if (length(data_present[data_present == TRUE]) > 1) {
       stop("The data provided contains values for more than one model
         Hint: Check your data contains values for a single model type only: ",
         paste(c(models), collapse = " or "), ". ",
@@ -103,9 +103,10 @@ rict_validate <- function(data = NULL) {
 
   # Create variable for data model detected  --------------------------------------------
   model <- data.frame(cbind(models, data_present))
-  model <- model$models[model$data_present == T]
+  model <- model$models[model$data_present == TRUE]
+
   # If model not detected
-  if (model == "") {
+  if (length(model) == 0) {
     stop("You provided data with columns that don't match either Model 1 or Model 44:", paste("\n", names(data)),
          paste("\n", "Hint: Check input dataset columns match either Model 1 or Model 44 input variables"),
          call. = FALSE
@@ -253,7 +254,9 @@ rict_validate <- function(data = NULL) {
 
   discharge <- lapply(split(data, paste(data$SITE, data$YEAR)), function(data_row) {
     if (!any(is.null(data_row$VELOCITY)) && !any(is.na(data_row$VELOCITY))) {
-      discharge_value <- data_row$MEAN_DEPTH / 100 * data_row$MEAN_WIDTH * velocity_categories[data_row$VELOCITY] / 100
+      discharge_value <- data_row$MEAN_DEPTH / 100 *
+                         data_row$MEAN_WIDTH *
+                         velocity_categories[data_row$VELOCITY] / 100
       data_row$DISCHARGE <- min(which(discharge_categories > discharge_value))
       message("Using velocity, width and depth to calculate discharge category")
     }
@@ -297,12 +300,16 @@ rict_validate <- function(data = NULL) {
 
   # Calculate Longitude & Latitude
   if (area == "gb" & model == "physical") {
-    lat_long <- with(data, getLatLong(NGR, EASTING, NORTHING, "WGS84", area))
+    # suppress warning: In showSRID(uprojargs, format = "PROJ", multiline = "NO"):
+    # Discarded datum OSGB_1936 in CRS definition
+    lat_long <- with(data, suppressWarnings(getLatLong(NGR, EASTING, NORTHING, "WGS84", area)))
     data$LONGITUDE <- lat_long$lon
     data$LATITUDE <- lat_long$lat
   }
   if (area == "ni" & model == "physical") {
-    lat_long <- with(data, getLatLong_NI(EASTING, NORTHING))
+    # suppress warning: In showSRID(uprojargs, format = "PROJ", multiline = "NO"):
+    # Discarded datum OSGB_1936 in CRS definition
+    lat_long <- with(data, suppressWarnings(getLatLong_NI(EASTING, NORTHING)))
     data$LONGITUDE <- lat_long$Longitude
     data$LATITUDE <- lat_long$Latitude
   }
@@ -396,7 +403,7 @@ These values will be used instead of calculating them from Grid Reference values
           "FAIL" = "",
           "WARNING" = "",
           "REPLACEMENT" = "",
-          stringsAsFactors = F
+          stringsAsFactors = FALSE
         )
         # if value not NA check for less than fails
         fails <- ""
@@ -484,7 +491,7 @@ These values will be used instead of calculating them from Grid Reference values
             "FAIL" = fails,
             "WARNING" = warns,
             "REPLACEMENT" = replacem,
-            stringsAsFactors = F
+            stringsAsFactors = FALSE
           )
         )
         return(checks)

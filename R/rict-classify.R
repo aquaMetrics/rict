@@ -18,6 +18,7 @@
 #'
 rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
   message("Classifying...")
+
   # This is a hack - best to combine single year and multiple year into single
   # function? For now, I've just stuck the single year into a different
   # function until these can be merged

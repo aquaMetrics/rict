@@ -113,5 +113,3 @@ test_that("taxa predictions work", {
   verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(indices_prediction)]
   expect_equal(indices_prediction$Average_Numerical_Abundance, verified_predictions$Average_Numerical_Abundance)
 })
-
-

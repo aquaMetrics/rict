@@ -4,7 +4,7 @@
 \alias{rict_classify}
 \title{Calculate classification}
 \usage{
-rict_classify(data = NULL, year_type = "multi", store_eqrs = F)
+rict_classify(data = NULL, year_type = "multi", store_eqrs = FALSE)
 }
 \arguments{
 \item{data}{Dataframe of predicted endgroups values from

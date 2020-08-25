@@ -26,8 +26,8 @@
 rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
                          taxa_list = c("TL1", "TL2", "TL3", "TL4", "TL5"),
                          rows = NULL) {
-  # Validate predictive input data
 
+  # Validate predictive input data
   all_validation <- rict_validate(data)
   model <- all_validation[["model"]] # returns model based on input headers
   area <- all_validation[["area"]] # returns area based on NGR
@@ -35,26 +35,25 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
   names(data) <- toupper(names(data))
 
   ## load supporting tables ---------------------------------------------------
-
-  if(taxa == TRUE) {
+  if (taxa == TRUE) {
     taxa.input.data <- utils::read.csv(system.file("extdat",
-                                                   "TAXA_AB_APR_PRAB.csv",
-                                                   package = "rict"),
-                                       stringsAsFactors = TRUE,
-                                       skip = 1)
+      "TAXA_AB_APR_PRAB.csv",
+      package = "rict"
+    ),
+    stringsAsFactors = TRUE,
+    skip = 1
+    )
     model_type <- ifelse(area == "gb", 1, 2)
     taxa.input.data <- filter(taxa.input.data, Model == model_type)
   }
 
   end_group_index <- utils::read.csv(system.file("extdat",
-                                                 "x-103-end-group-means-formatted-jdb-17-dec-2019.csv",
-                                                 package = "rict"),
-                                     check.names = F)
+    "x-103-end-group-means-formatted-jdb-17-dec-2019.csv",
+    package = "rict"
+  ),
+  check.names = F
+  )
   end_group_index <- rename_end_group_means(end_group_index)
-  # names(end_group_index) <- trimws(names(end_group_index))
-  # names(end_group_index) <- gsub("[()]", "", names(end_group_index))
-  # names(end_group_index) <- gsub(",", "_", names(end_group_index))
-  # names(end_group_index) <- gsub(" ", "_", names(end_group_index))
   nr_efg_groups <- utils::read.csv(system.file("extdat", "end-grp-assess-scores.csv", package = "rict"))
 
   if (model == "physical" & area == "gb") {
@@ -120,26 +119,14 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
     ) # or run all seasons if not provided
     seasons_to_run <- 1:3
   }
-  # extract fails, warnings and values from list of dataframes returned from rict_validate function:
-  # warning_failings <- all_validation[[1]]
-  this_failing <- all_validation[[2]]
-  this_failing <- this_failing[this_failing$fail != "---", ]
+
   data <- all_validation[[1]]
   if (model == "gis") {
+    # remove TEST-SITE_CODE column - not required and causes issues later on!
     data$`TEST SITECODE` <- NULL
-  } # remove TEST-SITE_CODE column - not required and causes issues later on?!
-  # Data validation and conversion
-  # 13.2 subset the instances to run in prediction by removing "this_failing", use anti-join
-  # i.e."Return all rows from x where there are no matching values in y, keeping just columns from x.
-  # This is a filtering join"
-  # final_predictors_one <- anti_join(data, this_failing, by="SITE") # This works in R Studio,
-  # but not in ML AZURE
-  final_predictors_one <- data[is.na(match(data$SITE, this_failing$SITE)), ]
-  # DONT SORT, if you do, don't use the SORTED array for prediction. it duplicates the results ******
-  # final_predictors_one <- final_predictors_one[order(final_predictors_one$SITE),]
-  # Print to see where the sorting is taking place  #
-  # Generate data for classification
-  # Final Data for classification e.g. Linear discriminant Analysis (LDA) classifier/predictor
+  }
+
+    # Final Data for classification e.g. Linear discriminant Analysis (LDA) classifier/predictor
   if (model == "physical" & area == "gb") {
     final_predictors <- data.frame(
       "SITE"                      =  final_predictors_one$SITE,
@@ -196,8 +183,8 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
       "Hardrock_O1_CEH"          =  final_predictors_one$HARDROCK,
       "Limestone_O1_CEH"         =  final_predictors_one$LIMESTONE
     )
-   # browser("check lat/lon conversion using st_transform Vs parse_osg?
-  #          - check this is the problem first?")
+    # browser("check lat/lon conversion using st_transform Vs parse_osg?
+    #          - check this is the problem first?")
     # convert proportions to percentage for geology variables
     final_predictors[, 14:18] <- final_predictors[, 14:18] * 100
   }
@@ -277,8 +264,10 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
   # We predict WHPT NTAXA, and WHPT ASP
   endgroup_index_frame <- end_group_index[grep(area, end_group_index$RIVPACS_Model, ignore.case = T), ]
   endgroup_index_frame <- dplyr::select(endgroup_index_frame, -RIVPACS_Model)
-  endgroup_index_frame <- dplyr::rename(endgroup_index_frame, EndGrp = End_Group,
-                                 SeasonCode = Season_Code)
+  endgroup_index_frame <- dplyr::rename(endgroup_index_frame,
+    EndGrp = End_Group,
+    SeasonCode = Season_Code
+  )
 
   # Sort by the columns "EndGrp", "SeasonCode"
   endgroup_index_frame <- dplyr::arrange(endgroup_index_frame, .data$EndGrp, .data$SeasonCode)
@@ -295,54 +284,54 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
   # Run the index Scores
   seasons_to_run <- seasons_to_run[!is.na(seasons_to_run)]
 
-  if(taxa == TRUE) {
+  if (taxa == TRUE) { # This block predicts and returns taxa predictions
     # Declare a variable where we append all sites
-     AllSites <- list()
-
+    taxa_predictions <- list()
     # Use complete cases removing null values
     taxa.input.data <- taxa.input.data[complete.cases(taxa.input.data), ]
     nsites <- nrow(final_predictors_try2)
-    if(is.null(rows)) {
-    chooseSite <- seq_len(nsites)
+    if (is.null(rows)) {
+      chooseSite <- seq_len(nsites)
     } else {
       chooseSite <- seq_len(rows)
     }
-
     taxa.input.data$EndGrp_Probs <- taxa.input.data$End.Group
     taxa.input.data <- taxa.input.data[taxa.input.data$TL %in% taxa_list, ]
-
     ## Loop for each SITE
     for (i in chooseSite) {
       message("Processing input row: ", i)
       site1 <- taxa.input.data
       siteIndex <- ifelse(i < 10, paste0("0", i), i)
-      measuredColumns <- site1[, c("Average_Numerical_Abundance",
-                                  "Average_Log10_Abundance", "Prob_Occurrence",
-                                  "Prob_Log1", "Prob_Log2", "Prob_Log3", "Prob_Log4", "Prob_Log5")]
+      measuredColumns <- site1[, c(
+        "Average_Numerical_Abundance",
+        "Average_Log10_Abundance", "Prob_Occurrence",
+        "Prob_Log1", "Prob_Log2", "Prob_Log3", "Prob_Log4", "Prob_Log5"
+      )]
       names_measuredColumns <- names(measuredColumns)
-      site1$EndGrp_Probs <- EndGrpProb_Replacement(site1$EndGrp_Probs, final_predictors_try3, which(chooseSite==i))
-      b1 <- site1 %>% group_by(Season_Code, TL, Furse_Code) %>%
+      site1$EndGrp_Probs <- EndGrpProb_Replacement(site1$EndGrp_Probs, final_predictors_try3, which(chooseSite == i))
+      b1 <- site1 %>%
+        group_by(Season_Code, TL, Furse_Code) %>%
         mutate(count = n(), mlist_endGrps = list(EndGrp_Probs)) # `End Group`
       # gives 3,522 rows.or unique b1 Multiply by 12 sites gives us 3,532x12 = 42,384 groups in TOTAL.
-      allUniqueSites <- unique(b1[,c(4, 3, 5, 6, 7, 20, 21)])
+      allUniqueSites <- unique(b1[, c(4, 3, 5, 6, 7, 20, 21)])
 
-      for (k in 1:nrow(allUniqueSites)) { ## loop over these unique rows per SITE
-        sitex    <- groupSitesFunction(allUniqueSites, k, siteIndex, b1)
-        AllSites[[k]] <- sitex
+      for (k in seq_len(nrow(allUniqueSites))) { ## loop over these unique rows per SITE
+        sitex <- groupSitesFunction(allUniqueSites, k, siteIndex, b1)
+        taxa_predictions[[k]] <- sitex
       } # for k
-    }# for i
+    } # for i
 
-     AllSites <- do.call("rbind", AllSites)
-     AllSites <- data.frame(AllSites)
+    taxa_predictions <- do.call("rbind", taxa_predictions)
+    taxa_predictions <- data.frame(taxa_predictions)
     # Remove the "End.Group" column
-    AllSites$End.Group <- NULL
+    taxa_predictions$End.Group <- NULL
     # Arrange the sites by siteName, TL, Season_Code, Furse_code
-    dplyr::arrange(AllSites, siteName, TL, Season_Code, Furse_Code)
-    return(AllSites)
+    dplyr::arrange(taxa_predictions, siteName, TL, Season_Code, Furse_Code)
+    return(taxa_predictions)
   }
 
-  # data_to_bindTo, season_to_run, index_id, end_group_IndexDFrame
-  mainData <- getSeasonIndexScores(
+  # Predict indices scores
+  indices_predictions <- getSeasonIndexScores(
     data_to_bindTo = final_predictors_try3,
     season_to_run = seasons_to_run,
     index_id = indices_to_run,
@@ -370,15 +359,14 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
     "AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)",
     "AUT_NTAXA_BIAS"
   )
-  # Check predictions data contains biological values
+  # Check user input data contains biological values
   if (all(names_biological %in% names(data))) {
     biological_data <- data[, names_biological]
-    # Remove failing sites from biological_data
-    biological_data <- biological_data[!(biological_data$SITE %in% this_failing$SITE), ]
     # remove column "SITE", the first one of columns
     biological_data <- biological_data[, -1]
-    mainData <- cbind(mainData, biological_data)
-    mainData$area <- area #  needed for classify function
+    indices_predictions <- cbind(indices_predictions, biological_data)
+    indices_predictions$area <- area #  needed for classify function
   }
-  return(mainData)
+
+  return(indices_predictions)
 }

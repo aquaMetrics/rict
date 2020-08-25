@@ -1,8 +1,9 @@
 # Prediction helper functions
 
-# getDFScores: Make sure the dimensions DFcoeff (m x n) maps to dimensions of EnvValues (n x k), result will be (m x k)
-# Convert DFCoeff and EnvValues to matrix, finalCopy <- as.matrix(final.predictors[,-c(1)]), removing first and last column
-# Similarly newDFcoeff <- as.matrix(DFCoeff_gb685[,-1])
+# getDFScores: Make sure the dimensions DFcoeff (m x n) maps to dimensions of
+# EnvValues (n x k), result will be (m x k). Convert DFCoeff and EnvValues to
+# matrix, finalCopy <- as.matrix(final.predictors[,-c(1)]), removing first and
+# last column Similarly newDFcoeff <- as.matrix(DFCoeff_gb685[,-1])
 # Return finalCopy %*% newDFcoeff
 getDFScores <- function(EnvValues, DFCoeff) {
   Env_i <- as.matrix(EnvValues[, -c(1)])
@@ -16,8 +17,8 @@ getMahDist <- function(DFscore, meanvalues) {
   DFscore <- as.matrix(DFscore)
   mah_Score <- matrix(0, nrow = nrow(DFscore), ncol = nrow(meanvalues))
   # Declare a matrix of zeros, with nrow, ncol dimensions
-  for (row_dfscore in 1:nrow(DFscore)) {
-    for (row_means in 1:nrow(meanvalues)) {
+  for (row_dfscore in seq_len(nrow(DFscore))) {
+    for (row_means in seq_len(nrow(meanvalues))) {
       mah_Score[row_dfscore, row_means] <- sum((DFscore[row_dfscore, ] - meanvalues[row_means, ])^2)
       # apply rowSums() or sum()
     }
@@ -29,7 +30,7 @@ getMahDist <- function(DFscore, meanvalues) {
 getMahDist_min <- function(DFscore, meanvalues) {
   mahdist_min <- getMahDist(DFscore, meanvalues)
   toappend <- data.frame(min = c())
-  for (i in 1:nrow(mahdist_min)) {
+  for (i in seq_len(nrow(mahdist_min))) {
     toappend <- rbind(toappend, min(mahdist_min[i, ]))
   }
   # Bind the result to the last column of input file "mahdist_min". No need to
@@ -49,7 +50,7 @@ getProbScores <- function(Proball, IDXMean) {
 # PDist: Calculate the Probability distribution PDist_g for each site
 PDist <- function(nmref_sites, mahdist) {
   endGrp_Score <- matrix(0, nrow = nrow(mahdist), ncol = ncol(mahdist))
-  for (i in 1:nrow(mahdist)) {
+  for (i in seq_len(nrow(mahdist))) {
     endGrp_Score[i, ] <- nmref_sites * exp(-mahdist[i, ] / 2)
   }
   return(endGrp_Score)
@@ -63,7 +64,7 @@ PDistTotal <- function(distr_g) {
 # getSuitabilityCode: Suitability code - input from getMahDist_min, and suitability codes
 getSuitabilityCode <- function(minMahDist, suitCodes) {
   suit_frame <- as.character(data.frame(c(), c())) # Note rbind works with character data.frames
-  for (i in 1:nrow(minMahDist)) { # Case 1
+  for (i in seq_len(nrow(minMahDist))) { # Case 1
     if (minMahDist[i, ncol(minMahDist)] < suitCodes[1, "CQ1"]) { # for GB, row = 1
       # print(c("Here in loop case 1, row =",i))
       suit_frame <- rbind(suit_frame, c(1, ">5%"))
@@ -243,10 +244,10 @@ rename_end_group_means <- function(data) {
 # final.predictionsxxx dataframe[i,pi] usage: site1 <- EndGrpProb_Replacement
 # (a$EndGrp_Probs,final.predictors_try2, 1) # for site k=1
 EndGrpProb_Replacement <- function(x, final_data, k) {
-  allprobss <- sapply(x, function (x)  ifelse(x==x,paste0("p",x), 0)) # apply to all values in EndGroup
+  allprobss <- sapply(x, function(x) ifelse(x == x, paste0("p", x), 0)) # apply to all values in EndGroup
   #allprobss <- noquote(allprobss)
-  c <- as.double(unname(final_data[k,c(allprobss)]))
-  return (c) # How do you select with duplicates included???
+  c <- as.double(unname(final_data[k, c(allprobss)]))
+  return(c) # How do you select with duplicates included???
 }
 
 # groupSitesFunction: Calculates endgroup probabilities with index values per
@@ -277,7 +278,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id,
 
   if (all_indices == TRUE) {
    predictions <- purrr::map_df(c(1, 2, 3), function(season) {
-      end_groups <- end_groups[end_groups$SeasonCode == season,]
+      end_groups <- end_groups[end_groups$SeasonCode == season, ]
       end_groups <- as.matrix(dplyr::select(end_groups, -EndGrp, -SeasonCode, -Season))
       end_groups <- end_groups[seq_len(length(DistNames)), ]
       probabilities <- as.matrix(data_to_bindTo[, DistNames])
@@ -519,8 +520,11 @@ getSeasonIndexScores_new <- function(data_to_bindTo, season_to_run, index_id, en
 
     # Check index, and getProbScores
     # Filter season and index together for all the indices
-    spr_all <- select(filter(end_group_IndexDFrame, SeasonCode == 1), everything())[, c(-1, -2, -3)] # All indices, removes " EndGrp, SeasonCode", "Season"
-    spring_allIndices_Scores <- as.data.frame(getProbScores(data_to_bindTo[, probScores], select(spr_all, everything()))) # LEave Season when multiplying out
+    # All indices, removes "EndGrp", "SeasonCode", "Season"
+    spr_all <- select(filter(end_group_IndexDFrame, SeasonCode == 1), everything())[, c(-1, -2, -3)]
+    # Leave Season when multiplying out
+    spring_allIndices_Scores <- as.data.frame(getProbScores(data_to_bindTo[, probScores],
+                                                            select(spr_all, everything())))
     spr <- data.frame(Season = rep("Spring", nrow(spring_allIndices_Scores)))
     # print("bind_all")
     bind_all <- rbind(bind_all, cbind(spr, spring_allIndices_Scores))
@@ -540,7 +544,8 @@ getSeasonIndexScores_new <- function(data_to_bindTo, season_to_run, index_id, en
 
     # Filter season and index together for all the indices
     sum_all <- select(filter(end_group_IndexDFrame, SeasonCode == 2), everything())[, c(-1, -2, -3)] # all indices
-    summer_allIndices_Scores <- as.data.frame(getProbScores(data_to_bindTo[, probScores], select(sum_all, everything())))
+    summer_allIndices_Scores <- as.data.frame(getProbScores(data_to_bindTo[, probScores],
+                                                            select(sum_all, everything())))
     summ <- data.frame(Season = rep("Summer", nrow(summer_allIndices_Scores)))
     # print(summer_allIndices_Scores)
     bind_all <- rbind(bind_all, cbind(summ, summer_allIndices_Scores)) # Remove row 1
@@ -557,7 +562,8 @@ getSeasonIndexScores_new <- function(data_to_bindTo, season_to_run, index_id, en
     print("Processing autumn")
     # Filter season and index together for all the indices
     aut_all <- select(filter(end_group_IndexDFrame, SeasonCode == 3), everything())[, c(-1, -2, -3)] # all indices
-    autumn_allIndices_Scores <- as.data.frame(getProbScores(data_to_bindTo[, probScores], select(aut_all, everything())))
+    autumn_allIndices_Scores <- as.data.frame(getProbScores(data_to_bindTo[, probScores],
+                                                            select(aut_all, everything())))
     aut <- data.frame(Season = rep("Autumn", nrow(autumn_allIndices_Scores)))
     print("Autum scores -->")
     # print(autumn_allIndices_Scores)

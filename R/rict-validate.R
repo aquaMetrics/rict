@@ -115,7 +115,7 @@ rict_validate <- function(data = NULL) {
   # Display which model type has been detected
   message("Variables for the '", model, "' model detected - applying relevant checks. ")
 
-  if(model == "physical") {
+  if (model == "physical") {
   # Detect NI / GB grid references -----------------------------------------------------
   areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", toupper(data$NGR)), "gb", "ni"))
 
@@ -553,6 +553,17 @@ These values will be used instead of calculating them from Grid Reference values
   } else {
     message("Success, all validation checks passed!")
   }
+  # Find fails and remove
+  this_failing <- checks[checks$FAIL != "---", ]
+  # Subset the instances to run in prediction by removing "this_failing"
+  # extract fails, warnings and values from list of dataframes returned from rict_validate function:
+  data <- data[!data$SITE %in% this_failing$SITE, ] # Note, can't use dplyr::anti_join() in ML AZURE
+   if(nrow(data) == 0) {
+   stop("You provided data that has failure(s) on every row.
+       We expect at least one row without any fails to proceed.
+       HINT: Check fail messages, fix errors and re-try.", call. = FALSE)
+  }
+
 
   return(list("data" = data, "checks" = checks, "model" = model, "area" = area))
 }

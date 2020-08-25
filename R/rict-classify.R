@@ -16,20 +16,21 @@
 #' classifications <- rict_classify(predictions)
 #' }
 #'
-rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
+rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE) {
   message("Classifying...")
-
+  # Create area variable to pass as parameter to classification functions (based on grid reference)
+  area <- unique(data$area)
+  # arrange in fixed order so random set.seed is ap
+  # data <- dplyr::arrange(data, SITE, YEAR)
   # This is a hack - best to combine single year and multiple year into single
   # function? For now, I've just stuck the single year into a different
   # function until these can be merged
-  area <- unique(data$area)
-  data <- dplyr::arrange(data, SITE, YEAR)
   if (year_type == "single") {
     classification_results <- singleYearClassification(data, store_eqrs, area = area)
     return(classification_results)
   } else {
     # set global random seed for rnorm functions etc
-    # set.seed(1234)
+     set.seed(1234)
     # Part 1: This Script reads all prediction indices for classification
     gb685_assess_score <- utils::read.csv(system.file("extdat",
       "end-grp-assess-scores.csv",
@@ -250,7 +251,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = F) {
       siteToProcess <- data[j, "SITE"]
       # Loop through rows with same "site" for multiple years creating multi-year averages
       while ((data[j, "SITE"] == siteToProcess && j <= nrow(data))) {
-        set.seed(1234)
+        # set.seed(1234)
         # Part 1: Deal with NTAXA: observed and Expected Calculations
         obsIDX8r_spr <- getObsIDX8rB(obs_ntaxa_spr[j], getZObs_r_new(sdobs_ntaxa, n_runs))
         obsIDX8r_aut <- getObsIDX8rB(obs_ntaxa_aut[j], getZObs_r_new(sdobs_ntaxa, n_runs))

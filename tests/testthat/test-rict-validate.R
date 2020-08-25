@@ -43,6 +43,13 @@ test_that("outright fails stop process and create error message", {
   test_data <- demo_observed_values
   test_data$Discharge <- 14
   expect_error(rict_validate(test_data))
+  # Test missing substrate
+  test_data <- demo_observed_values
+  test_data$Sand <- NA
+  test_data$Silt_Clay <- NA
+  test_data$Boulder_Cobbles <- NA
+  test_data$Pebbles_Gravel <- NA
+  expect_error(rict_validate(test_data))
 })
 
 # ---------------------------------------------------------------------
@@ -56,6 +63,13 @@ test_that("fails on some rows create fail messages (but process continues of val
   # Test missing Easting and Northing will fail
   test_data <- demo_gis_values_log
   test_data$EASTING[1] <- NA
+  expect_equal(class(rict_validate(test_data)), "list")
+  # Test missing substrate
+  test_data <- demo_observed_values
+  test_data$Sand[1] <- NA
+  test_data$Boulder_Cobbles[1] <- NA
+  test_data$Pebbles_Gravel[1] <- NA
+  test_data$Silt_Clay[1] <- NA
   expect_equal(class(rict_validate(test_data)), "list")
   # test fail values
   test_data <- demo_observed_values

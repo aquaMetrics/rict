@@ -54,6 +54,7 @@ rict_validate <- function(data = NULL) {
        Hint: Does your 'data' object contain your observed environmental
        values? ", call. = FALSE)
   }
+
   # Load validation rules
   validation_rules <-
     utils::read.csv(system.file("extdat", "validation-rules.csv", package = "rict"),
@@ -77,7 +78,6 @@ rict_validate <- function(data = NULL) {
   })
   # Predictor variables provided for more than one model? --------------------------------------
   # For example, input data has columns for GIS and Physical models
-  # check if variables contain values or are empty
   if (length(check_models[check_models == TRUE]) > 1) {
     data_present <- lapply(models, function(model) {
       model_variables <- validation_rules$variable[
@@ -89,7 +89,7 @@ rict_validate <- function(data = NULL) {
 
       model_data <- suppressWarnings(dplyr::select(data, dplyr::one_of(toupper(model_variables))))
 
-      ifelse(nrow(model_data %>% na.omit()) > 0 & ncol(model_data %>% na.omit()) > 0, TRUE, FALSE)
+      ifelse(nrow(model_data) > 0 & ncol(model_data) > 0, TRUE, FALSE)
     })
     # If values provided for more than one model then stop.
     if (length(data_present[data_present == TRUE]) > 1) {
@@ -355,8 +355,9 @@ These values will be used instead of calculating them from Grid Reference values
   # Total substrate
   if (model == "physical") {
     data$TOTSUB <- rowSums(data[, c("BOULDER_COBBLES", "PEBBLES_GRAVEL", "SILT_CLAY", "SAND")])
-    data$MSUBST <- ((-7.75 * data$BOULDER_COBBLES) - (3.25 * data$PEBBLES_GRAVEL) +
+      data$MSUBST <- ((-7.75 * data$BOULDER_COBBLES) - (3.25 * data$PEBBLES_GRAVEL) +
       (2 * data$SAND) + (8 * data$SILT_CLAY)) / data$TOTSUB
+
     # re-assign substrate variable to match with prediction function requirements
     data$vld_substr_log <- data$MSUBST
   }
@@ -391,9 +392,9 @@ These values will be used instead of calculating them from Grid Reference values
   ), function(rule) {
     # find matching column in input data to validation rule
     values <- data[, c(rule$variable, "SITE", "YEAR")]
-    # skip column if contains only NA values - e.g. HARDNESS - this
+    # skip optional column if contains only NA values - e.g. HARDNESS - this
     # column will be class logical and not as expected by validation rules
-    if (!all(is.na(values[, rule$variable]))) {
+    if (!all(is.na(values[, rule$variable]) & rule$optional == TRUE)) {
       # loop through all values in column
       checks <- lapply(split(values, row.names(values)), function(value) {
         # make dataframe to hold checks
@@ -417,6 +418,17 @@ These values will be used instead of calculating them from Grid Reference values
               )
             )
           }
+          # else { # if required column and NA or NULL then fail
+          #   if(rule$optional == FALSE & is.na( value[, rule$variable]) |
+          #      rule$optional == FALSE & is.null(value[, rule$variable])){
+          #     fails <- c(
+          #       fails,
+          #       paste0(
+          #         "You provided ", names(value)[1], ": ", value[, rule$variable],
+          #         ", expected value not to be missing")
+          #     )
+          #     }
+          # }
         }
         # Check for greater than fails
         if (is.na(rule$greater_than_fail) == FALSE) {

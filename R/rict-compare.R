@@ -69,8 +69,8 @@
 #' }
 #' @export
 #' @examples
-#' results_a <- rict(demo_observed_values[1, ], store_eqrs = T, year_type = "single")
-#' results_b <- rict(demo_gis_values_log[2, ], store_eqrs = T, year_type = "single")
+#' results_a <- rict(demo_observed_values[1, ], store_eqrs = TRUE, year_type = "single")
+#' results_b <- rict(demo_gis_values_log[2, ], store_eqrs = TRUE, year_type = "single")
 #' compare <- rict_compare(results_a, results_b)
 #'
 rict_compare <- function(results_a = NULL, results_b = NULL) {

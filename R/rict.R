@@ -19,7 +19,7 @@
 #' \dontrun{
 #' results <- rict(demo_observed_values)
 #' }
-rict <- function(data = NULL, year_type = "multi", store_eqrs = F) {
+rict <- function(data = NULL, year_type = "multi", store_eqrs = FALSE) {
   predictions <- rict_predict(data)
   results <- rict_classify(predictions, year_type, store_eqrs = store_eqrs)
   return(results)

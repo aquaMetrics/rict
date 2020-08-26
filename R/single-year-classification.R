@@ -1,4 +1,4 @@
-singleYearClassification <- function(predictions, store_eqrs = F, area = NULL) {
+singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NULL) {
 
   # set global random seed for rnorm functions etc
   set.seed(1234)
@@ -145,7 +145,7 @@ singleYearClassification <- function(predictions, store_eqrs = F, area = NULL) {
   Ubias8r_aut <- getUbias8r_new(n_runs, Ubias8)
 
   # Create variable to store EQRs to retain for compare function
-  if (store_eqrs == T) {
+  if (store_eqrs == TRUE) {
     eqr_metrics <- list()
   }
 

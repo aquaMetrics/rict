@@ -7,6 +7,8 @@ test_that("outright fails stop process and create error message", {
   expect_error(rict_validate(data.frame("test" = 1:10)))
   # Data provided for more than two model i.e. gis and physical
   expect_error(rict_validate(cbind(demo_observed_values, demo_gis_values_log[, 14:17])))
+  # Some shared columns (site, year etc) but nothing to suggest which model
+  expect_error(rict_validate(demo_gis_values_log[, 1:3]))
   # Data from GB and NI in input dataset
   test_data <- demo_observed_values
   test_data$NGR <- as.character(test_data$NGR)
@@ -16,17 +18,21 @@ test_that("outright fails stop process and create error message", {
   test_data <- demo_gis_values_log
   test_data$SITE <- NULL
   expect_error(rict_validate(test_data))
+  # Test data types are correct
+  test_data <- demo_gis_values_log
+  test_data$Alkalinity <- "test"
+  expect_error(rict_validate(test_data),
+               "You provided column 'ALKALINITY' with class 'character', we expect class 'numeric'.")
   # Test optional columns where one or the other column must be provided
   test_data <- demo_observed_values
   test_data$Velocity <- NA
   test_data$Discharge <- NA
   expect_error(rict_validate(test_data), "You provided empty VELOCITY and DISCHARGE values,
           we expect values for at least one of these variables. ")
-  # Test data types are correct
-  test_data <- demo_gis_values_log
-  test_data$Alkalinity <- "test"
-  expect_error(rict_validate(test_data),
-               "You provided column 'ALKALINITY' with class 'character', we expect class 'numeric'.")
+  # Empty ALKALINITY, HARDNESS, CONDUCT and CALCIUM values
+  test_data <- demo_observed_values
+  test_data$Alkalinity <- NA
+  expect_error(rict_validate(test_data))
   # Test NA in NGR will fail
   test_data <- demo_observed_values
   test_data$NGR[1] <- NA
@@ -39,6 +45,13 @@ test_that("outright fails stop process and create error message", {
   test_data$NGR <- as.character(test_data$NGR)
   test_data$NGR[1] <- "BIG"
   expect_error(rict_validate(test_data))
+  # Even a single missing Northing and Easting required
+  test_data <- demo_observed_values
+  test_data$Northing[1] <- NA
+  expect_error(rict_validate(test_data))
+  test_data <- demo_observed_values
+  test_data$Easting[1] <- NA
+  expect_error(rict_validate(test_data))
   # Test if all values in column fail
   test_data <- demo_observed_values
   test_data$Discharge <- 14
@@ -50,6 +63,10 @@ test_that("outright fails stop process and create error message", {
   test_data$Boulder_Cobbles <- NA
   test_data$Pebbles_Gravel <- NA
   expect_error(rict_validate(test_data))
+  # missing WHPT scores
+  test_data <- demo_observed_values
+  test_data[, grep("DistFam", names(test_data))] <- NA
+  test <- rict(test_data)
 })
 
 # ---------------------------------------------------------------------
@@ -60,10 +77,6 @@ test_that("fails on some rows create fail messages (but process continues of val
   test_data$SITE[1] <- NA
   test <- rict_validate(test_data)
   expect_equal(length(test[[2]][, 1]), 2)
-  # Test missing Easting and Northing will fail
-  test_data <- demo_gis_values_log
-  test_data$EASTING[1] <- NA
-  expect_equal(class(rict_validate(test_data)), "list")
   # Test missing substrate
   test_data <- demo_observed_values
   test_data$Sand[1] <- NA
@@ -148,7 +161,7 @@ test_that("velocity calculation work", {
 })
 
 # ---------------------------------------------------------------------
-test_that("changes that shouldn't impact calculations", {
+test_that("changes/formatting that shouldn't impact calculations", {
   # Test adding NGR column  in demo_gis_values_log doesn't interfere
   # (SX/SY columns provide location for GIS/model 44 data)
   test_data <- demo_gis_values_log
@@ -164,4 +177,11 @@ test_that("changes that shouldn't impact calculations", {
   test_data <- demo_observed_values
   test_data$SITE <- seq_len(24)
   no_error <- rict_validate(test_data)
+  # Short NGR - add leading zeros (because of issue with Excel cropping them)
+  test_data <- demo_observed_values
+  test_data$Easting <- "354"
+  test_data$Northing <- "9200"
+  test <- rict_validate(test_data)[[1]]
+  expect_equal(as.character(unique(test$EASTING)), "00354")
+  expect_equal(as.character(unique(test$NORTHING)), "09200")
 })

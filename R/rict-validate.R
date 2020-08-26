@@ -42,7 +42,7 @@
 #' }
 rict_validate <- function(data = NULL) {
   ### Sense checks --------------------------------------------------------------------
-  # check data object provided  -
+  # Check data object provided
   if (is.null(data)) {
     stop("Can't find 'data' object.
        We expected 'data' with environmental values.", call. = FALSE)
@@ -54,7 +54,6 @@ rict_validate <- function(data = NULL) {
        Hint: Does your 'data' object contain your observed environmental
        values? ", call. = FALSE)
   }
-
   # Load validation rules
   validation_rules <-
     utils::read.csv(system.file("extdat", "validation-rules.csv", package = "rict"),
@@ -99,6 +98,8 @@ rict_validate <- function(data = NULL) {
         call. = FALSE
       )
     }
+  } else {
+    data_present <- FALSE
   }
 
   # Create variable for data model detected  --------------------------------------------
@@ -107,27 +108,27 @@ rict_validate <- function(data = NULL) {
 
   # If model not detected
   if (length(model) == 0) {
-    stop("You provided data with columns that don't match either Model 1 or Model 44:", paste("\n", names(data)),
-         paste("\n", "Hint: Check input dataset columns match either Model 1 or Model 44 input variables"),
-         call. = FALSE
+    stop("You provided data without all required columns for either Model 1 or Model 44:", paste("\n", names(data)),
+      paste("\n", "Hint: Check input dataset match required for either Model 1 or Model 44 input variables"),
+      call. = FALSE
     )
   }
   # Display which model type has been detected
   message("Variables for the '", model, "' model detected - applying relevant checks. ")
 
   if (model == "physical") {
-  # Detect NI / GB grid references -----------------------------------------------------
-  areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", toupper(data$NGR)), "gb", "ni"))
+    # Detect NI / GB grid references -----------------------------------------------------
+    areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", toupper(data$NGR)), "gb", "ni"))
 
-  if (length(areas) > 1) {
-    stop("The data provided contains more than one area of the UK.
+    if (length(areas) > 1) {
+      stop("The data provided contains more than one area of the UK.
         Hint: Check your data contains NGR grid letters for either: ",
-      paste(c(toupper(areas)), collapse = " or "), ". ",
-      call. = FALSE
-    )
-  } else {
-    area <- areas
-  }
+        paste(c(toupper(areas)), collapse = " or "), ". ",
+        call. = FALSE
+      )
+    } else {
+      area <- areas
+    }
   } else {
     area <- "gb" # model 44 currently always "gb" but could change in future
   }
@@ -209,10 +210,10 @@ rict_validate <- function(data = NULL) {
   # Check alkalinity related columns and calculate if necessary
   if (all(is.na(data$HARDNESS)) &
     all(is.na(data$CALCIUM)) &
-    all(is.na(data$CONDUCT)) &
+    all(is.na(data$CONDUCTIVITY)) &
     all(is.na(data$ALKALINITY))
   ) {
-    stop("You provided empty ALKALINITY, HARDNESS, CONDUCT and CALCIUM values,
+    stop("You provided empty ALKALINITY, HARDNESS, CONDUCTIVITY and CALCIUM values,
        we expect values for at least one of these variables. ", call. = FALSE)
   } else { # loop through rows and calculate Alkalinity
 
@@ -255,8 +256,8 @@ rict_validate <- function(data = NULL) {
   discharge <- lapply(split(data, paste(data$SITE, data$YEAR)), function(data_row) {
     if (!any(is.null(data_row$VELOCITY)) && !any(is.na(data_row$VELOCITY))) {
       discharge_value <- data_row$MEAN_DEPTH / 100 *
-                         data_row$MEAN_WIDTH *
-                         velocity_categories[data_row$VELOCITY] / 100
+        data_row$MEAN_WIDTH *
+        velocity_categories[data_row$VELOCITY] / 100
       data_row$DISCHARGE <- min(which(discharge_categories > discharge_value))
       message("Using velocity, width and depth to calculate discharge category")
     }
@@ -271,32 +272,30 @@ rict_validate <- function(data = NULL) {
   # If model GIS - then NGR easting and northing maybe not be provided. So only calculate
   # Easting and Northings for physical data.
   if (model == "physical") {
-  # Convert to character as required by specification
-  data$EASTING <- as.character(data$EASTING)
-  data$NORTHING <- as.character(data$NORTHING)
+    # Convert to character as required by specification
+    data$EASTING <- as.character(data$EASTING)
+    data$NORTHING <- as.character(data$NORTHING)
 
-  # Check NGR length
-  data$NGR <- as.character(data$NGR)
-  data$NGR_LENGTH <- nchar(data$NGR)
-  if (any(data$NGR_LENGTH > 2)) {
-    stop("You provided an NGR with more than two letters,
+    # Check NGR length
+    data$NGR <- as.character(data$NGR)
+    data$NGR_LENGTH <- nchar(data$NGR)
+    if (any(data$NGR_LENGTH > 2)) {
+      stop("You provided an NGR with more than two letters,
        Hint: Check your NGR variables have less than 3 three letters. ", call. = FALSE)
-  }
-  data$NGR_LENGTH <- NULL
-  # Convert to numeric in order to help validate them as numbers
-  data$EASTING <- as.numeric(data$EASTING)
-  data$NORTHING <- as.numeric(data$NORTHING)
-  # Check for length <5, add a "0" to get proper Easting/Northing 5 digit codes
-  # data$EASTING_LENGTH <- nchar(data$EASTING)
-  # data$NORTHING_LENGTH <- nchar(data$NORTHING)
-  if (any(is.na(data$EASTING)) | any(is.na(data$NORTHING))) {
-    stop("EASTING or NORTHING value(s) have not been supplied, we expect
+    }
+    data$NGR_LENGTH <- NULL
+    # Convert to numeric in order to help validate them as numbers
+    data$EASTING <- as.numeric(data$EASTING)
+    data$NORTHING <- as.numeric(data$NORTHING)
+    # Check for length <5, add a "0" to get proper Easting/Northing 5 digit codes
+    if (any(is.na(data$EASTING)) | any(is.na(data$NORTHING))) {
+      stop("EASTING or NORTHING value(s) have not been supplied, we expect
        all rows to have Easting and Northing values.
        Hint: Check all rows of input data have Easting and Northing values. ", call. = FALSE)
-  } else {
-    data$EASTING <- as.character(formatC(round(data$EASTING), width = 5, format = "d", flag = "0"))
-    data$NORTHING <- as.character(formatC(round(data$NORTHING), width = 5, format = "d", flag = "0"))
-  }
+    } else {
+      data$EASTING <- as.character(formatC(round(data$EASTING), width = 5, format = "d", flag = "0"))
+      data$NORTHING <- as.character(formatC(round(data$NORTHING), width = 5, format = "d", flag = "0"))
+    }
   }
 
   # Calculate Longitude & Latitude
@@ -318,21 +317,21 @@ rict_validate <- function(data = NULL) {
   if (model == "gis") {
     coords <- st_as_sf(data[, c("SX", "SY")], coords = c("SX", "SY"), crs = 27700)
     coords <- st_transform(coords, crs = 4326)
-    data$LATITUDE <-  unlist(map(coords$geometry, 2))
-    data$LONGITUDE <-   unlist(map(coords$geometry, 1))
+    data$LATITUDE <- unlist(map(coords$geometry, 2))
+    data$LONGITUDE <- unlist(map(coords$geometry, 1))
   }
 
   if (area == "gb") {
     # Calculate Lat/Long using bng (British National Grid) - temperate lookup needs BNG
     if (model == "physical") {
-    bng <- with(data, getBNG(NGR, EASTING, NORTHING, "BNG"))
+      bng <- with(data, getBNG(NGR, EASTING, NORTHING, "BNG"))
     }
-  if (model == "gis") {
+    if (model == "gis") {
       bng <- data.frame(
         "easting" = data$SX,
         "northing" = data$SY
       )
-  }
+    }
     # Calculate mean temperature (TMEAN), range temperature (TRANGE) only if
     # users have not provided temperatures e.g. could be studying climate change etc...
     if ((is.null(data$MEAN.AIR.TEMP) | is.null(data$AIR.TEMP.RANGE)) ||
@@ -356,7 +355,7 @@ These values will be used instead of calculating them from Grid Reference values
   # Total substrate
   if (model == "physical") {
     data$TOTSUB <- rowSums(data[, c("BOULDER_COBBLES", "PEBBLES_GRAVEL", "SILT_CLAY", "SAND")])
-      data$MSUBST <- ((-7.75 * data$BOULDER_COBBLES) - (3.25 * data$PEBBLES_GRAVEL) +
+    data$MSUBST <- ((-7.75 * data$BOULDER_COBBLES) - (3.25 * data$PEBBLES_GRAVEL) +
       (2 * data$SAND) + (8 * data$SILT_CLAY)) / data$TOTSUB
 
     # re-assign substrate variable to match with prediction function requirements
@@ -419,17 +418,6 @@ These values will be used instead of calculating them from Grid Reference values
               )
             )
           }
-          # else { # if required column and NA or NULL then fail
-          #   if(rule$optional == FALSE & is.na( value[, rule$variable]) |
-          #      rule$optional == FALSE & is.null(value[, rule$variable])){
-          #     fails <- c(
-          #       fails,
-          #       paste0(
-          #         "You provided ", names(value)[1], ": ", value[, rule$variable],
-          #         ", expected value not to be missing")
-          #     )
-          #     }
-          # }
         }
         # Check for greater than fails
         if (is.na(rule$greater_than_fail) == FALSE) {
@@ -443,7 +431,7 @@ These values will be used instead of calculating them from Grid Reference values
             )
           }
         }
-        # if value not NA, then check for less than warnings
+        # If value not NA, then check for less than warnings
         warns <- ""
         if (is.na(rule$less_than_warn) == FALSE) {
           if (!is.na(value[, rule$variable]) & value[, rule$variable] < rule$less_than_warn) {
@@ -469,11 +457,10 @@ These values will be used instead of calculating them from Grid Reference values
           }
         }
         # check for replacement
-
         replacem <- ""
         if (is.na(rule$replacement) == FALSE) {
           if (!is.na(value[, rule$variable]) & rule$replacement_cond == "lessthan" &
-              value[, rule$variable] <= rule$replacement_limit) {
+            value[, rule$variable] <= rule$replacement_limit) {
             replacem <- c(
               replacem,
               paste0(
@@ -483,7 +470,7 @@ These values will be used instead of calculating them from Grid Reference values
             )
           }
           if (!is.na(value[, rule$variable]) & rule$replacement_cond == "equals" &
-              value[, rule$variable] == rule$replacement_limit) {
+            value[, rule$variable] == rule$replacement_limit) {
             replacem <- c(
               replacem,
               paste0(
@@ -492,7 +479,6 @@ These values will be used instead of calculating them from Grid Reference values
               )
             )
           }
-
         }
 
         # bind all checks and warnings into data frame
@@ -521,7 +507,7 @@ These values will be used instead of calculating them from Grid Reference values
     data$ALTITUDE[data$ALTITUDE == ALT_LIM] <- ALT_VAL
   }
   DFS_LIM <- validation_rules_input[validation_rules_input$variable %in%
-                                      c("DIST_FROM_SOURCE", "D_F_SOURCE"), "replacement_limit"]
+    c("DIST_FROM_SOURCE", "D_F_SOURCE"), "replacement_limit"]
   if (any(data$DIST_FROM_SOURCE[!is.na(data$DIST_FROM_SOURCE)] < DFS_LIM)) {
     data$DIST_FROM_SOURCE[data$DIST_FROM_SOURCE < DFS_LIM] <- DFS_LIM
   }
@@ -534,10 +520,10 @@ These values will be used instead of calculating them from Grid Reference values
     data$MEAN_DEPTH[data$MEAN_DEPTH < MND_LIM] <- MND_LIM
   }
   DIS_LIM <- validation_rules_input[validation_rules_input$variable %in%
-                                      c("DISCHARGE", "DISCH_CAT"), "replacement_limit"]
+    c("DISCHARGE", "DISCH_CAT"), "replacement_limit"]
   DIS_VAL <- validation_rules_input[validation_rules_input$variable %in%
-                                      c("DISCHARGE", "DISCH_CAT"), "replacement_val"]
-  if (any(data$DISCHARGE[!is.na(data$DISCHARGE)] == DIS_LIM))  {
+    c("DISCHARGE", "DISCH_CAT"), "replacement_val"]
+  if (any(data$DISCHARGE[!is.na(data$DISCHARGE)] == DIS_LIM)) {
     data$DISCHARGE[data$DISCHARGE == DIS_LIM] <- DIS_VAL
   }
   ALK_LIM <- validation_rules_input[validation_rules_input$variable == "ALKALINITY", "replacement_limit"]
@@ -571,8 +557,8 @@ These values will be used instead of calculating them from Grid Reference values
   # Subset the instances to run in prediction by removing "this_failing"
   # extract fails, warnings and values from list of dataframes returned from rict_validate function:
   data <- data[!data$SITE %in% this_failing$SITE, ] # Note, can't use dplyr::anti_join() in ML AZURE
-   if(nrow(data) == 0) {
-   stop("You provided data that has failure(s) on every row.
+  if (nrow(data) == 0) {
+    stop("You provided data that has failure(s) on every row.
        We expect at least one row without any fails to proceed.
        HINT: Check fail messages, fix errors and re-try.", call. = FALSE)
   }

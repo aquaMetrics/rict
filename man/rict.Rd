@@ -4,7 +4,7 @@
 \alias{rict}
 \title{Run the River Invertebrate Classification Tool (RICT)}
 \usage{
-rict(data = NULL, year_type = "multi", store_eqrs = F)
+rict(data = NULL, year_type = "multi", store_eqrs = FALSE)
 }
 \arguments{
 \item{data}{Dataframe of observed environmental values

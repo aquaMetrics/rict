@@ -282,6 +282,7 @@ rict_validate <- function(data = NULL) {
     stop("You provided an NGR with more than two letters,
        Hint: Check your NGR variables have less than 3 three letters. ", call. = FALSE)
   }
+  data$NGR_LENGTH <- NULL
   # Convert to numeric in order to help validate them as numbers
   data$EASTING <- as.numeric(data$EASTING)
   data$NORTHING <- as.numeric(data$NORTHING)

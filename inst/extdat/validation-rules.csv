@@ -1,6 +1,6 @@
 variable,pretty_name,units,area,models,shared,optional,source,type,fall_back_type,less_than_fail,greater_than_fail,less_than_warn,greater_than_warn,replacement,replacement_val,replacement_limit,replacement_cond,log,log_col_name,validation_notes,optional_notes,calculation_notes
 SITE,Site,,all,all,TRUE,FALSE,input,character,factor,0,,,,,,,,FALSE,,,,
-WATERBODY,Waterbody,,all,all,TRUE,FALSE,input,character,factor,0,,,,,,,,FALSE,,,,
+WATERBODY,Waterbody,,all,all,TRUE,TRUE,input,character,factor,0,,,,,,,,FALSE,,,,
 YEAR,Year,Year,all,all,TRUE,FALSE,input,integer,integer,0,,,,,,,,FALSE,,,,
 NGR,National Grid Reference,NGR,all,physical,TRUE,FALSE,input,character,factor,,,,,,,,,FALSE,,"Must be 5 digits; text not number, to retain leading zeros (input file screening). In R Code: If less than 5 digits leading zeros have been added",,
 EASTING,Easting,Easting,all,physical,TRUE,FALSE,input,character,integer,,,,,,,,,FALSE,,"Must be 5 digits; text not number, to retain leading zeros (input file screening). In R Code: If less than 5 digits leading zeros have been added",,
@@ -32,8 +32,8 @@ MSUBST,Mean substratum,%,ni,physical,FALSE,FALSE,calculated,numeric,integer,,,-7
 HARDNESS,Mean substratum,%,all,physical,FALSE,TRUE,input,numeric,integer,,,,,,,,,FALSE,,,"One of Alkalinity, Hardness, Conductivity or Calcium",
 CALCIUM,Calcium concentration,,all,physical,FALSE,TRUE,input,numeric,integer,,,,,,,,,FALSE,,,"One of Alkalinity, Hardness, Conductivity or Calcium",
 CONDUCTIVITY,Electrical Conductivity,,all,physical,FALSE,TRUE,input,numeric,integer,,,,,,,,,FALSE,,,"One of Alkalinity, Hardness, Conductivity or Calcium",
-TMEAN,Mean Air Temperature,,gb,all,TRUE,FALSE,calculated,numeric,integer,,,7.5,11.5,,,,,FALSE,,,,
-TRANGE,Air Temperature Range ,,gb,all,TRUE,FALSE,calculated,numeric,integer,,,8.2,13.9,,,,,FALSE,,,,
+TMEAN,Mean Air Temperature,,gb,all,TRUE,FALSE,calculated,numeric,integer,0.1,,7.5,11.5,,,,,FALSE,,,,
+TRANGE,Air Temperature Range ,,gb,all,TRUE,FALSE,calculated,numeric,integer,0.1,,8.2,13.9,,,,,FALSE,,,,
 ALKALINITY,Alkalinity,,gb,physical,TRUE,FALSE,input,numeric,integer,0,,0.7,365.5,TRUE,0.1,0.1,lessthan,TRUE,vld_alkal_log,,"One of Alkalinity, Hardness, Conductivity or Calcium",
 ALKALINITY,Alkalinity,,ni,physical,TRUE,FALSE,input,numeric,integer,0,,2.5,193.5,TRUE,0.1,0.1,lessthan,TRUE,vld_alkal_log,,"One of Alkalinity, Hardness, Conductivity or Calcium",
 ALKALINITY,Alkalinity,,gb,gis,TRUE,FALSE,input,numeric,integer,0,,0.7,366,TRUE,0.1,0.1,lessthan,TRUE,LgAlk,,"One of Alkalinity, Hardness, Conductivity or Calcium",

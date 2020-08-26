@@ -39,11 +39,11 @@ test_that("outright fails stop process and create error message", {
   test_data$NGR <- as.character(test_data$NGR)
   test_data$NGR[1] <- "BIG"
   expect_error(rict_validate(test_data))
-  # Test if all value in column fail
+  # Test if all values in column fail
   test_data <- demo_observed_values
   test_data$Discharge <- 14
   expect_error(rict_validate(test_data))
-  # Test missing substrate
+  # Test fail if all substrate missing
   test_data <- demo_observed_values
   test_data$Sand <- NA
   test_data$Silt_Clay <- NA
@@ -77,6 +77,14 @@ test_that("fails on some rows create fail messages (but process continues of val
   test_data$Pebbles_Gravel[1] <- 90
   test <- rict_validate(test_data)
   expect_equal(length(test[[2]][, 1]), 2)
+  # test temperature fails if outside temperature grid
+  test_data <- demo_observed_values
+  test_data$NGR <- as.character(test_data$NGR)
+  test_data$NGR[1] <- "NZ"
+  test_data$Easting[1] <- "57900"
+  test_data$Northing[1] <- "59000"
+  test <- rict_validate(test_data)
+  expect_equal(length(test[[2]][, 1]), 2)
 })
 
 # ---------------------------------------------------------------------
@@ -101,7 +109,7 @@ test_that("warnings work", {
 })
 
 # ---------------------------------------------------------------------
-test_that("replacement values work if value is less than the ‘overall’ minimum value", {
+test_that("replacement values work if value is less than the ‘overall’ minimum value (to avoid dividing by zero)", {
   test_data <- demo_observed_values
   test_data$Altitude[1] <- 0
   test_data$Dist_from_Source[1] <- 0.01
@@ -144,6 +152,7 @@ test_that("changes that shouldn't impact calculations", {
   # Test adding NGR column  in demo_gis_values_log doesn't interfere
   # (SX/SY columns provide location for GIS/model 44 data)
   test_data <- demo_gis_values_log
+  # Doesn't matter is GIS has NGR or not - not used in calculations:
   test_data$NGR <- "S"
   expect_equal(nrow(rict_validate(test_data)[["checks"]]), 0)
   # Test lower case NGR work - regex was not detecting lower case - fixed now.

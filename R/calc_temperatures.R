@@ -242,7 +242,6 @@ calcTemps <- function(coordinates) {
             SMEAN <- avcall[2]
             SRANGE <- avcall[3]
             if (NP < 4) {
-              print("if 14")
               TMEAN <- 0.0
               TRANGE <- 0.0
             } else {

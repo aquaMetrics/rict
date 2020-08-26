@@ -129,59 +129,59 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
     # Final Data for classification e.g. Linear discriminant Analysis (LDA) classifier/predictor
   if (model == "physical" & area == "gb") {
     final_predictors <- data.frame(
-      "SITE"                      =  final_predictors_one$SITE,
-      "LATITUDE"                  =  final_predictors_one$LATITUDE,
-      "LONGITUDE"                 =  final_predictors_one$LONGITUDE,
-      "LOG.ALTITUDE"              =  final_predictors_one$vld_alt_src_log,
-      "LOG.DISTANCE.FROM.SOURCE"  =  final_predictors_one$vld_dist_src_log,
-      "LOG.WIDTH"                 =  final_predictors_one$mn_width_log,
-      "LOG.DEPTH"                 =  final_predictors_one$mn_depth_log,
-      "MEAN.SUBSTRATUM"           =  final_predictors_one$vld_substr_log,
-      "DISCHARGE.CATEGORY"        =  final_predictors_one$DISCHARGE, # data$disch_log,
-      "ALKALINITY"                =  final_predictors_one$ALKALINITY,
-      "LOG.ALKALINITY"            =  final_predictors_one$vld_alkal_log,
-      "LOG.SLOPE"                 =  final_predictors_one$vld_slope_log,
-      "MEAN.AIR.TEMP"             =  final_predictors_one$TMEAN,
-      "AIR.TEMP.RANGE"            =  final_predictors_one$TRANGE
+      "SITE"                      =  data$SITE,
+      "LATITUDE"                  =  data$LATITUDE,
+      "LONGITUDE"                 =  data$LONGITUDE,
+      "LOG.ALTITUDE"              =  data$vld_alt_src_log,
+      "LOG.DISTANCE.FROM.SOURCE"  =  data$vld_dist_src_log,
+      "LOG.WIDTH"                 =  data$mn_width_log,
+      "LOG.DEPTH"                 =  data$mn_depth_log,
+      "MEAN.SUBSTRATUM"           =  data$vld_substr_log,
+      "DISCHARGE.CATEGORY"        =  data$DISCHARGE, # data$disch_log,
+      "ALKALINITY"                =  data$ALKALINITY,
+      "LOG.ALKALINITY"            =  data$vld_alkal_log,
+      "LOG.SLOPE"                 =  data$vld_slope_log,
+      "MEAN.AIR.TEMP"             =  data$TMEAN,
+      "AIR.TEMP.RANGE"            =  data$TRANGE
     )
   }
   if (area == "ni") {
     final_predictors <- data.frame(
-      "SITE"                     =  final_predictors_one$SITE,
-      "LATITUDE"                 =  final_predictors_one$LATITUDE,
-      "LONGITUDE"                =  final_predictors_one$LONGITUDE,
-      "LOG.ALTITUDE"             =  final_predictors_one$vld_alt_src_log,
-      "LOG.DISTANCE.FROM.SOURCE" =  final_predictors_one$vld_dist_src_log,
-      "LOG.WIDTH"                =  final_predictors_one$mn_width_log,
-      "LOG.DEPTH"                =  final_predictors_one$mn_depth_log,
-      "MEAN.SUBSTRATUM"          =  final_predictors_one$vld_substr_log,
-      "DISCHARGE.CATEGORY"       =  final_predictors_one$DISCHARGE, # data$disch_log,
-      "ALKALINITY"               =  final_predictors_one$ALKALINITY,
-      "LOG.ALKALINITY"           =  final_predictors_one$vld_alkal_log,
-      "LOG.SLOPE"                =  final_predictors_one$vld_slope_log
+      "SITE"                     =  data$SITE,
+      "LATITUDE"                 =  data$LATITUDE,
+      "LONGITUDE"                =  data$LONGITUDE,
+      "LOG.ALTITUDE"             =  data$vld_alt_src_log,
+      "LOG.DISTANCE.FROM.SOURCE" =  data$vld_dist_src_log,
+      "LOG.WIDTH"                =  data$mn_width_log,
+      "LOG.DEPTH"                =  data$mn_depth_log,
+      "MEAN.SUBSTRATUM"          =  data$vld_substr_log,
+      "DISCHARGE.CATEGORY"       =  data$DISCHARGE, # data$disch_log,
+      "ALKALINITY"               =  data$ALKALINITY,
+      "LOG.ALKALINITY"           =  data$vld_alkal_log,
+      "LOG.SLOPE"                =  data$vld_slope_log
     )
   }
 
   if (model == "gis") {
     final_predictors <- data.frame(
-      "SITE"                     =  final_predictors_one$SITE,
-      "LATITUDE"                 =  final_predictors_one$LATITUDE,
-      "LONGITUDE"                =  final_predictors_one$LONGITUDE,
-      "TEMPM"                    =  final_predictors_one$TMEAN,
-      "TEMPR"                    =  final_predictors_one$TRANGE,
-      "ALKALINITY"               =  final_predictors_one$ALKALINITY,
-      "LgAlk"                    =  final_predictors_one$LgAlk,
-      "LgArea_CEH"               =  final_predictors_one$LOG_AREA,
-      "LgAltBar_CEH"             =  final_predictors_one$LOGALTBAR,
-      "LgAlt_CEH"                =  final_predictors_one$LgAlt_CEH,
-      "LgDFS_CEH"                =  final_predictors_one$LgDFS_CEH,
-      "LgSlope_CEH"              =  final_predictors_one$LgSlope_CEH,
-      "QCat_CEH"                 =  final_predictors_one$DISCH_CAT,
-      "Peat_CEH"                 =  final_predictors_one$PEAT,
-      "Chalk_O1_CEH"             =  final_predictors_one$CHALK,
-      "Clay_O1_CEH"              =  final_predictors_one$CLAY,
-      "Hardrock_O1_CEH"          =  final_predictors_one$HARDROCK,
-      "Limestone_O1_CEH"         =  final_predictors_one$LIMESTONE
+      "SITE"                     =  data$SITE,
+      "LATITUDE"                 =  data$LATITUDE,
+      "LONGITUDE"                =  data$LONGITUDE,
+      "TEMPM"                    =  data$TMEAN,
+      "TEMPR"                    =  data$TRANGE,
+      "ALKALINITY"               =  data$ALKALINITY,
+      "LgAlk"                    =  data$LgAlk,
+      "LgArea_CEH"               =  data$LOG_AREA,
+      "LgAltBar_CEH"             =  data$LOGALTBAR,
+      "LgAlt_CEH"                =  data$LgAlt_CEH,
+      "LgDFS_CEH"                =  data$LgDFS_CEH,
+      "LgSlope_CEH"              =  data$LgSlope_CEH,
+      "QCat_CEH"                 =  data$DISCH_CAT,
+      "Peat_CEH"                 =  data$PEAT,
+      "Chalk_O1_CEH"             =  data$CHALK,
+      "Clay_O1_CEH"              =  data$CLAY,
+      "Hardrock_O1_CEH"          =  data$HARDROCK,
+      "Limestone_O1_CEH"         =  data$LIMESTONE
     )
     # browser("check lat/lon conversion using st_transform Vs parse_osg?
     #          - check this is the problem first?")

@@ -182,7 +182,7 @@ test_that("Dynamically changing output depending on data provided", {
 })
 
 test_that("Test single row of multi-year input works", {
- skip("")
+
   # Data contains single year / single row sites at start and end of input file
   single_row_test <- utils::read.csv(system.file("extdat",
                                                            "test-data-single-site-multi-year.csv",

@@ -22,9 +22,6 @@ addons:
       - libnetcdf-dev
       - netcdf-bin
 
-before_install:
-    - sudo apt-get --yes --force-yes update -qq
-
 # set NOT_CRAN to true to ensure that skip_on_cran tests are run here
 env:
   - NOT_CRAN=true

@@ -1,32 +1,28 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
-
-language: R
-
+language: r
 sudo: required
 dist: trusty
-warnings_are_errors: false
-cache: packages
-repos:
-  CRAN: https://cran.rstudio.com
-  rforge: http://R-Forge.R-project.org
+cache:
+#  - packages
+  - ccache
+
+r:
+  - oldrel
+
 addons:
   apt:
+    sources:
+      - sourceline: 'ppa:ubuntugis/ubuntugis-unstable'
     packages:
-      - gdal-bin
-      - proj-bin
+      - devscripts # checkbashisms
       - libgdal-dev
-      - libgdal1-dev
       - libproj-dev
       - libgeos-dev
-      - libv8-3.14-dev
-      - libprotobuf-dev
-      - protobuf-compiler
       - libudunits2-dev
       - libnetcdf-dev
-      - libjq-dev
+      - netcdf-bin
 
 before_install:
-    - sudo add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable
     - sudo apt-get --yes --force-yes update -qq
 
 # set NOT_CRAN to true to ensure that skip_on_cran tests are run here

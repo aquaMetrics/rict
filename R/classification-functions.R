@@ -62,18 +62,7 @@ simulateN_Values <- function(DFrameValues, N) {
   return(result)
 }
 
-# 3.2. Write to a file using the pathname
-writeToFile <- function(toWriteFrame, pathname, filename) {
-  if (file.exists(paste0(file = pathname, filename))) {
-    file.remove(file = paste0(pathname, filename))
-    utils::write.csv(toWriteFrame, file = paste0(pathname, filename))
-  } else {
-    utils::write.csv(toWriteFrame, file = paste0(pathname, filename))
-  }
-}
-
 # 3.3 Write a function to return column names numbered by index position for N ssimulations = N columns by numbers
-
 renameColsByNumbers <- function(dframe, N) {
   a <- rep(paste0("znorm_", colnames(dframe)), N)
   new_colnames <- paste0(a, 1:length(a))

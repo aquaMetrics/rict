@@ -20,9 +20,9 @@ List of three dataframes: 1. warnings_failings, 2. this_failing 3.
 }
 \description{
 Low level function to validate input `data`. Returns list of dataframes
-containing fails/warnings and passing observed values. The function detects
-which model (gis or physical) and area (GB & NI) and applies validation rules
-as required. Here is a summary of checks:
+containing fails/warnings/replacements and passing observed values. The
+function detects which model (gis or physical) and area (GB & NI) and applies
+validation rules as required. Here is a summary of checks:
 \enumerate{
  \item Input 'data' exists.
  \item Input is dataframe.

@@ -367,7 +367,6 @@ identify.
 
 ## Future Experiments
 
-
 A multi-site classification will be added to enable water bodies to be
 classified from more than one site. The GIS data location checker and delivery
 system and multi-site classification are currently in development and we hope to
@@ -472,7 +471,6 @@ variables | model | area | optional | notes
 * Distance from source
 * ...
 
-
 ### Biological variables
 
 **Shared by Model 1 and 44**
@@ -487,7 +485,6 @@ variables | notes
 
 
 ## Replacement rules
-
 
 Data Item
 Validation Comment 
@@ -936,17 +933,15 @@ interpolates between four values, 3 of the 4 points must be present to return a 
 if the above is not satisfied then the sampling is expanded to take in 16 points of which 5 or more must be present 
 
 ## Calculating Mean Substratum Composition - MSUBST (in phi units)
-MSUBST is derived from the following user-supplied environmental data (i.e. from the input file) for the river bed substratum composition at the test site:
-BOLDCOBB	= percentage cover of Boulders/Cobbles
-PEBBGRAV	= percentage cover of Pebbles/Gravel
-SAND	= percentage cover of sand
-SILTCLAY	= percentage cover of silt/clay
+MSUBST is derived from the following user-supplied environmental variables from the input file for the river bed substratum composition observed at the sampling site:  
+BOULDER_COBBLES	= percentage cover of Boulders/Cobbles  
+PEBBLES_GRAVEL	= percentage cover of Pebbles/Gravel  
+SAND	= percentage cover of sand  
+SILT_CLAY	= percentage cover of silt/clay  
 The Algorithm used is:
-TOTSUB = BOLDCOBB + PEBBGRAV + SAND + SILTCLAY
-MSUBST = ( -7.75*BOLDCOBB - 3.25*PEBBGRAV + 2*SAND + 8*SILTCLAY ) / TOTSUB
-During this calculation RICT2 will check that TOTSUB is between 97 and 103. If not, an error will be recorded against the site and prediction and classification will not then take place for that site.
-The specific function code used can be found within Helperfunctionsv1.r (within the prediction support files) and is as below:
-getSubstrate <- function(bould_cob, pebbles_gr, snd, silt_cl, lower_b, upper_b) 
+TOTSUB = BOULDER_COBBLES + PEBBLES_GRAVEL + SAND + SILT_CLAY
+MSUBST = ( -7.75*BOULDER_COBBLES - 3.25*PEBBLES_GRAVEL + 2*SAND + 8*SILT_CLAY ) / TOTSUB
+The specific function code `get_substrate` used can be found within helper-functions.R
 
 ## Estimating Discharge Category (if unavailable) from Stream Velocity
 
@@ -1028,8 +1023,7 @@ REPEAT
 DCH=K
 K=K-1
 UNTIL RDCH>CDCH(K)
-The specific function code used can be found within Helperfunctionsv1.r (within the prediction support files) and is as below:
-getLogDischarge <- function (depth, width, discharge, velocity, lower_b, upper_b)
+The specific function code is `get_discharge()` used can be found within helper-functions.R.
 
 ## Estimating Alkalinity (if unavailable) from Hardness, Calcium or Conductivity
 If a value for alkalinity (ALK) is not supplied by the user for the test site, then it is to be assumed that alkalinity is to be estimated from, in order of preference, the user-supplied values for either water hardness (HARD), calcium concentration (CALCIUM) or conductivity (CONDUCT).
@@ -1044,8 +1038,8 @@ ALK = 14.552 + 1.7606*CALCIUM
 ELSE
 IF CONDUCT is provided THEN
 ALK = 0.3201*CONDUCT -8.0593
-The specific function code used can be found within Helperfunctionsv1.r (within the prediction support files) and is as below:
-getLogAlkalinity <- function (hardness, calcium, conduct, alkal, lower_b, upper_b)
+The specific helper function is get_alkalinity.
+
 
 ## Transform Environmental Variables to Logarithm Base 10 Form
   
@@ -1968,7 +1962,7 @@ In R Code: If less than 5 digits leading zeroes have been added
 Northing
 Must be present (input file screening)
 Must be 5 digits; text not number, to retain leading zeroes (input file screening)
-In R Code: If less than 5 digits leading zeroes have been added
+In R Code: If less than 5 digits leading zeroes have been added see `rict_validate()` function  
 Alkalinity
 Hardness, Calcium concentration or Electrical conductivity can be provided if unable to provide Alkalinity – One of the values must be present (input file screening)
 Must be numeric (input file screening)

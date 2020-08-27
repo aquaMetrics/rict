@@ -1,9 +1,9 @@
 #' Validate observed values
 #'
 #' Low level function to validate input `data`. Returns list of dataframes
-#' containing fails/warnings and passing observed values. The function detects
-#' which model (gis or physical) and area (GB & NI) and applies validation rules
-#' as required. Here is a summary of checks:
+#' containing fails/warnings/replacements and passing observed values. The
+#' function detects which model (gis or physical) and area (GB & NI) and applies
+#' validation rules as required. Here is a summary of checks:
 #' \enumerate{
 #'  \item Input 'data' exists.
 #'  \item Input is dataframe.
@@ -75,7 +75,7 @@ rict_validate <- function(data = NULL) {
       TRUE, FALSE
     )
   })
-  # Predictor variables provided for more than one model? --------------------------------------
+  ### Predictor variables provided for more than one model? ----------------------------------------
   # For example, input data has columns for GIS and Physical models
   if (length(check_models[check_models == TRUE]) > 1) {
     data_present <- lapply(models, function(model) {
@@ -102,7 +102,7 @@ rict_validate <- function(data = NULL) {
     data_present <- FALSE
   }
 
-  # Create variable for data model detected  --------------------------------------------
+  ### Create variable for data model detected  ------------------------------------------------
   model <- data.frame(cbind(models, data_present))
   model <- model$models[model$data_present == TRUE]
 
@@ -117,7 +117,7 @@ rict_validate <- function(data = NULL) {
   message("Variables for the '", model, "' model detected - applying relevant checks. ")
 
   if (model == "physical") {
-    # Detect NI / GB grid references -----------------------------------------------------
+    ### Detect NI / GB grid references --------------------------------------------------------
     areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", toupper(data$NGR)), "gb", "ni"))
 
     if (length(areas) > 1) {
@@ -139,12 +139,12 @@ rict_validate <- function(data = NULL) {
   # Re-assigning area due to issue with filtering column and variable sharing same name
   area_selected <- area
 
-  # Filter rules based on which model and area selected ---------------------------
+  ### Filter rules based on which model and area selected -------------------------------------------
   validation_rules <-
     dplyr::filter(validation_rules, area %in% c(area_selected, "all")) %>%
     dplyr::filter(models %in% c(model, "all"))
 
-  # Check column names correct -----------------------------------------------------
+  ### Check column names correct ------------------------------------------------------------------
   # Note: additional columns provided by user are allowed
   if (all(validation_rules$variable[validation_rules$source == "input"] %in%
     names(data)) == FALSE) {
@@ -159,7 +159,7 @@ rict_validate <- function(data = NULL) {
   data$SITE <- as.character(data$SITE)
   data$WATERBODY <- as.character(data$WATERBODY)
 
-  # Check class of each column is correct ----------------------------------------
+  ### Check class of each column is correct --------------------------------------------
   # Loop through each 'variable' in rules dataframe
   fails <- lapply(
     split(
@@ -188,7 +188,7 @@ rict_validate <- function(data = NULL) {
   if (length(fails) != 0) {
     stop(fails, call. = FALSE)
   }
-  # Check columns that may or may not be provided --------------------------------------
+  ### Check columns that may or may not be provided -----------------------------------------
   if (model == "physical") {
     if (all(is.na(data$DISCHARGE)) &
       all(is.na(data$VELOCITY))) {
@@ -206,69 +206,14 @@ rict_validate <- function(data = NULL) {
       data$VELOCITY <- NULL
     }
   }
-  ### Add calculated variables based on input data ------------------------------------
-  # Check alkalinity related columns and calculate if necessary
-  if (all(is.na(data$HARDNESS)) &
-    all(is.na(data$CALCIUM)) &
-    all(is.na(data$CONDUCTIVITY)) &
-    all(is.na(data$ALKALINITY))
-  ) {
-    stop("You provided empty ALKALINITY, HARDNESS, CONDUCTIVITY and CALCIUM values,
-       we expect values for at least one of these variables. ", call. = FALSE)
-  } else { # loop through rows and calculate Alkalinity
+  ### Add calculated variables based on input data -----------------------------------------
 
-    alkalinity <- lapply(split(data, paste(data$SITE, data$YEAR)), function(data_row) {
-      if (!any(is.null(data_row$HARDNESS)) && !any(is.na(data_row$HARDNESS))) {
-        data_row$ALKALINITY <- 4.677 + 0.6393 * data_row$HARDNESS
-        message(paste0(
-          "Using Hardness value to calculate Alkalinity at ",
-          data_row$SITE, " - ", data_row$YEAR, ". "
-        ))
-      }
-      else
-      if (!any(is.null(data_row$CALCIUM)) && !any(is.na(data_row$CALCIUM))) {
-        data_row$ALKALINITY <- 14.552 + 1.7606 * data_row$CALCIUM
-        message(paste0(
-          "Using Calcium value to calculate Alkalinity at ",
-          data_row$SITE, " - ", data_row$YEAR, ". "
-        ))
-      }
-      else
-      if (!any(is.null(data_row$CONDUCTIVITY)) && !any(is.na(data_row$CONDUCTIVITY))) {
-        data_row$ALKALINITY <- 0.3201 * data_row$CONDUCTIVITY - 8.0593
-        message(paste0(
-          "Using Conductivity value to calculate Alkalinity at ",
-          data_row$SITE, " - ", data_row$YEAR, ". "
-        ))
-      }
-      return(data_row)
-    })
-    alkalinity <- dplyr::bind_rows(alkalinity)
-    # Keep order and row.names the same as original input data for consistent output
-    data <- alkalinity[order(match(alkalinity[, "SITE"], data[, "SITE"])), ]
-    row.names(data) <- seq_len(nrow(data))
-  }
+  # Check alkalinity related columns and calculate if necessary
+  data <- get_alkalinity(data)
 
   # Calculate discharge category from velocity and width if required
-  discharge_categories <- c(0.31, 0.62, 1.25, 2.5, 5.0, 10.0, 20.0, 40.0, 80.0, 1000000)
-  velocity_categories <- c(5.0, 17.5, 37.5, 75.0, 150.0, 1000000)
+  data <- get_discharge(data)
 
-  discharge <- lapply(split(data, paste(data$SITE, data$YEAR)), function(data_row) {
-    if (!any(is.null(data_row$VELOCITY)) && !any(is.na(data_row$VELOCITY))) {
-      discharge_value <- data_row$MEAN_DEPTH / 100 *
-        data_row$MEAN_WIDTH *
-        velocity_categories[data_row$VELOCITY] / 100
-      data_row$DISCHARGE <- min(which(discharge_categories > discharge_value))
-      message("Using velocity, width and depth to calculate discharge category")
-    }
-    # hack - to avoid errors if some VELOCITY rows are NA - but avoids velocity validation rules..
-    data_row$VELOCITY <- NULL
-    return(data_row)
-  })
-  discharge <- dplyr::bind_rows(discharge)
-  # Keep order and row.names the same as original input data for consistent output
-  data <- discharge[order(match(discharge[, "SITE"], data[, "SITE"])), ]
-  row.names(data) <- seq_len(nrow(data))
   # If model GIS - then NGR easting and northing maybe not be provided. So only calculate
   # Easting and Northings for physical data.
   if (model == "physical") {
@@ -287,7 +232,7 @@ rict_validate <- function(data = NULL) {
     # Convert to numeric in order to help validate them as numbers
     data$EASTING <- as.numeric(data$EASTING)
     data$NORTHING <- as.numeric(data$NORTHING)
-    # Check for length <5, add a "0" to get proper Easting/Northing 5 digit codes
+    # Check for length <5, add a leading zeros "0" to get proper Easting/Northing 5 digit codes
     if (any(is.na(data$EASTING)) | any(is.na(data$NORTHING))) {
       stop("EASTING or NORTHING value(s) have not been supplied, we expect
        all rows to have Easting and Northing values.
@@ -352,14 +297,9 @@ rict_validate <- function(data = NULL) {
 These values will be used instead of calculating them from Grid Reference values. ")
     }
   }
-  # Total substrate
+  # Calculate total substrate and phi grain size scale
   if (model == "physical") {
-    data$TOTSUB <- rowSums(data[, c("BOULDER_COBBLES", "PEBBLES_GRAVEL", "SILT_CLAY", "SAND")])
-    data$MSUBST <- ((-7.75 * data$BOULDER_COBBLES) - (3.25 * data$PEBBLES_GRAVEL) +
-      (2 * data$SAND) + (8 * data$SILT_CLAY)) / data$TOTSUB
-
-    # re-assign substrate variable to match with prediction function requirements
-    data$vld_substr_log <- data$MSUBST
+    data <- get_substrate(data)
   }
 
   # convert metres to km in Distance from source GIS attribute
@@ -384,7 +324,7 @@ These values will be used instead of calculating them from Grid Reference values
   columns <- dplyr::bind_cols(columns)
   data <- dplyr::bind_cols(data, columns)
 
-  ### Check values pass validation rules ----------------------------------------------
+  ### Check values pass validation rules ----------------------------------------------------------
   # Loop through each variable in validation rules dataframe
   checks <- lapply(split(
     validation_rules[validation_rules$variable %in% names(data), ],
@@ -499,7 +439,8 @@ These values will be used instead of calculating them from Grid Reference values
     }
   })
 
-  # Replace values if value is less than the ‘overall’ minimum value ---------------
+  ### Replace values if value is less than the ‘overall’ minimum value ------------------------------
+
   validation_rules_input <- validation_rules[validation_rules$source == "input", ]
   ALT_LIM <- validation_rules_input[validation_rules_input$variable == "ALTITUDE", "replacement_limit"]
   ALT_VAL <- validation_rules_input[validation_rules_input$variable == "ALTITUDE", "replacement_val"]
@@ -562,7 +503,6 @@ These values will be used instead of calculating them from Grid Reference values
        We expect at least one row without any fails to proceed.
        HINT: Check fail messages, fix errors and re-try.", call. = FALSE)
   }
-
 
   return(list("data" = data, "checks" = checks, "model" = model, "area" = area))
 }

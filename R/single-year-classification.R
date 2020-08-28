@@ -1,4 +1,4 @@
-singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NULL) {
+singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NULL, seasons = 4) {
 
   # set global random seed for rnorm functions etc
   set.seed(1234)
@@ -59,13 +59,14 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   obs_aspt_spr <- biological_data[, "SPR_TL2_WHPT_ASPT (ABW,DISTFAM)"]
   # obs_aspt_aut <- observed_aspt[,2]
   obs_aspt_aut <- biological_data[, "AUT_TL2_WHPT_ASPT (ABW,DISTFAM)"]
+  Obs_aspt_sum   <- biological_data[,"SUM_TL2_WHPT_ASPT (ABW,DISTFAM)"]
 
   # OBSERVED NTAXA
   # obs_ntaxa_spr <- observed_ntaxa[,1]
   obs_ntaxa_spr <- biological_data[, "SPR_TL2_WHPT_NTAXA (ABW,DISTFAM)"]
   # Obs_ntaxa_aut <- observed_ntaxa[,2]
   Obs_ntaxa_aut <- biological_data[, "AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)"] # change AZURE
-
+  Obs_ntaxa_sum    <- biological_data[,"SUM_TL2_WHPT_NTAXA (ABW,DISTFAM)"]
   # Input Multiplicative Adjustment factors adjusted_params, 1,..,5)
   adjusted_params <- as.matrix(adjusted_params)
   qij <- computeScoreProportions(gb685_assess_score[, -1]) # Remove the first Column
@@ -97,16 +98,17 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   # find the non-bias corrected  EQR = obs/ExpRef
   nonBiasCorrected_WHPT_aspt_spr <- obs_aspt_spr / dplyr::select(Exp_ref_aspt, dplyr::contains("_spr"))
   nonBiasCorrected_WHPT_aspt_aut <- obs_aspt_aut / dplyr::select(Exp_ref_aspt, dplyr::contains("_aut"))
-
+  nonBiasCorrected_WHPT_aspt_sum   <- Obs_aspt_sum/ dplyr::select(Exp_ref_aspt, dplyr::matches("_sum"))
   # Now do the Obs_rb withONE SITE obs_aspt_spr[1]
   sdobs_aspt <- sdobs_one_year_new(0.269, 0.279, 1)
 
   SiteProbabilityclasses_spr_aspt <- data.frame() # Store site probabilities in a dataframe
   SiteProbabilityclasses_aut_aspt <- data.frame() # Store site probabilities in a dataframe
   SiteProbabilityclasses_spr_aut_comb_aspt <- data.frame()
+  SiteProbabilityclasses_sum_aspt <- data.frame()
   EQRAverages_aspt_spr <- data.frame() # Store average EQRs for spr in a dataframe
   EQRAverages_aspt_aut <- data.frame() # Store average EQRs for spr in a dataframe
-
+  EQRAverages_aspt_sum <- data.frame()
   # **************  For NTAXA   *************
   Exp_ref_ntaxa <- ntaxa_adjusted / 1.0049 # select(adjusted_expected_new, contains("_NTAXA_"))/1.0049
   # head(Exp_ref_ntaxa,18)
@@ -115,7 +117,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   # not used but useful for output checing purposes only
   nonBiasCorrected_WHPT_ntaxa_spr <- obs_ntaxa_spr / dplyr::select(Exp_ref_ntaxa, dplyr::contains("_spr"))
   nonBiasCorrected_WHPT_ntaxa_aut <- Obs_ntaxa_aut / dplyr::select(Exp_ref_ntaxa, dplyr::contains("_aut"))
-
+  nonBiasCorrected_WHPT_ntaxa_sum <- Obs_ntaxa_sum/ dplyr::select(Exp_ref_ntaxa, dplyr::matches("_sum"))
   # Now do the obs_rb with ONE SITE obs_ntaxa_spr[1]
   sdobs_ntaxa <- sdobs_one_year_new(0.247, 0.211, 1)
 
@@ -124,14 +126,18 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   SiteProbabilityclasses_aut_ntaxa <- data.frame()
   SiteProbabilityclasses_spr_aut_comb_ntaxa <- data.frame()
   SiteProbabilityclasses_spr_aut_comb_aspt <- data.frame()
+  SiteProbabilityclasses_sum_sum_comb_ntaxa <- data.frame()
+  SiteProbabilityclasses_sum_ntaxa <- data.frame() # Store site probabilities in a dataframe
 
   # MINTA
   SiteMINTA_whpt_spr <- data.frame()
   SiteMINTA_whpt_aut <- data.frame()
   SiteMINTA_whpt_spr_aut <- data.frame()
+  SiteMINTA_whpt_sum <- data.frame()
 
   EQRAverages_ntaxa_spr <- data.frame() # Store average EQRs for spr in a dataframe
   EQRAverages_ntaxa_aut <- data.frame() # Store average EQRs for spr in a dataframe
+  EQRAverages_ntaxa_sum <- data.frame()  # Store average EQRs for spr in a datafram
 
   # ASPT
   SiteProbabilityclasses_spr_aspt <- data.frame() # Store site probabilities in a dataframe
@@ -143,7 +149,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   # Setup biases
   Ubias8r_spr <- getUbias8r_new(n_runs, Ubias8)
   Ubias8r_aut <- getUbias8r_new(n_runs, Ubias8)
-
+  Ubias8r_sum <-  getUbias8r_new (n_runs, Ubias8)
   # Create variable to store EQRs to retain for compare function
   if (store_eqrs == TRUE) {
     eqr_metrics <- list()
@@ -157,43 +163,55 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     # Loop strarts from here with site = k, i.e. sqr (sqrt(Obs) + ZObs) + Ubias8r
     ObsIDX8r_spr <- getObsIDX8rB(obs_ntaxa_spr[k], getZObs_r_new(sdobs_ntaxa, n_runs))
     ObsIDX8r_aut <- getObsIDX8rB(Obs_ntaxa_aut[k], getZObs_r_new(sdobs_ntaxa, n_runs))
+    ObsIDX8r_sum  <- getObsIDX8r(Obs_ntaxa_sum[k],getZObs_r_new(sdobs_ntaxa,n_runs)) # Obs_ntaxa_spr[k] used instead of Obs_ntaxa_sum[k] ****** !!!!
 
     Obs_site1_ntaxa_spr <- ObsIDX8r_spr + Ubias8r_spr # rename "Obs_site1_ntaxa_spr" to ObsIDX8rb_spr
     Obs_site1_ntaxa_aut <- ObsIDX8r_aut + Ubias8r_aut # rename "Obs_site1_ntaxa_aut" to ObsIDX8rb_aut
-
+    Obs_site1_ntaxa_sum <- ObsIDX8r_sum + Ubias8r_sum # rename "Obs_site1_ntaxa_aut" to ObsIDX8rb_aut
     # Part 2 . Do the RefAdjExpected bias
 
     sdexp8_ntaxa <- 0.53 # For aspt we use a different valsue
     ExpIDX8r_ntaxa_spr <- data.frame(val = (Exp_ref_ntaxa[k, 1] + getZObs_r_new(sdexp8_ntaxa, n_runs)))
     ExpIDX8r_ntaxa_aut <- data.frame(val = (Exp_ref_ntaxa[k, 2] + getZObs_r_new(sdexp8_ntaxa, n_runs)))
+    ExpIDX8r_ntaxa_sum <- data.frame(val = (Exp_ref_ntaxa[k,1]+ getZObs_r_new (sdexp8_ntaxa, n_runs)))
 
     EQR_ntaxa_spr <- as.data.frame(Obs_site1_ntaxa_spr / ExpIDX8r_ntaxa_spr[, 1])
     EQR_ntaxa_aut <- as.data.frame(Obs_site1_ntaxa_aut / ExpIDX8r_ntaxa_aut[, 1])
+    EQR_ntaxa_sum <- as.data.frame(Obs_site1_ntaxa_sum/ExpIDX8r_ntaxa_sum[,1] )
 
 
     # Part 1: for "Spring" - DO FOR NTAXA
-
+    eqr_av_sum  <- getAvgEQR_SprAut (EQR_ntaxa_sum,EQR_ntaxa_sum ) # CHECK this mean function !!!!!
+    #change to 1 value. Function "getAvgEQR_SprAut" is meant to compute for spr, aut
+    a <-data.frame(eqr_av_sum=eqr_av_sum[,1])
+    rownames(a) <- rownames(eqr_av_sum)
+    eqr_av_sum <- a
     # Find the averages of both spr and autum, declare a function to compute this
     eqr_av_spr <- getAvgEQR_SprAut(EQR_spr = EQR_ntaxa_spr, EQR_aut = EQR_ntaxa_aut, k, row_name = T)
 
     # Classify these for each SITE using the EQR just for spring
     classArray_siteOne_spr_ntaxa <- getClassarray_ntaxa(EQR_ntaxa_spr)
     classArray_siteOne_aut_ntaxa <- getClassarray_ntaxa(EQR_ntaxa_aut)
-
+    classArray_siteOne_sum_ntaxa <- getClassarray_ntaxa(EQR_ntaxa_sum)
     # Define an array to hold probability of class for each site- how much of
     # the site belongs to each classes, adds up to 100%.
     # 5 is the number of classes- H, G, M, B, P, ncol=1 or 2 for two seasons or
     # ntaxa_spr, ntaxa_aut, spr_aut_av_taxa, and spt etc.
     probClass_spr <- matrix(0, ncol = 1, nrow = 5)
     probClass_aut <- matrix(0, ncol = 1, nrow = 5)
+    probClass_sum <- matrix(0, ncol = 1, nrow = 5)
 
     for (i in 1:5) {
       probClass_spr[i] <- 100 * sum(classArray_siteOne_spr_ntaxa[classArray_siteOne_spr_ntaxa == i, ] / i) / n_runs
       probClass_aut[i] <- 100 * sum(classArray_siteOne_aut_ntaxa[classArray_siteOne_aut_ntaxa == i, ] / i) / n_runs
+      probClass_sum[i] <- 100 * sum(classArray_siteOne_sum_ntaxa[classArray_siteOne_sum_ntaxa == i, ] / i) / n_runs
     }
 
     probabilityClass <- getProbClassLabelFromEQR()
     a_ntaxa_spr <- t(probClass_spr) # spr
+    a_ntaxa_sum <- t(probClass_sum) # spr, need a_ntaxa_spr
+    colnames(a_ntaxa_sum) <- getProbClassLabelFromEQR()[,1]
+    rownames(a_ntaxa_sum) <- c(paste0("TST-",k))
     colnames(a_ntaxa_spr) <- getProbClassLabelFromEQR()[, 1]
     rownames(a_ntaxa_spr) <- as.character(predictions[k, "SITE"])
 
@@ -203,6 +221,14 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     SiteProbabilityclasses_spr_ntaxa <- rbind(SiteProbabilityclasses_spr_ntaxa, a_ntaxa_spr)
     # Add the averages of spr,aut
     EQRAverages_ntaxa_spr <- rbind(EQRAverages_ntaxa_spr, eqr_av_spr)
+
+    #Summer
+    mostProb <- getMostProbableClass(a_ntaxa_sum)
+    a_ntaxa_sum <- cbind(a_ntaxa_sum, mostProb) # add the site to the dataframe
+    SiteProbabilityclasses_sum_ntaxa<- rbind(SiteProbabilityclasses_sum_ntaxa,a_ntaxa_sum)
+    EQRAverages_ntaxa_sum <- rbind(EQRAverages_ntaxa_sum, eqr_av_sum)
+    rowAverage_sum_sum  <- data.frame(rowMeans(cbind(EQR_ntaxa_sum, EQR_ntaxa_sum)))
+
 
     # Part 2: for Autumn
     a_ntaxa_aut <- t(probClass_aut) # aut
@@ -246,22 +272,29 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     #### RALPH
     Ubias9r_spr <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_spr[k], n_runs, Ubias8r_spr)
     Ubias9r_aut <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_aut[k], n_runs, Ubias8r_aut)
+    Ubias9r_sum <- getUbias9r_new (u_9a, u_9b, u_9c,Obs_aspt_sum[k], n_runs, Ubias8r_sum)
+
 
     Ubias7r_spr <- Ubias8r_spr * Ubias9r_spr
     Ubias7r_aut <- Ubias8r_aut * Ubias9r_aut
+    #Summer
+    Ubias7r_sum <- Ubias8r_sum*Ubias9r_sum
 
     ObsIDX9r_spr <- getObsIDX9r(obs_aspt_spr[k], getZObs_r_new(sdobs_aspt, n_runs))
     ObsIDX9r_aut <- getObsIDX9r(obs_aspt_aut[k], getZObs_r_new(sdobs_aspt, n_runs))
+    ObsIDX9r_sum  <- getObsIDX9r (Obs_aspt_sum[k],getZObs_r_new(sdobs_aspt,n_runs))
 
     ObsIDX7r_spr <- ObsIDX8r_spr * ObsIDX9r_spr
     ObsIDX7r_aut <- ObsIDX8r_aut * ObsIDX9r_aut
+    #Summer
+    ObsIDX7r_sum <-  ObsIDX8r_sum* ObsIDX9r_sum
 
     ObsIDX7rb_spr <- ObsIDX7r_spr + Ubias7r_spr
     ObsIDX7rb_aut <- ObsIDX7r_aut + Ubias7r_aut
-
+    ObsIDX7rb_sum <- ObsIDX7r_sum+Ubias7r_sum
     ObsIDX8rb_spr <- ObsIDX8r_spr + Ubias8r_spr
     ObsIDX8rb_aut <- ObsIDX8r_aut + Ubias8r_aut
-
+    ObsIDX8rb_sum <- ObsIDX8r_sum+Ubias8r_sum
     # Obs_site1_aspt_spr <-
     # getObsIDX8r_new(obs_aspt_spr[k],getZObs_r_new(sdobs_aspt,n_runs)) +
     # getUbias8r_new (n_runs, Ubias8) # ths is replaced by "ObsIDX9rB_spr"
@@ -271,28 +304,33 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
 
     ObsIDX9rb_spr <- ObsIDX7rb_spr / ObsIDX8rb_spr
     ObsIDX9rb_aut <- ObsIDX7rb_aut / ObsIDX8rb_aut
-
+    ObsIDX9rb_sum <- ObsIDX7rb_sum/ObsIDX8rb_sum
     # Part 2 . Do the RefAdjExpected bias
     # Expected reference adjusted , as an array , ONE SITE, site 14
 
     sdexp9_aspt <- 0.081 # For aspt we use a different value, 0.081
     ExpIDX9r_aspt_spr <- data.frame(val = (Exp_ref_aspt[k, 1] + getZObs_r_new(sdexp9_aspt, n_runs)))
     ExpIDX9r_aspt_aut <- data.frame(val = (Exp_ref_aspt[k, 2] + getZObs_r_new(sdexp9_aspt, n_runs)))
+    ExpIDX9r_aspt_sum <- data.frame(val = (Exp_ref_aspt[k,1]+ getZObs_r_new (sdexp9_aspt, n_runs)))
 
     # Calculating simulated EQR
     EQR_aspt_spr <- as.data.frame(ObsIDX9rb_spr / ExpIDX9r_aspt_spr[, 1])
     EQR_aspt_aut <- as.data.frame(ObsIDX9rb_aut / ExpIDX9r_aspt_aut[, 1])
+    EQR_aspt_sum <- as.data.frame(ObsIDX9rb_sum/ExpIDX9r_aspt_sum[,1])
 
 
 
     # Part 1: for "Spring"
     # Find the averages of both spr and autum, declare a function to compute this
     eqr_av_spr_aspt <- getAvgEQR_SprAut(EQR_aspt_spr, EQR_aspt_aut, k, row_name = T)
-
+    eqr_av_sum_aspt  <- getAvgEQR_SprAut (EQR_aspt_sum,EQR_aspt_sum )
+    a <-data.frame(eqr_av_sum_aspt=eqr_av_sum_aspt[,1])
+    rownames(a) <- rownames(eqr_av_sum_aspt)
+    eqr_av_sum_aspt <- a
     # Classify these for each SITE using the EQR just for spring
     classArray_siteOne_spr_aspt <- getClassarray_aspt(EQR_aspt_spr)
     classArray_siteOne_aut_aspt <- getClassarray_aspt(EQR_aspt_aut)
-
+    classArray_siteOne_sum_aspt <- getClassarray_aspt(EQR_aspt_sum)
     # define an array to hold probability of class for each site- how much of
     # the site belongs to each classes, adds up to 100%
     # 5 is the number of classes- H, G, M, B, P, ncol=1 or 2 for two seasons or
@@ -303,6 +341,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     for (i in 1:5) {
       probClass_spr[i] <- 100 * sum(classArray_siteOne_spr_aspt[classArray_siteOne_spr_aspt == i, ] / i) / n_runs
       probClass_aut[i] <- 100 * sum(classArray_siteOne_aut_aspt[classArray_siteOne_aut_aspt == i, ] / i) / n_runs
+      probClass_sum[i] <- 100*sum(classArray_siteOne_sum_aspt[classArray_siteOne_sum_aspt==i,]/i)/n_runs
     }
 
     # Work out ASPT probability of classes
@@ -311,10 +350,15 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     colnames(a_aspt_spr) <- getProbClassLabelFromEQR()[, 1]
     rownames(a_aspt_spr) <- as.character(predictions[k, "SITE"])
 
+    a_aspt_sum <- t(probClass_sum) # spr
+    colnames(a_aspt_sum) <- getProbClassLabelFromEQR()[,1]
+    rownames(a_aspt_sum) <- c(paste0("TST-",k))
     # Find most probable class, i.e the maximum, and add it to the site
     mostProb <- getMostProbableClass(a_aspt_spr)
+    mostProb <- getMostProbableClass(a_aspt_sum)
     # add the site to the dataframe
     a_aspt_spr <- cbind(a_aspt_spr, mostProb)
+    a_aspt_sum <- cbind(a_aspt_sum, mostProb)
 
     SiteProbabilityclasses_spr_aspt <- rbind(SiteProbabilityclasses_spr_aspt, a_aspt_spr)
     # Add the averages of spr
@@ -327,10 +371,31 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     mostProb <- getMostProbableClass(a_aspt_aut)
     a_aspt_aut <- cbind(a_aspt_aut, mostProb)
     SiteProbabilityclasses_aut_aspt <- rbind(SiteProbabilityclasses_aut_aspt, a_aspt_aut)
-
+    SiteProbabilityclasses_sum_aspt<- rbind(SiteProbabilityclasses_sum_aspt,a_aspt_sum)
     # Part 3:: start the combined spr_aut processing
     # First find the row averages of all the 10,000 simulations
     EQR_aspt_avg <- data.frame(rowMeans(cbind(EQR_aspt_spr, EQR_aspt_aut)))
+    EQRAverages_aspt_sum <- rbind(EQRAverages_aspt_sum, eqr_av_sum_aspt)
+    matrix_ntaxa_sum <- as.matrix(classArray_siteOne_sum_ntaxa)
+    matrix_aspt_sum <- as.matrix(classArray_siteOne_sum_aspt)
+    minta_ntaxa_aspt_sum <- getMINTA_ntaxa_aspt (as.matrix(classArray_siteOne_sum_ntaxa),
+                                                 as.matrix(classArray_siteOne_sum_aspt))
+    # Summer
+    minta_probClass_sum <- matrix(0, ncol = 1, nrow = 5)
+    for(i in 1:5) {
+      minta_probClass_sum[i] <- 100*sum(minta_ntaxa_aspt_sum[minta_ntaxa_aspt_sum==i,]/i)/n_runs
+    }
+
+    # probabilityClass <- getProbClassLabelFromEQR()
+    aa <- t(minta_probClass_sum) # spr
+    colnames(aa) <- getProbClassLabelFromEQR()[,1]
+
+    rownames(aa) <- as.character(predictions[k,"SITE"]) #c(paste0("TST-",k))
+    # Find most probable MINTA class, i.e the maximum, and add it to the site
+    mostProb <- getMostProbableClass(aa)
+    aa <- cbind(aa, mostProb)
+    # Now bind the MINTA proportion to the dataframe
+    SiteMINTA_whpt_sum <- rbind(SiteMINTA_whpt_sum, aa)   # ## STORE , APPEND THIS
     # Classify these for each SITE using the EQR just for spring
     classArray_siteOne_combined_spr_aspt <- getClassarray_aspt(EQR_aspt_avg)
     # Define an array to hold probability of class
@@ -459,6 +524,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
       # into a big dataframe)
       eqr_metrics <- c(eqr_metrics, list(eqrs))
     }
+
   } # END of FOR LOOP
 
   # MINTA outputs
@@ -466,10 +532,20 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   colnames(SiteMINTA_whpt_spr) <- c(paste0("mintawhpt_spr_", names(SiteMINTA_whpt_spr)))
   colnames(SiteMINTA_whpt_aut) <- c(paste0("mintawhpt_aut_", names(SiteMINTA_whpt_aut)))
   colnames(SiteMINTA_whpt_spr_aut) <- c(paste0("mintawhpt_spr_aut_", names(SiteMINTA_whpt_spr_aut)))
+  colnames(EQRAverages_ntaxa_sum) <- c(paste0("NTAXA_",colnames(EQRAverages_ntaxa_sum)))
   # Combine all MINTA
 
   allMINTA_whpt <- cbind(SiteMINTA_whpt_spr, SiteMINTA_whpt_aut)
   allMINTA_whpt <- cbind(allMINTA_whpt, SiteMINTA_whpt_spr_aut)
+  whpt_ntaxa_sum_sum_averages <- data.frame(NTAXA_aver_sum_sum=rowMeans(EQRAverages_ntaxa_sum))
+  #Change row names
+  rownames(whpt_ntaxa_sum_sum_averages) <- predictions[,"SITE"]
+  colnames(SiteProbabilityclasses_sum_ntaxa) <- paste0(colnames(SiteProbabilityclasses_sum_ntaxa), "_NTAXA_sum")
+
+  # Summer
+  averages_sum_ntaxa <- cbind(EQRAverages_ntaxa_sum[1],SiteProbabilityclasses_sum_ntaxa) #
+  rownames(averages_sum_ntaxa) <- predictions[,"SITE"] ## predictions[,"SITE"] [1]
+
   # ****** For NTAXA outputs ********
   # Find the averages of these across seasons aver#(spr, aut)
   colnames(EQRAverages_ntaxa_spr) <- c(paste0("NTAXA_", colnames(EQRAverages_ntaxa_spr)))
@@ -491,6 +567,31 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
 
   allProbClasses_ave_ntaxa <- cbind(all_spr_aut_ntaxa_averages, SiteProbabilityclasses_spr_aut_comb_ntaxa)
   allResults <- cbind(allProbClasses_ave_ntaxa, whpt_ntaxa_spr_aut_averages)
+
+  allProbClasses_sum_ntaxa <- averages_sum_ntaxa
+  #allResults <- cbind(year_waterBody,allProbClasses_ave_ntaxa)   ## cbind(year_waterBody[1,],allProbClasses_ave_ntaxa)
+  allResultsSum <- allProbClasses_sum_ntaxa
+  colnames(SiteMINTA_whpt_sum) <- paste0(colnames(SiteMINTA_whpt_sum),"_MINTA")
+  all_minta <- cbind(year_waterBody, SiteMINTA_whpt_sum) ## cbind(year_waterBody[1,],SiteMINTA_whpt_sum )
+  # writeToFile(all_minta, path,"/Results/ALL_whpt_MINTA.csv")
+  allResults_sum <- cbind(allResults,SiteMINTA_whpt_sum)
+  colnames(SiteProbabilityclasses_sum_aspt) <- paste0(colnames(SiteProbabilityclasses_sum_aspt), "_ASPT_sum")
+    # Summer
+  averages_sum_aspt <- cbind(EQRAverages_aspt_sum[1],SiteProbabilityclasses_sum_aspt)
+
+  allResults_aspt <- averages_sum_aspt
+  rownames(allResults_aspt) <- predictions[,"SITE"]    ##Allpredictions[,"SITE"][1]
+
+  # Add waterbody, and YEAR
+  allResults_aspt_sum <- cbind(year_waterBody,averages_sum_aspt)
+  rownames(allResults_aspt_sum) <- NULL
+  site <- data.frame(SITE = predictions[,"SITE"])
+  #
+  #Add a column of SITES
+  allResults_aspt <- cbind(site, allResults_aspt_sum)
+
+  #Write all Results
+  all_summer<- cbind(allResults_aspt,allResults)
 
   # ****** For ASPT outputs ********
   # Find the averages of these across seasons aver#(spr, aut)
@@ -534,6 +635,16 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
       eqr_metrics
     )
   }
+
+  # if(all(seasons %in% c(2,4))) {
+  #   # join spr+aut and sum...
+  #   allResults_ntaxa_aspt_minta_combined <- cbind(allResults_ntaxa_aspt_minta_combined, all_summer[, c(3:10)])
+  # }
+  #
+  # if(seasons == 2) {
+  #   # only sum...
+  #   allResults_ntaxa_aspt_minta_combined <- all_summer
+  # }
 
   return(allResults_ntaxa_aspt_minta_combined)
 }

@@ -22,7 +22,7 @@ compute_RjAj <- function(Rj, Aj) {
   temp_mult <- as.data.frame(Rj %*% t(Aj))
   colnames(temp_mult) <- c("NTAXA", "ASPT")
   return(temp_mult)
-} #
+}
 
 # 3.1 Write a function to simulate N values from a given list, where is the N??? multiply by N*length(DFrameValues[,j])
 # This function is not used

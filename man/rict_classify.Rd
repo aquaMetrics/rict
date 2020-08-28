@@ -4,7 +4,12 @@
 \alias{rict_classify}
 \title{Calculate classification}
 \usage{
-rict_classify(data = NULL, year_type = "multi", store_eqrs = FALSE)
+rict_classify(
+  data = NULL,
+  year_type = "multi",
+  store_eqrs = FALSE,
+  n_runs = 10000
+)
 }
 \arguments{
 \item{data}{Dataframe of predicted endgroups values from
@@ -15,6 +20,8 @@ required - default is "multi"}
 
 \item{store_eqrs}{Boolean to signal if simulate EQRs should be stored. If
 TRUE, EQRs are stored allowing `rict_compare` to compare EQR results}
+
+\item{n_runs}{Number of simulations, default 10000.}
 }
 \value{
 Dataframe of classification results

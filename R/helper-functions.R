@@ -80,7 +80,7 @@ getLatLong_NI <- function(x, y) {
   yy <- as.numeric(paste0(y, 0))
 
   # Loop through the codes to extract the Easting and Northing
-  for (i in 1:length(x)) {
+  for (i in seq_len(length(x))) {
     xy <- data.frame(easting_x = xx[i], northing_y = yy[i]) # Edited, just to give site identifier
     # 1. create sf object in Irish National Grid (CRS 29903)
     irish.ng <- sf::st_as_sf(xy, coords = c("easting_x", "northing_y"), crs = 29903)
@@ -132,4 +132,3 @@ get_discharge <- function(data) {
   row.names(data) <- seq_len(nrow(data))
   return(data)
 }
-

@@ -6,6 +6,7 @@
 #'   required - default is "multi"
 #' @param store_eqrs Boolean to signal if simulate EQRs should be stored. If
 #'   TRUE, EQRs are stored allowing `rict_compare` to compare EQR results
+#' @param n_runs Number of simulations, default 10000.
 #' @return Dataframe of classification results
 #' @export
 #' @importFrom rlang .data
@@ -16,7 +17,7 @@
 #' classifications <- rict_classify(predictions)
 #' }
 #'
-rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE) {
+rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, n_runs = 10000) {
   message("Classifying...")
   # Create area variable to pass as parameter to classification functions (based on grid reference)
   area <- unique(data$area)
@@ -42,67 +43,47 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE) 
     ))
 
     if (area == "ni") {
-      gb685_assess_score <- utils::read.csv(system.file("extdat", "EndGrp_AssessScoresNI.csv", package = "rict"))
+      gb685_assess_score <- utils::read.csv(system.file("extdat",
+      "EndGrp_AssessScoresNI.csv",
+      package = "rict"))
     }
     # Enter source files
     # Use the column header as site names in the final output
     all_sites <- data[, 1]
-    # Keep YEAR, WATERBODY
 
+    # Keep YEAR, WATERBODY
     year_waterBody <- data[, c("YEAR", "WATERBODY")]
 
     # Combine all_sites with more information  - e.g. YEAR, WATERBODY
     all_sites <- cbind(all_sites, year_waterBody)
 
-    # data <- data[,-1] Create a routine that checks column names
-    # and puts them in the "data" dataframe
-    # data <- data[,-c(1,3:15)] Change all names to upper case
+    # Change all names to upper case for consistency
     names(data) <- toupper(names(data))
 
-    # Remove the "_CompFarm_" columns
-    data$`_COMPFAM_` <- NULL
     # Get the biological data TL2_WHPT_NTAXA_AbW_DistFam_spr
-    names_biological <- c(
-      "SPR_SEASON_ID", "SPR_TL2_WHPT_ASPT (ABW,DISTFAM)",
-      "SPR_TL2_WHPT_NTAXA (ABW,DISTFAM)", "SPR_NTAXA_BIAS",
-      "SUM_SEASON_ID", "SUM_TL2_WHPT_ASPT (ABW,DISTFAM)",
-      "SUM_TL2_WHPT_NTAXA (ABW,DISTFAM)", "SUM_NTAXA_BIAS",
-      "AUT_SEASON_ID", "AUT_TL2_WHPT_ASPT (ABW,DISTFAM)",
-      "AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)", "AUT_NTAXA_BIAS"
-    )
-
+    names_biological <-  names(data)[grep("ABW,DISTFAM|SEASON_ID|BIAS", names(data))]
     biological_data <- data[, names_biological]
-    # head(biological_data,9) # works now
-    # head(names(biological_data),9) # works now
+
     # Remove biological_data from data
     data <- data[, !names(data) %in% names_biological]
 
-    # Store all_probabilities in one dataframe.
-    # Use p1,p2,... etc in case data column positions change in future
-    prob_names <- paste0("p", 1:43)
-    if (area == "ni") {
-      prob_names <- paste0("p", 1:11)
-    }
-    # Needs to change when not uppercase
-    all_probabilities <- data[, toupper(prob_names)]
+    # Select the end group probabilities columns and store in one dataframe
+    # Find columns matching P1, P2,... etc
+    prob_names <- paste0("P", 1:43)
+    all_probabilities <- data[, names(data) %in% prob_names]
+
     # Input Adjustment factors for reference site quality scores (Q1, Q2, Q3, Q4, Q5)
     # Extract Ubias8 from Biological data
-    ubias_main <- biological_data[, "SPR_NTAXA_BIAS"][1] # Put new AZURE
+    ubias_main <- biological_data[, "SPR_NTAXA_BIAS"][1]
 
-    # Put the ubias_main default value of 1.68 if the user does not enter any value or
-    # enters a -9
+    # Create default bias value of 1.68 or 0 depending on area
+    default_bias <- data.frame("ni" = 0,
+                               "gb" = 1.68)
+    # If user does not provide any bias value select default from values
     if (is.na(ubias_main) | ubias_main == -9) {
-      # For NI model, the default is ZERO
-      ubias_main <- 1.68
+      ubias_main  <- default_bias[, grep(area, names(default_bias))]
+      message("Bias not provided in input file - using default bias of ", ubias_main)
     }
-
-    # OBSERVED ASPT
-    obs_aspt_spr <- biological_data[, "SPR_TL2_WHPT_ASPT (ABW,DISTFAM)"]
-    obs_aspt_aut <- biological_data[, "AUT_TL2_WHPT_ASPT (ABW,DISTFAM)"]
-
-    # OBSERVED NTAXA
-    obs_ntaxa_spr <- biological_data[, "SPR_TL2_WHPT_NTAXA (ABW,DISTFAM)"]
-    obs_ntaxa_aut <- biological_data[, "AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)"] # change AZURE
 
     # Input Multiplicative Adjustment factors adjusted_params, 1,..,5)
     adjusted_params <- as.matrix(adjusted_params)
@@ -127,14 +108,20 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE) 
     # Include site names from data
     adjusted_expected_new <- cbind(as.data.frame(all_sites), adjusted_expected)
 
+    # OBSERVED ASPT
+    obs_aspt_spr <- biological_data[, "SPR_TL2_WHPT_ASPT (ABW,DISTFAM)"]
+    obs_aspt_aut <- biological_data[, "AUT_TL2_WHPT_ASPT (ABW,DISTFAM)"]
+
+    # OBSERVED NTAXA
+    obs_ntaxa_spr <- biological_data[, "SPR_TL2_WHPT_NTAXA (ABW,DISTFAM)"]
+    obs_ntaxa_aut <- biological_data[, "AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)"]
+
+
     # Part 3:  Calculation of Exp_ref from "AdjustedExpected_new" values,
     # divide by K ( = 1.0049 for NTAXA,  = 0.9921 for ASPT)
-    # run simulations from here
-    n_runs <- 10000
 
     # ******* FOR ASPT ************
     Exp_ref_aspt <- aspt_adjusted / 0.9921
-    Ubias8 <- ubias_main
 
     # find the non-bias corrected  EQR = obs/ExpRef
     nonBiasCorrected_WHPT_aspt_spr <-
@@ -191,8 +178,8 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE) 
     classArray_siteOne_spr_aut_aspt <- data.frame()
 
     # Setup biases
-    Ubias8r_spr <- getUbias8r_new(n_runs, Ubias8)
-    Ubias8r_aut <- getUbias8r_new(n_runs, Ubias8)
+    Ubias8r_spr <- getUbias8r_new(n_runs, ubias_main)
+    Ubias8r_aut <- getUbias8r_new(n_runs, ubias_main)
 
     # Store all multiYear
     EQRAverages_ntaxa_spr_aut <- data.frame() # Store average EQRs for spr in a dataframe

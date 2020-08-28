@@ -199,3 +199,14 @@ test_that("Test single row of multi-year input works", {
   expect_gte(as.numeric(as.character(check$H_NTAXA_spr_aut)), 0)
 
 })
+
+test_that("Test summer", {
+  skip("work in progress")
+  demo_observed_values <- demo_observed_values
+  demo_gis_values_log <- demo_gis_values_log
+  demo_observed_values$SITE <- demo_gis_values_log$SITE
+
+  predictions <- rict_predict(demo_observed_values)
+  results <- rict:::summer_single_year_classification(predictions, area = "gb")
+
+})

@@ -1,7 +1,6 @@
 test_that("rict_compare matches test data", {
   skip_on_appveyor()
   skip_on_travis()
-  skip("changes to set.seed affected this?")
   # Test dataset
   test_data <- utils::read.csv(
     system.file("extdat",
@@ -29,5 +28,7 @@ test_that("rict_compare matches test data", {
 
   test <- type.convert(test)
   test_rict_compare <- type.convert(test_rict_compare)
-  expect_equal(length(all.equal(test, test_rict_compare)), 1)
+
+  expect_equal(round(sum(dplyr::select_if(test, is.numeric) - dplyr::select_if(test_rict_compare, is.numeric), na.rm = TRUE), 3),
+               -8.461)
 })

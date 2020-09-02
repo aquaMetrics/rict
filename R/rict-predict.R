@@ -119,7 +119,7 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
     ) # or run all seasons if not provided
     seasons_to_run <- 1:3
   }
-
+  seasons_to_run <- 1:3
   data <- all_validation[[1]]
   if (model == "gis") {
     # remove TEST-SITE_CODE column - not required and causes issues later on!

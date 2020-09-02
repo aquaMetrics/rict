@@ -52,7 +52,14 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
 
   # Extract Ubias8 from Biological data #
   ubias_main <- biological_data[, "SPR_NTAXA_BIAS"][1] # Put new AZURE
-
+  # Create default bias value of 1.68 or 0 depending on area
+  default_bias <- data.frame("ni" = 0,
+                             "gb" = 1.68)
+  # If user does not provide any bias value select default from values
+  if (is.na(ubias_main) | ubias_main == -9) {
+    ubias_main  <- default_bias[, grep(area, names(default_bias))]
+    message("Bias not provided in input file - using default bias of ", ubias_main)
+  }
   # OBSERVED ASPT
   # observed_aspt <- read.csv("src/observed_aspt.csv")
   # obs_aspt_spr <- observed_aspt[,1]
@@ -98,7 +105,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   # find the non-bias corrected  EQR = obs/ExpRef
   nonBiasCorrected_WHPT_aspt_spr <- obs_aspt_spr / dplyr::select(Exp_ref_aspt, dplyr::contains("_spr"))
   nonBiasCorrected_WHPT_aspt_aut <- obs_aspt_aut / dplyr::select(Exp_ref_aspt, dplyr::contains("_aut"))
-  nonBiasCorrected_WHPT_aspt_sum   <- Obs_aspt_sum/ dplyr::select(Exp_ref_aspt, dplyr::matches("_sum"))
+  nonBiasCorrected_WHPT_aspt_sum   <- Obs_aspt_sum / dplyr::select(Exp_ref_aspt, dplyr::matches("_sum"))
   # Now do the Obs_rb withONE SITE obs_aspt_spr[1]
   sdobs_aspt <- sdobs_one_year_new(0.269, 0.279, 1)
 
@@ -163,7 +170,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     # Loop strarts from here with site = k, i.e. sqr (sqrt(Obs) + ZObs) + Ubias8r
     ObsIDX8r_spr <- getObsIDX8rB(obs_ntaxa_spr[k], getZObs_r_new(sdobs_ntaxa, n_runs))
     ObsIDX8r_aut <- getObsIDX8rB(Obs_ntaxa_aut[k], getZObs_r_new(sdobs_ntaxa, n_runs))
-    ObsIDX8r_sum  <- getObsIDX8r(Obs_ntaxa_sum[k],getZObs_r_new(sdobs_ntaxa,n_runs)) # Obs_ntaxa_spr[k] used instead of Obs_ntaxa_sum[k] ****** !!!!
+    ObsIDX8r_sum  <- getObsIDX8r(Obs_ntaxa_sum[k], getZObs_r_new(sdobs_ntaxa,n_runs)) # Obs_ntaxa_spr[k] used instead of Obs_ntaxa_sum[k] ****** !!!!
 
     Obs_site1_ntaxa_spr <- ObsIDX8r_spr + Ubias8r_spr # rename "Obs_site1_ntaxa_spr" to ObsIDX8rb_spr
     Obs_site1_ntaxa_aut <- ObsIDX8r_aut + Ubias8r_aut # rename "Obs_site1_ntaxa_aut" to ObsIDX8rb_aut
@@ -511,7 +518,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
         "MINTA"
       )
       # To make it easier to merge and process simulated EQRs and
-      # classification results, bind all simluated EQRs into single dataframe
+      # classification results, bind all simulated EQRs into single dataframe
       # with a 'pretty' name for later manipulation
       eqrs <- lapply(seq_len(length(eqrs)), function(n) {
         df <- eqrs[[n]]
@@ -524,7 +531,6 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
       # into a big dataframe)
       eqr_metrics <- c(eqr_metrics, list(eqrs))
     }
-
   } # END of FOR LOOP
 
   # MINTA outputs
@@ -646,5 +652,15 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   #   allResults_ntaxa_aspt_minta_combined <- all_summer
   # }
 
-  return(allResults_ntaxa_aspt_minta_combined)
+  final <- allResults_ntaxa_aspt_minta_combined
+  # if spr or aut not provided remove from end result
+  if(is.na(final$ASPT_eqr_av_spr[1])) {
+    final[ grep("spr", names(final))] <- NA
+  }
+
+  if(is.na(final$ASPT_eqr_av_aut[1])) {
+    final[ grep("aut", names(final))] <- NA
+  }
+
+  return(final)
 }

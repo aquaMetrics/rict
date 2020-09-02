@@ -159,7 +159,7 @@ Exp_ref_ntaxa <- ntaxa_Adjusted/1.0049 # select(Adjusted_Expected_new, matches("
 
 # summer
 nonBiasCorrected_WHPT_ntaxa_sum <- Obs_ntaxa_sum/select(Exp_ref_ntaxa, matches("_sum"))
-browser()
+
 # Now do the Obs_rb with ONE SITE Obs_ntaxa_spr[1]
 sdobs_ntaxa <- sdobs_one_year_new(0.247, 0.211, 1)
 

@@ -210,3 +210,24 @@ test_that("Test summer", {
   results <- rict:::summer_single_year_classification(predictions, area = "gb")
 
 })
+
+test_that("Test missing seasons", {
+  skip("work in progress")
+  demo_observed_values <- rict::demo_observed_values
+
+  demo_observed_values <- demo_observed_values[1 , ]
+
+  demo_observed_values$Spr_Season_ID <- NA
+  demo_observed_values$Spr_Ntaxa_Bias <- NA
+  demo_observed_values$`Spr_TL2_WHPT_ASPT (AbW,DistFam)` <- NA
+  demo_observed_values$`Spr_TL2_WHPT_NTaxa (AbW,DistFam)` <- NA
+
+  class <- rict(demo_observed_values, year_type = "single", store_eqrs = TRUE)
+  class2 <- rict(demo_observed_values, year_type = "single", store_eqrs = TRUE)
+
+test <-    rict_compare(class, class2)
+
+})
+
+
+

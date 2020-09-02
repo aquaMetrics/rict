@@ -1,0 +1,91 @@
+---
+title: "White paper: Aquatic Joint Research Platform"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+```
+
+NOTE - Some ideas on the collection > modelling > prediction/classification/forecast/scenario testing process. 
+
+## Joint research platform for aquatic modelling and classification
+
+Currently there are a large number of modelling and classification tools available for understanding and responding to environmental harm. They do not share common input or output formats. Making integration and holistic understanding of the environment challenging. 
+
+To aid collaboration and to response to the changing environmentally pressures, we propose creating a joint research platform to share understanding on the environment while sharing the burden of more mundane tasks involved in maintaining and deploying models.
+
+This is influenced by the work climate change research and weather forecasting communities. As well as larger science projects such as CERN. 
+
+### Shared input format
+
+Ecological modelling relies on sampling. The samples come in a range of forms from points, transects, images, areas, grabs etc. But the general feature of modelling is based on being able to predict what we expect to find from whatever sampling technique we deploy. The sample is the fundamental observation which we compare against our expectation. The samples are discreet and independent, either observed instantaneously or perhaps over a few minutes or hours (where dynamic changes are not significant).
+
+Multiple samples can be aggregated to smooth variance but the sample still remains the fundamental building block. The sample could be a single pixel from an aerial image or a salmon moving through a fish counter. We still make predictions of what we expect this sample to be like even if the true picture only emerges after several samples are aggregated or compared.
+
+## How does this look?
+
+Below is an example of diatom records, invert data and river flow in a shared input format. 
+
+They share some reference/book keeping variables but not all. Ultimately, only one reference is needed which is a unique sample id. The other reference variables can be 'nested' or in others words there can be as many or a few as you like. These nested values could be sample type, collector, instrument details etc. Or variables later used for aggregation such as water body, river, geographic area etc. For example:
+
+```{r}
+data <- utils::read.csv(system.file("extdat",
+                                    "test-data.csv",
+                                    package = "rict"
+))
+
+
+knitr::kable(data.frame("sample_id" = 192342, "Nested meta data" = names(data[, 2:6]), check.names = FALSE))
+
+
+```
+
+## Predictors
+
+Predictive variables such as temperature, altitude, slope etc are also metadata can can be nested, as they are the same for each sample. 
+
+
+## Observations 
+
+The observation comes in two parts, the unique name/id for what you are observing and the value associated with it. For clarity these variables are called 'question' and 'response'. The question could be "Taxon name?" and the response "black bird". However the question must be unique. As 'Taxon name?' will be different depending on what survey is being undertaken. So question_id and response_id are given to allow these to be unique with metadata to provide a more readable format. 
+
+UUID are used to provide unique IDs for this variables. 
+
+```{r}
+
+ data <- nest(data, meta_variables = c(2:6, 9:26))
+ data <- nest(meta_variables = c(2:6))
+knitr::kable(data[1:2,])
+
+```
+
+## Data input
+
+Data input is through mobile or internet connected devices. The question_id and related meta data is configured. Manual or automated data can be collected.
+
+## Model platform
+
+There is no prescribed modelling program or software. Researchers can download the data provided and use any software they desire - as long as it has an api. 
+
+Alternatively, if researchers can't provide an api for others. The recommendation is to use R - which integrates into the data collection back-end. 
+
+Once model is complete in R, the model object is saved and deployed. Any existing or future data collected using the platform will be run through the model at the sample level.
+
+Researchers can then build tools to display and aggregate the sample level results as required. 
+
+
+
+
+
+
+
+
+
+
+
+
+

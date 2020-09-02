@@ -1,7 +1,7 @@
 
 prediction <- function(data, predict_indices = NULL) {
   data <- utils::read.csv(system.file("extdat",
-    "test-data.csv",
+    "test-data-model-1.csv",
     package = "rict"
   ))
 

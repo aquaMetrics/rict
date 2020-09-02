@@ -33,7 +33,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     "SUM_SEASON_ID", "SUM_TL2_WHPT_ASPT (ABW,DISTFAM)",
     "SUM_TL2_WHPT_NTAXA (ABW,DISTFAM)", "SUM_NTAXA_BIAS",
     "AUT_SEASON_ID", "AUT_TL2_WHPT_ASPT (ABW,DISTFAM)",
-    "AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)", "AUT_NTAXA_BIAS"predictions <- rict_predict(demo_observed_values[1, ])
+    "AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)", "AUT_NTAXA_BIAS"
   )
 
   biological_data <- predictions[, names_biological]

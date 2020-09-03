@@ -545,12 +545,12 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   allMINTA_whpt <- cbind(allMINTA_whpt, SiteMINTA_whpt_spr_aut)
   whpt_ntaxa_sum_sum_averages <- data.frame(NTAXA_aver_sum_sum=rowMeans(EQRAverages_ntaxa_sum))
   #Change row names
-  rownames(whpt_ntaxa_sum_sum_averages) <- predictions[,"SITE"]
+  rownames(whpt_ntaxa_sum_sum_averages) <- seq_len(nrow(predictions))
   colnames(SiteProbabilityclasses_sum_ntaxa) <- paste0(colnames(SiteProbabilityclasses_sum_ntaxa), "_NTAXA_sum")
 
   # Summer
   averages_sum_ntaxa <- cbind(EQRAverages_ntaxa_sum[1],SiteProbabilityclasses_sum_ntaxa) #
-  rownames(averages_sum_ntaxa) <- predictions[,"SITE"] ## predictions[,"SITE"] [1]
+  rownames(averages_sum_ntaxa) <- seq_len(nrow(predictions)) ## predictions[,"SITE"] [1]
 
   # ****** For NTAXA outputs ********
   # Find the averages of these across seasons aver#(spr, aut)
@@ -586,7 +586,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   averages_sum_aspt <- cbind(EQRAverages_aspt_sum[1],SiteProbabilityclasses_sum_aspt)
 
   allResults_aspt <- averages_sum_aspt
-  rownames(allResults_aspt) <- predictions[,"SITE"]    ##Allpredictions[,"SITE"][1]
+  rownames(allResults_aspt) <- seq_len(nrow(predictions))    ##Allpredictions[,"SITE"][1]
 
   # Add waterbody, and YEAR
   allResults_aspt_sum <- cbind(year_waterBody,averages_sum_aspt)
@@ -654,13 +654,10 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
 
   final <- allResults_ntaxa_aspt_minta_combined
   # if spr or aut not provided remove from end result
-  if(is.na(final$ASPT_eqr_av_spr[1])) {
-    final[ grep("spr", names(final))] <- NA
-  }
 
-  if(is.na(final$ASPT_eqr_av_aut[1])) {
-    final[ grep("aut", names(final))] <- NA
-  }
+    final[is.na(final$ASPT_eqr_av_spr), grep("spr", names(final))] <- NA
+    final[is.na(final$ASPT_eqr_av_aut), grep("aut", names(final))] <- NA
+
 
   return(final)
 }

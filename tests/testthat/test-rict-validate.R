@@ -106,8 +106,9 @@ test_that("warnings work", {
   test_data$Slope[1] <- 1500
   test_data$Slope[2] <- 0
   test_data$Slope[3] <- 0.1
+  test_data$Year[1] <- 1989
   test <- rict_validate(test_data)
-  expect_equal(length(test[[2]][, 1]), 2)
+  expect_equal(length(test[[2]][, 1]), 3)
   # Test user supplied temperatures override calculate temperatures
   test_data <- demo_observed_values
   test_data$MEAN.AIR.TEMP <- 15

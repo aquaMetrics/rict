@@ -19,6 +19,8 @@ knitr::opts_chunk$set(
   comment = "#>",
   echo = FALSE
 )
+
+options(scipen = 2)
 ```
 
 ```{r setup, message=F}

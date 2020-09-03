@@ -379,7 +379,7 @@ These values will be used instead of calculating them from Grid Reference values
               warns,
               paste0(
                 "You provided ", names(value)[1], ": ", value[, rule$variable],
-                ", min value used to train model: ", rule$less_than_warn, ". "
+                ", ", rule$min_warning_message," ", rule$less_than_warn, ". "
               )
             )
           }

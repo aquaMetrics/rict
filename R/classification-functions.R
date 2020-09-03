@@ -426,75 +426,75 @@ getBiasCorrectedEQR <- function(ObsIDX_index, ExpAdjust, K) {
   return(0)
 }
 
-
-#####################################################    not usable functions below ##################################
-
-# 2_old. getWeighted_proportion_Rj() - Get the weighted proportion R(j) = Sum[P(i)Q(ij)]
-# Q(ij) = Adjustment factors for reference site quality scores (Q1, Q2, Q3, Q4, Q5)
-
-getWeighted_proportion_Rj_old <- function(EndGrp_predictedProbs, AdjFactorSiteScores) { # j = 1 to 5,
-  endGrp_probs <- as.matrix(EndGrp_predictedProbs)
-  adjSiteScores <- as.matrix(AdjFactorSiteScores)
-  weighted_proportion_Rj <- rowSums(endGrp_probs %*% adjSiteScores) # a 24 by 1 matrix, sum the rows
-  return(weighted_proportion_Rj)
-}
-
-
-# 2.1_old. getAdjustedExpected() -  Get Adjusted Expected Value E for WHPT ntaxa and ASPT from Aj values 1 to 5 below
-# BMWP_AbnW_NTAXA_Adj <- c(0.996, 1.009, 1.000, 0.967, 0.926) # A1,..,A5
-# BMWP_AbnW_ASPT_Adj  <- c(1.002, 1.008, 1.000, 0.977, 0.945) # A1,..,A5
-# i.e. AdjParameters = A1, A2, A3, A4, A5
-# E = Rj * Aj, two values (ntaxa, aspt) for each site needed
-
-getAdjustedExpected_old <- function(AdjParameters, EndGrPredictions) {
-  expected_Score <- matrix(0, nrow = nrow(AdjParameters), ncol = nrow(EndGrPredictions))
-  for (row_dfscore in 1:nrow(AdjParameters)) {
-    for (row_means in 1:nrow(EndGrPredictions)) {
-      expected_Score[row_dfscore, row_means] <- sum(AdjParameters[row_dfscore, ] * EndGrPredictions[row_means, ]) # apply rowSums() or sum()
-    }
-  }
-  return(expected_Score)
-}
-
-# 4. Standard deviation of WHPT ASPT for under-estimated number M of WHPT_ntaxa input by user
-# Similar to above but check with Ralph
-
-calculate_Estimatedbias_whpt_aspt <- function(M, Obs_WHPT_ASPT) {
-  set.seed(1234)
-  SDev_denom <- 2 / sqrt(M)
-  mean_of_whpt_aspt_missed <- 4.35 + (0.271 * Obs_WHPT_ASPT) # the mean
-  return(stats::rnorm(Obs_WHPT_ASPT, mean_of_whpt_aspt_missed, SDev_denom)) # normal distribution, mean of "mean_of_whpt_aspt_missed",and SD of "SDev_denom"
-}
-
-
-# 5. EQR conversion factors, Function to calculate the EQR index for the reference sites observed
-# WHPTNTAXA = 1.0049, WHPT ASPT = 0.9921
-
-getEQRValue <- function(ObsIDX9rB, Exp_ref_r) {
-  EQR <- ObsIDX9rB / Exp_ref_r
-  # EQR <- ObsIDX9rB[,1:2] / Exp_ref_r
-  # try_this <- data.frame()
-  #  for(i in 2:(ncol(ObsIDX9rB)-1)) {
-  #    EQR <- cbind(EQR, (ObsIDX9rB[,2*i-1:2*i]/Exp_ref_r) )
-  #  }
-  return(EQR)
-}
-
-# Get an index
-# Function to calculate the EQR index for the reference sites observed
-# ObsIDX9_rB is 24 by ncol(ObsIDX9_rB) *N_runs, loop through the ObsIDX9_rB in pairs of two seasons each, divide by Exp_ref_ntaxa_r
-# sequence is 1:2, 3:4, 5:6, 7:8, ...., (2*i-1):2*i, the odd number sequence
-getEQRValue_old <- function(ObsValue, RefValue) {
-  thisFrame <- data.frame(0, nrow = nrow(ObsValue), ncol = ncol(ObsValue))
-  a <- ObsValue[, 1:2] * RefValue
-  # print(a)
-  for (i in 2:(ncol(ObsValue) - 1)) {
-    # print(i)
-    b <- ObsValue[, (2 * i - 1):2 * i] * RefValue
-    a <- cbind(a, b)
-    # print(a)
-  }
-  return(a)
-}
+#
+# #####################################################    not usable functions below ##################################
+#
+# # 2_old. getWeighted_proportion_Rj() - Get the weighted proportion R(j) = Sum[P(i)Q(ij)]
+# # Q(ij) = Adjustment factors for reference site quality scores (Q1, Q2, Q3, Q4, Q5)
+#
+# getWeighted_proportion_Rj_old <- function(EndGrp_predictedProbs, AdjFactorSiteScores) { # j = 1 to 5,
+#   endGrp_probs <- as.matrix(EndGrp_predictedProbs)
+#   adjSiteScores <- as.matrix(AdjFactorSiteScores)
+#   weighted_proportion_Rj <- rowSums(endGrp_probs %*% adjSiteScores) # a 24 by 1 matrix, sum the rows
+#   return(weighted_proportion_Rj)
+# }
+#
+#
+# # 2.1_old. getAdjustedExpected() -  Get Adjusted Expected Value E for WHPT ntaxa and ASPT from Aj values 1 to 5 below
+# # BMWP_AbnW_NTAXA_Adj <- c(0.996, 1.009, 1.000, 0.967, 0.926) # A1,..,A5
+# # BMWP_AbnW_ASPT_Adj  <- c(1.002, 1.008, 1.000, 0.977, 0.945) # A1,..,A5
+# # i.e. AdjParameters = A1, A2, A3, A4, A5
+# # E = Rj * Aj, two values (ntaxa, aspt) for each site needed
+#
+# getAdjustedExpected_old <- function(AdjParameters, EndGrPredictions) {
+#   expected_Score <- matrix(0, nrow = nrow(AdjParameters), ncol = nrow(EndGrPredictions))
+#   for (row_dfscore in 1:nrow(AdjParameters)) {
+#     for (row_means in 1:nrow(EndGrPredictions)) {
+#       expected_Score[row_dfscore, row_means] <- sum(AdjParameters[row_dfscore, ] * EndGrPredictions[row_means, ]) # apply rowSums() or sum()
+#     }
+#   }
+#   return(expected_Score)
+# }
+#
+# # 4. Standard deviation of WHPT ASPT for under-estimated number M of WHPT_ntaxa input by user
+# # Similar to above but check with Ralph
+#
+# calculate_Estimatedbias_whpt_aspt <- function(M, Obs_WHPT_ASPT) {
+#   set.seed(1234)
+#   SDev_denom <- 2 / sqrt(M)
+#   mean_of_whpt_aspt_missed <- 4.35 + (0.271 * Obs_WHPT_ASPT) # the mean
+#   return(stats::rnorm(Obs_WHPT_ASPT, mean_of_whpt_aspt_missed, SDev_denom)) # normal distribution, mean of "mean_of_whpt_aspt_missed",and SD of "SDev_denom"
+# }
+#
+#
+# # 5. EQR conversion factors, Function to calculate the EQR index for the reference sites observed
+# # WHPTNTAXA = 1.0049, WHPT ASPT = 0.9921
+#
+# getEQRValue <- function(ObsIDX9rB, Exp_ref_r) {
+#   EQR <- ObsIDX9rB / Exp_ref_r
+#   # EQR <- ObsIDX9rB[,1:2] / Exp_ref_r
+#   # try_this <- data.frame()
+#   #  for(i in 2:(ncol(ObsIDX9rB)-1)) {
+#   #    EQR <- cbind(EQR, (ObsIDX9rB[,2*i-1:2*i]/Exp_ref_r) )
+#   #  }
+#   return(EQR)
+# }
+#
+# # Get an index
+# # Function to calculate the EQR index for the reference sites observed
+# # ObsIDX9_rB is 24 by ncol(ObsIDX9_rB) *N_runs, loop through the ObsIDX9_rB in pairs of two seasons each, divide by Exp_ref_ntaxa_r
+# # sequence is 1:2, 3:4, 5:6, 7:8, ...., (2*i-1):2*i, the odd number sequence
+# getEQRValue_old <- function(ObsValue, RefValue) {
+#   thisFrame <- data.frame(0, nrow = nrow(ObsValue), ncol = ncol(ObsValue))
+#   a <- ObsValue[, 1:2] * RefValue
+#   # print(a)
+#   for (i in 2:(ncol(ObsValue) - 1)) {
+#     # print(i)
+#     b <- ObsValue[, (2 * i - 1):2 * i] * RefValue
+#     a <- cbind(a, b)
+#     # print(a)
+#   }
+#   return(a)
+# }
 
 # End Exclude Linting

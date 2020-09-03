@@ -1,6 +1,5 @@
 test_that("rict_compare matches test data", {
   skip_on_appveyor()
-  skip_on_travis()
   # Test dataset
   test_data <- utils::read.csv(
     system.file("extdat",

@@ -188,20 +188,14 @@ rict_validate <- function(data = NULL) {
   }
   ### Check columns that may or may not be provided -----------------------------------------
   if (model == "physical") {
-    if (all(is.na(data$DISCHARGE)) &
-      all(is.na(data$VELOCITY))) {
-      stop("You provided empty VELOCITY and DISCHARGE values,
-          we expect values for at least one of these variables. ", call. = FALSE)
-    }
-
     if (all(!is.na(data$DISCHARGE)) &
       all(!is.na(data$VELOCITY))) {
       warning("You provided both VELOCITY and DISCHARGE values,
           DISCHARGE will be used by default. ", call. = FALSE)
       # remove VELOCITY from validation rules so no rule will be applied
-      validation_rules <- validation_rules[validation_rules$variable != "VELOCITY", ]
+      # validation_rules <- validation_rules[validation_rules$variable != "VELOCITY", ]
       # remove VELOCITY from input data
-      data$VELOCITY <- NULL
+      # data$VELOCITY <- NULL
     }
   }
   ### Add calculated variables based on input data -----------------------------------------
@@ -436,9 +430,23 @@ These values will be used instead of calculating them from Grid Reference values
       return(dplyr::bind_rows(checks))
     }
   })
+  # Bind checks into data frame
+  checks <- dplyr::bind_rows(checks)
+  ### Add discharge and velocity columns missing data fails ---------------------------
+  discharge_velocity_fails <- data[is.na(data$DISCHARGE) & is.na(data$VELO_DUMMY), ]
+  discharge_velocity_fails <- data.frame("SITE" = discharge_velocity_fails$SITE,
+                                         "YEAR" = discharge_velocity_fails$YEAR,
+                                         stringsAsFactors = FALSE)
 
+  if (nrow(discharge_velocity_fails) > 0) {
+  discharge_velocity_fails$FAIL <-
+    "You provided empty VELOCITY and DISCHARGE values, we expect values for at least one of these variables."
+  discharge_velocity_fails$WARNING <- ""
+  discharge_velocity_fails$REPLACEMENT <-  ""
+  # Add discharge and velocity fails
+  checks <- rbind(checks, discharge_velocity_fails)
+  }
   ### Replace values if value is less than the ‘overall’ minimum value ------------------------------
-
   validation_rules_input <- validation_rules[validation_rules$source == "input", ]
   ALT_LIM <- validation_rules_input[validation_rules_input$variable == "ALTITUDE", "replacement_limit"]
   ALT_VAL <- validation_rules_input[validation_rules_input$variable == "ALTITUDE", "replacement_val"]
@@ -475,10 +483,10 @@ These values will be used instead of calculating them from Grid Reference values
     data$SLOPE[data$SLOPE == SLP_LIM] <- SLP_VAL
   }
 
-  # Bind and format checks into data frame
-  checks <- dplyr::bind_rows(checks)
+  ### Format checks and print check messages  --------------------------------------------------
+  # Remove empty checks
   checks <- checks[checks$FAIL != "" | checks$WARNING != "" | checks$REPLACEMENT != "", ]
-  # if both fail and warn - then only return fail
+  # If both fail and warn - then only return fail
   checks$WARNING[checks$FAIL != "" & checks$WARNING != ""] <- "---"
   checks$WARNING[checks$WARNING == ""] <- "---"
   checks$REPLACEMENT[checks$REPLACEMENT == ""] <- "---"
@@ -491,10 +499,11 @@ These values will be used instead of calculating them from Grid Reference values
   } else {
     message("Success, all validation checks passed!")
   }
-  # Find fails and remove
+
+  ### Pass checks and passing rows into list of dataframes ready for rict_predict() --------------------------
+  # Find failing rows and store separately
   this_failing <- checks[checks$FAIL != "---", ]
-  # Subset the instances to run in prediction by removing "this_failing"
-  # extract fails, warnings and values from list of dataframes returned from rict_validate function:
+  # Subset the 'passing' instances to run in prediction by removing "this_failing"
   data <- data[!data$SITE %in% this_failing$SITE, ] # Note, can't use dplyr::anti_join() in ML AZURE
   if (nrow(data) == 0) {
     stop("You provided data that has failure(s) on every row.

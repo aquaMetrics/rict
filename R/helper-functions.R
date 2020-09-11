@@ -123,6 +123,7 @@ get_discharge <- function(data) {
       message("Using velocity, width and depth to calculate discharge category")
     }
     # hack - to avoid errors if some VELOCITY rows are NA - but avoids velocity validation rules..
+    data_row$VELO_DUMMY <- data_row$VELOCITY
     data_row$VELOCITY <- NULL
     return(data_row)
   })

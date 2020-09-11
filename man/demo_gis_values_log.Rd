@@ -9,7 +9,7 @@ A data frame with 12 rows and 18 variables:
 \describe{
   \item{SITE}{Site identifier}
   \item{Year}{Year of sampling}
-  \item{WATERBODY}{Water body identifier}#'
+  \item{WATERBODY}{Water body identifier}
   \item{OBJECTID}{Optional object ID reference from map-based locator}
   \item{SX}{Sampling site X coordinate (British National Grid)}
   \item{SY}{Sampling site Y coordinate (British National Grid)}

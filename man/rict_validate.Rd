@@ -14,10 +14,6 @@ rict_validate(data = NULL)
   ...
 }}
 }
-\value{
-List of three dataframes: 1. warnings_failings, 2. this_failing 3.
-  valid 'data'.
-}
 \description{
 Low level function to validate input `data`. Returns list of dataframes
 containing fails/warnings/replacements and passing observed values. The

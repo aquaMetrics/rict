@@ -29,8 +29,7 @@ test_that("outright fails stop process and create error message", {
   test_data <- demo_observed_values
   test_data$Velocity <- NA
   test_data$Discharge <- NA
-  expect_error(rict_validate(test_data), "You provided empty VELOCITY and DISCHARGE values,
-          we expect values for at least one of these variables. ")
+  expect_error(rict_validate(test_data))
   # Empty ALKALINITY, HARDNESS, CONDUCT and CALCIUM values
   test_data <- demo_observed_values
   test_data$Alkalinity <- NA
@@ -105,6 +104,13 @@ test_that("fails on some rows create fail messages (but process continues of val
   test_data$Northing[1] <- "59000"
   test <- rict_validate(test_data)
   expect_equal(length(test[[2]][, 1]), 2)
+  # Test optional columns where one or the other column must be provided
+  test_data <- demo_observed_values
+  test_data$Velocity[1] <- NA
+  test_data$Discharge[1] <- NA
+  test_data$Dist_from_Source[1] <- NA
+  test <- rict_validate(test_data)
+  expect_equal(length(test[[2]][, 1]), 4)
 })
 
 # ---------------------------------------------------------------------
@@ -125,8 +131,7 @@ test_that("warnings work", {
   # Warning if both discharge and velocity have values
   test_data <- demo_observed_values
   test_data$Velocity <- 1
-  expect_warning(rict_validate(test_data), "You provided both VELOCITY and DISCHARGE values,
-          DISCHARGE will be used by default. ")
+  expect_warning(rict_validate(test_data))
 })
 
 # ---------------------------------------------------------------------

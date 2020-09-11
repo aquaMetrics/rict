@@ -32,7 +32,7 @@ test_that("Outputs match azure single-year outputs", {
 
 
 test_that("Outputs match azure multi-year outputs", {
- # skip("currently failing because change to set.seed code")
+  # skip("currently failing because change to set.seed code")
   predictions <- rict_predict(demo_observed_values)
   classification <- rict_classify(predictions)
   expect_equal(class(classification), "data.frame")
@@ -185,8 +185,8 @@ test_that("Test single row of multi-year input works", {
 
   # Data contains single year / single row sites at start and end of input file
   single_row_test <- utils::read.csv(system.file("extdat",
-                                                           "test-data-single-site-multi-year.csv",
-                                                           package = "rict"
+    "test-data-single-site-multi-year.csv",
+    package = "rict"
   ), check.names = F)
   # Run data through multi-year classification and check output is created for all sites
   sites <- unique(single_row_test$SITE)
@@ -197,7 +197,6 @@ test_that("Test single row of multi-year input works", {
   check <- rict(single_row_test[1, ])
   # Quick test to see it return a value
   expect_gte(as.numeric(as.character(check$H_NTAXA_spr_aut)), 0)
-
 })
 
 test_that("Test summer", {
@@ -208,14 +207,13 @@ test_that("Test summer", {
 
   predictions <- rict_predict(demo_observed_values)
   results <- rict:::summer_single_year_classification(predictions, area = "gb")
-
 })
 
 test_that("Test missing seasons", {
   skip("work in progress")
   demo_observed_values <- rict::demo_observed_values
 
-  demo_observed_values <- demo_observed_values[1 , ]
+  demo_observed_values <- demo_observed_values[1, ]
 
   demo_observed_values$Spr_Season_ID <- NA
   demo_observed_values$Spr_Ntaxa_Bias <- NA
@@ -225,9 +223,5 @@ test_that("Test missing seasons", {
   class <- rict(demo_observed_values, year_type = "single", store_eqrs = TRUE)
   class2 <- rict(demo_observed_values, year_type = "single", store_eqrs = TRUE)
 
-test <-    rict_compare(class, class2)
-
+  test <- rict_compare(class, class2)
 })
-
-
-

@@ -245,7 +245,7 @@ rename_end_group_means <- function(data) {
 # (a$EndGrp_Probs,final.predictors_try2, 1) # for site k=1
 EndGrpProb_Replacement <- function(x, final_data, k) {
   allprobss <- sapply(x, function(x) ifelse(x == x, paste0("p", x), 0)) # apply to all values in EndGroup
-  #allprobss <- noquote(allprobss)
+  # allprobss <- noquote(allprobss)
   c <- as.double(unname(final_data[k, c(allprobss)]))
   return(c) # How do you select with duplicates included???
 }
@@ -277,7 +277,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id,
   end_groups <- end_group_IndexDFrame %>% dplyr::filter(SeasonCode %in% season_to_run)
 
   if (all_indices == TRUE) {
-   predictions <- purrr::map_df(c(1, 2, 3), function(season) {
+    predictions <- purrr::map_df(c(1, 2, 3), function(season) {
       end_groups <- end_groups[end_groups$SeasonCode == season, ]
       end_groups <- as.matrix(dplyr::select(end_groups, -EndGrp, -SeasonCode, -Season))
       end_groups <- end_groups[seq_len(length(DistNames)), ]
@@ -287,7 +287,7 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id,
       all$SEASON <- season
       all <- cbind(data_to_bindTo, all)
     })
-   return(predictions)
+    return(predictions)
   }
   # Filter for Spring, SeasonCode==1, if exists
   if (1 %in% end_group_IndexDFrame$SeasonCode) {
@@ -523,8 +523,10 @@ getSeasonIndexScores_new <- function(data_to_bindTo, season_to_run, index_id, en
     # All indices, removes "EndGrp", "SeasonCode", "Season"
     spr_all <- select(filter(end_group_IndexDFrame, SeasonCode == 1), everything())[, c(-1, -2, -3)]
     # Leave Season when multiplying out
-    spring_allIndices_Scores <- as.data.frame(getProbScores(data_to_bindTo[, probScores],
-                                                            select(spr_all, everything())))
+    spring_allIndices_Scores <- as.data.frame(getProbScores(
+      data_to_bindTo[, probScores],
+      select(spr_all, everything())
+    ))
     spr <- data.frame(Season = rep("Spring", nrow(spring_allIndices_Scores)))
     # print("bind_all")
     bind_all <- rbind(bind_all, cbind(spr, spring_allIndices_Scores))
@@ -544,8 +546,10 @@ getSeasonIndexScores_new <- function(data_to_bindTo, season_to_run, index_id, en
 
     # Filter season and index together for all the indices
     sum_all <- select(filter(end_group_IndexDFrame, SeasonCode == 2), everything())[, c(-1, -2, -3)] # all indices
-    summer_allIndices_Scores <- as.data.frame(getProbScores(data_to_bindTo[, probScores],
-                                                            select(sum_all, everything())))
+    summer_allIndices_Scores <- as.data.frame(getProbScores(
+      data_to_bindTo[, probScores],
+      select(sum_all, everything())
+    ))
     summ <- data.frame(Season = rep("Summer", nrow(summer_allIndices_Scores)))
     # print(summer_allIndices_Scores)
     bind_all <- rbind(bind_all, cbind(summ, summer_allIndices_Scores)) # Remove row 1
@@ -562,8 +566,10 @@ getSeasonIndexScores_new <- function(data_to_bindTo, season_to_run, index_id, en
     print("Processing autumn")
     # Filter season and index together for all the indices
     aut_all <- select(filter(end_group_IndexDFrame, SeasonCode == 3), everything())[, c(-1, -2, -3)] # all indices
-    autumn_allIndices_Scores <- as.data.frame(getProbScores(data_to_bindTo[, probScores],
-                                                            select(aut_all, everything())))
+    autumn_allIndices_Scores <- as.data.frame(getProbScores(
+      data_to_bindTo[, probScores],
+      select(aut_all, everything())
+    ))
     aut <- data.frame(Season = rep("Autumn", nrow(autumn_allIndices_Scores)))
     print("Autum scores -->")
     # print(autumn_allIndices_Scores)

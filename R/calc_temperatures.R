@@ -37,7 +37,7 @@ calcTemps <- function(coordinates) {
 
   # load air temp grid - required for validation
   air_temp_grid <- utils::read.csv(system.file("extdat", "air-temp-grid.csv",
-                                               package = "rict"
+    package = "rict"
   ))
 
   NP <- NULL

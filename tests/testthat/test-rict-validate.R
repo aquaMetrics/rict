@@ -21,8 +21,10 @@ test_that("outright fails stop process and create error message", {
   # Test data types are correct
   test_data <- demo_gis_values_log
   test_data$Alkalinity <- "test"
-  expect_error(rict_validate(test_data),
-               "You provided column 'ALKALINITY' with class 'character', we expect class 'numeric'.")
+  expect_error(
+    rict_validate(test_data),
+    "You provided column 'ALKALINITY' with class 'character', we expect class 'numeric'."
+  )
   # Test optional columns where one or the other column must be provided
   test_data <- demo_observed_values
   test_data$Velocity <- NA
@@ -72,7 +74,6 @@ test_that("outright fails stop process and create error message", {
   test_data$SX <- NULL
   test_data$SY <- NULL
   expect_error(rict_validate(test_data))
-
 })
 
 # ---------------------------------------------------------------------

@@ -7,23 +7,23 @@
 get_alkalinity <- function(data) {
   names(data) <- toupper(names(data))
   if (all(is.na(data$HARDNESS)) &
-      all(is.na(data$CALCIUM)) &
-      all(is.na(data$CONDUCTIVITY)) &
-      all(is.na(data$ALKALINITY))
+    all(is.na(data$CALCIUM)) &
+    all(is.na(data$CONDUCTIVITY)) &
+    all(is.na(data$ALKALINITY))
   ) {
     stop("You provided empty ALKALINITY, HARDNESS, CONDUCTIVITY and CALCIUM values,
        we expect values for at least one of these variables. ", call. = FALSE)
   } else { # loop through rows and calculate Alkalinity
 
-  alkalinity <- lapply(split(data, paste(data$SITE, data$YEAR)), function(data_row) {
-    if (!any(is.null(data_row$HARDNESS)) && !any(is.na(data_row$HARDNESS))) {
-      data_row$ALKALINITY <- 4.677 + 0.6393 * data_row$HARDNESS
-      message(paste0(
-        "Using Hardness value to calculate Alkalinity at ",
-        data_row$SITE, " - ", data_row$YEAR, ". "
-      ))
-    }
-    else
+    alkalinity <- lapply(split(data, paste(data$SITE, data$YEAR)), function(data_row) {
+      if (!any(is.null(data_row$HARDNESS)) && !any(is.na(data_row$HARDNESS))) {
+        data_row$ALKALINITY <- 4.677 + 0.6393 * data_row$HARDNESS
+        message(paste0(
+          "Using Hardness value to calculate Alkalinity at ",
+          data_row$SITE, " - ", data_row$YEAR, ". "
+        ))
+      }
+      else
       if (!any(is.null(data_row$CALCIUM)) && !any(is.na(data_row$CALCIUM))) {
         data_row$ALKALINITY <- 14.552 + 1.7606 * data_row$CALCIUM
         message(paste0(
@@ -31,7 +31,7 @@ get_alkalinity <- function(data) {
           data_row$SITE, " - ", data_row$YEAR, ". "
         ))
       }
-    else
+      else
       if (!any(is.null(data_row$CONDUCTIVITY)) && !any(is.na(data_row$CONDUCTIVITY))) {
         data_row$ALKALINITY <- 0.3201 * data_row$CONDUCTIVITY - 8.0593
         message(paste0(
@@ -39,12 +39,12 @@ get_alkalinity <- function(data) {
           data_row$SITE, " - ", data_row$YEAR, ". "
         ))
       }
-    return(data_row)
-  })
-  alkalinity <- dplyr::bind_rows(alkalinity)
-  # Keep order and row.names the same as original input data for consistent output
-  data <- alkalinity[order(match(alkalinity[, "SITE"], data[, "SITE"])), ]
-  row.names(data) <- seq_len(nrow(data))
+      return(data_row)
+    })
+    alkalinity <- dplyr::bind_rows(alkalinity)
+    # Keep order and row.names the same as original input data for consistent output
+    data <- alkalinity[order(match(alkalinity[, "SITE"], data[, "SITE"])), ]
+    row.names(data) <- seq_len(nrow(data))
   }
   return(data)
 }
@@ -53,7 +53,7 @@ get_alkalinity <- function(data) {
 get_substrate <- function(data) {
   data$TOTSUB <- rowSums(data[, c("BOULDER_COBBLES", "PEBBLES_GRAVEL", "SILT_CLAY", "SAND")])
   data$MSUBST <- ((-7.75 * data$BOULDER_COBBLES) - (3.25 * data$PEBBLES_GRAVEL) +
-                    (2 * data$SAND) + (8 * data$SILT_CLAY)) / data$TOTSUB
+    (2 * data$SAND) + (8 * data$SILT_CLAY)) / data$TOTSUB
   # re-assign substrate variable to match with prediction function requirements
   data$vld_substr_log <- data$MSUBST
   return(data)

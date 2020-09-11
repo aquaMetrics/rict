@@ -78,15 +78,15 @@ test_that("NI predictions", {
 test_that("all_indices predictions work", {
   demo_observed_values <-
     utils::read.csv(system.file("extdat",
-                                "test-data-model-1.csv",
-                                package = "rict"
+      "test-data-model-1.csv",
+      package = "rict"
     ), check.names = FALSE)
 
   indices_prediction <- rict_predict(demo_observed_values[1:12, ], all_indices = TRUE)
   verified_predictions <-
     utils::read.csv(system.file("extdat",
-                                "rict-all-indices-predictions.csv",
-                                package = "rict"
+      "rict-all-indices-predictions.csv",
+      package = "rict"
     ), check.names = FALSE)
 
   indices_prediction <- indices_prediction[, names(indices_prediction) %in% names(verified_predictions)]
@@ -98,15 +98,15 @@ test_that("all_indices predictions work", {
 test_that("taxa predictions work", {
   demo_observed_values <-
     utils::read.csv(system.file("extdat",
-                                "test-data-model-1.csv",
-                                package = "rict"
+      "test-data-model-1.csv",
+      package = "rict"
     ), check.names = FALSE)
 
   indices_prediction <- rict_predict(demo_observed_values[1, ], taxa = TRUE)
   verified_predictions <-
     utils::read.csv(system.file("extdat",
-                                "rict-gb-taxa-prediction.csv",
-                                package = "rict"
+      "rict-gb-taxa-prediction.csv",
+      package = "rict"
     ), check.names = FALSE, stringsAsFactors = T)
 
   indices_prediction <- indices_prediction[, names(indices_prediction) %in% names(verified_predictions)]

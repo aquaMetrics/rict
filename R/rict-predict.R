@@ -126,7 +126,7 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
     data$`TEST SITECODE` <- NULL
   }
 
-    # Final Data for classification e.g. Linear discriminant Analysis (LDA) classifier/predictor
+  # Final Data for classification e.g. Linear discriminant Analysis (LDA) classifier/predictor
   if (model == "physical" & area == "gb") {
     final_predictors <- data.frame(
       "SITE"                      =  data$SITE,

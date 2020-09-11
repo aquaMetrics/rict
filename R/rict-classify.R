@@ -31,7 +31,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
     return(classification_results)
   } else {
     # set global random seed for rnorm functions etc
-     set.seed(1234)
+    set.seed(1234)
     # Part 1: This Script reads all prediction indices for classification
     gb685_assess_score <- utils::read.csv(system.file("extdat",
       "end-grp-assess-scores.csv",
@@ -44,8 +44,9 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
 
     if (area == "ni") {
       gb685_assess_score <- utils::read.csv(system.file("extdat",
-      "EndGrp_AssessScoresNI.csv",
-      package = "rict"))
+        "EndGrp_AssessScoresNI.csv",
+        package = "rict"
+      ))
     }
     # Enter source files
     # Use the column header as site names in the final output
@@ -61,7 +62,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
     names(data) <- toupper(names(data))
 
     # Get the biological data TL2_WHPT_NTAXA_AbW_DistFam_spr
-    names_biological <-  names(data)[grep("ABW,DISTFAM|SEASON_ID|BIAS", names(data))]
+    names_biological <- names(data)[grep("ABW,DISTFAM|SEASON_ID|BIAS", names(data))]
     biological_data <- data[, names_biological]
 
     # Remove biological_data from data
@@ -77,11 +78,13 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
     ubias_main <- biological_data[, "SPR_NTAXA_BIAS"][1]
 
     # Create default bias value of 1.68 or 0 depending on area
-    default_bias <- data.frame("ni" = 0,
-                               "gb" = 1.68)
+    default_bias <- data.frame(
+      "ni" = 0,
+      "gb" = 1.68
+    )
     # If user does not provide any bias value select default from values
     if (is.na(ubias_main) | ubias_main == -9) {
-      ubias_main  <- default_bias[, grep(area, names(default_bias))]
+      ubias_main <- default_bias[, grep(area, names(default_bias))]
       message("Bias not provided in input file - using default bias of ", ubias_main)
     }
 
@@ -341,7 +344,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
           lastSiteProcessed <- TRUE
         }
         # Move to current record just processed
-        #j <- j - 1
+        # j <- j - 1
         # ******************************************
         # Part 1.1: for "Spring" - DO FOR NTAXA
         # Combined ntaxa spr-aut
@@ -491,11 +494,10 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
 
       # Move the pointer k to new adjusted position for j - whether multiple or not
       if (multipleSite_encoutered) {
-      k <- j
+        k <- j
       } else {
-      k  <- j
+        k <- j
       }
-
     } # END of FOR LOOP
 
     # MINTA outputs

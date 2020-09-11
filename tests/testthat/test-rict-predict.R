@@ -95,7 +95,7 @@ test_that("all_indices predictions work", {
 })
 
 
-test_that("taxa predictions work", {
+test_that("taxa predictions work GB", {
   demo_observed_values <-
     utils::read.csv(system.file("extdat",
       "test-data-model-1.csv",
@@ -113,3 +113,20 @@ test_that("taxa predictions work", {
   verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(indices_prediction)]
   expect_equal(indices_prediction$Average_Numerical_Abundance, verified_predictions$Average_Numerical_Abundance)
 })
+
+test_that("All indices predictions work NI", {
+  skip("Work in progress")
+  data <- demo_ni_observed_values
+
+  indices_prediction <- rict_predict(data, all_indices = TRUE)
+  verified_predictions <-
+    utils::read.csv(system.file("extdat",
+                                "rict-ni-taxa-prediction.csv",
+                                package = "rict"
+    ), check.names = FALSE, stringsAsFactors = T)
+
+  indices_prediction <- indices_prediction[, names(indices_prediction) %in% names(verified_predictions)]
+  verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(indices_prediction)]
+  expect_equal(indices_prediction$Average_Numerical_Abundance, verified_predictions$Average_Numerical_Abundance)
+})
+

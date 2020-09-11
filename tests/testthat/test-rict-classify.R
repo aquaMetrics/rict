@@ -13,22 +13,58 @@ test_that("Outputs match azure single-year outputs", {
   classification <- rict_classify(predictions, year_type = "single")
   expect_equal(class(classification), "data.frame")
 
-  validation_classification <- utils::read.csv(system.file("extdat",
+  azure_classification <- utils::read.csv(system.file("extdat",
     "validation-class-single-year.csv",
     package = "rict"
   ))
 
   classification$mintawhpt_spr_aut_mostProb <-
     as.character(classification$mintawhpt_spr_aut_mostProb)
-  validation_classification$mintawhpt_spr_aut_mostProb <-
-    as.character(validation_classification$mintawhpt_spr_aut_mostProb)
+  azure_classification$mintawhpt_spr_aut_mostProb <-
+    as.character(azure_classification$mintawhpt_spr_aut_mostProb)
 
   equal <- all.equal(
     classification$mintawhpt_spr_aut_mostProb,
-    validation_classification$mintawhpt_spr_aut_mostProb[1]
+    azure_classification$mintawhpt_spr_aut_mostProb[1]
   )
   expect_true(equal == T)
+
 })
+
+test_that("Outputs match azure NI single-year outputs", {
+  data <- demo_ni_observed_values# only one year required
+  test_validation_func <- rict:::rict_validate(data)
+  predictions <- rict_predict(data)
+  classification <- rict_classify(predictions, year_type = "single")
+  expect_equal(class(classification), "data.frame")
+
+  azure_classification <- utils::read.csv(system.file("extdat",
+                                                               "validation-classification-ni-single-year.csv",
+                                                               package = "rict"
+  ),
+  check.names = F, stringsAsFactors = F
+  )
+
+  classification$mintawhpt_spr_aut_mostProb <-
+    as.character(classification$mintawhpt_spr_aut_mostProb)
+  azure_classification$mintawhpt_spr_aut_mostProb <-
+    as.character(azure_classification$mintawhpt_spr_aut_mostProb)
+ # status are the same:
+  equal <- all.equal(
+    classification$mintawhpt_spr_aut_mostProb,
+    azure_classification$mintawhpt_spr_aut_mostProb
+  )
+  expect_true(equal == T)
+
+# work in progress
+#  equal <- all.equal(
+#   type.convert(classification[, 3:60]),
+#   type.convert(azure_classification[, 3:60])
+#  )
+
+
+})
+
 
 
 test_that("Outputs match azure multi-year outputs", {

@@ -11,7 +11,7 @@ install:
   ps: Bootstrap
 
 environment:
-  R_VERSION: 3.5
+  R_VERSION: 3.5.0
 
 
 # Adapt as necessary starting from here

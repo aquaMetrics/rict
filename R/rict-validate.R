@@ -27,8 +27,6 @@
 #' }
 #'
 #'
-#' @return List of three dataframes: 1. warnings_failings, 2. this_failing 3.
-#'   valid 'data'.
 #' @export
 #' @importFrom rlang .data
 #' @importFrom stats na.omit

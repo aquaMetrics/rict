@@ -1,16 +1,20 @@
 #' Run the River Invertebrate Classification Tool (RICT)
 #'
 #' The \code{rict} function classifies observed environmental values.
-#' @param data Dataframe of observed environmental values
+#'
+#' @param data Dataframe of observed environmental values for example of input
+#'   data see \code{\link{demo_observed_values}} or
+#'   \code{\link{demo_gis_values_log}}.
 #'  \describe{
 #'   \item{SITE}{Site identifier}
 #'   \item{Waterbody}{Water body identifier}
+#'   \item{...}{...}
 #'    }
 #' @param year_type "single" or "multi" depending if multi-year classification
 #'   required - default is "multi".
 #' @param store_eqrs TRUE/FALSE if set to TRUE function will return simulate
 #'   EQRs only
-#' @return Dataframe of classification results (or simulated EQRs if store_eqrs
+#' @return Dataframe of classification results (and simulated EQRs if store_eqrs
 #'   = TRUE)
 #' @export
 #' @importFrom rlang .data

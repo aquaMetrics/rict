@@ -1,7 +1,10 @@
 #' A Statistical Test to Compare Two Results
 #'
-#' @param a numeric results 'a'
-#' @param b numeric results 'b'
+#' Statistics to compare whether there is a real difference in EQR values of
+#' paired results.
+#'
+#' @param a numeric vector containing results 'a'
+#' @param b numeric vector constainng results 'b'
 #'
 #' @return dataframe containing stats
 #' @export

@@ -8,12 +8,13 @@
 A data frame with 12 rows and 18 variables:
 \describe{
   \item{SITE}{Site identifier}
-  \item{WATERBODY}{Water body identifier}
   \item{Year}{Year of sampling}
+  \item{WATERBODY}{Water body identifier}#'
+  \item{OBJECTID}{Optional object ID reference from map-based locator}
   \item{SX}{Sampling site X coordinate (British National Grid)}
   \item{SY}{Sampling site Y coordinate (British National Grid)}
-  \item{EX}{Nearest X grid coordinate used for predictive variables}
-  \item{EY}{Nearest Y grid coordinate used for predictive variables}
+  \item{EX}{Optionally for reference, the nearest X grid coordinate used for predictive variables}
+  \item{EY}{Optionally for reference, the nearest Y grid coordinate used for predictive variables}
   \item{shape_Length}{shape_Length}
   \item{Alkalinity}{Alkalinity}
   \item{altitude}{altitude}

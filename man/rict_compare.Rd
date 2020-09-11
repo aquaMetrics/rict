@@ -76,9 +76,10 @@ difference in EQR values and/or status class between a pair of results and/or
 sites and/or time periods.
 }
 \details{
-The `rict_compare` makes use of two lower level functions: `compare_test` and
-`compare_probability`. And adds special handling, for instance of the 'MINTA'
-outputs from RICT classification.
+The `rict_compare` makes use of two lower level functions:
+\code{\link{compare_test`}} and \code{\link{compare_probability}}. Before
+passing data to these functions it formats the data and removes results for
+example the 'MINTA' values (as these are not applicable for compare_test()).
 }
 \examples{
 results_a <- rict(demo_observed_values[1, ], store_eqrs = TRUE, year_type = "single")

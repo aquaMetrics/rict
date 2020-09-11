@@ -63,10 +63,16 @@ test_that("outright fails stop process and create error message", {
   test_data$Boulder_Cobbles <- NA
   test_data$Pebbles_Gravel <- NA
   expect_error(rict_validate(test_data))
-  # missing WHPT scores
+  # Missing WHPT scores
   test_data <- demo_observed_values
   test_data[, grep("DistFam", names(test_data))] <- NA
   test <- rict(test_data)
+  # Missing SX or SY for GIS
+  test_data <- demo_gis_values_log
+  test_data$SX <- NULL
+  test_data$SY <- NULL
+  expect_error(rict_validate(test_data))
+
 })
 
 # ---------------------------------------------------------------------

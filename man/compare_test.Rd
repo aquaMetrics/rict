@@ -7,15 +7,16 @@
 compare_test(a, b)
 }
 \arguments{
-\item{a}{numeric results 'a'}
+\item{a}{numeric vector containing results 'a'}
 
-\item{b}{numeric results 'b'}
+\item{b}{numeric vector constainng results 'b'}
 }
 \value{
 dataframe containing stats
 }
 \description{
-A Statistical Test to Compare Two Results
+Statistics to compare whether there is a real difference in EQR values of
+paired results.
 }
 \examples{
 \dontrun{

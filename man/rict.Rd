@@ -7,10 +7,13 @@
 rict(data = NULL, year_type = "multi", store_eqrs = FALSE)
 }
 \arguments{
-\item{data}{Dataframe of observed environmental values
+\item{data}{Dataframe of observed environmental values for example of input
+ data see \code{\link{demo_observed_values}} or
+ \code{\link{demo_gis_values_log}}.
 \describe{
  \item{SITE}{Site identifier}
  \item{Waterbody}{Water body identifier}
+ \item{...}{...}
   }}
 
 \item{year_type}{"single" or "multi" depending if multi-year classification
@@ -20,7 +23,7 @@ required - default is "multi".}
 EQRs only}
 }
 \value{
-Dataframe of classification results (or simulated EQRs if store_eqrs
+Dataframe of classification results (and simulated EQRs if store_eqrs
   = TRUE)
 }
 \description{

@@ -170,6 +170,8 @@ The diagram below shows a diagrammatical representation of the main
 functionality of the RICT2 tool with numbered links to more detailed
 information.
 
+![image](vignettes/images/application-flow-chart.png)
+
 **LOGIN TO RICT:** A new user will need to create a Microsoft account and log in to
 be able to access to the RICT tool as the tool uses the Microsoft Azure Machine
 Learning Studio as its platform. How to access RICT is outlined in the RICT user
@@ -456,9 +458,12 @@ for up to three years for multi-year classification.
   
 ## Input variables
 
+All input variables as well as their validation rules are listed in the validation-rules.csv file within the package. The tables below are generated from this file. 
+
 ### Model 1 User input file (using physical predictors) 
 
-Requires these columns:
+Required columns:
+
 ```{r}
  validation_rules <-
     utils::read.csv(system.file("extdat", "validation-rules.csv", package = "rict"),
@@ -473,18 +478,9 @@ kable(filter(validation_rules, models %in% c("all", "physical") & source == "inp
                               Optional = "optional")  %>%  unique())
 ```
 
-Notes on optional columns:
-```{r}
-kable(filter(validation_rules, models %in% c("all", "physical") &
-                               source == "input" &
-                                optional_notes > 0) %>%
-                       select(Variable = "variable",
-                              "Optional note" = "optional_notes")  %>%  unique())
-```
-
 ### Model 44 Input files (using GIS predictors) 
 
-Require these columns:
+Required columns:
   
 ```{r}
 kable(filter(validation_rules, models %in% c("all", "gis") & source == "input") %>%
@@ -495,7 +491,22 @@ kable(filter(validation_rules, models %in% c("all", "gis") & source == "input") 
                               Optional = "optional") %>%  unique())
 ```
 
-Optional notes:
+## Optional variables
+
+Optional columns: Must still be present in input data file but they may contain missing values or be entirely empty. However, they must comply with the following notes:
+
+### Model 1 Optional notes:
+
+```{r}
+kable(filter(validation_rules, models %in% c("all", "physical") &
+                               source == "input" &
+                                optional_notes > 0) %>%
+                       select(Variable = "variable",
+                              "Optional note" = "optional_notes")  %>%  unique())
+```
+
+### Model 44 Optional notes:
+
 ```{r}
 kable(filter(validation_rules, models %in% c("all", "gis") &
                                source == "input" &
@@ -504,17 +515,16 @@ kable(filter(validation_rules, models %in% c("all", "gis") &
                               "Optional note" = "optional_notes")  %>%  unique())
 ```
 
-
 ## Validation
 
-Note that in the tables below, where the value of an environmental input variable
-is input as a “Warn” limit, RICT2 carries-on with prediction but flags the
-transgression in a warning report for that particular site.
+Warnings: Where the value of an environmental input variable exceeds a
+“Warn” limit, the prediction process will continue but warning message is
+created for that particular site.
   
-Note that in the tables below, where the value of an environmental input variable
-is input as a “Fail” limit, RICT2 does not proceed with prediction for that
-particular site and flags the transgression in a warning report.
-  
+Fails: Where the value of an environmental input variable exceeds a “Fail”
+limit, the prediction process will not proceed for that particular site and
+flags the transgression in a fail message.
+
 ### Validation rules for Model 1
 
 ```{r}
@@ -529,7 +539,8 @@ kable(filter(validation_rules, models %in% c("all", "physical") & source == "inp
 
 Model 1 Validation notes:
 ```{r}
-kable(filter(validation_rules, models %in% c("all", "physical") & source == "input" &  validation_notes != "") %>%
+kable(filter(validation_rules, models %in% c("all", "physical") &
+               source == "input" &  validation_notes != "") %>%
                        select(Variable = "variable",
                               "Validation notes" = "validation_notes") )
 
@@ -550,17 +561,38 @@ kable(filter(validation_rules, models %in% c("all", "gis") & source == "input") 
 
 Model 44 validation notes: 
 ```{r}
-kable(filter(validation_rules, models %in% c("all", "gis") & source == "input" &  validation_notes != "") %>%
+kable(filter(validation_rules, models %in% c("all", "gis") &
+               source == "input" &  validation_notes != "") %>%
                        select(Variable = "variable",
                               "Validation notes" = "validation_notes"))
 
 ```
 
+## Replacement values
 
-#### Environmental Variables Validation Process
+If values are provided that are zero (or close to zero) they are replaced to avoid divide by zero errors. Specifically, variables that are used in the RIVPACS model discriminator functions in their log form (as you cannot take logs of zeroes):
 
-The validation process is as described below. Some initial validation is done if
-the user (as recommended) enters data into the input spreadsheet:
+```{r}
+
+kable(filter(validation_rules, models %in% c("all", "gis", "physical") & source == "input" &
+               replacement_val != "") %>%
+                       select(Variable = "variable",
+                              Model = "models",
+                              Area = "area",
+                              "Replacement value" = "replacement_val",
+                              "Replacement condition" = "replacement_cond",
+                              "Replacement limit" = "replacement_limit"
+                        ) %>%  unique())
+```
+
+## Validation rules
+
+The min/max validation rules are stores in the `validation-rules.csv`. This can be updated with new min/max validation as required. The more complex validation rules for example checking the presence of optional columns are hard-coded into the `rict_validation()` function.
+
+## Environmental Variables Validation Process
+
+Some initial validation is done if the user (as recommended) enters data into
+the input spreadsheet:
 
 * Spreadsheet validation is carried out to check that the Environmental Values are present and they are the correct format as user enters data.
 
@@ -580,27 +612,6 @@ Values exceeding these limits must be wrong.
 * If not, then this should be recorded so that it can be flagged as a ‘warning’ in the output file but the experiment will proceed as normal. 
       
 The warning limits are the minimum and maximum values of the variables in the RIVPACS reference database for reference sites included in RIVPACS IV GB or NI. Exceedences indicate that the site is beyond the scope of the model and may be the cause of poor suitability and they could indicate errors.  Exceeding longitude and latitude is less serious that exceeding other parameters.
-  
-## Replacement values
-
-If values are provided that are zero (or close to zero) they are replaced to avoid divide by zero errors. Specifically, variables that are used in the RIVPACS model discriminator functions in their log form (as you cannot take logs of zeroes):
-
-```{r}
-
-kable(filter(validation_rules, models %in% c("all", "gis", "physical") & source == "input" &
-               replacement_val != "") %>%
-                       select(Variable = "variable",
-                               Model = "models",
-                              Area = "area",
-                              "Replacement value" = "replacement_val",
-                              "Replacement condition" = "replacement_cond",
-                              "Replacement limit" = "replacement_limit"
-                        ) %>%  unique())
-```
-
-## Validation rules
-
-The min/max validation rules are stores in the `validation-rules.csv`. This can be updated with new min/max validation as required. The more complex validation rules for example checking the presence of optional columns are hard-coded into the `rict_validation()` function.
   
 ## Observed Biological Data Values and Validation
 
@@ -1909,7 +1920,8 @@ PDiff1 = proportion of simulated differences greater than or equal to zero.
 ```
 
 Then PDiff is the two-sided test probability of the null hypothesis of no difference in true EQR values between the sites and/or times from which the two samples were taken. [True EQR for a site, in this sense, means average EQI amongst all possible samples from the sites as estimated from the simulated values of EQR].
-Code to calculate the difference and related statistics can be found in the compare_test() function.
+  
+Code to calculate the difference and related statistics can be found in the compare_test() function. Note, that the simulated EQRs are randomly re-ordered (using set.seed). This is because the simulate EQRs are created in the rict_classify() using the same set.seed and will have equal variance add to each simulated EQR. Therefore, if we calculate the difference without re-ordering the result will be zero. In other words, the difference will cancel out. By re-ordering, we ensure the there will be a difference for each pair of EQRs compared. 
   
 Confidence of change in status class:
   

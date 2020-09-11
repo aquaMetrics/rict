@@ -207,14 +207,9 @@ information.
 
 ```{r}
 
-embed_png("images/application-flow-chart.png")
-
-
+embed_png("images/application-flow-chart.png", dpi = 120)
 
 ```
-
-
-
 
 **1. LOGIN TO RICT:** A new user will need to create a Microsoft account and log in to
 be able to access to the RICT tool as the tool uses the Microsoft Azure Machine
@@ -1180,7 +1175,11 @@ The most complex part of this is a), which involves the use of multiple discrimi
 It needs to be carried out for every set of site data applicable to the run (a site may be present more than once where more than one years’ worth of environmental data has been provided). 
   
 The flow diagram below summarises the prediction process and calculations (including the data input, validation, conversion and transform steps described above) as well as identifying the relevant section for further information from the WFD72C final report:
-  
+
+```{r}
+embed_png("images/rict-prediction.png", dpi = 120)
+```
+
 ## Prediction Overview
   
 The probability of a site belonging to an End Group is determined by the similarity of its Environmental Variables (EVs) to those of the relevant End Group.
@@ -1533,6 +1532,10 @@ Line 378/396 – this goes through each site and processes each site to do the p
 ## Classification Process Summary
 
 The flow diagram below summarises the classification process and calculations as well as identifying the relevant section for further information from the WFD72C final report and other sources of information:
+
+```{r}
+embed_png("images/rict-classification.png", dpi = 120)
+```  
   
 Note that the blue boxes indicate processes that are simulated.
   
@@ -1921,6 +1924,11 @@ The relevant parts of the algorithms section of the SNIFFER WFD72C project 2008 
 The new RICT only refers to EQR values (which are bias-corrected observed (Obs) values divided by WFD reference-adjusted Expected (ExpRef) values, all WFD72C algorithms section references to former EQI (Obs/Exp) values are replaced by their new counterpart EQR values to improve explanation of how to program the new RICT Compare procedure.
   
 Compare flow chart:
+
+```{r}
+embed_png("images/rict-compare.png", dpi = 180)
+```  
+  
   
 The Compare procedure allows the user to assess whether there is a real difference in EQR values and/or status class between a pair of samples and/or sites and/or time periods. This is done using an extension of the simulation techniques and algorithms described above that are used to assess the EQRs and ecological status class and the associated uncertainty for individual samples/sites and time periods.
 The first sample in a pair is known as result A and the second as result B.
@@ -2115,8 +2123,24 @@ Another difference is that there are now 17 discriminant function scores and dis
 * end-group-means-discriminant-scores-model-44.csv
  
 The flow diagram below summarises the prediction process and calculations as well as identifying the relevant report for further information:
+
+
+```{r}
+
+embed_png("images/rict-prediction-model-44.png", dpi = 160)
+
+```
+
   
 The flow diagram below summarises the classification process and calculations as well as identifying the relevant report for further information:
+  
+
+```{r}
+
+embed_png("images/rict-classification-model-44.png", dpi = 160)
+
+```
+
   
 # Non-Functional Requirements
 

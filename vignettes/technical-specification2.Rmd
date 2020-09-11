@@ -20,13 +20,48 @@ knitr::opts_chunk$set(
   echo = FALSE
 )
 
+embed_png <- function(path, dpi = NULL) {
+  meta <- attr(png::readPNG(path, native = TRUE, info = TRUE), "info")
+  if (!is.null(dpi)) meta$dpi <- rep(dpi, 2)
+  knitr::asis_output(paste0(
+    "<img src='", path, "'",
+    " width=", round(meta$dim[1] / (meta$dpi[1] / 96)),
+    " height=", round(meta$dim[2] / (meta$dpi[2] / 96)),
+    " />"
+  ))
+}
+
 options(scipen = 2)
+```
+
+```{r results="asis", echo=FALSE}
+# directly adding css to output html without ruining css style https://stackoverflow.com/questions/29291633/adding-custom-css-tags-to-an-rmarkdown-html-document
+cat("
+<style>
+img {
+border: 0px;
+outline: 0 ;
+}
+</style>
+")
 ```
 
 ```{r setup, message=F}
 library(rict)
 library(knitr)
 library(dplyr)
+```
+
+```{r results="asis", echo=FALSE}
+# directly adding css to output html without ruining css style https://stackoverflow.com/questions/29291633/adding-custom-css-tags-to-an-rmarkdown-html-document
+cat("
+<style>
+img {
+border: 0px;
+outline: 0 ;
+}
+</style>
+")
 ```
 
 # Introduction
@@ -116,7 +151,7 @@ primary requirement of the tool is to allocate WFD (Water Framework
 Directive) compliant classifications to rivers with regard to the quality of the
 river invertebrate community.
   
-The classifications are calculated and described as H = high, G = good, M =
+The classifications are calculated and described as H() = high, G = good, M =
 moderate, P = poor or B = bad. This is achieved by comparing sample data
 from a river site against sample data previously taken from river sites
 considered to be the best available of their type.
@@ -170,14 +205,23 @@ The diagram below shows a diagrammatical representation of the main
 functionality of the RICT2 tool with numbered links to more detailed
 information.
 
-![image](vignettes/images/application-flow-chart.png)
+```{r}
 
-**LOGIN TO RICT:** A new user will need to create a Microsoft account and log in to
+embed_png("images/application-flow-chart.png")
+
+
+
+```
+
+
+
+
+**1. LOGIN TO RICT:** A new user will need to create a Microsoft account and log in to
 be able to access to the RICT tool as the tool uses the Microsoft Azure Machine
 Learning Studio as its platform. How to access RICT is outlined in the RICT user
 guide.
   
-**COMPLETE DATA INPUT:** User will need to complete a CSV (comma delimited) input
+**2. COMPLETE DATA INPUT:** User will need to complete a CSV (comma delimited) input
 file containing the data for the run required. A standard template excel
 spreadsheet will be provided to enter this data which can be downloaded via a
 SharePoint link from the website.
@@ -188,7 +232,7 @@ validation limits.
   
 Annex A of this document has a copy of the data input table in more detail.
   
-**PROVIDE DATA:**
+**3. PROVIDE DATA:**
 User will need to upload data into the RICT2 Tool and link the
 data to the project experiment in Microsoft Azure ML Studio.
   
@@ -197,7 +241,7 @@ Microsoft Azure ML Studio and will be linked to the project experiment.
 Section 3 of this document describes the support file data tables and R code
 support functions in more detail.
 
-**TRIGGER RUN:**
+**4. TRIGGER RUN:**
 User can choose to run a project experiment for Predict and
 Classify experiment using the GB (Great Britain) model or a Predict and Classify
 experiment using the NI (Northern Ireland) model using default values.
@@ -208,13 +252,13 @@ experiments in their own work area to run.
   
 Section 4 of this document describes the default values used in more detail.
   
-**VALIDATE DATA:**
+**5. VALIDATE DATA:**
 A series of validation checks to ensure data provided meets
 specified requirements will be carried out using R code in RICT2.
   
 Section 5 of this document describes the validation steps in more detail.
   
-**PREDICTION:** Tool will perform a series of steps in the project experiment to
+**6. PREDICTION:** Tool will perform a series of steps in the project experiment to
  calculate Prediction:
 * Convert Environmental Data
 * Calculate Probability of End Group Membership
@@ -225,7 +269,7 @@ Section 5 of this document describes the validation steps in more detail.
 Section 6 and 7 of this document describe the conversion and prediction steps in
 more detail.
 
-**CLASSIFICATION:** Tool will perform a series of steps in the project
+**7. CLASSIFICATION:** Tool will perform a series of steps in the project
 experiment to calculate Classification:
   
 * Calculate reference values from expected values
@@ -234,12 +278,13 @@ experiment to calculate Classification:
 * Calculate EQR for all simulations
 * Average spring and autumn EQR for all simulations
 * Calculate probability of class from the simulations
-      
+        
 Section 10 of this document describe the classification steps in more detail.
-COMPARE EXPERIMENT: Tool runs processing steps to compare data outputs from two
+  
+**9. COMPARE EXPERIMENT:** Tool runs processing steps to compare data outputs from two
 previous predict and classify runs to produce a compare output file report.
   
-**OUTPUT FILE:** RICT2 will generate an output file with processed data for Predict
+**10. OUTPUT FILE:** RICT2 will generate an output file with processed data for Predict
 and Classify in csv format for the user to download. This data extract can th en
 be used for analysis and reporting.
   

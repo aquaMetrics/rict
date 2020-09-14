@@ -65,17 +65,8 @@ test_that("end group means for GIS variables", {
   expect_true(equal == T)
 })
 
-test_that("NI predictions", {
-  ni_data <-
-    utils::read.csv(system.file("extdat",
-      "ni-model-1-test-data.csv",
-      package = "rict"
-    ), check.names = FALSE)
 
-  test <- rict(ni_data, year_type = "single")
-})
-
-test_that("all_indices predictions work", {
+test_that("all_indices predictions work GB", {
   demo_observed_values <-
     utils::read.csv(system.file("extdat",
       "test-data-model-1.csv",
@@ -111,11 +102,10 @@ test_that("taxa predictions work GB", {
 
   indices_prediction <- indices_prediction[, names(indices_prediction) %in% names(verified_predictions)]
   verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(indices_prediction)]
-  expect_equal(indices_prediction$Average_Numerical_Abundance, verified_predictions$Average_Numerical_Abundance)
+  expect_equal(indices_prediction[ , 11:18], verified_predictions[, 11:18]) # all probabilities the same
 })
 
 test_that("All indices predictions work NI", {
-  skip("Work in progress")
   data <- demo_ni_observed_values
 
   indices_prediction <- rict_predict(data, all_indices = TRUE)
@@ -123,10 +113,25 @@ test_that("All indices predictions work NI", {
     utils::read.csv(system.file("extdat",
                                 "rict-ni-taxa-prediction.csv",
                                 package = "rict"
-    ), check.names = FALSE, stringsAsFactors = T)
+    ), check.names = FALSE, stringsAsFactors = T) # from tested Azure data
 
   indices_prediction <- indices_prediction[, names(indices_prediction) %in% names(verified_predictions)]
   verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(indices_prediction)]
-  expect_equal(indices_prediction$Average_Numerical_Abundance, verified_predictions$Average_Numerical_Abundance)
+  expect_equal(indices_prediction[, 26:105], verified_predictions[, 26:105]) # check all indices columns the same
+})
+
+
+test_that("taxa predictions work NI", {
+
+  taxa_prediction <- rict_predict(demo_ni_observed_values[1:12, ], all_indices = TRUE)
+  verified_predictions <-
+    utils::read.csv(system.file("extdat",
+                                "rict-ni-all-indices-predictions.csv",
+                                package = "rict"
+    ), check.names = FALSE)
+
+  indices_prediction <- taxa_prediction[, names(taxa_prediction) %in% names(verified_predictions)]
+  verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(indices_prediction)]
+  expect_equal(indices_prediction[60:135], verified_predictions[60:135])
 })
 

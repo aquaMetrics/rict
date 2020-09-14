@@ -163,6 +163,14 @@ test_that("alkalinity, hardness, conductivity and calcium calculations work", {
   test_data$Calcium[2] <- 50
   test <- rict_validate(test_data)
   expect_equal(length(test[[2]][, 1]), 0)
+  # Also works for GIS input:
+  test_data <- demo_gis_values_log
+  test_data$Alkalinity[1:2] <- NA
+  test_data$hardness[1] <- 50
+  test_data$calcium[2] <- 50
+  test <- rict_validate(test_data)
+  expect_equal(length(test[[2]][, 1]), 0)
+
 })
 
 # ---------------------------------------------------------------------

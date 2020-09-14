@@ -236,7 +236,10 @@ test_that("Test single row of multi-year input works", {
 })
 
 test_that("Test summer", {
-  skip("work in progress")
+  skip("work in progress - issue that set.seed runs through other seasons before getting to summer giving slightly different
+       randomness compared to running summer alone? Maybe setup Azure experiment with set.seed within each function to allow
+       standard output no matter what the input - and do the same in rict package - this should give same output -
+       perhaps add a flag to turn this on and off to make it even easier to test?")
   demo_observed_values <- demo_observed_values
   demo_gis_values_log <- demo_gis_values_log
   demo_observed_values$SITE <- demo_gis_values_log$SITE
@@ -261,3 +264,15 @@ test_that("Test missing seasons", {
 
   test <- rict_compare(class, class2)
 })
+
+test_that("NI classification", {
+  skip("To do...")
+  ni_data <-
+    utils::read.csv(system.file("extdat",
+                                "ni-model-1-test-data.csv",
+                                package = "rict"
+    ), check.names = FALSE)
+
+  test <- rict(ni_data, year_type = "single")
+})
+

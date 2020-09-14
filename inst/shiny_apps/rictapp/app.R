@@ -19,14 +19,18 @@ library(htmltools)
       "RICT",
       tabPanel("Predict & Classify",
                sidebarPanel(
-      h3("Options"),
-      radioButtons(
-        "model", "Model Type:",
-        c(
-          "Physcial - Slope, depth, width..." = "physical",
-          "GIS - Geology, catchment area..." = "gis"
-        )
-      ),
+                   h4("This app is a work in progress -
+                      use the following for official uses: "),
+                   a("Azure Experiments", href="https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/RICT%20Application.aspx"),
+                   p(),
+                   fileInput("dataset", "Choose CSV File",
+                             accept = c(
+                               "text/csv",
+                               "text/comma-separated-values,text/plain",
+                               ".csv"
+                             )
+                   ),
+                    h3("Options"),
       radioButtons(
         "year_type", "Year Type:",
         c(
@@ -35,25 +39,29 @@ library(htmltools)
         )
       ),
       radioButtons(
-        "area", "Area:",
-        c(
-          "Great Britain" = "gb",
-          "Northern Ireland" = "ni"
-        )
-      ),
-      radioButtons(
         "output", "Output:",
         c(
           "Prediction & Classification" = "predict_classify",
-          "Prediction only" = "predict"
+          "Prediction Only" = "predict"
         )
       ),
-      fileInput("dataset", "Choose CSV File",
-        accept = c(
-          "text/csv",
-          "text/comma-separated-values,text/plain",
-          ".csv"
-        )
+      checkboxGroupInput(
+        "include", "Include: ",
+        c(
+          "Don't include taxa or predictions" = "none",
+          "Include Taxa Prediction" = "taxa",
+          "All Indices" = "all_indices"
+        ), selected = "none"
+      ),
+      checkboxGroupInput(
+        "tl", "Taxa Lists: ",
+        c(
+          "TL1" = "TL1",
+          "TL2" = "TL2",
+          "TL3" = "TL3",
+          "TL4" = "TL4",
+          "TL5" = "TL5"
+        ), selected = "TL2"
       )
     ),
     # Show tables
@@ -80,30 +88,34 @@ server <- function(input, output) {
     on.exit(progress$close())
     progress$set(message = "Calculating", value = 1)
     data <- read.csv(inFile$datapath, check.names = F)
-    predictions <- rict_predict(data, model = input$model, area = input$area)
-
+    predictions <- rict_predict(data)
     predictions_table <- predictions
-    # [, c(
-    #   "SITE", "YEAR",
-    #   "TL2_WHPT_NTAXA_AbW_DistFam_spr", "TL2_WHPT_ASPT_AbW_DistFam_spr",
-    #   "TL2_WHPT_NTAXA_AbW_DistFam_aut", "TL2_WHPT_ASPT_AbW_DistFam_aut",
-    #   "TL2_WHPT_NTAXA_AbW_DistFam_sum", "TL2_WHPT_ASPT_AbW_DistFam_sum"
-    # )]
 
     output_files <- list(predictions)
-    classification_table <- data.frame()
+    results <- data.frame()
     if (!is.null(predictions) & input$output == "predict_classify") {
       results <- rict_classify(predictions,
         year_type = input$year_type
       )
-      classification_table <- results
-      # [, c(
-      #   "SITE", "YEAR",
-      #   "mintawhpt_spr_aut_mostProb_MINTA_"
-      # )]
-
-      output_files <- list(predictions, results)
     }
+    classification_table <- results
+
+
+    taxa <- data.frame()
+    if (!is.null(predictions) & any(input$include %in% "taxa")) {
+      taxa <- rict_predict(data, taxa = T, taxa_list = input$tl)
+    }
+    taxa_table <- taxa
+
+
+    indices <- data.frame()
+    if (!is.null(predictions) & any(input$include %in% "all_indices")) {
+      indices <- rict_predict(data, all_indices = T)
+    }
+    indices_table <- indices
+
+    output_files <- list(predictions, results, taxa, indices)
+
 
     output$download_file <- downloadHandler(
       filename = function() {
@@ -139,6 +151,12 @@ server <- function(input, output) {
       }),
       h3("Classification"), DT::renderDataTable({
         classification_table
+      }),
+      h3("Taxa"), DT::renderDataTable({
+        taxa_table
+      }),
+      h3("All Indices"), DT::renderDataTable({
+        indices_table
       })
     ))
   })

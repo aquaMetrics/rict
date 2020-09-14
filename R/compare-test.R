@@ -1,7 +1,9 @@
 #' A Statistical Test to Compare Two Results
 #'
 #' Statistics to compare whether there is a real difference in EQR values of
-#' paired results.
+#' paired results. It is a low-level function used by the higher-level
+#' \code{\link{rict_compare}} function to compare the EQRs of two paired
+#' results.
 #'
 #' @param a numeric vector containing results 'a'
 #' @param b numeric vector constainng results 'b'

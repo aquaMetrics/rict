@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -37,24 +41,21 @@
 
 <meta property="og:title" content="Validate observed values — rict_validate" />
 <meta property="og:description" content="Low level function to validate input `data`. Returns list of dataframes
-containing fails, warnings and passing observed values. The validation rules
-adjust based on the `model` and `area` arguments. Here is a summary of
-checks:
-Input 'data' exists
-Input is dataframe
-Required columns are present
-Columns have correct class
-Conditional columns if present are correct class
+containing fails/warnings/replacements and passing observed values. The
+function detects which model (gis or physical) and area (GB &amp;amp; NI) and applies
+validation rules as required. Here is a summary of checks:
+Input 'data' exists.
+Input is dataframe.
+Required columns are present.
+Columns have correct class.
+Conditional columns if present are correct class.
 Where multiple classes are allowed, convert columns to
  standardised class for example integer to numeric.
-Suspected input errors are corrected for example `0` slope.
 Additional columns/variables calculated for example mean temperate.
 Logs failures and warnings applied using `validation_rules` table.
-
-Replacements made to very low values for example
-Returns dataframe with passing values, warnings, fails
+Replace values if value is less than the ‘overall’ minimum value.
+Returns dataframe with passing values, warnings, fails.
 See `validation` vignette for full details." />
-<meta name="twitter:card" content="summary" />
 
 <meta name="robots" content="noindex" />
 
@@ -72,7 +73,7 @@ See `validation` vignette for full details." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -86,7 +87,7 @@ See `validation` vignette for full details." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rict</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -109,14 +110,14 @@ See `validation` vignette for full details." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/technical-specification.html">Technical specification</a>
+      <a href="../articles/functional-specification.html">Functional specification</a>
     </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/aquaMetrics/rict">
+  <a href="https://github.com/aquaMetrics/rict/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -141,69 +142,50 @@ See `validation` vignette for full details." />
 
     <div class="ref-description">
     <p>Low level function to validate input `data`. Returns list of dataframes
-containing fails, warnings and passing observed values. The validation rules
-adjust based on the `model` and `area` arguments. Here is a summary of
-checks:</p><ol>
-<li><p>Input 'data' exists</p></li>
-<li><p>Input is dataframe</p></li>
-<li><p>Required columns are present</p></li>
-<li><p>Columns have correct class</p></li>
-<li><p>Conditional columns if present are correct class</p></li>
+containing fails/warnings/replacements and passing observed values. The
+function detects which model (gis or physical) and area (GB &amp; NI) and applies
+validation rules as required. Here is a summary of checks:</p><ol>
+<li><p>Input 'data' exists.</p></li>
+<li><p>Input is dataframe.</p></li>
+<li><p>Required columns are present.</p></li>
+<li><p>Columns have correct class.</p></li>
+<li><p>Conditional columns if present are correct class.</p></li>
 <li><p>Where multiple classes are allowed, convert columns to
  standardised class for example integer to numeric.</p></li>
-<li><p>Suspected input errors are corrected for example `0` slope.</p></li>
 <li><p>Additional columns/variables calculated for example mean temperate.</p></li>
 <li><p>Logs failures and warnings applied using `validation_rules` table.</p></li>
-<li><p></p></li>
-<li><p>Replacements made to very low values for example</p></li>
-<li><p>Returns dataframe with passing values, warnings, fails</p></li>
+<li><p>Replace values if value is less than the ‘overall’ minimum value.</p></li>
+<li><p>Returns dataframe with passing values, warnings, fails.</p></li>
 </ol><p>See `validation` vignette for full details.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>rict_validate</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>model</span> <span class='kw'>=</span> <span class='st'>"physical"</span>, <span class='kw'>area</span> <span class='kw'>=</span> <span class='st'>"gb"</span>)</pre>
+    <pre class="usage"><span class='fu'>rict_validate</span>(data = <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>data</th>
-      <td><p>dataframe of observed envornmental variables</p><dl class='dl-horizontal'>
+      <td><p>dataframe of observed environmental variables</p><dl>
   <dt>SITE</dt><dd><p>Site identifier</p></dd>
   <dt>Waterbody</dt><dd><p>Water body identifier</p></dd>
   ...
 
 </dl></td>
     </tr>
-    <tr>
-      <th>model</th>
-      <td><p>Specify model to apply correct validation rules, default is
-"physical".</p></td>
-    </tr>
-    <tr>
-      <th>area</th>
-      <td><p>Specify area of UK to apply localised validation rules, default
-is "gb". Accepts "ni" (Northern Ireland) or "gb" (Great Britain).</p></td>
-    </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>List of three dataframes: 1. warnings_failings, 2. this_failing 3.
-  valid 'data'.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>validations</span> <span class='kw'>&lt;-</span> <span class='fu'>rict_validate</span>(<span class='no'>demo_observed_values</span>)
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>validations</span> <span class='op'>&lt;-</span> <span class='fu'>rict_validate</span>(<span class='kw'>demo_observed_values</span>)
+}
+</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -214,7 +196,7 @@ is "gb". Accepts "ni" (Northern Ireland) or "gb" (Great Britain).</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

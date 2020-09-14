@@ -9,8 +9,8 @@
 #'   \item{AUT_SEASON_ID}{Aut ID}
 #'   \item{...}{etc}
 #' }
-#' @param all_indices Return all indices in output (default only returns WHPT indices).
-#' @param taxa Return taxa predictions (default  returns indices).
+#' @param all_indices Boolean - Return all indices in output (default only returns WHPT indices).
+#' @param taxa Boolean - Return taxa predictions (default  returns indices).
 #' @param taxa_list Vector of taxa lists to predict default all lists i.e. c("TL1", "TL2", "TL3", "TL4", "TL5").
 #' @param rows Number (integer) of rows (one site per row) to predict taxa. Default is all rows.
 #' @return Dataframe of predicted biotic scores and probability of observed values

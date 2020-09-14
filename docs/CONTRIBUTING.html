@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="bootstrap-toc.css">
+<script src="bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="pkgdown.css" rel="stylesheet">
@@ -53,7 +57,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-title-body">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -67,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rict</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -90,14 +94,14 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="articles/technical-specification.html">Technical specification</a>
+      <a href="articles/functional-specification.html">Functional specification</a>
     </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/aquaMetrics/rict">
+  <a href="https://github.com/aquaMetrics/rict/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -135,9 +139,29 @@
 <li>If you are not a maintainer, wait for feedback and comments - maybe there are different approaches that need exploring</li>
 </ul>
 </div>
-<div id="install-software" class="section level4">
+</div>
+<div id="install-software" class="section level3">
+<h3 class="hasAnchor">
+<a href="#install-software" class="anchor"></a>Install software</h3>
+<div id="via-the-cloud---quick-and-easy" class="section level4">
 <h4 class="hasAnchor">
-<a href="#install-software" class="anchor"></a>Install software</h4>
+<a href="#via-the-cloud---quick-and-easy" class="anchor"></a>Via the “Cloud” - <em>Quick and Easy!</em>
+</h4>
+<ul>
+<li>Sign-up to <a href="https://rstudio.cloud">R Studio Cloud</a>.</li>
+<li>Click on New Project dropdown menu and select ‘New Project from Git repo’.</li>
+<li>Paste <code>https://github.com/aquaMetrics/rict</code>.</li>
+<li>You can now make changes to the files - look in the ‘Files’ tab and look for ‘R’ folder where most R code is held.</li>
+<li>Add <code><a href="https://rdrr.io/r/base/browser.html">browser()</a></code> to the line above where you wish to add a breakpoint in the code/function.</li>
+<li>Now run the function, try typing in the console: <code><a href="reference/rict.html">rict(observed_demo_values)</a></code> - this will run most functions in the package.</li>
+<li>The code will break where you added the <code><a href="https://rdrr.io/r/base/browser.html">browser()</a></code> and you can investigate the values and see what needs changing etc.</li>
+<li>Make changes as required then ‘Install and Restart’.</li>
+<li>Once you are happy with the code run the test go to Create new branch section.</li>
+</ul>
+</div>
+<div id="local-machine" class="section level4">
+<h4 class="hasAnchor">
+<a href="#local-machine" class="anchor"></a>Local machine</h4>
 <ul>
 <li>install <a href="https://git-scm.com/">Git</a> on to your machine</li>
 <li>install <a href="https://cran.r-project.org/">R</a>
@@ -145,21 +169,21 @@
 <li>install <a href="https://www.rstudio.com/">Rstudio</a> - recommended - other editors are available</li>
 </ul>
 </div>
-<div id="create-new-branch" class="section level4">
-<h4 class="hasAnchor">
-<a href="#create-new-branch" class="anchor"></a>Create new branch</h4>
+</div>
+<div id="create-new-branch" class="section level3">
+<h3 class="hasAnchor">
+<a href="#create-new-branch" class="anchor"></a>Create new branch</h3>
 <p>If you have admin/contributor rights on aquaMetrics team, you can create a new branch there. Click ‘Branch: …’ button on the main repository page. Then clone the repository to your local machine:</p>
 <pre><code>git clone https://github.com/aquaMetrics/rict
 cd phytobenthosMetrics/
 git checkout -b issue-??</code></pre>
-<p>(Replacing <code>??</code> with the issue number found on Github)</p>
-<p>The first two lines above will clone the repository and open the directory where the files have been copied to. The last line will ‘checkout’ and create new branch called issue-…so you can now start work editing your new branch.</p>
+<p>(Replacing <code>??</code> with the issue number found on Github issue you created)</p>
+<p>The first two lines above will clone the repository and open the directory where the files have been copied to. The last line will ‘checkout’ and create new branch called issue-??. Now you can start work editing your new branch.</p>
 <p>Or using RStudio, use open &gt; new project &gt; version control &gt; paste url:</p>
 <p><code>https://github.com/aquaMetrics/rict</code></p>
 <ul>
 <li>If you created the branch on Github remember to Pull to Rstudio and change into that branch using the ‘Git’ panel</li>
 </ul>
-</div>
 <div id="coding-style" class="section level4">
 <h4 class="hasAnchor">
 <a href="#coding-style" class="anchor"></a>Coding style</h4>
@@ -168,13 +192,15 @@ git checkout -b issue-??</code></pre>
 <li>Add comments as required to explain the <em>why</em> rather than the <em>how</em>
 </li>
 <li>Not every line needs comments - but any large or unusual sections</li>
-<li>Document code and follow standard CRAN checks and file structure</li>
 <li>
-<a href="http://r-pkgs.had.co.nz/">R Package</a> guidance is a very useful resource</li>
-<li>Run checks and tests locally - before commit <code><a href="https://rdrr.io/pkg/devtools/man/test.html">devtools::test()</a></code>
+<a href="http://r-pkgs.had.co.nz/">R Package</a> guidance is a very useful resource
+</li>
+<li>Document code and follow standard CRAN checks and file structure <code><a href="https://devtools.r-lib.org//reference/check.html">devtools::check()</a></code>
+</li>
+<li>Run checks and tests locally - before commit <code><a href="https://devtools.r-lib.org//reference/check.html">devtools::check()</a></code>
 </li>
 <li>Testing allows check coding ‘style’ with rules from <a href="https://github.com/jimhester/lintr">lintr</a> package</li>
-<li>See .lintr file for exact linting rules applied during testing</li>
+<li>See .lintr file for exact linting rules applied during testing.</li>
 </ul>
 </div>
 <div id="commit" class="section level4">
@@ -182,8 +208,8 @@ git checkout -b issue-??</code></pre>
 <a href="#commit" class="anchor"></a>Commit</h4>
 <ul>
 <li>Commit message should reference the issue number e.g. ‘docs: closes #1’- the ‘#1’ is the issue number</li>
-<li>Not sure how to write a commit message? Try to use this <a href="https://gist.github.com/stephenparish/9941e89d80e2bc58a153#subject-line">commit message guidance</a>, although this is not enforced.</li>
-<li>Push changes to remote branch</li>
+<li>Not sure how to write a commit message? Try to use this <a href="https://gist.github.com/stephenparish/9941e89d80e2bc58a153#subject-line">commit message guidance</a>, although this is not enforced</li>
+<li>Push changes to remote branch.</li>
 </ul>
 </div>
 <div id="pull-request" class="section level4">
@@ -191,8 +217,8 @@ git checkout -b issue-??</code></pre>
 <a href="#pull-request" class="anchor"></a>Pull request</h4>
 <ul>
 <li>On Github create a Pull Request to master branch from your issue-?? branch</li>
-<li>Wait for a maintainer to review, they will check no tests break, and the code has been tested if required</li>
-<li>Changes are merged to master and the ‘test-1’ branch deleted.</li>
+<li>Wait for a maintainer to review, they will check no tests break, and the code has been tested as required</li>
+<li>Changes are merged to master and the ‘test-1’ branch deleted</li>
 </ul>
 </div>
 <div id="all-done-" class="section level4">
@@ -202,6 +228,12 @@ git checkout -b issue-??</code></pre>
 </div>
 </div>
 
+  </div>
+
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 
 </div>
@@ -214,7 +246,7 @@ git checkout -b issue-??</code></pre>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

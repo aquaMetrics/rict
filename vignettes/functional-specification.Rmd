@@ -5,6 +5,7 @@ date: "`r Sys.Date()`"
 output: 
  rmarkdown::html_vignette:
   number_sections: yes
+  toc: yes
 vignette: >
   %\VignetteIndexEntry{Functional specification}
   \usepackage[utf8]{inputenc}
@@ -65,6 +66,8 @@ outline: 0 ;
 ```
 
 # Introduction
+
+DRAFT!
 
 ## Purpose of the document
 
@@ -184,7 +187,10 @@ experiments relevant to RICT2 as per the link below:
   
 https://gallery.azure.ai/Collection/River-Invertebrate-Classification-Tool-RICT-Current-Versions
   
-Users can amend and save these experiments in their own azure ML studio workspace to create a experiments to suit their own requirements. The R source code can also be download from github and amended in local R environment for example in Rstudio. 
+Users can amend and save these experiments in their own azure ML studio
+workspace to create a experiments to suit their own requirements. The R source
+code can also be download from [github](https://github.com/aquaMetrics/rict) and
+edited in local R environment for example in Rstudio.
   
 However, it must be noted that the version of R software studio on Microsoft
 Azure ML studio, at the time of writing this document, are currently older
@@ -311,13 +317,23 @@ as internal data tables and R software code functions in the project experiment.
 
 A list of the tables and functions required for the **GB model experiment** is as
 below.  
+  
+All the following files can be found within the rict package on [github](https://github.com/aquaMetrics/rict).
+
+Each experiment uses the exact same supporting file/package. The code within each experiment determines which functions and supporting table are called from the rict package.
+  
+The rict package is automatically tested and compiled/built on every update to the master branch on github. This process is carried out by the Appveyor website, which monitors github for any changes and re-builds and tests the code on a Windows machine in the cloud.
+  
+The Microsoft Windows binary .zip package file (Azure requires a Windows binary package) is stored on the Appveyor [artifacts](https://ci.appveyor.com/project/ecodata1/rict/branch/master/artifacts) page. It is currently built using R 3.5 (slight above the Azure version 3.4.4) for compatibility with Appveyor. But this has not caused any issues. Alternatively, the rict package binary can be compile/built locally on a Windows machine.  
+  
+The .zip binary package file, is then moved to a folder called 'support-files' and that folder is also zip compressed. This zipped folder is then uploaded to Azure Studio experiments as required. 
 
 ## Prediction
 
 ### Support Tables:
   
-These files can be found in the inst/extdat folder within the RICT2 package source code:
-
+These files can be found in the inst/extdat folder within the rict package.
+  
 **Model 1 specific:**
   
 * `df-coeff-gb-685.DAT` – used for Discriminant score.
@@ -339,8 +355,8 @@ These files can be found in the inst/extdat folder within the RICT2 package sour
 
 Found in the `/R` package directory there are two main R functions files for predictions:
   
-`rict_predict.R` - main function called to run prediction  
-`rict_validate.R` - lower level function to validate input data 
+`rict-predict.R` - main function called to run prediction  
+`rict-validate.R` - lower level function to validate input data 
 `helper-functions.R` - support functions to carry out the Environmental Variables validation  
   
 Prediction support functions are found:
@@ -367,7 +383,7 @@ below: Prediction support files:
 * `DFMEAN_NI_RALPH.DAT` file used for calculating Mahanalobis distance as described in section 7.6 of this document.j
 * `EndGrp_AssessScores.csv` file used for calculating proportion during prediction.
 
-### Classificaiton Functions:
+### Classification Functions:
 
 * `classification-functions.R` - A large number of R code functions used during the prediction process as described in Section 8.
 
@@ -385,13 +401,17 @@ All source code and support files can be downloaded into R environment for examp
 ##  Introduction
 
 The  “settings” will be determined by the project experiment which will use
-default values relevant for that project experiment. However, the tool will allow a user to open experiments in their own workspace and change the settings and values and save their own experiments. Standard published experiments can only be amended by an administrator user. These will be a “locked down” version displayed in the Azure Studio gallery.
-
+default values relevant for that project experiment. However, the tool will
+allow a user to open experiments in their own workspace and change the settings
+and values and save their own experiments. Standard published experiments can
+only be amended by an administrator user. These will be a “locked down” version
+displayed in the Azure Studio gallery.
+  
 Below are described the default settings values for the WFD Classification experiments.
-
+  
 A run of the tool can only be carried out against one Reference End Group model.
 Users can choose to run an experiment for either:
-
+  
 * RIVPACS IV GB (M1) (Set ID = 1)
 * RIVPACS IV NI (M1) (Set ID = 2)
   
@@ -451,11 +471,13 @@ guides, as appropriate.
   
 ## Acceptance and validation of input data
 
-In order to be able to predict and classify, the tool requires input data in one csv file which includes:
+In order to be able to predict and classify, the tool requires input data in one
+csv file which includes:
   
 * Site Identifier
 * Values for a number of Environmental Variables (e.g. NGR, width, depth, etc.)
-* Values for a number of Observed Tool Indices (e.g. ASPT, NTAXA, etc.) (only required for classification)
+* Values for a number of Observed Tool Indices (e.g. ASPT, NTAXA, etc.) (only
+required for classification)
   
 An excel spreadsheet template will be provided for the user to enter input data
 into the relevant column headings. Validation rules will be applied to the data
@@ -697,49 +719,28 @@ The values for some input environmental variable data needs to be converted to p
   
 The required conversion rules and some validation rules that need to be applied are described below.
 
-## Deriving Latitude and Longitude from National Grid Reference for Great Britain
+## Deriving Latitude and Longitude from Grid References
 
-National Grid reference (BNG) is eight characters long consisting of:  
+Grid references consists of:  
   
-NGRLET	= 2 letters indicating the National Grid 100km x 100km grid square
+nat_grid_ref	= 2 letters for the British National Grid (BNG) or 1 letter for the Irish grid specifying a  100km x 100km grid square 
   
-NGREAST	= 3 digit Easting within the 100km grid square (to nearest 100m)
+easting	= 3 digit Easting within the 100km grid square (to nearest 100m)
   
-NGRNORTH	= 3 digit Northing within the 100km grid square (to nearest 100m)
+northing	= 3 digit Northing within the 100km grid square (to nearest 100m)
   
-To derive latitude and longitude, the NGR input by the users is run through Helperfunctionsv1.r within the prediction support files folder. 
+To derive latitude and longitude, the NGR input by the users is run through `getLatLong()` in the `helper-functions.R` file. 
+   
+This code converts the grid references to Latitude and Longitude WGS84 system. This co-ordinate system is required to calculate Long Term Average Mean Temperature and Range of Air Temperature environmental variables.
   
-This contains code that calls the WGS84 system to derive Latitude and Longitude that is required to calculate Long Term Average Mean Temperature and Range of Air Temperature environmental variables.
+The specific function code used within `helper-functions.R` is as below:
   
-The specific function code used within Helperfunctionsv1.r is as below:  
-  
-`getLatLong <- function (nat_grid_ref, easting, northing, coordsys_latlon)`
+`getLatLong <- function(nat_grid_ref, easting, northing, coordsys_latlon, area)`
   
 where:  
   
-nat_grid_ref, is the NGR, easting and northing from the user input file
-coordsys_latlon uses the WGS84 system as described above.
-
-## Deriving Latitude and Longitude from National Grid Reference for Northern Ireland
-
-Grid references in Northern Ireland are different and consist of:
-  
-NGR	= 1 letter indicating the National Grid 100km x 100km grid square
-  
-EASTING	= 3 digit Easting within the 100km grid square (to nearest 100m)
-  
-NORTHING	= 3 digit Northing within the 100km grid square (to nearest 100m)
-  
-To derive latitude and longitude, the grid reference input by the users is run
-through `helper-functions.R`.
-
-This contains code that calls the relevant function within the SF package (which
-is also within the Northern Ireland prediction support files folder) to derive
-Latitude and Longitude. The specific function called is:
-  
-`getLatLong_NI <- function(EASTING, NORTHING)`  
-  
-This algorithm has been used in RICT2 as found in the helper-functions.R. 
+`nat_grid_ref`, are the grid letter(s), `easting` and `northing` from the user input file,
+`coordsys_latlon` uses the WGS84 system as described above and `area` is `gb` or `ni`.
 
 ## Calculating Mean and Range of Air Temperature from Latitude and Longitude
 
@@ -747,9 +748,9 @@ This conversion process is only applicable to GB model sites.
   
 When converting Latitude and Longitude to Long Term Average Mean Temperature and Range of Air Temperature, RICT2 uses a data file containing previously derived values for Mean air temperature and Air temperature range for points in the centres of 5km interval grid squares. This data file can be found in the inst/ext directory and is called AirTempGrid. 
   
-To calculate Long Term Average Mean Temperature and Range of Air Temperature, the Latitude and Longitude previously derived is run through `calc_temperatues.R` within the prediction support files folder. 
+To calculate Long Term Average Mean Temperature and Range of Air Temperature, the Latitude and Longitude previously derived is run through `calc_temperatures.R` within the prediction support files folder. 
   
-The specific function code used within `calc_temperatues.R` is as below:  
+The specific function code used within `calc_temperatures.R` is as below:  
   
 `calculated_temps <- calcTemps(coordinates)`  
   
@@ -1107,7 +1108,7 @@ ELSE
 IF CONDUCT is provided THEN  
 ALK = 0.3201*CONDUCT -8.0593
 ``` 
-The specific helper function is get_alkalinity.
+The specific helper function is `get_alkalinity()`.
 
 ## Transform Environmental Variables to Logarithm Base 10 Form
   
@@ -1115,7 +1116,9 @@ Some environmental predictor variables are used in discriminant functions in a
 logarithm to base10 transformed form (denoted Log10). They, therefore, need to
 be converted prior to prediction.
   
-The discriminant functions for the Great Britain (GB) model (Reference end group set 1) use 13 environmental predictor variables (i.e. vN = 13), as detailed below. 
+The discriminant functions for the Great Britain (GB) model (Reference end group
+set 1) use 13 environmental predictor variables (i.e. vN = 13), as detailed
+below.
   
 The Northern Ireland (NI) model (Reference end group set 2) uses the same set of
 variables apart from air temperature mean (TEMPM) and air temperature range
@@ -1130,11 +1133,13 @@ Some of the environmental predictor variables are used in the discriminant
 functions in a logarithm to base 10 transformed form (denoted Log10), as
 detailed below.
 
-Specific functions within the Helperfunctionv1.r will do the conversions as
+Specific functions within the `helper-functions.R` will do the conversions as
 described in Sections 6.1 – 6.6 above and will also calculate to log base 10 for
 any Environmental variables that require Log Base 10 form.
   
-The precise order and form of the environmental variables to be used as Env 1– EnvvN in the discrimination functions equations used to calculate the discriminant function axis scores (DFScore) is as follows:
+The precise order and form of the environmental variables to be used as Env 1–
+EnvvN in the discrimination functions equations used to calculate the
+discriminant function axis scores (DFScore) is as follows:
 
 ```{r}
 
@@ -1238,7 +1243,7 @@ DFScored	= discriminant function score on axis d for the current test site
   
 For a particular End Group g, the probability of End Group Membership is calculated as follows:
   
-* Calculate Mahanalobis distance (MahDistg) of test site from each End Group
+- Calculate Mahanalobis distance (MahDistg) of test site from each End Group
 ```
 MahDistg = (DFScore1 - DFMeang,1)2 + ... + (DFScoredN - DFMeang,dN )2 ; for g = 1,...,gN
 ```
@@ -1255,7 +1260,7 @@ MahDistg	= Mahalanobis distance of test site from end group g
 ## Use Mahanalobis Distance to Determine Probability of End Group Membership
 (Step 6 in diagram above)
   
-# Calculate the PDistg for each End Group
+- Calculate the PDistg for each End Group
 
 ```
 PDistg	= NRef g * EXP(-MahDist g/2)
@@ -1292,23 +1297,11 @@ In order to highlight this to the user, a calculation is required to allocate an
 * 5   < 0.1%
   
 The required calculation uses the Chi-square values (CQ1 to CQ4) which vary per End Group Set as below:
-```
-End Group set (ID)
-CQ1
-CQ2
-CQ3
-CQ4
-RIVPACS IV GB (set 1)
-21.02606
-24.05393
-26.21696
-32.90923
-RIVPACS IV NI (set 2)
-18.307
-21.1608
-23.2093
-29.5883
-```
+
+|End Group set (ID)     |CQ1      |CQ2      |CQ3      |CQ4      |
+|:----------------------|:--------|:--------|:--------|:--------|
+|RIVPACS IV GB (set 1)  |21.02606 |24.05393 |26.21696 |32.90923 |
+|RIVPACS IV NI (set 2)  |18.307   |21.1608  |23.2093  |29.5883  |
 
 PredictionfunctionsV1 (within the prediction support files folder) has a function called getSuitabilityCode() which will do this calculation.
   
@@ -1391,7 +1384,13 @@ The biotic indices included in all index prediction are listed in Appendix B2.
   
 #	Taxa Prediction
   
-Although not required for status classification, an important feature of RVPACS that is included in RICT is to be able to predict the taxa expected to be present at the site. For each taxon, the prediction provides: expected probability of occurrence, expected log abundance category and the expected numerical abundance. The steps involved are described below. 
+Although not required for status classification, an important feature of RIVPACS that is included in RICT is to be able to predict the taxa expected to be present at the site. For each taxon, the prediction provides:
+  
+* Expected probability of occurrence.
+* Expected log abundance category.
+* Expected numerical abundance.
+  
+The steps involved are described below. 
 
 ## Identify the Relevant sites for the run
 
@@ -1409,11 +1408,11 @@ Leave the HasHeader box unchecked, if checked it will have a header file.
   
 The data fields are the sites you choose to run for the experiment.
   
-Note, the GB model has no restrictions when it comes to the number of sites that can be run in the experiment, however, the NI model is restricted to a maximum of two sites that can be run for each experiment.  Therefore, it is suggested that only two sites are run for the GB model at any one time for it to work effectively. If you want to run all the sites for the GB model you need to put a 0 in the data line.
+Note, the GB model has no restrictions when it comes to the number of sites that can be run in the experiment, however, the NI model is restricted to a maximum of two sites that can be run for each experiment. Therefore, it is suggested that only two sites are run for the GB model at any one time for it to work effectively. If you want to run all the sites for the GB model you need to put a 0 in the data line.
   
 Example:  GB – 1,2  2,3  3,5  4,7  etc., however, for NI only two sites can be run at one time, 1,2 and 3,10 or 2,7 and 3,4 in whichever sequential order you choose. 
   
-Figure 1 Example data entered to indicate two sites in the data input file selected for taxon prediction
+Figure 1 Example data entered to indicate two sites in the data input file selected for taxon prediction.
   
 ## Methods and Algorithms to predict Expected values for each taxon
 
@@ -1421,22 +1420,25 @@ From Ralph Clarke 30/01/20
 
 ### Taxon prediction data file
 
-All of the required taxon prediction data was supplied by John Davy-Bowker in a single Excel file derived from the RIVPACS Reference Database: TAXA_AB_APR_PRAB.XLSX
+All of the required taxon prediction data was supplied by John Davy-Bowker in a single file derived from the RIVPACS Reference Database: TAXA_AB_APR_PRAB.csv
   
 This file contains the following 18 columns:
-  
-1. Model			1 = GB, 2 = NI
-2. End_Group		1-43 for GB, 1-11 for NI
-3. TL			Taxonomic Level: TL1, TL2, TL3, TL4, TL5
+
+```
+1. Model			    1 = GB, 2 = NI
+2. End_Group      1-43 for GB, 1-11 for NI
+3. TL			        Taxonomic Level: TL1, TL2, TL3, TL4, TL5
 4. Season_Code:		1 = spring, 2 = summer, 3 = autumn
+
 The next 6 columns (5-10) should all be stored as Text columns (even those which appear numeric because they need to retain their leading zeroes.
+
 5. Maitland_Code
 6. Maitland_Name
 7. Furse_Code
 8. Furse_Name
 9. NBN_Code
 10.	NBN_Name
-  
+
 The final 8 columns (11-18) are the 8 parameters whose expected values for any test site we wish to calculate for each taxon at each taxonomic level in each season
   
 11.	Average_Numerical_Abundance
@@ -1447,7 +1449,7 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 16.	Prob_Log3
 17.	Prob_Log4
 18.	Prob_Log5
-  
+```  
 Note: For the GB model, at any one taxonomic level (TL1 – TL5) and particular season (1-3), any particular taxon at that level only occurs as a row in this input file if it occurred (i.e. has at least one positive taxonomic parameter value) in at least one of the GB RIVPACS IV reference site End-groups. Similarly for taxa in the NI model. Thus the taxa listed (i.e. given) rows varies slightly between seasons because not all taxa were found in every seasons in at least one of the RIVPACS IV model reference sites.
   
 * TL1 = BMWP taxa
@@ -1455,6 +1457,7 @@ Note: For the GB model, at any one taxonomic level (TL1 – TL5) and particular 
 * TL3 = all RIVPACS families
 * TL4 = all RIVPACS species
 * TL5 = mixed taxon level
+  
 Season 1 = spring, 2 = summer, 3 = autumn.
   
 ### Algorithm to calculate Expected values of the 8 parameters for a GB test site
@@ -1481,7 +1484,7 @@ If (P1 , P2 , … P43) denote the probabilities of the current test site belongi
    
 (i) Copy column 2 (‘End_Group’) to a new column ‘End_Group_Prob’ 
   
-(ii) Use a software coding (translation) function to recode the new   ‘End_Group_Prob’ column so that : 1 becomes P1 , 2 becomes P2, … , 43 becomes P43 
+(ii) Use a software coding (translation) function to recode the new ‘End_Group_Prob’ column so that : 1 becomes P1 , 2 becomes P2, … , 43 becomes P43 
   
 (iii)	For any particular taxonomic parameter J (denoted here ParamJ and supplied in one of columns 11-18), calculate new column ParamJ_Prob as:  
   
@@ -1521,11 +1524,11 @@ Sections below are based on notes from write up with Maybin (March 2020):
 **(Update this section - TF)**
 Line 350 – this is the same as previous predictions but for taxa prediction we need to find each site’s EndGroup, it uses columns 15:57 for GB and 13:23 for NI.  Two functions are used: Function1 EndGroup Probability replacement, gets EndGroup and replaces it with the Probability (GB - columns 15:57 and NI columns 13:23).
   
-Line 366 – an important file as it looks at the taxonomic info from the TAXA_AB_APR_PRAB.XLSX about the model to be used in the prediction.  EndGroup found are used with this file to compute predictions.
+Line 366 – an important file as it looks at the taxonomic info from the TAXA_AB_APR_PRAB.csv about the model to be used in the prediction. EndGroup found are used with this file to compute predictions.
   
 Line 371/372 – shows which model is being used for the experiment (GB or NI)
   
-Line 378/396 – this goes through each site and processes each site to do the predictions.  The second function, Function2, does the computation of all the columns – it computes the site and adds it to the list of all sites, and repeats this function until all the sites have been computed.
+Line 378/396 – this goes through each site and processes each site to do the predictions. The second function, Function2, does the computation of all the columns – it computes the site and adds it to the list of all sites, and repeats this function until all the sites have been computed.
   
 # Classification
 
@@ -1577,24 +1580,14 @@ This supporting data table csv file contains the number of reference sites by Bi
   
 The source for this csv file is based on the Table 6 from the Testing RICT2 predictions and classifications draft report 2018 which is as below:
   
-Index 
-Q1
-Q2
-Q3
-Q4
-Q5
-WHPT NTAXA
-1
-1
-1
-0.967
-0.926
-WHPT ASPT
-1
-1
-1
-0.977
-0.945
+|Index                        |WHPT NTAXA                      |WHPT ASPT                             |
+|:----------------------------|:-------------------------------|:-------------------------------------|
+|Q1                           |1                               |1                                     | 
+|Q2                           |1                               |1                                     | 
+|Q3                           |1                               |1                                     | 
+|Q4                           |0.967                           |0.977                                 | 
+|Q5                           |0.926                           |0.945                                 |   
+  
 Table 1. Adjustment factors for reference site quality (Q1, Q2, Q3, Q4, Q5) for abundance-weighted WHPT NTAXA and WHPT ASPT
   
 However, further work has been done which has resulted in slightly different values for these adjustment factors which are reflected in the `adjustParams_ntaxa_aspt.csv` file used by RICT2, It is expected that the Testing RICT2 predictions and classifications draft report 2018 will be shortly updated to include a Table 7 to show these changes. 
@@ -1841,7 +1834,7 @@ EQRirB,Sp 	  = EQR value for spring season as calculated in section 8.10
 EQRirB,Au 	  = EQR value for autumn season as calculated in section 8.10 
 ```
 
-This is calculated in RICT2 using the getAvgEQR_SpAut () function found in the `classification-functions.R`(within the classification support files folder).  
+This is calculated in RICT2 using the getAvgEQR_SpAut () function found in the `classification-functions.R` (within the classification support files folder).  
 
 ## Determine the probability of the class being High, Good, Moderate, Poor and Bad status
 
@@ -1872,10 +1865,10 @@ The WFD requires that all water bodies, including rivers sites, are classified i
   
 There are a number of processes involved in this step as described below: 
   
-* The EQR values calculated in section 10 above are used within the getClassFromEQR_ntaxa () function found in the `classification-functions.R`(within the classification support files folder) to find the class and relevant boundary limit values.
-* These values are then used within the getClassFromEQR_aspt () function found in the `classification-functions.R`(within the classification support files folder).
-* The getMostProbableClass () function found in the `classification-functions.R`(within the classification support files folder) is used to find the most probable class.  
-* The getMINTA_ntaxa_aspt () function found in the `classification-functions.R`(within the classification support files folder is used to find the maximum of the two classes and which is the worst class. The worst class in then recorded in the output file and displayed in the MINTA column
+* The EQR values calculated in section 10 above are used within the getClassFromEQR_ntaxa () function found in the `classification-functions.R` to find the class and relevant boundary limit values.
+* These values are then used within the getClassFromEQR_aspt () function found in the `classification-functions.R`.
+* The `getMostProbableClass()` function found in the `classification-functions.R` is used to find the most probable class.  
+* The `getMINTA_ntaxa_aspt()` function found in the `classification-functions.R` is used to find the maximum of the two classes and which is the worst class. The worst class in then recorded in the output file and displayed in the MINTA column
 
 ## Classification output
 
@@ -1991,6 +1984,7 @@ If for coding purposes classes ‘high’ to ‘bad’ are referred to as classe
 PrChij       = 	Proportion of simulations for which simulated sample A was classified as class i and simulated sample B was classified as class j.
                  =	Estimated probability of change in status from class i to class j
 ```
+  
   
 Status class of sample B
    

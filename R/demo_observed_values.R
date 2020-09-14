@@ -1,4 +1,4 @@
-#' Demo observed values for physical model
+#' Demo observed values for physical model in Great Britain
 #'
 #' A dataset containing demo observed values. Stored as .csv
 #'     demo_observed_values <- utils::read.csv(

@@ -20,6 +20,8 @@
 #' @export rict_app
 
 rict_app <- function() {
+  message("This app is a work in progress - use the rict experiments on Azure for officialclassification:
+          https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/RICT%20Application.aspx")
   appDir <- system.file("shiny_apps", "rictapp", package = "rict")
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `rict`.", call. = FALSE)

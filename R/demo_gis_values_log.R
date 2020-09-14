@@ -1,7 +1,7 @@
 #' Demo observed values for gis model
 #'
-#' A dataset containing demo observed log transformedgis values for model 44.
-#' Stored as .csv.
+#' A dataset containing demo observed log transformed gis values for model 44.
+#' Stored as .csv:
 #' demo_gis_values_log <- utils::read.csv( system.file("extdat",
 #' "environmental-test-data-model-44-log.csv", package = "rict"), check.names =
 #' F )
@@ -11,13 +11,16 @@
 #'   \item{SITE}{Site identifier}
 #'   \item{Year}{Year of sampling}
 #'   \item{WATERBODY}{Water body identifier}
+#'   \item{Alkalinity}{Alkalinity}
+#'   \item{Conductivity}{Conductivity}
+#'   \item{hardness}{hardness}
+#'   \item{calcium}{calcium}
 #'   \item{OBJECTID}{Optional object ID reference from map-based locator}
 #'   \item{SX}{Sampling site X coordinate (British National Grid)}
 #'   \item{SY}{Sampling site Y coordinate (British National Grid)}
 #'   \item{EX}{Optionally for reference, the nearest X grid coordinate used for predictive variables}
 #'   \item{EY}{Optionally for reference, the nearest Y grid coordinate used for predictive variables}
 #'   \item{shape_Length}{shape_Length}
-#'   \item{Alkalinity}{Alkalinity}
 #'   \item{altitude}{altitude}
 #'   \item{d_f_source}{d_f_source}
 #'   \item{logaltbar}{logaltbar}

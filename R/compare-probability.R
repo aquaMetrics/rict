@@ -1,7 +1,10 @@
 #' Compare Proportion of Results in each Class
 #'
 #' Compares proportion of results 'a' falling into the same or different class
-#' as results 'b'. Designed for comparing simulated Environmental Quality Ratios (EQR).
+#' as results 'b'. Designed for comparing simulated Environmental Quality Ratios
+#' (EQR). It is a low-level function used by the higher-level
+#' \code{\link{rict_compare}} function to compare the EQRs of two paired
+#' results.
 #'
 #' @param a numeric list of results 'a'
 #' @param b numeric list of results 'b'

@@ -23,9 +23,9 @@ rict_predict(
   \item{...}{etc}
 }}
 
-\item{all_indices}{Return all indices in output (default only returns WHPT indices).}
+\item{all_indices}{Boolean - Return all indices in output (default only returns WHPT indices).}
 
-\item{taxa}{Return taxa predictions (default  returns indices).}
+\item{taxa}{Boolean - Return taxa predictions (default  returns indices).}
 
 \item{taxa_list}{Vector of taxa lists to predict default all lists i.e. c("TL1", "TL2", "TL3", "TL4", "TL5").}
 

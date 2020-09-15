@@ -1,5 +1,7 @@
 #' Calculate River Invertebrate Classification Tool (RICT) predictions
 #'
+#' @seealso \code{\link{rict_classify}} to run classification using rict_predict
+#'   outputs
 #' @param data Dataframe of predictive environmental values
 #' \describe{
 #'   \item{SITE}{Site identifier}

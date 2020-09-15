@@ -42,3 +42,6 @@ test <- compare_probability(
 )
 }
 }
+\seealso{
+\code{\link{rict_compare}}
+}

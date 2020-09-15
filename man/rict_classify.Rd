@@ -13,7 +13,7 @@ rict_classify(
 }
 \arguments{
 \item{data}{Dataframe of predicted endgroups values from
-'rict__predict' function}
+\code{\link{rict__predict}} function}
 
 \item{year_type}{"single" or "multi" depending if multi-year classification
 required - default is "multi"}

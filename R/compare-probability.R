@@ -6,6 +6,8 @@
 #' \code{\link{rict_compare}} function to compare the EQRs of two paired
 #' results.
 #'
+#' @seealso \code{\link{rict_compare}}
+#'
 #' @param a numeric list of results 'a'
 #' @param b numeric list of results 'b'
 #' @param eqr_bands Class boundaries default is eqr_bands = c(0.0, 0.2, 0.4, 0.6, 0.8, 1.0)

@@ -34,3 +34,6 @@ The \code{rict} function classifies observed environmental values.
 results <- rict(demo_observed_values)
 }
 }
+\seealso{
+\code{\link{rict_predict}} to run prediction (not classification)
+}

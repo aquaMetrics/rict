@@ -1,7 +1,7 @@
 #' Run the River Invertebrate Classification Tool (RICT)
 #'
 #' The \code{rict} function classifies observed environmental values.
-#'
+#' @seealso \code{\link{rict_predict}} to run prediction (not classification)
 #' @param data Dataframe of observed environmental values for example of input
 #'   data see \code{\link{demo_observed_values}} or
 #'   \code{\link{demo_gis_values_log}}.

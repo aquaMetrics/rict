@@ -1,7 +1,7 @@
 #' Calculate classification
 #'
 #' @param data Dataframe of predicted endgroups values from
-#'   'rict__predict' function
+#'   \code{\link{rict__predict}} function
 #' @param year_type "single" or "multi" depending if multi-year classification
 #'   required - default is "multi"
 #' @param store_eqrs Boolean to signal if simulate EQRs should be stored. If

@@ -43,3 +43,7 @@ Calculate River Invertebrate Classification Tool (RICT) predictions
 predictions <- rict_predict(demo_observed_values)
 }
 }
+\seealso{
+\code{\link{rict_classify}} to run classification using rict_predict
+  outputs
+}

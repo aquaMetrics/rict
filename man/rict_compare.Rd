@@ -79,10 +79,13 @@ sites and/or time periods.
 The `rict_compare` makes use of two lower level functions:
 \code{\link{compare_test}} and \code{\link{compare_probability}}. Before
 passing data to these functions it formats the data and removes results for
-example the 'MINTA' values (as these are not applicable for compare_test()).
+example the 'MINTA' values as these are not applicable for
+`compare_test()`.
 }
 \examples{
+\dontrun{
 results_a <- rict(demo_observed_values[1, ], store_eqrs = TRUE, year_type = "single")
 results_b <- rict(demo_gis_values_log[2, ], store_eqrs = TRUE, year_type = "single")
 compare <- rict_compare(results_a, results_b)
+}
 }

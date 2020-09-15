@@ -7,7 +7,8 @@
 #' The `rict_compare` makes use of two lower level functions:
 #' \code{\link{compare_test}} and \code{\link{compare_probability}}. Before
 #' passing data to these functions it formats the data and removes results for
-#' example the 'MINTA' values (as these are not applicable for compare_test()).
+#' example the 'MINTA' values as these are not applicable for
+#' `compare_test()`.
 #'
 #' @param results_a Dataframe output from `rict(store_eqrs = T)`. The
 #'   `results_b` and `results_b` input  dataframes must have the same number of

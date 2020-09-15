@@ -1,0 +1,27 @@
+destination: docs
+
+template:
+  params:
+    noindex: true
+
+reference:
+  - title: "Predictions and classification"
+    desc: "Functions for calculating predictions and classification"
+    contents:
+      - rict
+      - rict_predict
+      - rict_classify
+  - title: "Compare"
+    desc: "Function for comparing two or more classification results"
+    contents:
+      - rict_compare
+  - title: "Example Datasets"
+    desc: "Example datasets for different areas and model inputs for the UK"
+    contents:
+      - demo_ni_observed_values
+      - demo_observed_values
+      - demo_gis_values_log
+  - title: "Launch RICT web app"
+    desc: "Demo RICT web app providing a user interface for the rict package"
+    contents:
+      - rict_app

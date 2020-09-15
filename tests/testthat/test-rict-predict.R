@@ -111,7 +111,7 @@ test_that("All indices predictions work NI", {
   indices_prediction <- rict_predict(data, all_indices = TRUE)
   verified_predictions <-
     utils::read.csv(system.file("extdat",
-                                "rict-ni-taxa-prediction.csv",
+                                "rict-ni-all-indices-predictions.csv",
                                 package = "rict"
     ), check.names = FALSE, stringsAsFactors = T) # from tested Azure data
 
@@ -122,16 +122,35 @@ test_that("All indices predictions work NI", {
 
 
 test_that("taxa predictions work NI", {
-skip("work in progress")
-  taxa_prediction <- rict_predict(demo_ni_observed_values[1:12, ], all_indices = TRUE)
+  taxa_prediction <- rict_predict(demo_ni_observed_values[1, ], taxa = TRUE)
   verified_predictions <-
     utils::read.csv(system.file("extdat",
-                                "rict-ni-all-indices-predictions.csv",
+                                "rict-ni-taxa-prediction.csv",
                                 package = "rict"
     ), check.names = FALSE)
 
-  indices_prediction <- taxa_prediction[, names(taxa_prediction) %in% names(verified_predictions)]
-  verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(indices_prediction)]
-  expect_equal(indices_prediction[60:135], verified_predictions[60:135])
+  taxa_prediction <- dplyr::arrange(taxa_prediction, Maitland_Name, Season_Code)
+  verified_predictions <- dplyr::arrange(verified_predictions, Maitland_Name, Season_Code)
+  taxa_prediction <- taxa_prediction[, names(taxa_prediction) %in% names(verified_predictions)]
+  verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(taxa_prediction)]
+
+  expect_equal(round(taxa_prediction[11:18],3), round(verified_predictions[11:18],3))
+})
+
+test_that("predictions work NI", {
+  skip("work in progress")
+  taxa_prediction <- rict_predict(demo_ni_observed_values)
+  verified_predictions <-
+    utils::read.csv(system.file("extdat",
+                                "rict-ni-prediction.csv",
+                                package = "rict"
+    ), check.names = FALSE)
+
+  taxa_prediction <- dplyr::arrange(taxa_prediction, Maitland_Name, Season_Code)
+  verified_predictions <- dplyr::arrange(verified_predictions, Maitland_Name, Season_Code)
+  taxa_prediction <- taxa_prediction[, names(taxa_prediction) %in% names(verified_predictions)]
+  verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(taxa_prediction)]
+
+  expect_equal(round(taxa_prediction[11:18],3), round(verified_predictions[11:18],3))
 })
 

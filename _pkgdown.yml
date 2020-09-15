@@ -1,4 +1,0 @@
-template:
-  params:
-    noindex: true
-destination: docs

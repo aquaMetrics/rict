@@ -154,7 +154,7 @@ test_that("GIS variables classification against Ralph's output", {
   library(dplyr)
   library(tidyr)
   data("demo_gis_values_log")
-  demo_gis_values$WATERBODY <- demo_gis_values_log$SITE
+  demo_gis_values_log$WATERBODY <- demo_gis_values_log$SITE
   predictions <- rict_predict(demo_gis_values_log)
   results <- rict_classify(predictions, year_type = "single")
   results_two <- rict(demo_gis_values_log, year_type = "single")
@@ -266,13 +266,24 @@ test_that("Test missing seasons", {
 })
 
 test_that("NI classification", {
-  skip("To do...")
-  ni_data <-
-    utils::read.csv(system.file("extdat",
-                                "ni-model-1-test-data.csv",
-                                package = "rict"
-    ), check.names = FALSE)
+  classification <- rict(demo_ni_observed_values, year_type = "single")
 
-  test <- rict(ni_data, year_type = "single")
+  verfied_classification <- utils::read.csv(system.file("extdat",
+                                                 "validation-classification-ni-single-year.csv",
+                                                 package = "rict"
+  ), check.names = F)
+
+  classification <- classification[, names(classification) %in% names(verfied_classification)]
+  verfied_classification <- verfied_classification[, names(verfied_classification) %in% names(classification)]
+
+  classification <- type.convert(classification)
+  verfied_classification <- type.convert(verfied_classification)
+  # not exact match because of difference in randomness due to global set.seed implementation
+  # the single-year classification loops through all seasons in the package (including summer)
+  # which means the set.seed is slightly different after looping through summer etc
+  # if you remove summer from the loop it gives the same answer.
+  # however these status classes do still match ofr spring:
+  expect_equal(classification$mostProb_NTAXA_spr, verfied_classification$mostProb_NTAXA_spr)
+
 })
 

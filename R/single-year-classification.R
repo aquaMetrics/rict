@@ -646,21 +646,18 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     )
   }
 
-  # if(all(seasons %in% c(2,4))) {
-  #   # join spr+aut and sum...
-  #   allResults_ntaxa_aspt_minta_combined <- cbind(allResults_ntaxa_aspt_minta_combined, all_summer[, c(3:10)])
-  # }
-  #
-  # if(seasons == 2) {
-  #   # only sum...
-  #   allResults_ntaxa_aspt_minta_combined <- all_summer
-  # }
 
-  final <- allResults_ntaxa_aspt_minta_combined
-  # if spr or aut not provided remove from end result
+ # add summer in
+ allResults_ntaxa_aspt_minta_combined <- cbind(allResults_ntaxa_aspt_minta_combined, all_summer[, c(4:10)])
+ final <- allResults_ntaxa_aspt_minta_combined
 
-  final[is.na(final$ASPT_eqr_av_spr), grep("spr", names(final))] <- NA
-  final[is.na(final$ASPT_eqr_av_aut), grep("aut", names(final))] <- NA
+ # if spr or aut not provided remove from end result
+ final[is.na(final$ASPT_eqr_av_spr), grep("spr", names(final))] <- NA
+ final[is.na(final$ASPT_eqr_av_aut), grep("aut", names(final))] <- NA
+ final[is.na(final$ASPT_eqr_av_aut), grep("sum", names(final))] <- NA
+
+
+
 
 
   return(final)

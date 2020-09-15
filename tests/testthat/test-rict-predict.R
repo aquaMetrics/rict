@@ -138,19 +138,18 @@ test_that("taxa predictions work NI", {
 })
 
 test_that("predictions work NI", {
-  skip("work in progress")
-  taxa_prediction <- rict_predict(demo_ni_observed_values)
+  prediction <- rict_predict(demo_ni_observed_values)
   verified_predictions <-
     utils::read.csv(system.file("extdat",
-                                "rict-ni-prediction.csv",
+                                "rict-ni-predictions.csv",
                                 package = "rict"
     ), check.names = FALSE)
 
-  taxa_prediction <- dplyr::arrange(taxa_prediction, Maitland_Name, Season_Code)
-  verified_predictions <- dplyr::arrange(verified_predictions, Maitland_Name, Season_Code)
-  taxa_prediction <- taxa_prediction[, names(taxa_prediction) %in% names(verified_predictions)]
-  verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(taxa_prediction)]
 
-  expect_equal(round(taxa_prediction[11:18],3), round(verified_predictions[11:18],3))
+  prediction <- prediction[, names(prediction) %in% names(verified_predictions)]
+  verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(prediction)]
+  # test predictions are the same for ASPT and NTAXA:
+  expect_equal(prediction$TL2_WHPT_NTAXA_AbW_DistFam_sum, verified_predictions$TL2_WHPT_NTAXA_AbW_DistFam_sum)
+  expect_equal(prediction$TL2_WHPT_ASPT_AbW_DistFam_sum, verified_predictions$TL2_WHPT_ASPT_AbW_DistFam_sum)
 })
 

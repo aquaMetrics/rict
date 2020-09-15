@@ -1,5 +1,5 @@
 ---
-title: "functional-specification"
+title: "Functional Specification"
 author: ""
 date: "`r Sys.Date()`"
 output: 
@@ -7,12 +7,19 @@ output:
   number_sections: yes
   toc: yes
 vignette: >
-  %\VignetteIndexEntry{functional-specification}
+  %\VignetteIndexEntry{Functional Specification}
   \usepackage[utf8]{inputenc}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
 ---
+
+```{r setup, message=F, echo=FALSE}
+library(rict)
+library(knitr)
+library(dplyr)
+library(png)
+```
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -47,11 +54,6 @@ outline: 0 ;
 ")
 ```
 
-```{r setup, message=F}
-library(rict)
-library(knitr)
-library(dplyr)
-```
 
 ```{r results="asis", echo=FALSE}
 # directly adding css to output html without ruining css style https://stackoverflow.com/questions/29291633/adding-custom-css-tags-to-an-rmarkdown-html-document
@@ -217,13 +219,13 @@ embed_png("images/application-flow-chart.png", dpi = 120)
 
 ```
 
-**1. LOGIN TO RICT:** A new user will need to create a Microsoft account and log in to
-be able to access to the RICT tool as the tool uses the Microsoft Azure Machine
-Learning Studio as its platform. How to access RICT is outlined in the RICT user
-guide.
+**1. LOGIN TO RICT:** A new user will need to create a Microsoft account and log
+in to be able to access to the RICT tool as the tool uses the Microsoft Azure
+Machine Learning Studio as its platform. How to access RICT is outlined in the
+RICT user guide.
   
-**2. COMPLETE DATA INPUT:** User will need to complete a CSV (comma delimited) input
-file containing the data for the run required. A standard template excel
+**2. COMPLETE DATA INPUT:** User will need to complete a CSV (comma delimited)
+input file containing the data for the run required. A standard template excel
 spreadsheet will be provided to enter this data which can be downloaded via a
 SharePoint link from the website.
   
@@ -282,12 +284,13 @@ experiment to calculate Classification:
         
 Section 10 of this document describe the classification steps in more detail.
   
-**9. COMPARE EXPERIMENT:** Tool runs processing steps to compare data outputs from two
-previous predict and classify runs to produce a compare output file report.
+**9. COMPARE EXPERIMENT:** Tool runs processing steps to compare data outputs
+from two previous predict and classify runs to produce a compare output file
+report.
   
-**10. OUTPUT FILE:** RICT2 will generate an output file with processed data for Predict
-and Classify in csv format for the user to download. This data extract can th en
-be used for analysis and reporting.
+**10. OUTPUT FILE:** RICT2 will generate an output file with processed data for
+Predict and Classify in csv format for the user to download. This data extract
+can th en be used for analysis and reporting.
   
 Annex B of this document has a copy of the data output table in more detail.
   
@@ -318,15 +321,29 @@ as internal data tables and R software code functions in the project experiment.
 A list of the tables and functions required for the **GB model experiment** is as
 below.  
   
-All the following files can be found within the rict package on [github](https://github.com/aquaMetrics/rict).
+All the following files can be found within the rict package on
+[github](https://github.com/aquaMetrics/rict).
 
-Each experiment uses the exact same supporting file/package. The code within each experiment determines which functions and supporting table are called from the rict package.
+Each experiment uses the exact same supporting file/package. The code within
+each experiment determines which functions and supporting table are called from
+the rict package.
   
-The rict package is automatically tested and compiled/built on every update to the master branch on github. This process is carried out by the Appveyor website, which monitors github for any changes and re-builds and tests the code on a Windows machine in the cloud.
+The rict package is automatically tested and compiled/built on every update to
+the master branch on github. This process is carried out by the Appveyor
+website, which monitors github for any changes and re-builds and tests the code
+on a Windows machine in the cloud.
   
-The Microsoft Windows binary .zip package file (Azure requires a Windows binary package) is stored on the Appveyor [artifacts](https://ci.appveyor.com/project/ecodata1/rict/branch/master/artifacts) page. It is currently built using R 3.5 (slight above the Azure version 3.4.4) for compatibility with Appveyor. But this has not caused any issues. Alternatively, the rict package binary can be compile/built locally on a Windows machine.  
+The Microsoft Windows binary .zip package file (Azure requires a Windows binary
+package) is stored on the Appveyor
+[artifacts](https://ci.appveyor.com/project/ecodata1/rict/branch/master/artifacts)
+page. It is currently built using R 3.5 (slight above the Azure version 3.4.4)
+for compatibility with Appveyor. But this has not caused any issues.
+Alternatively, the rict package binary can be compile/built locally on a Windows
+machine.
   
-The .zip binary package file, is then moved to a folder called 'support-files' and that folder is also zip compressed. This zipped folder is then uploaded to Azure Studio experiments as required. 
+The .zip binary package file, is then moved to a folder called 'support-files'
+and that folder is also zip compressed. This zipped folder is then uploaded to
+Azure Studio experiments as required.
 
 ## Prediction
 
@@ -394,7 +411,9 @@ Classification support files:
 * `adjustParams_ntaxa_aspt.csv` containing reference adjustment values which are used as described in Section 8.2.
 * `EndGrp_AssessScoresNI.csv` used for adjusting the expected values during classification as described in Section 8.2.
   
-All source code and support files can be downloaded into R environment for example Rstudio from github for users who wish to amend and create their own versions and set up their own experiments.
+All source code and support files can be downloaded into R environment for
+example Rstudio from github for users who wish to amend and create their own
+versions and set up their own experiments.
 
 # RICT2 Experiments 
 
@@ -407,7 +426,8 @@ and values and save their own experiments. Standard published experiments can
 only be amended by an administrator user. These will be a “locked down” version
 displayed in the Azure Studio gallery.
   
-Below are described the default settings values for the WFD Classification experiments.
+Below are described the default settings values for the WFD Classification
+experiments.
   
 A run of the tool can only be carried out against one Reference End Group model.
 Users can choose to run an experiment for either:
@@ -469,7 +489,7 @@ the modifications do not affect the results and if they do, we know what the
 effect is.  Information about that will be added to this document and to user
 guides, as appropriate.
   
-## Acceptance and validation of input data
+# Acceptance and validation of input data
 
 In order to be able to predict and classify, the tool requires input data in one
 csv file which includes:
@@ -518,11 +538,13 @@ Note that at least one set of the following data will be required for each site
 but there may be up to three sets of data where the ‘raw’ data is being provided
 for up to three years for multi-year classification.
   
-## Input variables
+### Input variables
 
-All input variables as well as their validation rules are listed in the validation-rules.csv file within the package. The tables below are generated from this file. 
+All input variables as well as their validation rules are listed in the
+validation-rules.csv file within the package. The tables below are generated
+from this file.
 
-### Model 1 User input file (using physical predictors) 
+#### Model 1 User input file (using physical predictors) 
 
 Required columns:
 
@@ -540,7 +562,7 @@ kable(filter(validation_rules, models %in% c("all", "physical") & source == "inp
                               Optional = "optional")  %>%  unique())
 ```
 
-### Model 44 Input files (using GIS predictors) 
+#### Model 44 Input files (using GIS predictors) 
 
 Required columns:
   
@@ -553,11 +575,13 @@ kable(filter(validation_rules, models %in% c("all", "gis") & source == "input") 
                               Optional = "optional") %>%  unique())
 ```
 
-## Optional variables
+#### Optional variables
 
-Optional columns: Must still be present in input data file but they may contain missing values or be entirely empty. However, they must comply with the following notes:
+Optional columns: Must still be present in input data file but they may contain
+missing values or be entirely empty. However, they must comply with the
+following notes:
 
-### Model 1 Optional notes:
+#### Model 1 Optional notes:
 
 ```{r}
 kable(filter(validation_rules, models %in% c("all", "physical") &
@@ -567,7 +591,7 @@ kable(filter(validation_rules, models %in% c("all", "physical") &
                               "Optional note" = "optional_notes")  %>%  unique())
 ```
 
-### Model 44 Optional notes:
+#### Model 44 Optional notes:
 
 ```{r}
 kable(filter(validation_rules, models %in% c("all", "gis") &
@@ -577,7 +601,7 @@ kable(filter(validation_rules, models %in% c("all", "gis") &
                               "Optional note" = "optional_notes")  %>%  unique())
 ```
 
-## Validation
+#### Validation
 
 Warnings: Where the value of an environmental input variable exceeds a
 “Warn” limit, the prediction process will continue but warning message is
@@ -587,10 +611,10 @@ Fails: Where the value of an environmental input variable exceeds a “Fail”
 limit, the prediction process will not proceed for that particular site and
 flags the transgression in a fail message.
 
-### Validation rules for Model 1
+#### Validation rules for Model 1
 
 ```{r}
-kable(filter(validation_rules, models %in% c("all", "physical") & source == "input") %>%
+knitr::kable(filter(validation_rules, models %in% c("all", "physical")) %>%
                        select(Variable = "variable",
                               Area = "area",
                               "Less than fail" = "less_than_fail",
@@ -608,11 +632,11 @@ kable(filter(validation_rules, models %in% c("all", "physical") &
 
 ```
 
-### Validation rules for Model 44
+#### Validation rules for Model 44
 
 ```{r}
 
-kable(filter(validation_rules, models %in% c("all", "gis") & source == "input") %>%
+kable(filter(validation_rules, models %in% c("all", "gis")) %>%
                        select(Variable = "variable",
                               Area = "area",
                               "Less than fail" = "less_than_fail",
@@ -630,9 +654,12 @@ kable(filter(validation_rules, models %in% c("all", "gis") &
 
 ```
 
-## Replacement values
+#### Replacement values
 
-If values are provided that are zero (or close to zero) they are replaced to avoid divide by zero errors. Specifically, variables that are used in the RIVPACS model discriminator functions in their log form (as you cannot take logs of zeroes):
+If values are provided that are zero (or close to zero) they are replaced to
+avoid divide by zero errors. Specifically, variables that are used in the
+RIVPACS model discriminator functions in their log form (as you cannot take logs
+of zeroes):
 
 ```{r}
 
@@ -647,18 +674,22 @@ kable(filter(validation_rules, models %in% c("all", "gis", "physical") & source 
                         ) %>%  unique())
 ```
 
-## Validation rules
+### Validation rules
 
-The min/max validation rules are stores in the `validation-rules.csv`. This can be updated with new min/max validation as required. The more complex validation rules for example checking the presence of optional columns are hard-coded into the `rict_validation()` function.
+The min/max validation rules are stores in the `validation-rules.csv`. This can
+be updated with new min/max validation as required. The more complex validation
+rules for example checking the presence of optional columns are hard-coded into
+the `rict_validation()` function.
 
-## Environmental Variables Validation Process
+### Environmental Variables Validation Process
 
 Some initial validation is done if the user (as recommended) enters data into
 the input spreadsheet:
 
 * Spreadsheet validation is carried out to check that the Environmental Values are present and they are the correct format as user enters data.
 
-The user then inputs the values into RICT2 on Azure and the software carries out further validation:
+The user then inputs the values into RICT2 on Azure and the software carries out
+further validation:
   
 If any columns are missing when data is imported to RICT2 the program fails.
     
@@ -673,19 +704,33 @@ Values exceeding these limits must be wrong.
 * Check that each provided EV value is greater than or equal to the ‘warning’ minimum value and less than or equal to the ‘warning’ maximum value defined in the Environmental Variable parameter table above.
 * If not, then this should be recorded so that it can be flagged as a ‘warning’ in the output file but the experiment will proceed as normal. 
       
-The warning limits are the minimum and maximum values of the variables in the RIVPACS reference database for reference sites included in RIVPACS IV GB or NI. Exceedences indicate that the site is beyond the scope of the model and may be the cause of poor suitability and they could indicate errors.  Exceeding longitude and latitude is less serious that exceeding other parameters.
+The warning limits are the minimum and maximum values of the variables in the
+RIVPACS reference database for reference sites included in RIVPACS IV GB or NI.
+Exceedences indicate that the site is beyond the scope of the model and may be
+the cause of poor suitability and they could indicate errors.  Exceeding
+longitude and latitude is less serious that exceeding other parameters.
   
 ## Observed Biological Data Values and Validation
 
-Biological data is needed to enable the classification process. The values of the Biological data is provided by the user. 
+Biological data is needed to enable the classification process. The values of
+the Biological data is provided by the user.
   
-The table below refers to the data items required and the data field validation for the RIVPACS IV Great Britain Model 1 and for the RIVPACS IV Northern Ireland Model 1.
+The table below refers to the data items required and the data field validation
+for the RIVPACS IV Great Britain Model 1 and for the RIVPACS IV Northern Ireland
+Model 1.
   
-Conditional formatting validation will be carried out for all of the validation rules described in the table below when a user enters data into the input file spreadsheet. There is no validation for the Observed Biological data within RICT2. 
+Conditional formatting validation will be carried out for all of the validation
+rules described in the table below when a user enters data into the input file
+spreadsheet. There is no validation for the Observed Biological data within
+RICT2.
   
-However, RICT2 will validate that relevant values have been provided from the prediction process of the experiment prior to the classification process. This is to check that there are no null values if these values are required for the classification to be successful.
+However, RICT2 will validate that relevant values have been provided from the
+prediction process of the experiment prior to the classification process. This
+is to check that there are no null values if these values are required for the
+classification to be successful.
   
-Note, this data will need to be entered for each season relevant for the project experiment. For WFD classification, this will be data for spring and autumn. 
+Note, this data will need to be entered for each season relevant for the project
+experiment. For WFD classification, this will be data for spring and autumn.
   
 Data Item  
 Validation  
@@ -705,9 +750,11 @@ See All Indices table with new labels
 Must be numeric integer (i.e. whole number)  
 Bias (Ntaxa_Bias) Must be numeric  
 
-## Conversion of Input Environmental Variables
+# Conversion of Input Environmental Variables
 
-The values for some input environmental variable data needs to be converted to particular values that are required for the prediction process. These are as follows:
+The values for some input environmental variable data needs to be converted to
+particular values that are required for the prediction process. These are as
+follows:
   
 * NGR converted to latitude and longitude
 * Calculate mean air temperature and temperature range from latitude and longitude (GB only)
@@ -717,13 +764,15 @@ The values for some input environmental variable data needs to be converted to p
 * NGR convert many EVs to logarithms
 * Replace values of some EVs to prevent arithmetical problems, such as division by zero
   
-The required conversion rules and some validation rules that need to be applied are described below.
+The required conversion rules and some validation rules that need to be applied
+are described below.
 
 ## Deriving Latitude and Longitude from Grid References
 
 Grid references consists of:  
   
-nat_grid_ref	= 2 letters for the British National Grid (BNG) or 1 letter for the Irish grid specifying a  100km x 100km grid square 
+nat_grid_ref	= 2 letters for the British National Grid (BNG) or 1 letter for the
+Irish grid specifying a  100km x 100km grid square
   
 easting	= 3 digit Easting within the 100km grid square (to nearest 100m)
   
@@ -731,7 +780,9 @@ northing	= 3 digit Northing within the 100km grid square (to nearest 100m)
   
 To derive latitude and longitude, the NGR input by the users is run through `getLatLong()` in the `helper-functions.R` file. 
    
-This code converts the grid references to Latitude and Longitude WGS84 system. This co-ordinate system is required to calculate Long Term Average Mean Temperature and Range of Air Temperature environmental variables.
+This code converts the grid references to Latitude and Longitude WGS84 system.
+This co-ordinate system is required to calculate Long Term Average Mean
+Temperature and Range of Air Temperature environmental variables.
   
 The specific function code used within `helper-functions.R` is as below:
   
@@ -746,9 +797,15 @@ where:
 
 This conversion process is only applicable to GB model sites.
   
-When converting Latitude and Longitude to Long Term Average Mean Temperature and Range of Air Temperature, RICT2 uses a data file containing previously derived values for Mean air temperature and Air temperature range for points in the centres of 5km interval grid squares. This data file can be found in the inst/ext directory and is called AirTempGrid. 
+When converting Latitude and Longitude to Long Term Average Mean Temperature and
+Range of Air Temperature, RICT2 uses a data file containing previously derived
+values for Mean air temperature and Air temperature range for points in the
+centres of 5km interval grid squares. This data file can be found in the
+inst/ext directory and is called AirTempGrid.
   
-To calculate Long Term Average Mean Temperature and Range of Air Temperature, the Latitude and Longitude previously derived is run through `calc_temperatures.R` within the prediction support files folder. 
+To calculate Long Term Average Mean Temperature and Range of Air Temperature,
+the Latitude and Longitude previously derived is run through
+`calc_temperatures.R` within the prediction support files folder.
   
 The specific function code used within `calc_temperatures.R` is as below:  
   
@@ -896,8 +953,10 @@ TempGrid_out<-as.data.frame(TempGrid_out)
 #write.csv(TempGrid_out,"TempGrid.csv", row.names = FALSE, append = TRUE)
 }
 ```
-The temperature grid below is used to obtain mean air temperature and mean air temperature range for RICT predictions. 
-The dots represent points on the existing temperature grid if the site has exactly the same coordinates as the centre point
+The temperature grid below is used to obtain mean air temperature and mean air
+temperature range for RICT predictions. The dots represent points on the
+existing temperature grid if the site has exactly the same coordinates as the
+centre point
   
 **Key**
 
@@ -907,7 +966,9 @@ The dots represent points on the existing temperature grid if the site has exact
   
 1. If the site has exactly the same coordinates as the centre point
 
-If the point has exactly the same coordinates as the centre point it samples only the centre point to provide the temperature mean and range if that point exists in the dataset:
+If the point has exactly the same coordinates as the centre point it samples
+only the centre point to provide the temperature mean and range if that point
+exists in the dataset:
 ```  
 ● ● ● ● ●  
 ● ● ● ● ●  
@@ -915,7 +976,9 @@ If the point has exactly the same coordinates as the centre point it samples onl
 ● ● ● ● ●  
 ● ● ● ● ● 
 ```
-If the centre point doesn't exist in the above example then the surrounding 8 points are sampled, if more than 4 of the 8 pts are present within the dataset a value is returned:
+If the centre point doesn't exist in the above example then the surrounding 8
+points are sampled, if more than 4 of the 8 pts are present within the dataset a
+value is returned:
 ```
 ● ● ● ● ●   
 ● ◎ ◎ ◎ ●   
@@ -923,7 +986,9 @@ If the centre point doesn't exist in the above example then the surrounding 8 po
 ● ◎ ◎ ◌ ◌   
 ● ● ● ● ●   
 ```
-if the above condition is not satisfied then the sampling is expanded to include the adjacent points, if at least 5 of the 24 possible points are available a result is returned - if less than 5 no result is returned:
+If the above condition is not satisfied then the sampling is expanded to include
+the adjacent points, if at least 5 of the 24 possible points are available a
+result is returned - if less than 5 no result is returned:
 ```
 ◎ ◎ ◎ ◎ ◎     
 ◎ ◎ ◎ ◎ ◎   
@@ -933,7 +998,8 @@ if the above condition is not satisfied then the sampling is expanded to include
 ```
 2. If the site lies exactly on the N/S line of the centre point
   
-if the point lies exactly on the N/S line of the centre point then the nearest point and the one above are sampled if both points are present in the dataset:
+If the point lies exactly on the N/S line of the centre point then the nearest
+point and the one above are sampled if both points are present in the dataset:
 ```
 ● ● ● ● ●   
 ● ● ◎ ● ●   
@@ -941,7 +1007,9 @@ if the point lies exactly on the N/S line of the centre point then the nearest p
 ● ● ● ● ●   
 ● ● ● ● ●   
 ```
-if one of the two points above is not present in the dataset then the two either side are also sampled, if more than three points are present a result is returned:
+If one of the two points above is not present in the dataset then the two either
+side are also sampled, if more than three points are present a result is
+returned:
 ``` 
 ● ● ● ● ●  
 ● ◎ ◌ ◎ ●  
@@ -949,7 +1017,9 @@ if one of the two points above is not present in the dataset then the two either
 ● ● ● ● ●  
 ● ● ● ● ●  
 ```
-if less than 4 of the 6 points above are present in the dataset then the three above and below are also sampled if that at least 4 of the 12 are present a result is returned:
+If less than 4 of the 6 points above are present in the dataset then the three
+above and below are also sampled if that at least 4 of the 12 are present a
+result is returned:
 ```
 ● ◎ ◎ ◎ ●  
 ● ◎ ◌ ◌ ●  
@@ -959,7 +1029,9 @@ if less than 4 of the 6 points above are present in the dataset then the three a
 ```  
 3. if the site lies exactly on the E/W line of the centre point
 
-if the point lies exactly on the E/W line of the centre point then the nearest point and the east of it will be sampled if both points are present in the dataset: 
+If the point lies exactly on the E/W line of the centre point then the nearest
+point and the east of it will be sampled if both points are present in the
+dataset:
 ```
 ● ● ● ● ●  
 ● ● ● ● ●  
@@ -967,7 +1039,9 @@ if the point lies exactly on the E/W line of the centre point then the nearest p
 ● ● ● ● ●  
 ● ● ● ● ●  
 ```
-if one of the two pointts above are not present in the dataset then the two either side are also sampled, if more than three points are present a result is returned:  
+If one of the two pointts above are not present in the dataset then the two
+either side are also sampled, if more than three points are present a result is
+returned:
 ``` 
 ● ● ● ● ●  
 ● ● ◎ ◎ ●  
@@ -975,7 +1049,8 @@ if one of the two pointts above are not present in the dataset then the two eith
 ● ● ◎ ◎ ●  
 ● ● ● ● ●   
 ```
-if less than  4 of the 6 points above are  present in the dataset then the three east and west are also sampled assuming that at least 4 of the 12 are present:
+If less than  4 of the 6 points above are  present in the dataset then the three
+east and west are also sampled assuming that at least 4 of the 12 are present:
 ```
 ● ● ● ● ●  
 ● ◎ ◌ ◌ ◎   
@@ -983,9 +1058,10 @@ if less than  4 of the 6 points above are  present in the dataset then the three
 ● ◎ ◎ ◎ ◎   
 ● ● ● ● ●  
 ```  
-4. If none of the above are satisfied - the majority of sites. The site is not coincident with any point or the n/s or e/w line of any point
+4. If none of the above are satisfied - the majority of sites. The site is not coincident with any point or the n/s or e/w line of any point.
   
-interpolates between four values, 3 of the 4 points must be present to return a value:
+Interpolates between four values, 3 of the 4 points must be present to return a
+value:
 ```
 ● ● ● ● ●  
 ● ● ◎ ◎ ●  
@@ -993,7 +1069,8 @@ interpolates between four values, 3 of the 4 points must be present to return a 
 ● ● ● ● ●  
 ● ● ● ● ●  
 ```
-if the above is not satisfied then the sampling is expanded to take in 16 points of which 5 or more must be present:
+If the above is not satisfied then the sampling is expanded to take in 16 points
+of which 5 or more must be present:
 ```  
 ● ◎ ◎ ◎ ◎  
 ● ◎ ◎ ◌ ◌     
@@ -1003,7 +1080,9 @@ if the above is not satisfied then the sampling is expanded to take in 16 points
 ```
 ## Calculating Mean Substratum Composition
 
-MSUBST (in phi units) is derived from the following user-supplied environmental variables  from the input file for the river bed substratum composition observed at the sampling site:  
+MSUBST (in phi units) is derived from the following user-supplied environmental
+variables  from the input file for the river bed substratum composition observed
+at the sampling site:
 ```
 BOULDER_COBBLES	= percentage cover of Boulders/Cobbles  
 PEBBLES_GRAVEL	= percentage cover of Pebbles/Gravel  
@@ -1156,13 +1235,20 @@ kable(filter(validation_rules, models %in% c("physical"), pev == "TRUE") %>%
 
 * Alkalinity is involved in the discriminant functions in both untransformed form (as Env9) and in log transformed form (as Env) to represent its non-linear impact on the biota.
 
-This table also shows which EVs are supplied by the user in the input file and which EVs are internally derived by RICT2 conversions.
+This table also shows which EVs are supplied by the user in the input file and
+which EVs are internally derived by RICT2 conversions.
 
 ## Validation of Derived Environmental Variables
 
-Whenever the value of an Environmental variable is derived from any conversion applied, it needs to be validated against the various max/min values. There are two distinct max/min values; Fail and Warn and the required validation is as detailed previously in section 5. 
+Whenever the value of an Environmental variable is derived from any conversion
+applied, it needs to be validated against the various max/min values. There are
+two distinct max/min values; Fail and Warn and the required validation is as
+detailed previously in section 5.
   
-Once all the conversion processing has been carried out, then this should result in a value being present for every required Environmental variable.  This complete set of Environmental variables is called the Predictive Environmental Variables (PEVS).
+Once all the conversion processing has been carried out, then this should result
+in a value being present for every required Environmental variable.  This
+complete set of Environmental variables is called the Predictive Environmental
+Variables (PEVS).
   
 # Prediction
 
@@ -1175,11 +1261,18 @@ b) determine Environmental Suitability
 c) based on a), determine the predicted index values for the indices relevant to the run  
 d) based on a), determine the predicted taxa to be present at the site  
   
-The most complex part of this is a), which involves the use of multiple discriminant analysis and specialised statistical techniques (e.g. Mahanalobis Distance).
+The most complex part of this is a), which involves the use of multiple
+discriminant analysis and specialised statistical techniques (e.g. Mahanalobis
+Distance).
   
-It needs to be carried out for every set of site data applicable to the run (a site may be present more than once where more than one years’ worth of environmental data has been provided). 
+It needs to be carried out for every set of site data applicable to the run (a
+site may be present more than once where more than one years’ worth of
+environmental data has been provided).
   
-The flow diagram below summarises the prediction process and calculations (including the data input, validation, conversion and transform steps described above) as well as identifying the relevant section for further information from the WFD72C final report:
+The flow diagram below summarises the prediction process and calculations
+(including the data input, validation, conversion and transform steps described
+above) as well as identifying the relevant section for further information from
+the WFD72C final report:
 
 ```{r}
 embed_png("images/rict-prediction.png", dpi = 120)
@@ -1187,39 +1280,66 @@ embed_png("images/rict-prediction.png", dpi = 120)
 
 ## Prediction Overview
   
-The probability of a site belonging to an End Group is determined by the similarity of its Environmental Variables (EVs) to those of the relevant End Group.
+The probability of a site belonging to an End Group is determined by the
+similarity of its Environmental Variables (EVs) to those of the relevant End
+Group.
   
-Due to the multivariate nature of the environmental variable data, Multiple Discriminant Analysis (MDA) is used to turn the environmental variable data into a format that can be used to discriminate between the end groups.
+Due to the multivariate nature of the environmental variable data, Multiple
+Discriminant Analysis (MDA) is used to turn the environmental variable data into
+a format that can be used to discriminate between the end groups.
   
-MDA depends on multiple Discriminant Functions (DF). A Discriminant Function has the general format:-
+MDA depends on multiple Discriminant Functions (DF). A Discriminant Function has
+the general format:-
   
 ```
 Z = constant + c1EV1 + c2EV2 + c3EV3 + ... + cnEVn
 ```
   
-where Z is the Discriminant Score (DS) for that particular discriminant function, c1…cn are the coefficients of that discriminant function and EV1…EVn are the values of the environmental variables.
+where Z is the Discriminant Score (DS) for that particular discriminant
+function, c1…cn are the coefficients of that discriminant function and EV1…EVn
+are the values of the environmental variables.
   
-A DF is a linear combination of the EVs and the coefficients, which maximises the separation in data space of the end groups. In other words, if the discriminant function was solved for the mean values of the environmental variables of each end group and the results plotted on a line, the value from the solved formula for each end group would be as far apart from its nearest neighbour as could be achieved by using the available environmental variables to separate the end groups
+A DF is a linear combination of the EVs and the coefficients, which maximises
+the separation in data space of the end groups. In other words, if the
+discriminant function was solved for the mean values of the environmental
+variables of each end group and the results plotted on a line, the value from
+the solved formula for each end group would be as far apart from its nearest
+neighbour as could be achieved by using the available environmental variables to
+separate the end groups
 
 ## Environmental Variables
 
-The values of the EVs relevant to the prediction run will have been determined during the acceptance, validation and subsequent conversion processing of the input data as described in section 5 and 6 of this document. These are referred to in the algorithm below as EnvvN.
+The values of the EVs relevant to the prediction run will have been determined
+during the acceptance, validation and subsequent conversion processing of the
+input data as described in section 5 and 6 of this document. These are referred
+to in the algorithm below as EnvvN.
 
 ## Discriminant Functions (DFs) and the Coefficients
 
-The RIVPACS model used will determine the DFs that have to be run. For the GB model 1 with 13 EVs the DFs values can be found in the inst/ext folder for GB in a file called DFCOEFF_GB685. 
+The RIVPACS model used will determine the DFs that have to be run. For the GB
+model 1 with 13 EVs the DFs values can be found in the inst/ext folder for GB in
+a file called DFCOEFF_GB685.
   
-For the GB model 44 with 17 EVs the DFs values can be found in the prediction support files folder for GB in a file called `discrimant-function-coefficients-model-44.csv` - see section 12 for additional Model 44 information.
+For the GB model 44 with 17 EVs the DFs values can be found in the prediction
+support files folder for GB in a file called
+`discrimant-function-coefficients-model-44.csv` - see section 12 for additional
+Model 44 information.
   
-For the NI model with 11 EVs, the DFs values can be found in the prediction support files folder for Northern Ireland in a file called `DFCOEFF_NI`
+For the NI model with 11 EVs, the DFs values can be found in the prediction
+support files folder for Northern Ireland in a file called `DFCOEFF_NI`
   
-These are separate occurrences of DF. Each of these has a single ‘constant’ and, for each component EV, a co-efficient that is to be applied to the EV value. The coefficients are referred to in the algorithm below as DFCoef.
+These are separate occurrences of DF. Each of these has a single ‘constant’ and,
+for each component EV, a co-efficient that is to be applied to the EV value. The
+coefficients are referred to in the algorithm below as DFCoef.
 
 ## Calculate the Discriminant Function Scores
 
 (Step 4 in diagram above) 
 
-The functions that RICT2 uses for the calculations in the steps below (steps 4 - 8) can be found in the prediction-functions.R file. The algorithms and definitions provided below are copied from WFD72C and have been used to create the functions.
+The functions that RICT2 uses for the calculations in the steps below (steps 4 -
+8) can be found in the prediction-functions.R file. The algorithms and
+definitions provided below are copied from WFD72C and have been used to create
+the functions.
   
 For each DF, the Discriminant Score needs to be calculated as follows:
   
@@ -1241,7 +1361,8 @@ DFScored	= discriminant function score on axis d for the current test site
 
 (Step 5 in diagram above)
   
-For a particular End Group g, the probability of End Group Membership is calculated as follows:
+For a particular End Group g, the probability of End Group Membership is
+calculated as follows:
   
 - Calculate Mahanalobis distance (MahDistg) of test site from each End Group
 ```
@@ -1265,7 +1386,8 @@ MahDistg	= Mahalanobis distance of test site from end group g
 ```
 PDistg	= NRef g * EXP(-MahDist g/2)
 ```
-where NRef g = the number of reference sites in the End Group (from the End Group Reference Data table) and EXP is the natural exponential function
+where NRef g = the number of reference sites in the End Group (from the End
+Group Reference Data table) and EXP is the natural exponential function
   
 * Calculate the PDistTot
 ``` 
@@ -1280,15 +1402,20 @@ Probg = PDistg / PDistTot
 where Probg is the Probability test site belongs to end group g
 
   
-At the end of this process we end up with a set of probabilities of End Group Membership, one for each End Group. These are referred to below as Prob1 to Probn.
+At the end of this process we end up with a set of probabilities of End Group
+Membership, one for each End Group. These are referred to below as Prob1 to
+Probn.
 
 ## Determine Environmental Suitability of the Test Site for Prediction
 
 (Step 7 in diagram above)
 
-In certain cases it may be calculated that there is a very low probability of the site being in any of the end groups based on the data provided.
+In certain cases it may be calculated that there is a very low probability of
+the site being in any of the end groups based on the data provided.
   
-In order to highlight this to the user, a calculation is required to allocate an Environmental Suitability code to the site data indicating the probability the site belongs to any end group. The potential codes are:
+In order to highlight this to the user, a calculation is required to allocate an
+Environmental Suitability code to the site data indicating the probability the
+site belongs to any end group. The potential codes are:
   
 * 1   OK
 * 2   < 5%
@@ -1303,7 +1430,8 @@ The required calculation uses the Chi-square values (CQ1 to CQ4) which vary per 
 |RIVPACS IV GB (set 1)  |21.02606 |24.05393 |26.21696 |32.90923 |
 |RIVPACS IV NI (set 2)  |18.307   |21.1608  |23.2093  |29.5883  |
 
-PredictionfunctionsV1 (within the prediction support files folder) has a function called getSuitabilityCode() which will do this calculation.
+`prediction-functions.R` has a
+function called getSuitabilityCode() which will do this calculation.
   
 The detailed calculation is as follows:
   
@@ -1323,17 +1451,23 @@ If the MahDistmin >= value for CQ3 and < value for CQ4 then Suitability Code = 4
   
 If the MahDistmin >= value for CQ4 then Suitability Code = 5 and suitability text is <0.1%
   
-The output file will provide the user with the Suitability Code and suitability text. The Suitability text gives the user information and warnings about the suitability code calculated. 
+The output file will provide the user with the Suitability Code and suitability
+text. The Suitability text gives the user information and warnings about the
+suitability code calculated.
 
 ## Determine the Predicted Values of Indices
   
 (Step 8 in diagram above)
   
-The indices that require to be processed will be identified from the project experiment settings. For the initial release of RICT2 this will be for WHPT ASPT and WHPT NTAXA sets which are the indices required for the WFD classification. However, for Prediction, all 80 indices (which includes WHPT ASPT and WHPT NTAXA sets), will be used at this point and for Prediction only. 
+The indices that require to be processed will be identified from the project
+experiment settings. For the initial release of RICT2 this will be for WHPT ASPT
+and WHPT NTAXA sets which are the indices required for the WFD classification.
+However, for Prediction, all 80 indices (which includes WHPT ASPT and WHPT NTAXA
+sets), will be used at this point and for Prediction only.
    
 `prediction-functions.R` contains the following functions which will do this calculation:
 
-`getSeasonIndexScores <- function (data_to_bindTo, season_to_run, index_id, end_group_IndexDFrame, model)`
+`rict:::getSeasonIndexScores()`
 
 and the: end_group_IndexDFrame uses the `x-103-end-group-means.csv` file
 
@@ -1364,7 +1498,8 @@ IDXMeani,s,g	= Mean value of index i for season s for reference sites in end gro
 
 ## Completion and Outputs of Prediction Processing
 
-Once the prediction processing has been completed, the following data has been calculated for each occurrence of site data:
+Once the prediction processing has been completed, the following data has been
+calculated for each occurrence of site data:
   
 * Probabilities of End Group Membership
 * Expected Index Values
@@ -1374,17 +1509,22 @@ The expected index data is then passed to the classification process.
 
 # All index prediction
 
-This is a modification of the prediction undertaken in the predict and classify experiments.  It provides predictions for a wide range of indices.
+This is a modification of the prediction undertaken in the predict and classify
+experiments.  It provides predictions for a wide range of indices.
   
-However, it uses a different end group means data file derived from the RIVPACS database.
+However, it uses a different end group means data file derived from the RIVPACS
+database.
   
-The all indices output file will only show the output for prediction for the 80 indices.
+The all indices output file will only show the output for prediction for the 80
+indices.
   
 The biotic indices included in all index prediction are listed in Appendix B2.
   
 #	Taxa Prediction
   
-Although not required for status classification, an important feature of RIVPACS that is included in RICT is to be able to predict the taxa expected to be present at the site. For each taxon, the prediction provides:
+Although not required for status classification, an important feature of RIVPACS
+that is included in RICT is to be able to predict the taxa expected to be
+present at the site. For each taxon, the prediction provides:
   
 * Expected probability of occurrence.
 * Expected log abundance category.
@@ -1394,11 +1534,16 @@ The steps involved are described below.
 
 ## Identify the Relevant sites for the run
 
-Because of a potentially overwhelming amount of data in the output files, the user must specify which sites included in the input file the prediction is to be carried out. This additional step is undertaken using the manual data entry, explained below.
+Because of a potentially overwhelming amount of data in the output files, the
+user must specify which sites included in the input file the prediction is to be
+carried out. This additional step is undertaken using the manual data entry,
+explained below.
   
 Notes from write up with Maybin (March 2020):
   
-The following images illustrate the process flow and data requirements for the experiment to be run.  The data inputs and support files are different for the GB and NI experiments.
+The following images illustrate the process flow and data requirements for the
+experiment to be run.  The data inputs and support files are different for the
+GB and NI experiments.
   
 Click on Enter Data Manually
   
@@ -1408,11 +1553,19 @@ Leave the HasHeader box unchecked, if checked it will have a header file.
   
 The data fields are the sites you choose to run for the experiment.
   
-Note, the GB model has no restrictions when it comes to the number of sites that can be run in the experiment, however, the NI model is restricted to a maximum of two sites that can be run for each experiment. Therefore, it is suggested that only two sites are run for the GB model at any one time for it to work effectively. If you want to run all the sites for the GB model you need to put a 0 in the data line.
+Note, the GB model has no restrictions when it comes to the number of sites that
+can be run in the experiment, however, the NI model is restricted to a maximum
+of two sites that can be run for each experiment. Therefore, it is suggested
+that only two sites are run for the GB model at any one time for it to work
+effectively. If you want to run all the sites for the GB model you need to put a
+0 in the data line.
   
-Example:  GB – 1,2  2,3  3,5  4,7  etc., however, for NI only two sites can be run at one time, 1,2 and 3,10 or 2,7 and 3,4 in whichever sequential order you choose. 
+Example:  GB – 1,2  2,3  3,5  4,7  etc., however, for NI only two sites can be
+run at one time, 1,2 and 3,10 or 2,7 and 3,4 in whichever sequential order you
+choose.
   
-Figure 1 Example data entered to indicate two sites in the data input file selected for taxon prediction.
+Figure 1 Example data entered to indicate two sites in the data input file
+selected for taxon prediction.
   
 ## Methods and Algorithms to predict Expected values for each taxon
 
@@ -1420,7 +1573,8 @@ From Ralph Clarke 30/01/20
 
 ### Taxon prediction data file
 
-All of the required taxon prediction data was supplied by John Davy-Bowker in a single file derived from the RIVPACS Reference Database: TAXA_AB_APR_PRAB.csv
+All of the required taxon prediction data was supplied by John Davy-Bowker in a
+single file derived from the RIVPACS Reference Database: TAXA_AB_APR_PRAB.csv
   
 This file contains the following 18 columns:
 
@@ -1450,7 +1604,13 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 17.	Prob_Log4
 18.	Prob_Log5
 ```  
-Note: For the GB model, at any one taxonomic level (TL1 – TL5) and particular season (1-3), any particular taxon at that level only occurs as a row in this input file if it occurred (i.e. has at least one positive taxonomic parameter value) in at least one of the GB RIVPACS IV reference site End-groups. Similarly for taxa in the NI model. Thus the taxa listed (i.e. given) rows varies slightly between seasons because not all taxa were found in every seasons in at least one of the RIVPACS IV model reference sites.
+Note: For the GB model, at any one taxonomic level (TL1 – TL5) and particular
+season (1-3), any particular taxon at that level only occurs as a row in this
+input file if it occurred (i.e. has at least one positive taxonomic parameter
+value) in at least one of the GB RIVPACS IV reference site End-groups. Similarly
+for taxa in the NI model. Thus the taxa listed (i.e. given) rows varies slightly
+between seasons because not all taxa were found in every seasons in at least one
+of the RIVPACS IV model reference sites.
   
 * TL1 = BMWP taxa
 * TL2 = WHPT taxa
@@ -1462,11 +1622,17 @@ Season 1 = spring, 2 = summer, 3 = autumn.
   
 ### Algorithm to calculate Expected values of the 8 parameters for a GB test site
   
-End-group means of the 8 parameters to be predicted are supplied in columns 11-18 of the above taxon prediction data file.
+End-group means of the 8 parameters to be predicted are supplied in columns
+11-18 of the above taxon prediction data file.
   
-When working on the GB model, you first need to subset the data in the taxon prediction file to eliminate the rows for NI (Model =2).
+When working on the GB model, you first need to subset the data in the taxon
+prediction file to eliminate the rows for NI (Model =2).
   
-Assuming the RICT software has already read the test site’s environmental input data and calculated the probabilities (P1 , P2 , … P43) of the test site belonging to each of the 43 GB Model End-groups, for any particular taxa K at taxonomic level L in season S, its predicted expected value (ExpJKLS) of Taxonomic parameter J for that season is given by:
+Assuming the RICT software has already read the test site’s environmental input
+data and calculated the probabilities (P1 , P2 , … P43) of the test site
+belonging to each of the 43 GB Model End-groups, for any particular taxa K at
+taxonomic level L in season S, its predicted expected value (ExpJKLS) of
+Taxonomic parameter J for that season is given by:
   
 ```
 EJKLS = P1 x MJKLS(1) + P2 x MJKLS(2) + … + P43 x MJKLS(43)
@@ -1474,13 +1640,19 @@ EJKLS = P1 x MJKLS(1) + P2 x MJKLS(2) + … + P43 x MJKLS(43)
 	  
 Where MJKLS(i) = supplied End-group mean of taxonomic parameter J of taxa K at taxonomic level L in season S.
   
-In a mathematical sense that’s it and it appears easy. However, in practice it is not easy, not only because of the vast number of taxa, taxonomic level, end-group and season combinations for which Expected values are required, but also because the number of taxa included in the input file varies between seasons.
+In a mathematical sense that’s it and it appears easy. However, in practice it
+is not easy, not only because of the vast number of taxa, taxonomic level,
+end-group and season combinations for which Expected values are required, but
+also because the number of taxa included in the input file varies between
+seasons.
   
 ### Computing trick to calculate all taxonomic expected values for a test site
   
-The following computing trick calculates the expected values of taxonomic parameters for all taxa at all levels in all seasons in one step.
+The following computing trick calculates the expected values of taxonomic
+parameters for all taxa at all levels in all seasons in one step.
    
-If (P1 , P2 , … P43) denote the probabilities of the current test site belonging to each of the 43 GB Model End-groups, then:
+If (P1 , P2 , … P43) denote the probabilities of the current test site belonging
+to each of the 43 GB Model End-groups, then:
    
 (i) Copy column 2 (‘End_Group’) to a new column ‘End_Group_Prob’ 
   
@@ -1496,19 +1668,39 @@ If (P1 , P2 , … P43) denote the probabilities of the current test site belongi
   
 (vi)	In fact, if you can do this for one of 8 taxonomic parameters, you could probably do it for all 8 parameters at one step, having first derived the 8 intermediary columns: Param1_Prob, Param2_Prob,… , Param8_Prob  
   
-The order of multi-way table classifying columns that I specified above, namely (4, 3, 7, 5, 6, 8, 9, 10) will ensure that new columns of Expected taxonomic parameters will have classifier columns sorted first on Season, then Taxonomic Level, then Furse code, and finally all of the other alternative taxonomic codes for a taxa. I have suggested using ‘Furse_Code’ as the first (and primary individual taxonomic code) as I think it is unique and always available. It will also make it easier to compare with Ralph’s independent test code.
+The order of multi-way table classifying columns that I specified above, namely
+(4, 3, 7, 5, 6, 8, 9, 10) will ensure that new columns of Expected taxonomic
+parameters will have classifier columns sorted first on Season, then Taxonomic
+Level, then Furse code, and finally all of the other alternative taxonomic codes
+for a taxa. I have suggested using ‘Furse_Code’ as the first (and primary
+individual taxonomic code) as I think it is unique and always available. It will
+also make it easier to compare with Ralph’s independent test code.
   
-In summary, this should lead to an output file of 18 columns, akin to those in the input file, but where the values in output file columns 11-18 are now the predicted Expected values for the 8 taxonomic parameters for each combination of season, taxonomic level and taxa code as specified in output file columns 1-10.
+In summary, this should lead to an output file of 18 columns, akin to those in
+the input file, but where the values in output file columns 11-18 are now the
+predicted Expected values for the 8 taxonomic parameters for each combination of
+season, taxonomic level and taxa code as specified in output file columns 1-10.
   
-This procedure could be done for each test site in turn. The 18 output columns for each site could be stacked so that there is one additional output column denoting ‘SiteName’.
+This procedure could be done for each test site in turn. The 18 output columns
+for each site could be stacked so that there is one additional output column
+denoting ‘SiteName’.
   
-The single output file of columns can now be re-sorted externally by the User or use to subset by SiteName, Season, Taxonomic Level and/or Tax code, as required. For example, to just get predictions of taxonomic parameters for taxa at taxonomic level TL1 (BMWP family level), you just subset the 18 output columns by column TL= TL2.
+The single output file of columns can now be re-sorted externally by the User or
+use to subset by SiteName, Season, Taxonomic Level and/or Tax code, as required.
+For example, to just get predictions of taxonomic parameters for taxa at
+taxonomic level TL1 (BMWP family level), you just subset the 18 output columns
+by column TL= TL2.
   
-If the user wishes to only view the prediction results, a csv output will be generated in the project experiment which can be downloaded and used for reports. 
+If the user wishes to only view the prediction results, a csv output will be
+generated in the project experiment which can be downloaded and used for
+reports.
 
 ### Taxon prediction Output
 
-Taxon prediction output includes a row for each taxon predicted. For each site, expect about 3500 rows of data. The first block of rows will be for the first site selected and below it the results for the second site. Each row includes the same columns as the taxon prediction data file, together with siteName.
+Taxon prediction output includes a row for each taxon predicted. For each site,
+expect about 3500 rows of data. The first block of rows will be for the first
+site selected and below it the results for the second site. Each row includes
+the same columns as the taxon prediction data file, together with siteName.
 Sections below are based on notes from write up with Maybin (March 2020):
   
 ## Data Input files in addition to the taxon prediction data file 
@@ -1522,19 +1714,30 @@ Sections below are based on notes from write up with Maybin (March 2020):
 ## Execute R Script
 
 **(Update this section - TF)**
-Line 350 – this is the same as previous predictions but for taxa prediction we need to find each site’s EndGroup, it uses columns 15:57 for GB and 13:23 for NI.  Two functions are used: Function1 EndGroup Probability replacement, gets EndGroup and replaces it with the Probability (GB - columns 15:57 and NI columns 13:23).
+Line 350 – this is the same as previous predictions but for taxa prediction we
+need to find each site’s EndGroup, it uses columns 15:57 for GB and 13:23 for
+NI.  Two functions are used: Function1 EndGroup Probability replacement, gets
+EndGroup and replaces it with the Probability (GB - columns 15:57 and NI columns
+13:23).
   
-Line 366 – an important file as it looks at the taxonomic info from the TAXA_AB_APR_PRAB.csv about the model to be used in the prediction. EndGroup found are used with this file to compute predictions.
+Line 366 – an important file as it looks at the taxonomic info from the
+TAXA_AB_APR_PRAB.csv about the model to be used in the prediction. EndGroup
+found are used with this file to compute predictions.
   
 Line 371/372 – shows which model is being used for the experiment (GB or NI)
   
-Line 378/396 – this goes through each site and processes each site to do the predictions. The second function, Function2, does the computation of all the columns – it computes the site and adds it to the list of all sites, and repeats this function until all the sites have been computed.
+Line 378/396 – this goes through each site and processes each site to do the
+predictions. The second function, Function2, does the computation of all the
+columns – it computes the site and adds it to the list of all sites, and repeats
+this function until all the sites have been computed.
   
 # Classification
 
 ## Classification Process Summary
 
-The flow diagram below summarises the classification process and calculations as well as identifying the relevant section for further information from the WFD72C final report and other sources of information:
+The flow diagram below summarises the classification process and calculations as
+well as identifying the relevant section for further information from the WFD72C
+final report and other sources of information:
 
 ```{r}
 embed_png("images/rict-classification.png", dpi = 120)
@@ -1544,27 +1747,43 @@ Note that the blue boxes indicate processes that are simulated.
   
 ## Classification overview
 
-For every site in the experiment, the input to the classification process consists of Observed and Expected Index Values for the ‘current year’ for each applicable index. 
+For every site in the experiment, the input to the classification process
+consists of Observed and Expected Index Values for the ‘current year’ for each
+applicable index.
   
-Multiyear classification will include Observed and Expected Index Values for up to two previous years for each applicable index.
+Multiyear classification will include Observed and Expected Index Values for up
+to two previous years for each applicable index.
   
-The indices that need to be classified will be relevant to the project experiment. For the WFD classification default experiment, RICT2 will use TL2 WHPT Abundance weighted with distinct taxa for ASPT and NTAXA indices.
+The indices that need to be classified will be relevant to the project
+experiment. For the WFD classification default experiment, RICT2 will use TL2
+WHPT Abundance weighted with distinct taxa for ASPT and NTAXA indices.
   
-Any functions that RICT2 uses for the calculations described in the steps below (steps 1 - 13), can be found in the ClassificationfunctionsV2 within the classification support files folder. The algorithms and definitions provided below are copied from WFD72C plus other sources and have been used to create the functions.
+Any functions that RICT2 uses for the calculations described in the steps below
+(steps 1 - 13), can be found in the ClassificationfunctionsV2 within the
+classification support files folder. The algorithms and definitions provided
+below are copied from WFD72C plus other sources and have been used to create the
+functions.
 
 ## Expected Values calculated by the Prediction programme
 
 (Step 1 in process diagram above and Section 7)
   
-This is the main result from RIVPACS prediction (Section 7), based on environmental variable data input by the user. It is the prediction of the value of the index expected at the site if it was in the best quality available for that type of site, based on samples collected from best available reference sites.
+This is the main result from RIVPACS prediction (Section 7), based on
+environmental variable data input by the user. It is the prediction of the value
+of the index expected at the site if it was in the best quality available for
+that type of site, based on samples collected from best available reference
+sites.
 
 ## Adjust Expected Values to Standardise against the High/Good Boundary
 
 (Step 2 in process diagram above)
   
-The aim of this step is to standardise the raw predictions so that they relate to the same environmental quality (the high/good boundary quality) using algorithms first developed in WFD72b. This step is necessary to take account of variation in the environmental quality of RIVPACS reference sites.
+The aim of this step is to standardise the raw predictions so that they relate
+to the same environmental quality (the high/good boundary quality) using
+algorithms first developed in WFD72b. This step is necessary to take account of
+variation in the environmental quality of RIVPACS reference sites.
   
-There are a number of processes involved in this step as described below: 
+There are a number of processes involved in this step as described below:
   
 * The `computeScoreProportions()` function within the prediction support files folder is used to calculate proportions (Qij) for each end group using a CSV file (also within the prediction support files folder) called EndGrp_AssessScores.  
   
@@ -1574,11 +1793,16 @@ There are a number of processes involved in this step as described below:
   
 * Finally, the RjAj value is used to divide by for all the predictions (NTAXA and ASPT) to get the adjusted expected value (ExpIDXadj,i) for each site and each index.
   
-The reference adjustment values referred to above are default values for the WFD classification experiment and can be found in adjustParams_ntaxa_aspt csv file within the classification support files folder. 
+The reference adjustment values referred to above are default values for the WFD
+classification experiment and can be found in adjustParams_ntaxa_aspt csv file
+within the classification support files folder.
   
-This supporting data table csv file contains the number of reference sites by Biologist assessment score (1-5) for each End Group together with the five adjustment factors (Q1, Q2, Q3, Q4, Q5) for each index.
+This supporting data table csv file contains the number of reference sites by
+Biologist assessment score (1-5) for each End Group together with the five
+adjustment factors (Q1, Q2, Q3, Q4, Q5) for each index.
   
-The source for this csv file is based on the Table 6 from the Testing RICT2 predictions and classifications draft report 2018 which is as below:
+The source for this csv file is based on the Table 6 from the Testing RICT2
+predictions and classifications draft report 2018 which is as below:
   
 |Index                        |WHPT NTAXA                      |WHPT ASPT                             |
 |:----------------------------|:-------------------------------|:-------------------------------------|
@@ -1588,21 +1812,38 @@ The source for this csv file is based on the Table 6 from the Testing RICT2 pred
 |Q4                           |0.967                           |0.977                                 | 
 |Q5                           |0.926                           |0.945                                 |   
   
-Table 1. Adjustment factors for reference site quality (Q1, Q2, Q3, Q4, Q5) for abundance-weighted WHPT NTAXA and WHPT ASPT
+Table 1. Adjustment factors for reference site quality (Q1, Q2, Q3, Q4, Q5) for
+abundance-weighted WHPT NTAXA and WHPT ASPT
   
-However, further work has been done which has resulted in slightly different values for these adjustment factors which are reflected in the `adjustParams_ntaxa_aspt.csv` file used by RICT2, It is expected that the Testing RICT2 predictions and classifications draft report 2018 will be shortly updated to include a Table 7 to show these changes. 
+However, further work has been done which has resulted in slightly different
+values for these adjustment factors which are reflected in the
+`adjustParams_ntaxa_aspt.csv` file used by RICT2, It is expected that the
+Testing RICT2 predictions and classifications draft report 2018 will be shortly
+updated to include a Table 7 to show these changes.
   
-There is one set of adjustment factors for each index. Within current RICT2, adjustment factors for WHPT NTAXA and WHPT ASPT have been calculated for the default WFD experiment. If a user wants to try a different value then they will need to amend and create their own experiment. 
+There is one set of adjustment factors for each index. Within current RICT2,
+adjustment factors for WHPT NTAXA and WHPT ASPT have been calculated for the
+default WFD experiment. If a user wants to try a different value then they will
+need to amend and create their own experiment.
 
 ## EQR Conversion Factor
 
 (Step 3 in process diagram above)
   
-This is the conversion factor used to convert the adjusted predictions that relate to high/good boundary quality to reference values that relate to reference condition, which is somewhere in high status (reference values are the average value of the metric at reference sites in reference condition = high status)
+This is the conversion factor used to convert the adjusted predictions that
+relate to high/good boundary quality to reference values that relate to
+reference condition, which is somewhere in high status (reference values are the
+average value of the metric at reference sites in reference condition = high
+status)
   
-Each index has a different conversion factor, based on the average value of the index at all RIVPACS Reference Sites divided by the value at RIVPACS reference sites that are in WFD high status (reflected in Biologists’ Assessment values for each reference site). 
+Each index has a different conversion factor, based on the average value of the
+index at all RIVPACS Reference Sites divided by the value at RIVPACS reference
+sites that are in WFD high status (reflected in Biologists’ Assessment values
+for each reference site).
   
-For the default WFD classification in RICT2 the conversion factor value will be (as copied from Section 5.5 of the Testing RICT2 predictions and classifications draft report 2018):
+For the default WFD classification in RICT2 the conversion factor value will be
+(as copied from Section 5.5 of the Testing RICT2 predictions and classifications
+draft report 2018):
   
 * 1.0049 for WHPT NTAXA
 * 0.9921 for WHPT ASPT
@@ -1611,9 +1852,15 @@ For the default WFD classification in RICT2 the conversion factor value will be 
 
 (Step 4 in process diagram above)
   
-The aim of this step is to convert the predictions from high/good boundary to reference values, which is somewhere in high status (actually the average value of the index at reference sites in high status), by applying the conversion factor.
+The aim of this step is to convert the predictions from high/good boundary to
+reference values, which is somewhere in high status (actually the average value
+of the index at reference sites in high status), by applying the conversion
+factor.
   
-The conversion factor is applied to the adjusted expected value to give an expected reference value which will be used to calculate the EQRs expected by the Water Framework Directive.
+The conversion factor is applied to the adjusted expected value to give an
+expected reference value which will be used to calculate the EQRs expected by
+the Water Framework Directive.
+  
 Specifically, ExpIDXRef,i is calculated as:
   
 ```  
@@ -1628,7 +1875,10 @@ IDX = do this for each Index, i.e. for WHPT NTAXA and WHPT ASPT
 i = do this for each specific site
 ```
   
-This avoids the need for the intermediary step of calculating and referring to EQI (Environmental Quality Indices) values (which are calculated as EQI = Obs / ExpAdj) and means that the site classifications can use the published class limits for index EQR values directly.
+This avoids the need for the intermediary step of calculating and referring to
+EQI (Environmental Quality Indices) values (which are calculated as EQI = Obs /
+ExpAdj) and means that the site classifications can use the published class
+limits for index EQR values directly.
   
 This calculation is done directly within RICT2 code and not via any function. 
   
@@ -1636,18 +1886,24 @@ This calculation is done directly within RICT2 code and not via any function.
 
 (Step 5 in process diagram above)
   
-The aim of this step is to take account of error in measurement of environmental variables used to predict the reference values.
+The aim of this step is to take account of error in measurement of environmental
+variables used to predict the reference values.
   
-It should be noted that the “ +eir “ shown in the algorithm in the process step above is a summary of the algorithm values of ZExpir * SDExpi / √(NExpyear) as described in further detail below. It is the error term used to adjust the expected value. 
+It should be noted that the “ +eir “ shown in the algorithm in the process step
+above is a summary of the algorithm values of ZExpir * SDExpi / √(NExpyear) as
+described in further detail below. It is the error term used to adjust the
+expected value.
   
-The simulation of uncertainty in ExpRef is obtained using the algorithms in Section 6.4 of the Clarke & Davy-Bowker WHPT indices RICT2 Report of March 2014 report, but now where uncertainty in the Expected values is measured about the WFD Reference-adjusted value ExpRef., this has been amended as described below.
+The simulation of uncertainty in ExpRef is obtained using the algorithms in
+Section 6.4 of the Clarke & Davy-Bowker WHPT indices RICT2 Report of March 2014
+report, but now where uncertainty in the Expected values is measured about the
+WFD Reference-adjusted value ExpRef., this has been amended as described below.
   
 Main algorithm used:
 
 ```  
 ExpIDXir 	= ExpIDXi +  ZExpir * SDExpi / √(NExpyear)
 ```
-  
 Where (using the same notation as section 6.4 of the 2014 WHPT report):
 
 ```
@@ -1660,7 +1916,6 @@ ZExpir	= Random number deviate from a standard Normal distribution with a mean o
   
 
 ```
-
 Where:
 
 ```
@@ -1668,9 +1923,12 @@ SDExp7 = 4.3 = Measurement error SD of Expected values of weighted WHPT Score (i
 SDExp8 = 0.53 = Measurement error SD of Expected values of weighted WHPT NTAXA (index 8)
 SDExp9 = 0.081 = Measurement error SD of Expected values of weighted WHPT ASPT (index 9)
 ```
-Within RICT, these calculations are done using functions which can be found in the ClassificationfunctionsV2 (within the classification support files folder).
+Within RICT, these calculations are done using functions which can be found in
+the ClassificationfunctionsV2 (within the classification support files folder).
   
-It should be noted that it is important to do this for each index and also be aware of the numbering for each index. As indicated above, each index has a number, i.e.:
+It should be noted that it is important to do this for each index and also be
+aware of the numbering for each index. As indicated above, each index has a
+number, i.e.:
   
 * WHPT Score (index 7)
 * WHPT NTAXA (index 8)
@@ -1680,17 +1938,31 @@ It should be noted that it is important to do this for each index and also be aw
 
 (Step 6 in process diagram above)
   
-RICT2 classification requires users to input an observed value for an index (ObsIDXi), based on samples collected in the field. This value is provided by the user completing the relevant data field in the input file as described in section 5 and Annex B of this document. Values are required for each index and for all three seasons, spring, summer and autumn.
+RICT2 classification requires users to input an observed value for an index
+(ObsIDXi), based on samples collected in the field. This value is provided by
+the user completing the relevant data field in the input file as described in
+section 5 and Annex B of this document. Values are required for each index and
+for all three seasons, spring, summer and autumn.
   
-Users may also input a bias value (UBiasis) for NTAXA, which reflects the impact of analytical error (measured by auditing) on the observed index values. This value is provided by the user completing the relevant data field in the input file as described in section 5 and Annex B of this document. RICT2 calculates bias for ASPT from bias for NTAXA and the observed NTAXA. If no input value for Bias is provided, RICT2 will use a default value of 1.62.
+Users may also input a bias value (UBiasis) for NTAXA, which reflects the impact
+of analytical error (measured by auditing) on the observed index values. This
+value is provided by the user completing the relevant data field in the input
+file as described in section 5 and Annex B of this document. RICT2 calculates
+bias for ASPT from bias for NTAXA and the observed NTAXA. If no input value for
+Bias is provided, RICT2 will use a default value of 1.62.
   
-If bias correction is not wanted, users should enter a bias value of zero into the relevant data field in the input file. The zero value must be entered and not left blank or RICT2 will use a default value.
+If bias correction is not wanted, users should enter a bias value of zero into
+the relevant data field in the input file. The zero value must be entered and
+not left blank or RICT2 will use a default value.
   
 ## Simulate uncertainty in observed values
 
 (Step 7 in process diagram above)
   
-These simulations take account of sampling error, estimated in replicated sampling studies, including the Biological Assessment Methods Study (BAMS) which is needed so that statistical confidence of the status classification can be estimated.
+These simulations take account of sampling error, estimated in replicated
+sampling studies, including the Biological Assessment Methods Study (BAMS) which
+is needed so that statistical confidence of the status classification can be
+estimated.
   
 The main algorithm used:
 ```
@@ -1708,15 +1980,18 @@ ObsIDX9r = ObsIDX9 + ZObs9r = rth simulated value for observed weighted WHPT ASP
 ObsIDX7r = ObsIDX8r * ObsIDX9r = rth simulated value for observed weighted WHPT Score
 ```
   
-Within RICT2, these calculations are done using functions which can be found in the `classification-functions.R`.
+Within RICT2, these calculations are done using functions which can be found in
+the `classification-functions.R`.
 
 ## Simulate variation in Bias
 
 (Step 8 in process diagram above)
   
-This is simulation of user input bias which is calculated in RICT2 using the `getUbias8r()` function found in the `classification-functions.R`.
+This is simulation of user input bias which is calculated in RICT2 using the
+`getUbias8r()` function found in the `classification-functions.R`.
   
-The algorithms used within this function are as below which is copied from Section 6.3.3.3 of the WHPT and other Abundance-Weighted Indices SEPA Report.
+The algorithms used within this function are as below which is copied from
+Section 6.3.3.3 of the WHPT and other Abundance-Weighted Indices SEPA Report.
   
 Definitions
   
@@ -1733,7 +2008,7 @@ Ubias8 is either:
 Ubiasir   =	Estimate of bias (net under-estimation) of index i for simulation r
 ObsIDXirB = Bias-corrected observed value of index i for simulation r
 ```
-Special case :    when no WHPT taxa were recorded in the sample (i.e. ObsIDX8 = 0), assume none were missed (i.e, set Ubias8 = 0)
+Special case: when no WHPT taxa were recorded in the sample (i.e. ObsIDX8 = 0), assume none were missed (i.e, set Ubias8 = 0)
 ```
 Ubias8r = bias (net under-estimate of number of WHPT taxa) for simulated sample r, estimated as a random deviate from a Poisson distribution with a mean of Ubias8
   
@@ -1755,8 +2030,11 @@ Ubias7r = Ubias8r * Ubias9r   =  bias of abundance-weighted WHPT score for simul
 
 (Step 9 in process diagram above)
   
-The aim of this step is to use the values provided in the previous steps, add them together to give an overall calculated observed value corrected for Bias. 
-Bias is a measure of the impact of laboratory error on the value of observed indices. It is calculated from audits of laboratory performance and is input by users as described in Section 8.6 above.
+The aim of this step is to use the values provided in the previous steps, add
+them together to give an overall calculated observed value corrected for Bias.
+Bias is a measure of the impact of laboratory error on the value of observed
+indices. It is calculated from audits of laboratory performance and is input by
+users as described in Section 8.6 above.
   
 The main algorithm used is:
   
@@ -1769,8 +2047,11 @@ ObsIDXirB 	= Bias corrected observed value
 ObsIDXir 	= Simulated observed value from Section 8.7 above  
 Ubiasir		= Simulated Bias value from Section 8.8 above  
 ```
-Within RICT2, these calculations are done using functions which can be found in the ClassificationfunctionsV2 (within the classification support files folder).  
-The algorithms used within this function are as below which is copied from Section 6.3.3.3 of the WHPT and other Abundance-Weighted Indices SEPA Report.  
+Within RICT2, these calculations are done using functions which can be found in
+the ClassificationfunctionsV2 (within the classification support files folder).
+  
+The algorithms used within this function are as below which is copied from
+Section 6.3.3.3 of the WHPT and other Abundance-Weighted Indices SEPA Report.
 ```
 ObsIDX7rB = ObsIDX7r + Ubias7r	  =  bias-corrected observed abundance-weighted WHPT Score for simulation r
                                                                     
@@ -1779,23 +2060,29 @@ ObsIDX8rB = ObsIDX8r + Ubias8r	  =  bias-corrected observed abundance-weighted W
 ObsIDX9rB = ObsIDX7rB / ObsIDX8rB   =  bias-corrected observed abundance-weighted WHPT ASPT for simulation r
 ```
   
-It should be noted as mentioned previously, that it is important to do this for each index and also be aware of the numbering for each index. As indicated above, each index has a number, i.e.:
+It should be noted as mentioned previously, that it is important to do this for
+each index and also be aware of the numbering for each index. As indicated
+above, each index has a number, i.e.:
   
 * WHPT Score (index 7)
 * WHPT NTAXA (index 8)
 * WHPT ASPT (index 9)
   
-The simulated EQRs are stored for each metric at this point if required for Compare experiment.
+The simulated EQRs are stored for each metric at this point if required for
+Compare experiment.
   
 ## Calculate Environmental Quality Ratio (EQR)
   
 (Step 10 in process diagram above)
   
-The aim of this step is to express the observed value of the index as an indication of human impact by removing the effect of natural environmental conditions.
+The aim of this step is to express the observed value of the index as an
+indication of human impact by removing the effect of natural environmental
+conditions.
   
 Status class boundaries for WFD are expressed as EQRs.
   
-Simulated EQRs, based on simulated observed and expected values, are needed to estimate probabilities of class.  
+Simulated EQRs, based on simulated observed and expected values, are needed to
+estimate probabilities of class.
   
 The main algorithm used is:  
   ```
@@ -1816,12 +2103,16 @@ This calculation is done directly within RICT2 code and not via any function.
   
 (Step 11 in process diagram above)
   
-The aim of this step is to increase precision of classification and take account of seasonal variations in environmental quality.  
+The aim of this step is to increase precision of classification and take account
+of seasonal variations in environmental quality.
   
-The WFD status must be based on EQRs calculated from spring and autumn samples. These values must be calculated and available within the experiment for this step to calculate the seasonal average.
+The WFD status must be based on EQRs calculated from spring and autumn samples.
+These values must be calculated and available within the experiment for this
+step to calculate the seasonal average.
   
-The EQR values for spring and autumn samples are divided by the number of season (i.e. 2) to calculate the seasonal average for each simulation.   
-The main algorithm is:
+The EQR values for spring and autumn samples are divided by the number of season
+(i.e. 2) to calculate the seasonal average for each simulation. The main
+algorithm is:
 
 ```  
 EQRirB,SpSuAu = (EQRirB,Sp + EQRirB,Au) / 2  
@@ -1834,15 +2125,18 @@ EQRirB,Sp 	  = EQR value for spring season as calculated in section 8.10
 EQRirB,Au 	  = EQR value for autumn season as calculated in section 8.10 
 ```
 
-This is calculated in RICT2 using the getAvgEQR_SpAut () function found in the `classification-functions.R` (within the classification support files folder).  
+This is calculated in RICT2 using the getAvgEQR_SpAut () function found in the
+`classification-functions.R` (within the classification support files folder).
 
 ## Determine the probability of the class being High, Good, Moderate, Poor and Bad status
 
 (Step 12 in process diagram above)
   
-The aim of this step is to take account of imprecision in monitoring data in the classification.
+The aim of this step is to take account of imprecision in monitoring data in the
+classification.
   
-The probability of each class is simply the sum of the simulations resulting in that class and is included in the output file.  
+The probability of each class is simply the sum of the simulations resulting in
+that class and is included in the output file.
   
 As copied from Section 6.5 of the WHPT and other Abundance-Weighted Indices SEPA Report:
   
@@ -1855,13 +2149,19 @@ So to summarise, the probability of each class is simply the sum of the simulati
   
 (Step 13 in process diagram above)
   
-The aim for this step is to ensure that the classification reflects ecological impacts caused by any type of environmental pressure.
+The aim for this step is to ensure that the classification reflects ecological
+impacts caused by any type of environmental pressure.
   
-The overall status class for a sample is defined to be the worst of classification based on number of taxa and ASPT. This is referred to as the MINTA class (i.e. MINimum of classes based on number of Taxa and ASPT).
+The overall status class for a sample is defined to be the worst of
+classification based on number of taxa and ASPT. This is referred to as the
+MINTA class (i.e. MINimum of classes based on number of Taxa and ASPT).
   
-The WFD status of a site or water body is based on the worst class indicated by either WHPT ASPT or WHPT Ntaxa, following the ‘one out all out’ rule.
+The WFD status of a site or water body is based on the worst class indicated by
+either WHPT ASPT or WHPT Ntaxa, following the ‘one out all out’ rule.
   
-The WFD requires that all water bodies, including rivers sites, are classified into one of five ecological status class. These classes in RICT2 are coded as classes 1-5 with 1= ‘high’, 2=‘good’, 3=‘moderate’, 4=‘poor’ and 5=‘bad’.
+The WFD requires that all water bodies, including rivers sites, are classified
+into one of five ecological status class. These classes in RICT2 are coded as
+classes 1-5 with 1= ‘high’, 2=‘good’, 3=‘moderate’, 4=‘poor’ and 5=‘bad’.
   
 There are a number of processes involved in this step as described below: 
   
@@ -1872,19 +2172,31 @@ There are a number of processes involved in this step as described below:
 
 ## Classification output
 
-An output file will be created from running a project experiment to show the calculated data results of the experiment run for prediction and classification. 
-The output file will also indicate any validation errors found during the run of the project experiment and specify which values resulted in either a “fail” or “warn”. 
+An output file will be created from running a project experiment to show the
+calculated data results of the experiment run for prediction and classification.
+The output file will also indicate any validation errors found during the run of
+the project experiment and specify which values resulted in either a “fail” or
+“warn”.
   
-The output file will be in csv format to be downloaded by the user and used for reporting. There will be an output file available for prediction and an output file available for classification. 
+The output file will be in csv format to be downloaded by the user and used for
+reporting. There will be an output file available for prediction and an output
+file available for classification.
 
 # Multi Year Classification
 
-The aim of the multi-year experiment is to take account of temporary differences in quality and improve precision if a user has more than one year of sample data.
-River Invertebrate status must be assessed every 3 years for WFD. Where sites are sampled in a 3 year monitoring cycle, WFD status can be based on samples collected in more than one year.
+The aim of the multi-year experiment is to take account of temporary differences
+in quality and improve precision if a user has more than one year of sample
+data.
   
-Multi-year status classification takes account of inter-year variation based on observations from specific rivers and streams.
+River Invertebrate status must be assessed every 3 years for WFD. Where sites
+are sampled in a 3 year monitoring cycle, WFD status can be based on samples
+collected in more than one year.
   
-When the multi-year classification experiment is developed it will need to follow the agreed principles and process as described below:
+Multi-year status classification takes account of inter-year variation based on
+observations from specific rivers and streams.
+  
+When the multi-year classification experiment is developed it will need to
+follow the agreed principles and process as described below:
   
 * This will be a separate experiment that can be downloaded for any user wanting to carry out a multi-year classification.
 * Assessment is always on a 3 year period.
@@ -1898,23 +2210,49 @@ When the multi-year classification experiment is developed it will need to follo
 * Output file will need to be amended to display the multi-year data and will display the term “multi-year” instead of the actual year in the Year column.
 * Apart from the differences highlighted above, the multi-year classification will follow the same process at the Prediction and Classification procedures specified in the previous sections of this document.
   
-We assume simple averaging based on the same number of samples involved in each year, but not necessarily the same seasons. There is therefore no problem (from a statistical point of view) if spring one year and autumn the next, but we do have a problem if year 1 = single season and Year 2 = 2-season classification. Basically, we assume the same sampling effort each year. However, remember that official WFD status classification must always be based on 2-season spring + autumn data.
+We assume simple averaging based on the same number of samples involved in each
+year, but not necessarily the same seasons. There is therefore no problem (from
+a statistical point of view) if spring one year and autumn the next, but we do
+have a problem if year 1 = single season and Year 2 = 2-season classification.
+Basically, we assume the same sampling effort each year. However, remember that
+official WFD status classification must always be based on 2-season spring +
+autumn data.
   
 # Multi-site classification experiment
 
-The aim of multi-site classification experiment is to determine the overall status class for a water body based on samples collected from more than one site.
-The Environment Agency collects samples from some water bodies from more than one site.
+The aim of multi-site classification experiment is to determine the overall
+status class for a water body based on samples collected from more than one
+site. The Environment Agency collects samples from some water bodies from more
+than one site.
   
-The Environment Agency currently uses VISCOUS software to calculate WFD status for water bodies monitored from more than one site, as well as sites sampled in more than one year before 2019.  Multi-site will allow the Environment Agency to replace VISCOUS completely, and therefore streamline the classification process.
-Multi-site classification uses similar algorithms to multi-year classification.  Additionally, its output indicates which sites have been used.
+The Environment Agency currently uses VISCOUS software to calculate WFD status
+for water bodies monitored from more than one site, as well as sites sampled in
+more than one year before 2019.  Multi-site will allow the Environment Agency to
+replace VISCOUS completely, and therefore streamline the classification process.
   
-As with multi-year, we assume simple averaging based on the same number of samples involved in each year within the water body (not necessarily the same seasons). There is therefore no problem (from the point of view of multi-year classification) if spring one year and autumn the next, but we do have a problem if year 1 = single season and Year 2 = 2-season classification. Basically, we assume the same sampling effort each year. However, remember that official WFD status classification must always be based on 2-season spring + autumn data.
+Multi-site classification uses similar algorithms to multi-year classification.
+Additionally, its output indicates which sites have been used.
+  
+As with multi-year, we assume simple averaging based on the same number of
+samples involved in each year within the water body (not necessarily the same
+seasons). There is therefore no problem (from the point of view of multi-year
+classification) if spring one year and autumn the next, but we do have a problem
+if year 1 = single season and Year 2 = 2-season classification. Basically, we
+assume the same sampling effort each year. However, remember that official WFD
+status classification must always be based on 2-season spring + autumn data.
 
 # Compare Project Experiment
 
-The relevant parts of the algorithms section of the SNIFFER WFD72C project 2008 Final Report have been extracted and adapted here to explain the algorithms needed to code the Compare procedure in the new R studio and Microsoft AZURE versions of the RICT software developed in 2019-20.
+The relevant parts of the algorithms section of the SNIFFER WFD72C project 2008
+Final Report have been extracted and adapted here to explain the algorithms
+needed to code the Compare procedure in the new R studio and Microsoft AZURE
+versions of the RICT software developed in 2019-20.
   
-The new RICT only refers to EQR values (which are bias-corrected observed (Obs) values divided by WFD reference-adjusted Expected (ExpRef) values, all WFD72C algorithms section references to former EQI (Obs/Exp) values are replaced by their new counterpart EQR values to improve explanation of how to program the new RICT Compare procedure.
+The new RICT only refers to EQR values (which are bias-corrected observed (Obs)
+values divided by WFD reference-adjusted Expected (ExpRef) values, all WFD72C
+algorithms section references to former EQI (Obs/Exp) values are replaced by
+their new counterpart EQR values to improve explanation of how to program the
+new RICT Compare procedure.
   
 Compare flow chart:
 
@@ -1923,12 +2261,32 @@ embed_png("images/rict-compare.png", dpi = 180)
 ```  
   
   
-The Compare procedure allows the user to assess whether there is a real difference in EQR values and/or status class between a pair of samples and/or sites and/or time periods. This is done using an extension of the simulation techniques and algorithms described above that are used to assess the EQRs and ecological status class and the associated uncertainty for individual samples/sites and time periods.
+The Compare procedure allows the user to assess whether there is a real
+difference in EQR values and/or status class between a pair of samples and/or
+sites and/or time periods. This is done using an extension of the simulation
+techniques and algorithms described above that are used to assess the EQRs and
+ecological status class and the associated uncertainty for individual
+samples/sites and time periods.
+ 
 The first sample in a pair is known as result A and the second as result B.
   
-In each simulation r, independent simulated EQR values are calculated for each index i for each of the two results using the methods described in section 8.9 Correct observed values for bias. In this context, independent simulations means that the various random uncertainty terms are different and completely independent for the two simulated samples A and B for any simulation r.
-  
-Calculations for the EQR simulations are run as part of the classification process and are stored and available for output in each experiment. These EQR simulations can be saved and imported into the Compare experiment. To compare results, the two input files into Compare experiment must contain the same number of rows. The two files are then compared pair-wise, row to row for each result. For instance, if comparing a single upstream result to multiple downstream results, repeat the single result over multiple rows (equal to the number of downstream results) in the input file. Then run through the classification experiment and save results in Azure. Then run the downstream results through the classification and save dataset. Import both datasets into the Compare experiment and run. 
+In each simulation r, independent simulated EQR values are calculated for each
+index i for each of the two results using the methods described in section 8.9
+Correct observed values for bias. In this context, independent simulations means
+that the various random uncertainty terms are different and completely
+independent for the two simulated samples A and B for any simulation r.
+   
+Calculations for the EQR simulations are run as part of the classification
+process and are stored and available for output in each experiment. These EQR
+simulations can be saved and imported into the Compare experiment. To compare
+results, the two input files into Compare experiment must contain the same
+number of rows. The two files are then compared pair-wise, row to row for each
+result. For instance, if comparing a single upstream result to multiple
+downstream results, repeat the single result over multiple rows (equal to the
+number of downstream results) in the input file. Then run through the
+classification experiment and save results in Azure. Then run the downstream
+results through the classification and save dataset. Import both datasets into
+the Compare experiment and run.
   
 Calculate Difference and Related Statistics:
 
@@ -1937,7 +2295,9 @@ Average EQR for Results A = mean(EQRA)
 Average EQR for Results B = mean(EQRB)
 Average EQR: Difference (B- A) (DiffEQRirB) = EQRB – EQRA
 ```
-For each simulation r, the difference in the two simulated EQR values (sample B value minus sample A value) is calculated for each index i to give DiffEQRirB when corrected for bias.
+For each simulation r, the difference in the two simulated EQR values (sample B
+value minus sample A value) is calculated for each index i to give DiffEQRirB
+when corrected for bias.
 ```
 Standard Deviation of Difference = SD of the rN simulated values of EQIi (corrected for bias) for index i for the current test site
 ```
@@ -1946,7 +2306,10 @@ Calculate the SD, (SDEQRi) of the rN values of EQRir in the usual way for calcul
 Lower 95% (L95) of Difference 	= Lower 2.5 percentile of the rN simulated values (EQRir) of EQR (corrected for bias) for index i for the current test site
 Upper 95% (U95) of Difference	= Upper 2.5 percentile of the rN simulated values (EQRir) of EQR 
 ```
-Determine the lower and upper 2.5 percentiles and thus 95% confidence limits by sorting all of the rN simulated EQRir values into order from smallest to largest. Then the lower and upper percentiles are given by the mL and mU smallest values, where:
+Determine the lower and upper 2.5 percentiles and thus 95% confidence limits by
+sorting all of the rN simulated EQRir values into order from smallest to
+largest. Then the lower and upper percentiles are given by the mL and mU
+smallest values, where:
 ```
 mL	= nearest integer to 0.025 * (rN + 1)
 mU	= nearest integer to 0.975 * (rN + 1) 
@@ -1955,9 +2318,18 @@ For the recommended rN = 9999, mL = 250   and mU = 9750.
   
 Confidence (and statistical test) of change/difference in EQR:
   
-Confidence limits for the difference in EQR values are obtained from the frequency distribution of the differences (DiffEQRir) using the same approach as for single sample EQR values described above, namely, order the differences from smallest to largest and find the 2.5 and 97.5 percentile values of the order distribution.
+Confidence limits for the difference in EQR values are obtained from the
+frequency distribution of the differences (DiffEQRir) using the same approach as
+for single sample EQR values described above, namely, order the differences from
+smallest to largest and find the 2.5 and 97.5 percentile values of the order
+distribution.
   
-Strictly speaking we can’t do a normal type of statistical test for the statistical significance of the difference (DiffEQRir) in EQR because we only actually have one sample on each occasion with no actually replication. However, we can generate a type of statistical test using the simulated EQI values, or more specifically, the frequency distribution of the simulated differences (DiffEQRir).
+Strictly speaking we can’t do a normal type of statistical test for the
+statistical significance of the difference (DiffEQRir) in EQR because we only
+actually have one sample on each occasion with no actually replication. However,
+we can generate a type of statistical test using the simulated EQI values, or
+more specifically, the frequency distribution of the simulated differences
+(DiffEQRir).
 
 ```
 PDiff0 = proportion of simulated differences less than or equal to zero.
@@ -1965,21 +2337,46 @@ PDiff1 = proportion of simulated differences greater than or equal to zero.
 2-sided test probability p of No difference in EQR (PDiff) = 2 * minimum of (PDiff0, PDiff1)
 ```
 
-Then PDiff is the two-sided test probability of the null hypothesis of no difference in true EQR values between the sites and/or times from which the two samples were taken. [True EQR for a site, in this sense, means average EQI amongst all possible samples from the sites as estimated from the simulated values of EQR].
+Then PDiff is the two-sided test probability of the null hypothesis of no
+difference in true EQR values between the sites and/or times from which the two
+samples were taken. [True EQR for a site, in this sense, means average EQI
+amongst all possible samples from the sites as estimated from the simulated
+values of EQR].
   
-Code to calculate the difference and related statistics can be found in the compare_test() function. Note, that the simulated EQRs are randomly re-ordered (using set.seed). This is because the simulate EQRs are created in the rict_classify() using the same set.seed and will have equal variance add to each simulated EQR. Therefore, if we calculate the difference without re-ordering the result will be zero. In other words, the difference will cancel out. By re-ordering, we ensure the there will be a difference for each pair of EQRs compared. 
+Code to calculate the difference and related statistics can be found in the
+compare_test() function. Note, that the simulated EQRs are randomly re-ordered
+(using set.seed). This is because the simulate EQRs are created in the
+rict_classify() using the same set.seed and will have equal variance add to each
+simulated EQR. Therefore, if we calculate the difference without re-ordering the
+result will be zero. In other words, the difference will cancel out. By
+re-ordering, we ensure the there will be a difference for each pair of EQRs
+compared.
   
 Confidence of change in status class:
   
-Each of the two simulated samples is assigned to a status class by applying the ‘status classification method’ independently to the simulated EQR values for each sample for that simulation. This is done repeatedly in rN simulations to build up a two-way frequency (and hence probability) distribution that the site (in its time period) from which sample A was taken was of status class 'x' (say) and the sites (in its time period) from which sample B was taken was of class 'y'. 
+Each of the two simulated samples is assigned to a status class by applying the
+‘status classification method’ independently to the simulated EQR values for
+each sample for that simulation. This is done repeatedly in rN simulations to
+build up a two-way frequency (and hence probability) distribution that the site
+(in its time period) from which sample A was taken was of status class 'x' (say)
+and the sites (in its time period) from which sample B was taken was of class
+'y'.
   
-From this two-way probability distribution, the probability that samples A and B are from the same quality band can be estimated, together with the probabilities that sample B is one band better than A, one band worse, two or more bands better, or two or more bands worse. 
+From this two-way probability distribution, the probability that samples A and B
+are from the same quality band can be estimated, together with the probabilities
+that sample B is one band better than A, one band worse, two or more bands
+better, or two or more bands worse.
   
-In terms of RICT software, a 5 x 5 probability tables of changes is calculated internally using compare_probability() function. This is done for each index for which class limits are to be used and for each multi-index MINTA classification method. 
+In terms of RICT software, a 5 x 5 probability tables of changes is calculated
+internally using compare_probability() function. This is done for each index for
+which class limits are to be used and for each multi-index MINTA classification
+method.
   
-In each case, a wide range of outputs are derived from this table and presented to the user as listed below.
+In each case, a wide range of outputs are derived from this table and presented
+to the user as listed below.
 
-If for coding purposes classes ‘high’ to ‘bad’ are referred to as classes 1-5 respectively, then
+If for coding purposes classes ‘high’ to ‘bad’ are referred to as classes 1-5
+respectively, then
 ```
 PrChij       = 	Proportion of simulations for which simulated sample A was classified as class i and simulated sample B was classified as class j.
                  =	Estimated probability of change in status from class i to class j
@@ -2081,43 +2478,71 @@ Probability Result A in Bad & Result B in Moderate
 Probability Result A in Bad & Result B in Poor
 Probability Result A in Bad & Result B in Bad
 ```
-Pivot all calculated variables (in bold above) to give one column per variable. Each row represents a pair of classification results.  
+Pivot all calculated variables (in bold above) to give one column per variable.
+Each row represents a pair of classification results.
 
 # Model 44 Prediction and Classification  
 
-The Centre for Ecology and Hydrology (CEH) have produced a database of GIS environmental variables data for every 50m of steam or river for use with the new RIVPACS GB Model M44. T
+The Centre for Ecology and Hydrology (CEH) have produced a database of GIS
+environmental variables data for every 50m of steam or river for use with the
+new RIVPACS GB Model M44. T
   
-This database will have a map-based location checker, to enable users to check that the Ordnance survey grid reference that they enter returns data for the catchment that they intended. Many monitoring sites are at the downstream end of rivers close to tributaries, so small error in the grid reference or GIS river line can cause the system to return data for the wrong river, and the database holds data only for one river within each 50m grid. The database holds all the environmental data for Model 44, derived from GIS, including discharge category but not including alkalinity.
+This database will have a map-based location checker, to enable users to check
+that the Ordnance survey grid reference that they enter returns data for the
+catchment that they intended. Many monitoring sites are at the downstream end of
+rivers close to tributaries, so small error in the grid reference or GIS river
+line can cause the system to return data for the wrong river, and the database
+holds data only for one river within each 50m grid. The database holds all the
+environmental data for Model 44, derived from GIS, including discharge category
+but not including alkalinity.
   
 This database has been hosted by **Add details here**
   
-This model produced by Ralph Clark and John Davey Bowker and based on these predictive variables is detailed in the report ‘GIS Re-calibration of the hydromorphology-independent RIVPACS predictive model (M37): new model M44’. **(Add link?)**.
+This model produced by Ralph Clark and John Davey Bowker and based on these
+predictive variables is detailed in the report ‘GIS Re-calibration of the
+hydromorphology-independent RIVPACS predictive model (M37): new model M44’.
+**(Add link?)**.
   
-RICT2 will be used with the new RIVPACS Model 44 to give better predictions of streams impacted by siltation due to flow alteration.
+RICT2 will be used with the new RIVPACS Model 44 to give better predictions of
+streams impacted by siltation due to flow alteration.
   
-The majority of the coding that has been done in RICT2 for prediction and classification will also be suitable when running the experiment for the Model 44 prediction and classification. 
+The majority of the coding that has been done in RICT2 for prediction and
+classification will also be suitable when running the experiment for the Model
+44 prediction and classification.
   
-With minor adjustments, the RICT2 prediction and classification code is suitable for running both Model 1 and Model 44 experiments.
+With minor adjustments, the RICT2 prediction and classification code is suitable
+for running both Model 1 and Model 44 experiments.
   
-The main areas of development involved understanding how to extract the data from RIVPACS and to link to a location checker as outlined in the picture below: 
+The main areas of development involved understanding how to extract the data
+from RIVPACS and to link to a location checker as outlined in the picture below:
 
 ## Model 44 Validation
 
-The GIS input spreadsheet may be needed for these values. However, it should be noted that these values will be provided by the model and not entered by a user.
+The GIS input spreadsheet may be needed for these values. However, it should be
+noted that these values will be provided by the model and not entered by a user.
 
-Therefore validation requirements could be minimal as shown above. Validation may be required to check that values are numeric and not null. 
+Therefore validation requirements could be minimal as shown above. Validation
+may be required to check that values are numeric and not null.
 
-It is expected that the experiment will be built first and then checks will be made on results produced to determine if some validation may be required, i.e. warnings and failures based on a limits amount. 
+It is expected that the experiment will be built first and then checks will be
+made on results produced to determine if some validation may be required, i.e.
+warnings and failures based on a limits amount.
   
-Where a replacement value is available from the current RIVPACS IV GB or NI experiments, this has been used. But at this stage, there is no requirement for replacement values for new GIS based EVs used in Model 44. The GIS data layers provide EVs from pre-calculated datasets; therefore, replacement values are unlikely to be required. 
+Where a replacement value is available from the current RIVPACS IV GB or NI
+experiments, this has been used. But at this stage, there is no requirement for
+replacement values for new GIS based EVs used in Model 44. The GIS data layers
+provide EVs from pre-calculated datasets; therefore, replacement values are
+unlikely to be required.
   
-Another difference is that there are now 17 discriminant function scores and discriminant function end group means scores rather than 13. See supporting files:
+Another difference is that there are now 17 discriminant function scores and
+discriminant function end group means scores rather than 13. See supporting
+files:
   
 * discrimant-function-coefficients-model-44.csv
 * end-group-means-discriminant-scores-model-44.csv
  
-The flow diagram below summarises the prediction process and calculations as well as identifying the relevant report for further information:
-
+The flow diagram below summarises the prediction process and calculations as
+well as identifying the relevant report for further information:
 
 ```{r}
 
@@ -2125,9 +2550,8 @@ embed_png("images/rict-prediction-model-44.png", dpi = 160)
 
 ```
 
-  
-The flow diagram below summarises the classification process and calculations as well as identifying the relevant report for further information:
-  
+The flow diagram below summarises the classification process and calculations as
+well as identifying the relevant report for further information:
 
 ```{r}
 
@@ -2135,30 +2559,42 @@ embed_png("images/rict-classification-model-44.png", dpi = 160)
 
 ```
 
-  
 # Non-Functional Requirements
 
 ##  Operational Support
 
 The tool needs to be freely available for anyone to access online.
   
-User support for EA users will be via the Defra service desk (at Tier 4 service level) who will route the issue to the appropriate team to deal with. This routing could be to RICT2 support email or to the Environmental systems team depending on the nature of the issue. EA users will also be able to access an article in MyIT which will provide FAQs to help users with common issues. 
+User support for EA users will be via the Defra service desk (at Tier 4 service
+level) who will route the issue to the appropriate team to deal with. This
+routing could be to RICT2 support email or to the Environmental systems team
+depending on the nature of the issue. EA users will also be able to access an
+article in MyIT which will provide FAQs to help users with common issues.
 
-User support for other UK regulatory agency users will be via the support email box called RICT2 support.
+User support for other UK regulatory agency users will be via the support email
+box called RICT2 support.
   
-There will be no official contracted support for external users but they can send issues and comments to the RICT2 support inbox
+There will be no official contracted support for external users but they can
+send issues and comments to the RICT2 support inbox
   
 ## Look and Feel of User Interface
 
-The user interface will be provided via Azure Studio which is intuitive and ‘user friendly’ and consistent with similar windows-based or web-based user interface applications. 
+The user interface will be provided via Azure Studio which is intuitive and
+‘user friendly’ and consistent with similar windows-based or web-based user
+interface applications.
   
-Official RICT2 experiments will be collated in a designated “Collection” in Microsoft Azure Learning Studio to help users find all the experiments relevant to RICT2. 
+Official RICT2 experiments will be collated in a designated “Collection” in
+Microsoft Azure Learning Studio to help users find all the experiments relevant
+to RICT2.
   
 ##  Input and Output Files
 
-Input files will be a standard template in Excel which can be downloaded, completed by the user and then uploaded as a CSV file to RICT2. A user guide will be available to help users understand and complete the input file.
+Input files will be a standard template in Excel which can be downloaded,
+completed by the user and then uploaded as a CSV file to RICT2. A user guide
+will be available to help users understand and complete the input file.
   
-The output file will be produced by RICT2 as a CSV file following the run. A CSV file can easily be opened in Excel or other applications to view the results. 
+The output file will be produced by RICT2 as a CSV file following the run. A CSV
+file can easily be opened in Excel or other applications to view the results.
   
 ##   Hosting
 
@@ -2166,44 +2602,129 @@ RICT2 is cloud hosted within Microsoft Azure Learning Studio.
  
 ## Accessibility
 
-Access to RICT2 functionality may be required by a number of different device types. RICT2 will be useable at a minimum by the following device types (model not specified):
+Access to RICT2 functionality may be required by a number of different device
+types. RICT2 will be useable at a minimum by the following device types (model
+not specified):
 
 * Desktop
 * Laptop
 
-Access to RICT2 functionality may be required by a number of different browser types. RICT2 will be useable in the following browser types (which must be updated to the latest version as required by Microsoft Azure):
+Access to RICT2 functionality may be required by a number of different browser
+types. RICT2 will be useable in the following browser types (which must be
+updated to the latest version as required by Microsoft Azure):
 
 * IE
 * Google Chrome
 * Firefox
 * Edge
   
-Users will only have access to their own data and cannot access data input or output from other users.
+Users will only have access to their own data and cannot access data input or
+output from other users.
 
 ## Performance
 
-RICT2 will be accessible by multiple concurrent users at any one time without degradation of performance or limitation of features. Users will be internal EA, other UK regulatory body users (SEPA, NRW and NIEA) and external users. 
+RICT2 will be accessible by multiple concurrent users at any one time without
+degradation of performance or limitation of features. Users will be internal EA,
+other UK regulatory body users (SEPA, NRW and NIEA) and external users.
   
-RICT2 will be capable of processing the prediction and classification of a very large number of sites (approx. 5,000) once per year. 
+RICT2 will be capable of processing the prediction and classification of a very
+large number of sites (approx. 5,000) once per year.
   
-RICT2 will meet the following rough order estimates of service usage and performance requirements:
+RICT2 will meet the following rough order estimates of service usage and
+performance requirements:
   
 * Service Availability: In excess of 97% at all times;
 * Service Recovery: RTO (Recovery Time Objective) in 48 hours;
 * Maximum Nos. of Users: <1000;
 * Max number of Concurrent Users: 50.
      
-RICT2 availability must be at an acceptable level. Planned downtime for maintenance must be advised in advance (minimum 48 hours’ notice). Unplanned downtime must be communicated regularly with up to date information on tools/services affected and projected downtime.
+RICT2 availability must be at an acceptable level. Planned downtime for
+maintenance must be advised in advance (minimum 48 hours’ notice). Unplanned
+downtime must be communicated regularly with up to date information on
+tools/services affected and projected downtime.
 
 ##  System Administration
   
-An “expert” user (system administrator) will be identified and given permission to publish new standard experiments using default values to the “official” Microsoft Azure ML Studio gallery collection. 
+An “expert” user (system administrator) will be identified and given permission
+to publish new standard experiments using default values to the “official”
+Microsoft Azure ML Studio gallery collection.
   
-These experiments will be “locked down” for normal users and can only be amended by downloading to the users own work area to create their own copy of a project experiment. 
+These experiments will be “locked down” for normal users and can only be amended
+by downloading to the users own work area to create their own copy of a project
+experiment.
   
-The System administrator will be permitted to amend the published standard experiments and the data tables used by the experiment (e.g. amend end group data) if required. 
+The System administrator will be permitted to amend the published standard
+experiments and the data tables used by the experiment (e.g. amend end group
+data) if required.
   
 ## Data Protection
   
-Data protection requirements are handled by Microsoft as the tool is hosted on Microsoft ML Studio. It is freely available to access but requires the user to use an existing/or create a Microsoft account. This account requires an email address and password. These credentials are held solely by Microsoft and the usage is outlined in the Microsoft Privacy Statement (https://privacy.microsoft.com/en-gb/privacystatement). 
+Data protection requirements are handled by Microsoft as the tool is hosted on
+Microsoft ML Studio. It is freely available to access but requires the user to
+use an existing/or create a Microsoft account. This account requires an email
+address and password. These credentials are held solely by Microsoft and the
+usage is outlined in the Microsoft Privacy Statement
+(https://privacy.microsoft.com/en-gb/privacystatement).
+
+# Annex A: Input File
+
+This table shows test data (GB - Model 1) which can be left in by the user to
+help understand format to use and run with the experiment.
+
+```{r}
+knitr::kable(demo_gis_values_log[1, ])
+```
+
+See the [Input
+File](https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx)
+excel spreadsheet which includes test data and validation
+
+A full description of each column for the input table and how it is completed
+can be found within the [RICT2 user
+guide](https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx).
+
+# Appendix B2: Biotic included in all index prediction
+
+*Please note the format changes to the labels of the indices – see table of changes below:
+
+```{r}
+
+ end_group_index <- utils::read.csv(system.file("extdat",
+    "x-103-end-group-means-formatted-jdb-17-dec-2019.csv",
+    package = "rict"
+  ),
+  check.names = F
+  )
+  end_group_index_update <- rict:::rename_end_group_means(end_group_index)
+  
+all_indices_names <- data.frame("RIVPACS DB Label"  = names(end_group_index),
+          "OUTPUT Label" =                     names(end_group_index_update) ,
+          check.names = FALSE) 
+
+
+  knitr::kable(all_indices_names[5:84, ], row.names = T)
+  
+
+```
+
+# Annex B: Output Files predict and classify
+
+#### Prediction outputs
+
+```{r, message=FALSE}
+
+predict <- rict_predict(demo_observed_values[1, ])
+knitr::kable(predict)
+
+```
+
+#### Classification
+
+```{r, message=FALSE}
+class <- rict(demo_observed_values[1, ])
+knitr::kable(class)
+```
+
+
+# Annex C: Critical Success Factors
 

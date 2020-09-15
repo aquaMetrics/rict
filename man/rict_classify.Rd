@@ -36,3 +36,6 @@ classifications <- rict_classify(predictions)
 }
 
 }
+\seealso{
+\code{\link{rict_predict}} to run predictions
+}

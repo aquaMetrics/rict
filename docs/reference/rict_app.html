@@ -95,7 +95,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/functional-specification.html">functional-specification</a>
+      <a href="../articles/functional-specification.html">Functional Specification</a>
     </li>
   </ul>
 </li>
@@ -134,9 +134,13 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>rict_app()</code> opens RICT as an interactive shiny app.</p>
+    <p><code>rict_app()</code> opens RICT as an interactive shiny app. RICT will
+automatically detect if the input file contains NI or GB grid references and
+apply the correct model including if GIS / geological predictors are used
+(currently only available for GB).</p>
 <p>Using the app:</p><ol>
-<li><p>Select your required model/area/year type options.</p></li>
+<li><p>Select your required year type (multi/single) for classification and
+ type of prediction for instance include taxa or all indices.</p></li>
 <li><p>Click the Browse for .csv file button to select and upload a data file.</p></li>
 <li><p>View and download results.</p></li>
 </ol>
@@ -159,7 +163,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Maybin Muyeba, Tim Foster.</p>
+  <p>Developed by Maybin Muyeba, Tim Foster, Tim Loveday.</p>
 </div>
 
 <div class="pkgdown">

@@ -4,7 +4,7 @@
 #'   outputs
 #' @param data Dataframe of predictive environmental values
 #' \describe{
-#'   \item{SITE}{Site identifier}
+#'   \item{SITE}{Site reference number}
 #'   \item{Waterbody}{Water body identifier}
 #'   \item{SPR_SEASON_ID}{Spring ID}
 #'   \item{SUM_SEASON_ID}{Summary ID}

@@ -2,9 +2,9 @@
 #'
 #' A dataset containing demo observed log transformed gis values for model 44.
 #' Stored as .csv:
-#' demo_gis_values_log <- utils::read.csv( system.file("extdat",
-#' "environmental-test-data-model-44-log.csv", package = "rict"), check.names =
-#' F )
+demo_gis_values_log <- utils::read.csv( system.file("extdat",
+"environmental-test-data-model-44-log.csv", package = "rict"), check.names =
+F )
 #'
 #' @format A data frame with 12 rows and 18 variables:
 #' \describe{
@@ -21,7 +21,7 @@
 #'   \item{EX}{Optionally for reference, the nearest X grid coordinate used for predictive variables}
 #'   \item{EY}{Optionally for reference, the nearest Y grid coordinate used for predictive variables}
 #'   \item{shape_Length}{shape_Length}
-#'   \item{altitude}{altitude}
+#'   \item{Altitude}{Altitude}
 #'   \item{d_f_source}{d_f_source}
 #'   \item{logaltbar}{logaltbar}
 #'   \item{log_area}{log_area}

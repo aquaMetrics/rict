@@ -444,8 +444,7 @@ The list below describes the default values used:
 * Season type – Spring, Autumn, Spring/Autumn Combined, Summer
 * Classification boundary limits – Coded as per WFD compliant values found in
 the classification support files (user would need to amend the function in this
-file to alter values for their own experiments) **(Make this a parameter? -
-TF)**
+file to alter values for their own experiments)
 * Bias - Bias values can be provided in the input file by the user and will be
 used in the experiment if they have been provided. However, if no data values
 for Bias or "-9" has been entered in the input file, then the hard-coded default
@@ -1707,29 +1706,21 @@ Sections below are based on notes from write up with Maybin (March 2020):
 
 ### GB & NI
 
-* New Input File `wValidation wTestData.csv`
+* New Input File on Azure: `wValidation wTestData.csv`
 * `prediction-functions.R`
 + `helper-functions.R` – contains all the functions used to run the experiment
 
-## Execute R Script
+## R code for taxa prediction
 
-**(Update this section - TF)**
-Line 350 – this is the same as previous predictions but for taxa prediction we
-need to find each site’s EndGroup, it uses columns 15:57 for GB and 13:23 for
-NI.  Two functions are used: Function1 EndGroup Probability replacement, gets
-EndGroup and replaces it with the Probability (GB - columns 15:57 and NI columns
-13:23).
+The `rict_predict` function this is the same as previous predictions but for taxa
+prediction we need to find each site’s EndGroup, it uses columns 15:57 for GB
+and 13:23 for NI.
   
-Line 366 – an important file as it looks at the taxonomic info from the
-TAXA_AB_APR_PRAB.csv about the model to be used in the prediction. EndGroup
+An important file as it looks at the taxonomic info from the
+`TAXA_AB_APR_PRAB.csv` about the model to be used in the prediction. EndGroup
 found are used with this file to compute predictions.
   
-Line 371/372 – shows which model is being used for the experiment (GB or NI)
-  
-Line 378/396 – this goes through each site and processes each site to do the
-predictions. The second function, Function2, does the computation of all the
-columns – it computes the site and adds it to the list of all sites, and repeats
-this function until all the sites have been computed.
+If the argument `taxa = TRUE` the function loops through each site and processes each site to do the predictions. 
   
 # Classification
 
@@ -1804,13 +1795,13 @@ adjustment factors (Q1, Q2, Q3, Q4, Q5) for each index.
 The source for this csv file is based on the Table 6 from the Testing RICT2
 predictions and classifications draft report 2018 which is as below:
   
-|Index                        |WHPT NTAXA                      |WHPT ASPT                             |
-|:----------------------------|:-------------------------------|:-------------------------------------|
-|Q1                           |1                               |1                                     | 
-|Q2                           |1                               |1                                     | 
-|Q3                           |1                               |1                                     | 
-|Q4                           |0.967                           |0.977                                 | 
-|Q5                           |0.926                           |0.945                                 |   
+|Index    |WHPT NTAXA      |WHPT ASPT       |
+|:--------|:---------------|:---------------|
+|Q1       |1               |1               | 
+|Q2       |1               |1               | 
+|Q3       |1               |1               | 
+|Q4       |0.967           |0.977           | 
+|Q5       |0.926           |0.945           |   
   
 Table 1. Adjustment factors for reference site quality (Q1, Q2, Q3, Q4, Q5) for
 abundance-weighted WHPT NTAXA and WHPT ASPT
@@ -2165,8 +2156,7 @@ classes 1-5 with 1= ‘high’, 2=‘good’, 3=‘moderate’, 4=‘poor’ and
   
 There are a number of processes involved in this step as described below: 
   
-* The EQR values calculated in section 10 above are used within the getClassFromEQR_ntaxa () function found in the `classification-functions.R` to find the class and relevant boundary limit values.
-* These values are then used within the getClassFromEQR_aspt () function found in the `classification-functions.R`.
+* The EQR values calculated in section 10 above are used within the `getClassarray_ntaxa()`  and `getClassarray_aspt()` function found in the `classification-functions.R` to find the class and relevant boundary limit values.
 * The `getMostProbableClass()` function found in the `classification-functions.R` is used to find the most probable class.  
 * The `getMINTA_ntaxa_aspt()` function found in the `classification-functions.R` is used to find the maximum of the two classes and which is the worst class. The worst class in then recorded in the output file and displayed in the MINTA column
 
@@ -2501,7 +2491,6 @@ This database has been hosted by **Add details here**
 This model produced by Ralph Clark and John Davey Bowker and based on these
 predictive variables is detailed in the report ‘GIS Re-calibration of the
 hydromorphology-independent RIVPACS predictive model (M37): new model M44’.
-**(Add link?)**.
   
 RICT2 will be used with the new RIVPACS Model 44 to give better predictions of
 streams impacted by siltation due to flow alteration.
@@ -2546,7 +2535,7 @@ well as identifying the relevant report for further information:
 
 ```{r}
 
-embed_png("images/rict-prediction-model-44.png", dpi = 160)
+embed_png("images/rict-prediction-model-44.png", dpi = 140)
 
 ```
 
@@ -2555,7 +2544,7 @@ well as identifying the relevant report for further information:
 
 ```{r}
 
-embed_png("images/rict-classification-model-44.png", dpi = 160)
+embed_png("images/rict-classification-model-44.png", dpi = 140)
 
 ```
 
@@ -2711,6 +2700,11 @@ all_indices_names <- data.frame("RIVPACS DB Label"  = names(end_group_index),
 
 #### Prediction outputs
 
+RICT2 predict and classify experiments will produce two output files; one for prediction, one for classification
+
+Prediction Output file
+An example of the output file for prediction is linked below: 
+
 ```{r, message=FALSE}
 
 predict <- rict_predict(demo_observed_values[1, ])
@@ -2725,6 +2719,27 @@ class <- rict(demo_observed_values[1, ])
 knitr::kable(class)
 ```
 
+A full description of each column for the prediction output table and what the values indicate can be found within the RICT2 user guide. A summary list of the column headings is given in the `rict_predict` function.
 
 # Annex C: Critical Success Factors
+
+The CSF specified below denotes the minimum requirements as agreed with the project team and stakeholders as agreed in the outline business case:
+
+
+|N  |Level      |Description                                                   |Score|
+|:--|:----------|:-------------------------------------------------------------|:----|
+|1  |Primary    |RICT can complete the full nationalclassification in June 2019|    3|
+|2  |Primary    |Improved performance of RICT – end to end processing time     |    3|
+|3  |Primary    |New RIVPACS model added to RICT                               |    3|
+|4  |Primary    |Platform and associated code accessible for future development|    3|
+|5  |Secondary  |Agree ongoing support and maintenance arrangement (Hosting)   |    2|
+|6  |Secondary  |Agree ongoing support, maintenance and development arrangement (application)|    2|
+|7  |Secondary  |Improved technical and scientific resilience                  |    2|
+|8  |Tertiary   |Critical bugs resolved                                        |    1|
+|9  |Tertiary   |Critical functionality added                                  |    1|
+|10 |Tertiary   |Non critical bugs resolved                                    |    1|
+|11 |Tertiary   |Non critical functionality added                              |    1|
+|12 |Tertiary   |Produce an updated functional specification and architecture documentation  |    1| documentation
+
+
 

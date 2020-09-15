@@ -13,14 +13,52 @@ rict_predict(
 )
 }
 \arguments{
-\item{data}{Dataframe of predictive environmental values
+\item{data}{Dataframe of predictive environmental values - variables
+  dependent on input for model 44, model 1, NI or GB
 \describe{
   \item{SITE}{Site reference number}
   \item{Waterbody}{Water body identifier}
-  \item{SPR_SEASON_ID}{Spring ID}
+  \item{LATITUDE}{Location point}
+  \item{LONGITUDE}{Location point}
+  \item{LOG.ALTITUDE}{Logarithmic value for Altitude}
+  \item{LOG.DISTANCE.FROM.SOURCE}{Logarithmic value for Distance from source}
+  \item{LOG.WIDTH}{Logarithmic value for Stream Width}
+  \item{LOG.DEPTH}{Logarithmic value for Stream Depth}
+  \item{MEAN.SUBSTRATUM}{Calculated mean substratum}
+  \item{DISCHARGE.CATEGORY}{Discharge category}
+  \item{ALKALINITY}{Alkalinity}
+  \item{LOG.ALKALINITY}{Logarithmic value for Alkalinity}
+  \item{LOG.SLOPE}{Logarithmic value for Slope}
+  \item{MEAN.AIR.TEMP}{Calculated Mean Air Temperature}
+  \item{AIR.TEMP.RANGE}{Calculated Air Temperature Range}
+  \item{p1 – p43}{Calculated probability of end group membership}
+  \item{SuitCode}{Calculated Suitability code for test site}
+  \item{BelongsTo_endGrp}{Predicted probable end group the test site belongs to}
+  \item{All Indices...}{...Predicted index value for All Indices}
+  \item{SPR_SEASON_ID}{ID number for season}
+  \item{SPR_TL2_WHPT_ASPT (ABW,DISTFAM)}{Observed  value for WHPT NTAXA for spring}
+  \item{SPR_TL2_WHPT_NTAXA (ABW,DISTFAM)}{Observed value for WHPT ASPT for spring}
+  \item{SPR_NTAXA_BIAS}{Bias value used}
   \item{SUM_SEASON_ID}{Summary ID}
+  \item{SUM_TL2_WHPT_ASPT (ABW,DISTFAM)}{Observed value for WHPT ASPT for summer}
+  \item{SUM_TL2_WHPT_NTAXA (ABW,DISTFAM)}{Observed value for WHPT NTAXA for summer}
+  \item{SUM_NTAXA_BIAS}{Bias value used}
   \item{AUT_SEASON_ID}{Aut ID}
-  \item{...}{etc}
+  \item{AUT_TL2_WHPT_ASPT (ABW,DISTFAM)}{Observed value for WHPT ASPT for autumn}
+  \item{AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)}{Observed value for WHPT NTAXA for autumn}
+  \item{AUT_NTAXA_BIAS}{Bias value used}
+  \item{Area_CEH}{}
+  \item{AltBar_CEH}{}
+  \item{Alt_CEH}{}
+  \item{DFS_CEH}{}
+  \item{Slope_CEH}{}
+  \item{QCat_CEH}{}
+  \item{Peat_CEH}{}
+  \item{Chalk_O1_CEH}{}
+  \item{Clay_O1_CEH}{}
+  \item{Hardrock_O1_CEH}{}
+  \item{Limestone_O1_CEH}{}
+  \item{area}{ni or gb}
 }}
 
 \item{all_indices}{Boolean - Return all indices in output (default only returns WHPT indices).}

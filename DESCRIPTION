@@ -13,7 +13,7 @@ Description: This is an R implementation of the River Invertebrate
   of many other authors. For background, user guides and technical information
   see Freshwater Biological Association http://www.fba.org.uk/river-invertebrate-classification-tool-rict-and-rivpacs
   for details.
-License: GPL-3
+License: GPL-3 + file LICENSE
 URL: https://github.com/aquaMetrics/rict
 Encoding: UTF-8
 LazyData: true

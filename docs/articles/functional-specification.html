@@ -304,8 +304,7 @@ outline: 0 ;
 <li>Number of Monte-Carlo simulations – 10,000</li>
 <li>Index sets – all 80 indices</li>
 <li>Season type – Spring, Autumn, Spring/Autumn Combined, Summer</li>
-<li>Classification boundary limits – Coded as per WFD compliant values found in the classification support files (user would need to amend the function in this file to alter values for their own experiments) <strong>(Make this a parameter? - TF)</strong>
-</li>
+<li>Classification boundary limits – Coded as per WFD compliant values found in the classification support files (user would need to amend the function in this file to alter values for their own experiments)</li>
 <li>Bias - Bias values can be provided in the input file by the user and will be used in the experiment if they have been provided. However, if no data values for Bias or “-9” has been entered in the input file, then the hard-coded default value of 1.62 (GB) or 0 (NI) will be used.</li>
 </ul>
 <p>Note that 1.62 is the default value currently being used for Bias as this was input as the default value in the previous version of RICT2 as used in SEPA for BMWP NTAXA. However, the EA uses a value of 1.68 as the Bias value for WHPT which was based on an audit of the analytical quality of Environment Agency laboratories. The Bias value for WHPT should be greater than the value for BMWP for the same level of analytical quality, because WHPT uses more taxa than BMWP. Plus WHPT taxa also includes additional Diptera families which are less easy to identify.</p>
@@ -2527,7 +2526,7 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 <h3 class="hasAnchor">
 <a href="#gb-ni" class="anchor"></a>GB &amp; NI</h3>
 <ul>
-<li>New Input File <code>wValidation wTestData.csv</code>
+<li>New Input File on Azure: <code>wValidation wTestData.csv</code>
 </li>
 <li><code>prediction-functions.R</code></li>
 <li>
@@ -2535,13 +2534,12 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 </ul>
 </div>
 </div>
-<div id="execute-r-script" class="section level2">
+<div id="r-code-for-taxa-prediction" class="section level2">
 <h2 class="hasAnchor">
-<a href="#execute-r-script" class="anchor"></a>Execute R Script</h2>
-<p><strong>(Update this section - TF)</strong> Line 350 – this is the same as previous predictions but for taxa prediction we need to find each site’s EndGroup, it uses columns 15:57 for GB and 13:23 for NI. Two functions are used: Function1 EndGroup Probability replacement, gets EndGroup and replaces it with the Probability (GB - columns 15:57 and NI columns 13:23).</p>
-<p>Line 366 – an important file as it looks at the taxonomic info from the TAXA_AB_APR_PRAB.csv about the model to be used in the prediction. EndGroup found are used with this file to compute predictions.</p>
-<p>Line 371/372 – shows which model is being used for the experiment (GB or NI)</p>
-<p>Line 378/396 – this goes through each site and processes each site to do the predictions. The second function, Function2, does the computation of all the columns – it computes the site and adds it to the list of all sites, and repeats this function until all the sites have been computed.</p>
+<a href="#r-code-for-taxa-prediction" class="anchor"></a>R code for taxa prediction</h2>
+<p>The <code>rict_predict</code> function this is the same as previous predictions but for taxa prediction we need to find each site’s EndGroup, it uses columns 15:57 for GB and 13:23 for NI.</p>
+<p>An important file as it looks at the taxonomic info from the <code>TAXA_AB_APR_PRAB.csv</code> about the model to be used in the prediction. EndGroup found are used with this file to compute predictions.</p>
+<p>If the argument <code>taxa = TRUE</code> the function loops through each site and processes each site to do the predictions.</p>
 </div>
 </div>
 <div id="classification-1" class="section level1">
@@ -2815,8 +2813,7 @@ EQRirB,Au     = EQR value for autumn season as calculated in section 8.10 </code
 <p>The WFD requires that all water bodies, including rivers sites, are classified into one of five ecological status class. These classes in RICT2 are coded as classes 1-5 with 1= ‘high’, 2=‘good’, 3=‘moderate’, 4=‘poor’ and 5=‘bad’.</p>
 <p>There are a number of processes involved in this step as described below:</p>
 <ul>
-<li>The EQR values calculated in section 10 above are used within the getClassFromEQR_ntaxa () function found in the <code>classification-functions.R</code> to find the class and relevant boundary limit values.</li>
-<li>These values are then used within the getClassFromEQR_aspt () function found in the <code>classification-functions.R</code>.</li>
+<li>The EQR values calculated in section 10 above are used within the <code>getClassarray_ntaxa()</code> and <code>getClassarray_aspt()</code> function found in the <code>classification-functions.R</code> to find the class and relevant boundary limit values.</li>
 <li>The <code>getMostProbableClass()</code> function found in the <code>classification-functions.R</code> is used to find the most probable class.<br>
 </li>
 <li>The <code>getMINTA_ntaxa_aspt()</code> function found in the <code>classification-functions.R</code> is used to find the maximum of the two classes and which is the worst class. The worst class in then recorded in the output file and displayed in the MINTA column</li>
@@ -2961,7 +2958,7 @@ Probability Result A in Bad &amp; Result B in Bad</code></pre>
 <p>The Centre for Ecology and Hydrology (CEH) have produced a database of GIS environmental variables data for every 50m of steam or river for use with the new RIVPACS GB Model M44. T</p>
 <p>This database will have a map-based location checker, to enable users to check that the Ordnance survey grid reference that they enter returns data for the catchment that they intended. Many monitoring sites are at the downstream end of rivers close to tributaries, so small error in the grid reference or GIS river line can cause the system to return data for the wrong river, and the database holds data only for one river within each 50m grid. The database holds all the environmental data for Model 44, derived from GIS, including discharge category but not including alkalinity.</p>
 <p>This database has been hosted by <strong>Add details here</strong></p>
-<p>This model produced by Ralph Clark and John Davey Bowker and based on these predictive variables is detailed in the report ‘GIS Re-calibration of the hydromorphology-independent RIVPACS predictive model (M37): new model M44’. <strong>(Add link?)</strong>.</p>
+<p>This model produced by Ralph Clark and John Davey Bowker and based on these predictive variables is detailed in the report ‘GIS Re-calibration of the hydromorphology-independent RIVPACS predictive model (M37): new model M44’.</p>
 <p>RICT2 will be used with the new RIVPACS Model 44 to give better predictions of streams impacted by siltation due to flow alteration.</p>
 <p>The majority of the coding that has been done in RICT2 for prediction and classification will also be suitable when running the experiment for the Model 44 prediction and classification.</p>
 <p>With minor adjustments, the RICT2 prediction and classification code is suitable for running both Model 1 and Model 44 experiments.</p>
@@ -2979,9 +2976,9 @@ Probability Result A in Bad &amp; Result B in Bad</code></pre>
 <li>end-group-means-discriminant-scores-model-44.csv</li>
 </ul>
 <p>The flow diagram below summarises the prediction process and calculations as well as identifying the relevant report for further information:</p>
-<p><img src="images/rict-prediction-model-44.png" width="576" height="432"></p>
+<p><img src="images/rict-prediction-model-44.png" width="658" height="494"></p>
 <p>The flow diagram below summarises the classification process and calculations as well as identifying the relevant report for further information:</p>
-<p><img src="images/rict-classification-model-44.png" width="577" height="432"></p>
+<p><img src="images/rict-classification-model-44.png" width="660" height="494"></p>
 </div>
 </div>
 <div id="non-functional-requirements" class="section level1">
@@ -3604,6 +3601,8 @@ Probability Result A in Bad &amp; Result B in Bad</code></pre>
 <div id="prediction-outputs" class="section level4">
 <h4 class="hasAnchor">
 <a href="#prediction-outputs" class="anchor"></a>Prediction outputs</h4>
+<p>RICT2 predict and classify experiments will produce two output files; one for prediction, one for classification</p>
+<p>Prediction Output file An example of the output file for prediction is linked below:</p>
 <table class="table">
 <colgroup>
 <col width="0%">
@@ -3954,11 +3953,101 @@ Probability Result A in Bad &amp; Result B in Bad</code></pre>
 <td align="left">H</td>
 </tr></tbody>
 </table>
+<p>A full description of each column for the prediction output table and what the values indicate can be found within the RICT2 user guide. A summary list of the column headings is given in the <code>rict_predict</code> function.</p>
 </div>
 </div>
 <div id="annex-c-critical-success-factors" class="section level1">
 <h1 class="hasAnchor">
 <a href="#annex-c-critical-success-factors" class="anchor"></a>Annex C: Critical Success Factors</h1>
+<p>The CSF specified below denotes the minimum requirements as agreed with the project team and stakeholders as agreed in the outline business case:</p>
+<table class="table">
+<colgroup>
+<col width="3%">
+<col width="13%">
+<col width="76%">
+<col width="6%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">N</th>
+<th align="left">Level</th>
+<th align="left">Description</th>
+<th align="left">Score</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">Primary</td>
+<td align="left">RICT can complete the full nationalclassification in June 2019</td>
+<td align="left">3</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">Primary</td>
+<td align="left">Improved performance of RICT – end to end processing time</td>
+<td align="left">3</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">Primary</td>
+<td align="left">New RIVPACS model added to RICT</td>
+<td align="left">3</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">Primary</td>
+<td align="left">Platform and associated code accessible for future development</td>
+<td align="left">3</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">Secondary</td>
+<td align="left">Agree ongoing support and maintenance arrangement (Hosting)</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">Secondary</td>
+<td align="left">Agree ongoing support, maintenance and development arrangement (application)</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left">Secondary</td>
+<td align="left">Improved technical and scientific resilience</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">8</td>
+<td align="left">Tertiary</td>
+<td align="left">Critical bugs resolved</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">Tertiary</td>
+<td align="left">Critical functionality added</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">10</td>
+<td align="left">Tertiary</td>
+<td align="left">Non critical bugs resolved</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">11</td>
+<td align="left">Tertiary</td>
+<td align="left">Non critical functionality added</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">12</td>
+<td align="left">Tertiary</td>
+<td align="left">Produce an updated functional specification and architecture documentation</td>
+<td align="left">1</td>
+</tr>
+</tbody>
+</table>
 </div>
   </div>
 

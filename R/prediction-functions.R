@@ -447,4 +447,3 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id,
   }
   return(bind_all)
 }
-

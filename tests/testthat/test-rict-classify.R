@@ -28,19 +28,18 @@ test_that("Outputs match azure single-year outputs", {
     azure_classification$mintawhpt_spr_aut_mostProb[1]
   )
   expect_true(equal == T)
-
 })
 
 test_that("Outputs match azure NI single-year outputs", {
-  data <- demo_ni_observed_values# only one year required
+  data <- demo_ni_observed_values # only one year required
   test_validation_func <- rict:::rict_validate(data)
   predictions <- rict_predict(data)
   classification <- rict_classify(predictions, year_type = "single")
   expect_equal(class(classification), "data.frame")
 
   azure_classification <- utils::read.csv(system.file("extdat",
-                                                               "validation-classification-ni-single-year.csv",
-                                                               package = "rict"
+    "validation-classification-ni-single-year.csv",
+    package = "rict"
   ),
   check.names = F, stringsAsFactors = F
   )
@@ -49,20 +48,18 @@ test_that("Outputs match azure NI single-year outputs", {
     as.character(classification$mintawhpt_spr_aut_mostProb)
   azure_classification$mintawhpt_spr_aut_mostProb <-
     as.character(azure_classification$mintawhpt_spr_aut_mostProb)
- # status are the same:
+  # status are the same:
   equal <- all.equal(
     classification$mintawhpt_spr_aut_mostProb,
     azure_classification$mintawhpt_spr_aut_mostProb
   )
   expect_true(equal == T)
 
-# work in progress
-#  equal <- all.equal(
-#   type.convert(classification[, 3:60]),
-#   type.convert(azure_classification[, 3:60])
-#  )
-
-
+  # work in progress
+  #  equal <- all.equal(
+  #   type.convert(classification[, 3:60]),
+  #   type.convert(azure_classification[, 3:60])
+  #  )
 })
 
 
@@ -131,8 +128,8 @@ test_that("Outputs match azure multi-year outputs", {
 
   # test azure and package results match:
   equal <- all.equal(
-    classification[, c(1,3:23)], # ignore YEAR - this is wrong in Azure - duplicate SITE + YEAR rows
-    validation_classification[, c(1,3:23)]
+    classification[, c(1, 3:23)], # ignore YEAR - this is wrong in Azure - duplicate SITE + YEAR rows
+    validation_classification[, c(1, 3:23)]
   )
   expect_true(equal == T)
 })
@@ -235,42 +232,12 @@ test_that("Test single row of multi-year input works", {
   expect_gte(as.numeric(as.character(check$H_NTAXA_spr_aut)), 0)
 })
 
-test_that("Test summer", {
-  skip("work in progress - issue that set.seed runs through other seasons before getting to summer giving slightly different
-       randomness compared to running summer alone? Maybe setup Azure experiment with set.seed within each function to allow
-       standard output no matter what the input - and do the same in rict package - this should give same output -
-       perhaps add a flag to turn this on and off to make it even easier to test?")
-  demo_observed_values <- demo_observed_values
-  demo_gis_values_log <- demo_gis_values_log
-  demo_observed_values$SITE <- demo_gis_values_log$SITE
-
-  predictions <- rict_predict(demo_observed_values)
-  results <- rict:::summer_single_year_classification(predictions, area = "gb")
-})
-
-test_that("Test missing seasons", {
-  skip("work in progress")
-  demo_observed_values <- rict::demo_observed_values
-
-  demo_observed_values <- demo_observed_values[1, ]
-
-  demo_observed_values$Spr_Season_ID <- NA
-  demo_observed_values$Spr_Ntaxa_Bias <- NA
-  demo_observed_values$`Spr_TL2_WHPT_ASPT (AbW,DistFam)` <- NA
-  demo_observed_values$`Spr_TL2_WHPT_NTaxa (AbW,DistFam)` <- NA
-
-  class <- rict(demo_observed_values, year_type = "single", store_eqrs = TRUE)
-  class2 <- rict(demo_observed_values, year_type = "single", store_eqrs = TRUE)
-
-  test <- rict_compare(class, class2)
-})
-
 test_that("NI classification", {
   classification <- rict(demo_ni_observed_values, year_type = "single")
 
   verfied_classification <- utils::read.csv(system.file("extdat",
-                                                 "validation-classification-ni-single-year.csv",
-                                                 package = "rict"
+    "validation-classification-ni-single-year.csv",
+    package = "rict"
   ), check.names = F)
 
   classification <- classification[, names(classification) %in% names(verfied_classification)]
@@ -284,6 +251,4 @@ test_that("NI classification", {
   # if you remove summer from the loop it gives the same answer.
   # however these status classes do still match ofr spring:
   expect_equal(classification$mostProb_NTAXA_spr, verfied_classification$mostProb_NTAXA_spr)
-
 })
-

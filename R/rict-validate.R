@@ -434,17 +434,19 @@ These values will be used instead of calculating them from Grid Reference values
   checks <- dplyr::bind_rows(checks)
   ### Add discharge and velocity columns missing data fails ---------------------------
   discharge_velocity_fails <- data[is.na(data$DISCHARGE) & is.na(data$VELO_DUMMY), ]
-  discharge_velocity_fails <- data.frame("SITE" = discharge_velocity_fails$SITE,
-                                         "YEAR" = discharge_velocity_fails$YEAR,
-                                         stringsAsFactors = FALSE)
+  discharge_velocity_fails <- data.frame(
+    "SITE" = discharge_velocity_fails$SITE,
+    "YEAR" = discharge_velocity_fails$YEAR,
+    stringsAsFactors = FALSE
+  )
 
   if (nrow(discharge_velocity_fails) > 0) {
-  discharge_velocity_fails$FAIL <-
-    "You provided empty VELOCITY and DISCHARGE values, we expect values for at least one of these variables."
-  discharge_velocity_fails$WARNING <- ""
-  discharge_velocity_fails$REPLACEMENT <-  ""
-  # Add discharge and velocity fails
-  checks <- rbind(checks, discharge_velocity_fails)
+    discharge_velocity_fails$FAIL <-
+      "You provided empty VELOCITY and DISCHARGE values, we expect values for at least one of these variables."
+    discharge_velocity_fails$WARNING <- ""
+    discharge_velocity_fails$REPLACEMENT <- ""
+    # Add discharge and velocity fails
+    checks <- rbind(checks, discharge_velocity_fails)
   }
   ### Replace values if value is less than the ‘overall’ minimum value ------------------------------
   validation_rules_input <- validation_rules[validation_rules$source == "input", ]

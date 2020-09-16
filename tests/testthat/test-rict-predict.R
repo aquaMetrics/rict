@@ -102,7 +102,7 @@ test_that("taxa predictions work GB", {
 
   indices_prediction <- indices_prediction[, names(indices_prediction) %in% names(verified_predictions)]
   verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(indices_prediction)]
-  expect_equal(indices_prediction[ , 11:18], verified_predictions[, 11:18]) # all probabilities the same
+  expect_equal(indices_prediction[, 11:18], verified_predictions[, 11:18]) # all probabilities the same
 })
 
 test_that("All indices predictions work NI", {
@@ -111,8 +111,8 @@ test_that("All indices predictions work NI", {
   indices_prediction <- rict_predict(data, all_indices = TRUE)
   verified_predictions <-
     utils::read.csv(system.file("extdat",
-                                "rict-ni-all-indices-predictions.csv",
-                                package = "rict"
+      "rict-ni-all-indices-predictions.csv",
+      package = "rict"
     ), check.names = FALSE, stringsAsFactors = T) # from tested Azure data
 
   indices_prediction <- indices_prediction[, names(indices_prediction) %in% names(verified_predictions)]
@@ -125,8 +125,8 @@ test_that("taxa predictions work NI", {
   taxa_prediction <- rict_predict(demo_ni_observed_values[1, ], taxa = TRUE)
   verified_predictions <-
     utils::read.csv(system.file("extdat",
-                                "rict-ni-taxa-prediction.csv",
-                                package = "rict"
+      "rict-ni-taxa-prediction.csv",
+      package = "rict"
     ), check.names = FALSE)
 
   taxa_prediction <- dplyr::arrange(taxa_prediction, Maitland_Name, Season_Code)
@@ -134,15 +134,15 @@ test_that("taxa predictions work NI", {
   taxa_prediction <- taxa_prediction[, names(taxa_prediction) %in% names(verified_predictions)]
   verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(taxa_prediction)]
 
-  expect_equal(round(taxa_prediction[11:18],3), round(verified_predictions[11:18],3))
+  expect_equal(round(taxa_prediction[11:18], 3), round(verified_predictions[11:18], 3))
 })
 
 test_that("predictions work NI", {
   prediction <- rict_predict(demo_ni_observed_values)
   verified_predictions <-
     utils::read.csv(system.file("extdat",
-                                "rict-ni-predictions.csv",
-                                package = "rict"
+      "rict-ni-predictions.csv",
+      package = "rict"
     ), check.names = FALSE)
 
 
@@ -152,4 +152,3 @@ test_that("predictions work NI", {
   expect_equal(prediction$TL2_WHPT_NTAXA_AbW_DistFam_sum, verified_predictions$TL2_WHPT_NTAXA_AbW_DistFam_sum)
   expect_equal(prediction$TL2_WHPT_ASPT_AbW_DistFam_sum, verified_predictions$TL2_WHPT_ASPT_AbW_DistFam_sum)
 })
-

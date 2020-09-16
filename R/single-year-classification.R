@@ -636,8 +636,13 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     allResults_ntaxa_aspt_minta_combined$mintawhpt_spr_aut_mostProb
   allResults_ntaxa_aspt_minta_combined$mintawhpt_spr_aut_mostProb <- NULL
 
+
+  # add summer in
+  allResults_ntaxa_aspt_minta_combined <- cbind(allResults_ntaxa_aspt_minta_combined, all_summer[, c(4:10)])
+
   if (store_eqrs == T) {
     eqr_metrics <- dplyr::bind_rows(eqr_metrics)
+    eqr_metrics <- eqr_metrics[!is.na(eqr_metrics$EQR), ]
     # Merge simluated eqrs with classification results based on 'ID' (row number)
     allResults_ntaxa_aspt_minta_combined$ID <- seq_len(nrow(allResults_ntaxa_aspt_minta_combined))
     allResults_ntaxa_aspt_minta_combined <- merge(
@@ -647,14 +652,12 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   }
 
 
- # add summer in
- allResults_ntaxa_aspt_minta_combined <- cbind(allResults_ntaxa_aspt_minta_combined, all_summer[, c(4:10)])
- final <- allResults_ntaxa_aspt_minta_combined
+  final <- allResults_ntaxa_aspt_minta_combined
 
- # if spr or aut not provided remove from end result
- final[is.na(final$ASPT_eqr_av_spr), grep("spr", names(final))] <- NA
- final[is.na(final$ASPT_eqr_av_aut), grep("aut", names(final))] <- NA
- final[is.na(final$ASPT_eqr_av_aut), grep("sum", names(final))] <- NA
+  # if spr or aut not provided remove from end result
+  final[is.na(final$ASPT_eqr_av_spr), grep("spr", names(final))] <- NA
+  final[is.na(final$ASPT_eqr_av_aut), grep("aut", names(final))] <- NA
+  final[is.na(final$ASPT_eqr_av_aut), grep("sum", names(final))] <- NA
 
 
 

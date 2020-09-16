@@ -170,7 +170,6 @@ test_that("alkalinity, hardness, conductivity and calcium calculations work", {
   test_data$calcium[2] <- 50
   test <- rict_validate(test_data)
   expect_equal(length(test[[2]][, 1]), 0)
-
 })
 
 # ---------------------------------------------------------------------

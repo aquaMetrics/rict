@@ -196,18 +196,24 @@ edited in local R environment for example in Rstudio.
   
 However, it must be noted that the version of R software studio on Microsoft
 Azure ML studio, at the time of writing this document, are currently older
-(latest being 3.4.4) than the latest version of R available. Therefore, if
-the experiment is downloaded and the user does some amendments to the R code
-using their latest version of the R, it may have compatibility
-issues if this experiment is subsequently uploaded back into Microsoft Azure ML
-studio.
-  
+(latest being 3.4.4) than the latest version of R available. Therefore, if the
+experiment is downloaded and the user does some amendments to the R code using
+their latest version of the R, it may have compatibility issues if this
+experiment is subsequently uploaded back into Microsoft Azure ML studio.
+
 It should be noted that this document is written from the expectation that the
-user will be running the experiment in Microsoft Azure ML studio.
+user will be running the experiment in [Microsoft Azure ML studio](https://studio.azureml.net/).
+    
+There are some minor compatibility issues between R running in Azure and running
+R locally. Azure does provide error [documentation](https://docs.microsoft.com/en-us/azure/machine-learning/studio-module-reference/errors/machine-learning-module-error-codes). The common issues are encountered are:
+
+* Packages not loading (fix by re-running the experiment). 
+* Dataframes must have row.names when exported from one Azure module to the next. 
+* Using namespaces on some Non-standard evaluation functions can sometimes cause issues, for instance `dplyr::summarise(data, dplyr::n())` - the `dplyr::n()` won't work. 
   
-For initial release, the GB Single year, GB multi-year and NI single year for
+For initial release (2019), the GB Single year, GB multi-year and NI single year for
 WFD classification have been produced. These three experiments are available in
-the Azure ML Studio gallery.**(chnage this section?)**
+the Azure ML Studio gallery.
   
 The diagram below shows a diagrammatical representation of the main
 functionality of the RICT2 tool with numbered links to more detailed
@@ -324,26 +330,27 @@ below.
 All the following files can be found within the rict package on
 [github](https://github.com/aquaMetrics/rict).
 
-Each experiment uses the exact same supporting file/package. The code within
-each experiment determines which functions and supporting table are called from
-the rict package.
+Each experiment uses the exact same supporting files/package. The code within
+each experiment determines which functions and supporting tables are called from
+the supporting files.
   
-The rict package is automatically tested and compiled/built on every update to
-the master branch on github. This process is carried out by the Appveyor
-website, which monitors github for any changes and re-builds and tests the code
+The rict code  is automatically tested and compiled/built on every update to
+the master branch on Github. This process is carried out by the Appveyor
+website, which monitors Github for any changes and re-builds and tests the code
 on a Windows machine in the cloud.
   
-The Microsoft Windows binary .zip package file (Azure requires a Windows binary
+The Microsoft Windows binary rict.zip package file (Azure requires a Windows binary
 package) is stored on the Appveyor
 [artifacts](https://ci.appveyor.com/project/ecodata1/rict/branch/master/artifacts)
-page. It is currently built using R 3.5 (slight above the Azure version 3.4.4)
+page. It is currently built using R 3.5 (slightly above the Azure version R 3.4.4)
 for compatibility with Appveyor. But this has not caused any issues.
+  
 Alternatively, the rict package binary can be compile/built locally on a Windows
 machine.
   
 The .zip binary package file, is then moved to a folder called 'support-files'
 and that folder is also zip compressed. This zipped folder is then uploaded to
-Azure Studio experiments as required.
+Azure Studio and drag and dropped into all experiments as required.
 
 ## Prediction
 
@@ -466,11 +473,6 @@ classified from more than one site. The GIS data location checker and delivery
 system and multi-site classification are currently in development and we hope to
 release them in a couple of months.
 
-We may need to modify Compare to allow individual-season estimates of class for
-spring and autumn to be compared, as that is used in conjunction with the
-official combined season classification for evaluating the impact of combined
-sewer overflows
-  
 Additional standard default experiments to calculate the output for more
 specific Index sets (e.g. for hydro-ecological evaluation) may be added later,
 if the need arises.
@@ -482,10 +484,10 @@ BMWP (Biological Monitoring Working Party) classification based on RIVPACS IV
 (used before 2015) or RIVPACS III+ (used 1990-1009), or using WHPT based on BMWP
 taxa including BMWP composite taxa.
   
-We may also correct or improve experiments.  If we need to do that, or we add
+We may also correct or improve experiments. If we need to do that, or we add
 new experiments to the gallery, we will run them through testing to ensure that
 the modifications do not affect the results and if they do, we know what the
-effect is.  Information about that will be added to this document and to user
+effect is. Information about that will be added to this document and to user
 guides, as appropriate.
   
 # Acceptance and validation of input data
@@ -2247,7 +2249,7 @@ new RICT Compare procedure.
 Compare flow chart:
 
 ```{r}
-embed_png("images/rict-compare.png", dpi = 180)
+embed_png("images/rict-compare.png", dpi = 160)
 ```  
   
   
@@ -2257,7 +2259,7 @@ sites and/or time periods. This is done using an extension of the simulation
 techniques and algorithms described above that are used to assess the EQRs and
 ecological status class and the associated uncertainty for individual
 samples/sites and time periods.
- 
+
 The first sample in a pair is known as result A and the second as result B.
   
 In each simulation r, independent simulated EQR values are calculated for each
@@ -2275,8 +2277,11 @@ result. For instance, if comparing a single upstream result to multiple
 downstream results, repeat the single result over multiple rows (equal to the
 number of downstream results) in the input file. Then run through the
 classification experiment and save results in Azure. Then run the downstream
-results through the classification and save dataset. Import both datasets into
-the Compare experiment and run.
+results through the classification and save dataset. Drag and drop both datasets
+into the Compare experiment and run.
+
+Note, Compare allows individual-season estimates of class for
+spring and autumn to be compared.
   
 Calculate Difference and Related Statistics:
 
@@ -2300,12 +2305,12 @@ Determine the lower and upper 2.5 percentiles and thus 95% confidence limits by
 sorting all of the rN simulated EQRir values into order from smallest to
 largest. Then the lower and upper percentiles are given by the mL and mU
 smallest values, where:
+
 ```
 mL	= nearest integer to 0.025 * (rN + 1)
 mU	= nearest integer to 0.975 * (rN + 1) 
 For the recommended rN = 9999, mL = 250   and mU = 9750.
 ```
-  
 Confidence (and statistical test) of change/difference in EQR:
   
 Confidence limits for the difference in EQR values are obtained from the
@@ -2326,7 +2331,6 @@ PDiff0 = proportion of simulated differences less than or equal to zero.
 PDiff1 = proportion of simulated differences greater than or equal to zero.
 2-sided test probability p of No difference in EQR (PDiff) = 2 * minimum of (PDiff0, PDiff1)
 ```
-
 Then PDiff is the two-sided test probability of the null hypothesis of no
 difference in true EQR values between the sites and/or times from which the two
 samples were taken. [True EQR for a site, in this sense, means average EQI
@@ -2371,8 +2375,6 @@ respectively, then
 PrChij       = 	Proportion of simulations for which simulated sample A was classified as class i and simulated sample B was classified as class j.
                  =	Estimated probability of change in status from class i to class j
 ```
-  
-  
 Status class of sample B
    
 high (1)
@@ -2507,21 +2509,14 @@ from RIVPACS and to link to a location checker as outlined in the picture below:
 
 ## Model 44 Validation
 
-The GIS input spreadsheet may be needed for these values. However, it should be
-noted that these values will be provided by the model and not entered by a user.
+The GIS input file spreadsheet may be needed for these values (tbc). However, it
+should be noted that these values will be provided by the model and not entered
+by a user.
 
-Therefore validation requirements could be minimal as shown above. Validation
-may be required to check that values are numeric and not null.
-
-It is expected that the experiment will be built first and then checks will be
-made on results produced to determine if some validation may be required, i.e.
-warnings and failures based on a limits amount.
+Detailed validation requirements for model 44 are outlined in the acceptance and
+validation section of this document.
   
-Where a replacement value is available from the current RIVPACS IV GB or NI
-experiments, this has been used. But at this stage, there is no requirement for
-replacement values for new GIS based EVs used in Model 44. The GIS data layers
-provide EVs from pre-calculated datasets; therefore, replacement values are
-unlikely to be required.
+## Discriminant function scores
   
 Another difference is that there are now 17 discriminant function scores and
 discriminant function end group means scores rather than 13. See supporting
@@ -2529,6 +2524,8 @@ files:
   
 * discrimant-function-coefficients-model-44.csv
 * end-group-means-discriminant-scores-model-44.csv
+ 
+## Summary diagrams
  
 The flow diagram below summarises the prediction process and calculations as
 well as identifying the relevant report for further information:
@@ -2657,8 +2654,22 @@ usage is outlined in the Microsoft Privacy Statement
 
 # Annex A: Input File
 
-This table shows test data (GB - Model 1) which can be left in by the user to
-help understand format to use and run with the experiment.
+Below are examples of the import file format to help understand and verify the
+format to used and run with the experiment.
+
+GB - Model 1 input format
+
+```{r}
+knitr::kable(demo_observed_values[1, ])
+```
+
+NI - Model 1 input format
+
+```{r}
+knitr::kable(demo_ni_observed_values[1, ])
+```
+
+GIS - Model 44 input format
 
 ```{r}
 knitr::kable(demo_gis_values_log[1, ])
@@ -2672,7 +2683,40 @@ A full description of each column for the input table and how it is completed
 can be found within the [RICT2 user
 guide](https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx).
 
-# Appendix B2: Biotic included in all index prediction
+# Annex B: Output Files predict and classify
+
+#### Prediction outputs
+
+RICT2 predict and classify experiments will produce two output files; one for prediction, one for classification
+
+Prediction Output file
+
+An example of the output file for prediction is linked below: 
+
+```{r, message=FALSE}
+
+predict <- rict_predict(demo_observed_values[1, ])
+knitr::kable(predict)
+
+```
+
+#### Classification
+
+Multiple year:
+
+```{r, message=FALSE}
+multi_class <- rict(demo_observed_values[1, ])
+knitr::kable(multi_class)
+```
+
+Single year:
+
+```{r, message=FALSE}
+single_class <- rict(demo_observed_values[1, ], year_type = "single")
+knitr::kable(single_class)
+```
+
+# Appendix C: Biotic included in all index prediction
 
 *Please note the format changes to the labels of the indices – see table of changes below:
 
@@ -2696,39 +2740,16 @@ all_indices_names <- data.frame("RIVPACS DB Label"  = names(end_group_index),
 
 ```
 
-# Annex B: Output Files predict and classify
-
-#### Prediction outputs
-
-RICT2 predict and classify experiments will produce two output files; one for prediction, one for classification
-
-Prediction Output file
-An example of the output file for prediction is linked below: 
-
-```{r, message=FALSE}
-
-predict <- rict_predict(demo_observed_values[1, ])
-knitr::kable(predict)
-
-```
-
-#### Classification
-
-```{r, message=FALSE}
-class <- rict(demo_observed_values[1, ])
-knitr::kable(class)
-```
-
 A full description of each column for the prediction output table and what the values indicate can be found within the RICT2 user guide. A summary list of the column headings is given in the `rict_predict` function.
 
-# Annex C: Critical Success Factors
+# Annex D: Critical Success Factors
 
 The CSF specified below denotes the minimum requirements as agreed with the project team and stakeholders as agreed in the outline business case:
 
 
 |N  |Level      |Description                                                   |Score|
 |:--|:----------|:-------------------------------------------------------------|:----|
-|1  |Primary    |RICT can complete the full nationalclassification in June 2019|    3|
+|1  |Primary    |RICT can complete the full national classification in June 2019|    3|
 |2  |Primary    |Improved performance of RICT – end to end processing time     |    3|
 |3  |Primary    |New RIVPACS model added to RICT                               |    3|
 |4  |Primary    |Platform and associated code accessible for future development|    3|

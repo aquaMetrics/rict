@@ -33,3 +33,25 @@ test_that("rict_compare matches test data", {
     -8.461
   )
 })
+
+
+test_that("Test missing seasons compare", {
+  demo_observed_values <- rict::demo_observed_values[1, ]
+
+  demo_observed_values$Spr_Season_ID <- NA
+  demo_observed_values$Spr_Ntaxa_Bias <- NA
+  demo_observed_values$`Spr_TL2_WHPT_ASPT (AbW,DistFam)` <- NA
+  demo_observed_values$`Spr_TL2_WHPT_NTaxa (AbW,DistFam)` <- NA
+
+  class <- rict(demo_observed_values, year_type = "single", store_eqrs = TRUE)
+
+  demo_observed_values <- rict::demo_observed_values[1, ]
+  demo_observed_values$Aut_Season_ID <- NA
+  demo_observed_values$Aut_Ntaxa_Bias <- NA
+  demo_observed_values$`Aut_TL2_WHPT_ASPT (AbW,DistFam)` <- NA
+  demo_observed_values$`Aut_TL2_WHPT_NTaxa (AbW,DistFam)` <- NA
+
+  class2 <- rict(demo_observed_values, year_type = "single", store_eqrs = TRUE)
+
+  test <- rict_compare(class, class2)
+})

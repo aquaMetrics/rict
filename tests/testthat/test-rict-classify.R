@@ -30,6 +30,7 @@ test_that("Outputs match azure single-year outputs", {
   expect_true(equal == T)
 })
 
+### ---------------------------------------------------------------------------------------
 test_that("Outputs match azure NI single-year outputs", {
   data <- demo_ni_observed_values # only one year required
   test_validation_func <- rict:::rict_validate(data)
@@ -55,14 +56,9 @@ test_that("Outputs match azure NI single-year outputs", {
   )
   expect_true(equal == T)
 
-  # work in progress
-  #  equal <- all.equal(
-  #   type.convert(classification[, 3:60]),
-  #   type.convert(azure_classification[, 3:60])
-  #  )
 })
 
-
+### -----------------------------------------------------------------------------------------
 
 test_that("Outputs match azure multi-year outputs", {
   # skip("currently failing because change to set.seed code")
@@ -122,17 +118,19 @@ test_that("Outputs match azure multi-year outputs", {
     validation_classification$mintawhpt_spr_aut_mostProb_MINTA_
   )
 
-  # remove row.names - not required for comparison
+  # Remove row.names - not required for comparison
   row.names(classification) <- NULL
   row.names(validation_classification) <- NULL
 
-  # test azure and package results match:
+  # Test azure and package results match:
   equal <- all.equal(
     classification[, c(1, 3:23)], # ignore YEAR - this is wrong in Azure - duplicate SITE + YEAR rows
     validation_classification[, c(1, 3:23)]
   )
   expect_true(equal == T)
 })
+
+### -------------------------------------------------------------------------------------------------
 
 test_that("Outputs on SEPA system", {
   skip("internal sepa test only")
@@ -146,6 +144,8 @@ test_that("Outputs on SEPA system", {
   observed_values <- transformRict(ecology_results)
   predictions <- rict::rict_predict(observed_values)
 })
+
+### --------------------------------------------------------------------------------------------
 
 test_that("GIS variables classification against Ralph's output", {
   library(dplyr)
@@ -206,13 +206,51 @@ test_that("GIS variables classification against Ralph's output", {
   # write.csv(results, file = "r-output-standard.csv")
 })
 
+### --------------------------------------------------------------------------------------------
 
-test_that("Dynamically changing output depending on data provided", {
-  skip("work in progress")
-  remove_cols <- grep("Sum_Ntaxa|Spr_Ntaxa", names(demo_observed_values))
+test_that("Single year: Only return results for seasons provided", {
+  # Remove specific seasons completely:
+
+ remove_cols <- grep("Sum_TL2|Spr_TL2", names(demo_observed_values))
   demo_observed_values[, remove_cols] <- NA
   test <- rict(demo_observed_values, year_type = "single")
+
+  expect_equal(all(is.na(test$M_NTAXA_spr)), TRUE)
+  expect_equal(all(is.na(test$M_NTAXA_sum)), TRUE)
+  expect_equal(all(is.na(test$M_NTAXA_aut)), FALSE)
+
+  # Remove seasons in certain rows:
+  demo_observed_values <- rict::demo_observed_values
+  remove_cols <- grep("Sum_TL2|Spr_TL2", names(demo_observed_values))
+  demo_observed_values[1:2, remove_cols] <- NA
+  remove_cols <- grep("Sum_TL2", names(demo_observed_values))
+  demo_observed_values[5:7, remove_cols] <- NA
+  test <- rict(demo_observed_values, year_type = "single")
+
+  expect_equal(all(is.na(test$M_NTAXA_spr[1])), TRUE)
+  expect_equal(all(is.na(test$M_NTAXA_spr[3])), FALSE)
+  expect_equal(all(is.na(test$M_NTAXA_sum[5])), TRUE)
+  expect_equal(all(is.na(test$M_NTAXA_sum[8])), FALSE)
 })
+
+test_that("Single year: Summer only", {
+ skip("work in progress - testing summer outputs - need to calculate minta")
+
+  classification <- rict(demo_observed_values, year_type = "single")
+  verfied_classification <- utils::read.csv(system.file("extdat",
+                                                        "rict-summer-single-year-gb.csv",
+                                                        package = "rict"
+  ), check.names = F)
+
+  expect_equal(sum(as.numeric(as.character(classification$H_NTAXA_sum))) -
+                 sum(verfied_classification$H_NTAXA_sum),
+               -138.52)
+
+  expect_equal(classification$mostProb_MINTA, verfied_classification$mostProb_MINTA)
+})
+
+### --------------------------------------------------------------------------------------------
+
 
 test_that("Test single row of multi-year input works", {
 
@@ -245,10 +283,10 @@ test_that("NI classification", {
 
   classification <- type.convert(classification)
   verfied_classification <- type.convert(verfied_classification)
-  # not exact match because of difference in randomness due to global set.seed implementation
+  # Not exact match because of difference in randomness due to global set.seed implementation
   # the single-year classification loops through all seasons in the package (including summer)
   # which means the set.seed is slightly different after looping through summer etc
   # if you remove summer from the loop it gives the same answer.
-  # however these status classes do still match ofr spring:
+  # however these status classes do still match for spring:
   expect_equal(classification$mostProb_NTAXA_spr, verfied_classification$mostProb_NTAXA_spr)
 })

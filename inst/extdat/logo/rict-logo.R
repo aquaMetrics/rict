@@ -17,16 +17,17 @@ library(grid)
 # Publisher: Stuttgart
 # Contributing Library: Harvard University, Museum of Comparative Zoology, Ernst Mayr Library
 # Digitizing Sponsor: Harvard University, Museum of Comparative Zoology, Ernst Mayr Library
-img <- readPNG(system.file("extdat/images", "gammarus-pulex.png", package="rict"))
-g <- rasterGrob(img, interpolate=TRUE)
+img <- readPNG(system.file("extdat/images", "gammarus-pulex.png", package = "rict"))
+g <- rasterGrob(img, interpolate = TRUE)
 
-p <- ggplot(data = demo_observed_values, aes(x = SITE , y = `Sum_TL2_WHPT_ASPT (AbW,DistFam)`), geom="blank") +
-  annotation_custom(g, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf) +
-  geom_point(colour = wes_palette(n=24 , type = c("continuous"), "Zissou1")) +
+p <- ggplot(data = demo_observed_values, aes(x = SITE, y = `Sum_TL2_WHPT_ASPT (AbW,DistFam)`), geom = "blank") +
+  annotation_custom(g, xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf) +
+  geom_point(colour = wes_palette(n = 24, type = c("continuous"), "Zissou1")) +
   theme_void() +
   theme_transparent() +
-  scale_color_gradientn(colours = wes_palette(n =5 , type = c("continuous"), "Zissou1"))
+  scale_color_gradientn(colours = wes_palette(n = 5, type = c("continuous"), "Zissou1"))
 
-sticker(p, package="rict", p_color = "#EEC900", p_size=35, s_x=1, s_y=0.7 , s_width=1.2, s_height=1, h_color="#EEC900",
-        filename="inst/extdat/images/rict-logo.png", white_around_sticker = T, l_x = 1, l_y = 1.3,  spotlight = TRUE)
-
+sticker(p,
+  package = "rict", p_color = "#EEC900", p_size = 35, s_x = 1, s_y = 0.7, s_width = 1.2, s_height = 1, h_color = "#EEC900",
+  filename = "inst/extdat/images/rict-logo.png", white_around_sticker = T, l_x = 1, l_y = 1.3, spotlight = TRUE
+)

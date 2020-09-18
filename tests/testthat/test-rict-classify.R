@@ -234,8 +234,6 @@ test_that("Single year: Only return results for seasons provided", {
 })
 
 test_that("Single year: Summer only", {
- skip("work in progress - testing summer outputs - need to calculate minta")
-
   classification <- rict(demo_observed_values, year_type = "single")
   verfied_classification <- utils::read.csv(system.file("extdat",
                                                         "rict-summer-single-year-gb.csv",
@@ -246,7 +244,7 @@ test_that("Single year: Summer only", {
                  sum(verfied_classification$H_NTAXA_sum),
                -138.52)
 
-  expect_equal(classification$mostProb_MINTA, verfied_classification$mostProb_MINTA)
+  expect_equal(as.character(classification$mostProb_MINTA[1:4]), as.character(verfied_classification$mostProb_MINTA[1:4]))
 })
 
 ### --------------------------------------------------------------------------------------------

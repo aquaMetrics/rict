@@ -30,7 +30,11 @@ test_that("rict_compare matches test data", {
 
   expect_equal(
     round(sum(dplyr::select_if(test, is.numeric) - dplyr::select_if(test_rict_compare, is.numeric), na.rm = TRUE), 3),
-    -8.461
+    -24.273 # -8.461
+  )
+
+  expect_equal(
+    test$`Most Probable Class for Result A`, test_rict_compare$`Most Probable Class for Result A`
   )
 })
 

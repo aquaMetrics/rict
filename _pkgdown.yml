@@ -22,6 +22,6 @@ reference:
       - demo_observed_values
       - demo_gis_values_log
   - title: "Launch RICT web app"
-    desc: "Demo RICT web app providing a user interface for the rict package"
+    desc: "Demo RICT web app interactive web app for rict package"
     contents:
       - rict_app

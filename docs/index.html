@@ -86,36 +86,41 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-
-<div id="work-in-progress" class="section level1">
+<div id="rict-" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#work-in-progress" class="anchor"></a>Work in progress</h1></div>
-<p>This R package is in development. Please don’t use in production. Please use see the <a href="https://www.fba.org.uk/FBA/Discover-and-Learn/Projects/RIVPACS-RICT/Public/Discover-and-Learn/Projects/RIVPACS-RICT-Landing-Page.aspx?hkey=72b27a8b-d566-4bab-b863-ca39545226ae">RICT website</a> for offical documentation and links to the Azure experiments.</p>
-<div id="rict-package" class="section level2">
+<a href="#rict-" class="anchor"></a>rict <img src="inst/extdat/images/rict-logo.png" align="right" height="139">
+</h1></div>
+
+<div id="overview" class="section level2">
 <h2 class="hasAnchor">
-<a href="#rict-package" class="anchor"></a>rict package</h2>
+<a href="#overview" class="anchor"></a>Overview</h2>
 <p>An R package for calculating River Invertebrate Classification Tool (RICT) predictions</p>
 </div>
+</div>
+<div id="work-in-progress" class="section level1">
+<h1 class="hasAnchor">
+<a href="#work-in-progress" class="anchor"></a>Work in progress</h1>
+<p>This R package is in development. Please don’t use in production. Please use the <a href="https://www.fba.org.uk/FBA/Discover-and-Learn/Projects/RIVPACS-RICT/Public/Discover-and-Learn/Projects/RIVPACS-RICT-Landing-Page.aspx?hkey=72b27a8b-d566-4bab-b863-ca39545226ae">RICT website</a> for offical documentation and links to the Azure experiments.</p>
 <div id="install" class="section level2">
 <h2 class="hasAnchor">
 <a href="#install" class="anchor"></a>Install</h2>
 <p>Install <a href="rstats.org/install">R</a> and also recommend installing <a href="rstudio.com/install">Rstudio</a>.</p>
 <p>Open Rstudio.</p>
 <p>In R: Install the development version from GitHub:</p>
-<pre><code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages("devtools")
-library(devtools)
-install_github("aquaMetrics/rict")
-library(rict)</a></code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">install.packages</span>(<span class="st">"devtools"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(devtools)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">install_github</span>(<span class="st">"aquaMetrics/rict"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(rict)</span></code></pre></div>
 <p>Open interactive web app:</p>
-<pre><code><a href="reference/rict_app.html">rict_app()</a></code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">rict_app</span>()</span></code></pre></div>
 <p>Or run the demo dataset through the <code>rict</code> function in R to get classification results:</p>
-<pre><code>results &lt;- rict(demo_observed_values)</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>results &lt;-<span class="st"> </span><span class="kw">rict</span>(demo_observed_values)</span></code></pre></div>
 <p>Use <code>rict_predict</code> to only calculate predictions:</p>
-<pre><code>predictions &lt;- rict_predict(demo_observed_values)</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>predictions &lt;-<span class="st"> </span><span class="kw">rict_predict</span>(demo_observed_values)</span></code></pre></div>
 <p>And <code>rict_classify</code> to classify these predictions:</p>
-<pre><code>results &lt;- rict_classify(predictions)</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>results &lt;-<span class="st"> </span><span class="kw">rict_classify</span>(predictions)</span></code></pre></div>
 <p>See <a href="https://aquametrics.github.io/rict/">documentation</a> for further usage details. For example, how to change the default <code>year_type</code> from multi-year to single year classification:</p>
-<pre><code>results &lt;- rict(demo_gis_values_log, year_type = "single")</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>results &lt;-<span class="st"> </span><span class="kw">rict</span>(demo_gis_values_log, <span class="dt">year_type =</span> <span class="st">"single"</span>)</span></code></pre></div>
 </div>
 <div id="contributing" class="section level2">
 <h2 class="hasAnchor">
@@ -166,7 +171,7 @@ library(rict)</a></code></pre>
 <ul class="list-unstyled">
 <li><a href="https://travis-ci.org/aquaMetrics/rict"><img src="https://travis-ci.org/aquaMetrics/rict.svg?branch=master" alt="Travis-CI Build Status"></a></li>
 <li><a href="https://ci.appveyor.com/project/ecodata1/rict/branch/master"><img src="https://ci.appveyor.com/api/projects/status/github/aquaMetrics/rict?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a></li>
-<li><a href="https://codecov.io/gh/aquaMetrics/rict"><img src="https://codecov.io/gh/aquaMetrics/rict/branch/master/graph/badge.svg" alt="codecov"></a></li>
+<li><a href="https://codecov.io/gh/aquaMetrics/rict?branch=master"><img src="https://codecov.io/gh/aquaMetrics/rict/branch/master/graph/badge.svg" alt="codecov"></a></li>
 </ul>
 </div>
 </div>

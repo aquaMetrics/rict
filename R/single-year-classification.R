@@ -523,7 +523,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   colnames(SiteMINTA_whpt_aut) <- c(paste0("mintawhpt_aut_", names(SiteMINTA_whpt_aut)))
   colnames(SiteMINTA_whpt_spr_aut) <- c(paste0("mintawhpt_spr_aut_", names(SiteMINTA_whpt_spr_aut)))
 
-  colnames(SiteMINTA_whpt_sum) <- c(paste0(names(SiteMINTA_whpt_sum), "_MINTA" ))
+  colnames(SiteMINTA_whpt_sum) <- c(paste0(names(SiteMINTA_whpt_sum), "_MINTA"))
   # Combine all MINTA
   allMINTA_whpt <- cbind(SiteMINTA_whpt_spr, SiteMINTA_whpt_aut)
   allMINTA_whpt <- cbind(allMINTA_whpt, SiteMINTA_whpt_spr_aut)
@@ -580,7 +580,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   allResults_aspt <- cbind(site, allResults_aspt_sum)
 
   # Write all Results
-  all_summer <- cbind(allResults_aspt, allResultsSum, allResults , SiteMINTA_whpt_sum)
+  all_summer <- cbind(allResults_aspt, allResultsSum, allResults, SiteMINTA_whpt_sum)
 
   ### For ASPT outputs -----------------------------------------------------------------------------------
   # Find the averages of these across seasons aver#(spr, aut)

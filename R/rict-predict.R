@@ -181,8 +181,8 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
       "ALKALINITY"                =  data$ALKALINITY,
       "LOG.ALKALINITY"            =  data$vld_alkal_log,
       "LOG.SLOPE"                 =  data$vld_slope_log,
-      "MEAN.AIR.TEMP"             =  data$TMEAN,
-      "AIR.TEMP.RANGE"            =  data$TRANGE
+      "MEAN.AIR.TEMP"             =  data$TEMPM,
+      "AIR.TEMP.RANGE"            =  data$TEMPR
     )
   }
   if (area == "ni") {
@@ -207,8 +207,8 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
       "SITE"                     =  data$SITE,
       "LATITUDE"                 =  data$LATITUDE,
       "LONGITUDE"                =  data$LONGITUDE,
-      "TEMPM"                    =  data$TMEAN,
-      "TEMPR"                    =  data$TRANGE,
+      "TEMPM"                    =  data$TEMPM,
+      "TEMPR"                    =  data$TEMPR,
       "ALKALINITY"               =  data$ALKALINITY,
       "LgAlk"                    =  data$LgAlk,
       "LgArea_CEH"               =  data$LOG_AREA,

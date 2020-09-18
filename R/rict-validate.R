@@ -289,6 +289,12 @@ rict_validate <- function(data = NULL) {
 These values will be used instead of calculating them from Grid Reference values. ")
     }
   }
+  # Rename variables to match functional specifications
+  data$TEMPM <- data$TMEAN
+  data$TEMPR <- data$TRANGE
+  data$TMEAN <- NULL
+  data$TRANGE <- NULL
+
   # Calculate total substrate and phi grain size scale
   if (model == "physical") {
     data <- get_substrate(data)

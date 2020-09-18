@@ -19,15 +19,15 @@ An R package for calculating River Invertebrate Classification Tool (RICT) predi
 This R package is in development. Please don't use in production. Please use
 the [RICT
 website](https://www.fba.org.uk/FBA/Discover-and-Learn/Projects/RIVPACS-RICT/Public/Discover-and-Learn/Projects/RIVPACS-RICT-Landing-Page.aspx?hkey=72b27a8b-d566-4bab-b863-ca39545226ae)
-for offical documentation and links to the Azure experiments.
+for official documentation and links to the Azure experiments.
 
 ## Install
 
-Install [R](rstats.org/install) and also recommend installing [Rstudio](rstudio.com/install).
+Install [R](rstats.org/install) and we also recommend installing [Rstudio](rstudio.com/install).
 
-Open Rstudio.
-  
-In R: Install the development version from GitHub:
+Alternatively, use [R Cloud](https://rstudio.cloud) through your browser.
+
+In the R console, install the development version from GitHub:
 ```
 install.packages("devtools")
 library(devtools)
@@ -62,7 +62,7 @@ results <- rict(demo_gis_values_log, year_type = "single")
 ```
 ## Contributing 
 
-Please read the [Contributing guidelines](CONTRIBUTING.md) file for more details 
+Please read the [Contributing Guidelines](CONTRIBUTING.md) file for more details. 
 
 ## Code of Conduct
 

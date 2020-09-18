@@ -32,7 +32,7 @@ compute_RjAj <- function(Rj, Aj) {
 # ZObsir = = ZNormir * SDObsi # Random deviate for potential average observed value of index i in simulation r
 
 getZObs_r_new <- function(sdobs, N_sim) { # N_sim = no. of simulations
-  # set.seed(1234)
+  set.seed(1234)
   dframe <- as.data.frame(sdobs * stats::rnorm(N_sim, 0, 1)) ## With a mean of 0.0 and SD of 1.0 for index i in simulation r
   return(dframe)
 }
@@ -67,7 +67,7 @@ getObsIDXniner <- function(ObsIDX9, znorm_ir) {
 
 # Next Bias correction foir Ubias8
 getUbias8r_new <- function(N_sim, Ubias8) { # N_sim = no. of simulations, and  Ubias8 = 1.62
-  # set.seed(1234)
+  set.seed(1234)
   dframe <- as.data.frame(stats::rpois(N_sim, Ubias8)) ## With a mean of 0.0 and SD of 1.0 for index i in simulation r
   return(dframe)
 }
@@ -124,7 +124,7 @@ getAvgEQR_SprAut <- function(EQR_spr, EQR_aut, k, row_name = F) {
 # 5.4 Calculate Zbias9r - Random number deviate from a standard Normal distribution of mean 0.0 and SD of 1.0
 # zbias mean and standard deviation
 getZbias_9r <- function(N_sims, zbias_mean, zbias_sd) {
-  # set.seed(1234)
+  set.seed(1234)
   ZNorm_ir_whpt <- stats::rnorm(N_sims, 0, 1)
   return(ZNorm_ir_whpt)
 }

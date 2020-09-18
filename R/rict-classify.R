@@ -32,7 +32,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
     return(classification_results)
   } else {
     # set global random seed for rnorm functions etc
-    set.seed(1234)
+    # set.seed(1234)
     # Part 1: This Script reads all prediction indices for classification
     gb685_assess_score <- utils::read.csv(system.file("extdat",
       "end-grp-assess-scores.csv",

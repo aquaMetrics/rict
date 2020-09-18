@@ -1,7 +1,7 @@
 singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NULL) {
 
   # set global random seed for rnorm functions etc
-  set.seed(1234)
+  # set.seed(1234)
   # Part 1: This Script reads all prediction indices for classification
   gb685_assess_score <- utils::read.csv(system.file("extdat", "end-grp-assess-scores.csv", package = "rict"))
   adjusted_params <- utils::read.csv(system.file("extdat", "adjust-params-ntaxa-aspt.csv", package = "rict"))

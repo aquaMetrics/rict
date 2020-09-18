@@ -1,17 +1,19 @@
+# rict <img src='inst/extdat/images/rict-logo.png' align="right" height="139" />
+
 [![Travis-CI Build Status](https://travis-ci.org/aquaMetrics/rict.svg?branch=master)](https://travis-ci.org/aquaMetrics/rict)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/aquaMetrics/rict?branch=master&svg=true)](https://ci.appveyor.com/project/ecodata1/rict/branch/master)
 [![codecov](https://codecov.io/gh/aquaMetrics/rict/branch/master/graph/badge.svg)](https://codecov.io/gh/aquaMetrics/rict)
 
+## Overview
+
+An R package for calculating River Invertebrate Classification Tool (RICT) predictions
+
 # Work in progress
 
-This R package is in development. Please don't use in production. Please use see
+This R package is in development. Please don't use in production. Please use
 the [RICT
 website](https://www.fba.org.uk/FBA/Discover-and-Learn/Projects/RIVPACS-RICT/Public/Discover-and-Learn/Projects/RIVPACS-RICT-Landing-Page.aspx?hkey=72b27a8b-d566-4bab-b863-ca39545226ae)
 for offical documentation and links to the Azure experiments.
-
-## rict package
-
-An R package for calculating River Invertebrate Classification Tool (RICT) predictions
 
 ## Install
 

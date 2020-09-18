@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# rict <img src='inst/extdat/images/rict-logo.png' align="right" height="139" />
+# rict <img src='man/figures/rict_logo.png' align="right" height="139" />
 
 [![Travis-CI Build
 Status](https://travis-ci.org/aquaMetrics/rict.svg?branch=master)](https://travis-ci.org/aquaMetrics/rict)

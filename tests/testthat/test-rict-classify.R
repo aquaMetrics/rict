@@ -316,3 +316,16 @@ test_that("NI classification", {
   # however these status classes do still match for spring:
   expect_equal(classification$mostProb_NTAXA_spr, verfied_classification$mostProb_NTAXA_spr)
 })
+
+test_that("test reproducibility", {
+  # Are results the same no matter what order etc
+  test <- demo_observed_values[1:3, ]
+  test <- rbind(demo_observed_values[4:6, ], test)
+
+  # Change the order - switch first and second site/multi-year around
+  test1 <- rict(demo_observed_values[1:3, ])
+  test2 <- rict(test)
+  # First results from test1 should match second result from test2
+  expect_equal(as.numeric(as.character(test1$H_NTAXA_spr_aut)), as.numeric(as.character(test2$H_NTAXA_spr_aut[2])))
+})
+

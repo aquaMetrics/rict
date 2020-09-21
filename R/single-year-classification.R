@@ -636,5 +636,8 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   final[is.na(final$ASPT_eqr_av_aut), grep("aut", names(final))] <- NA
   final[is.na(final$eqr_av_sum_aspt), grep("sum", names(final))] <- NA
 
+  # Place SITE column at start
+  final <- dplyr::select(final, SITE, everything())
+
   return(final)
 }

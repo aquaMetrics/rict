@@ -1,3 +1,5 @@
+#' @importFrom dplyr select everything
+
 singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NULL) {
 
   # set global random seed for rnorm functions etc
@@ -637,7 +639,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   final[is.na(final$eqr_av_sum_aspt), grep("sum", names(final))] <- NA
 
   # Place SITE column at start
-  final <- dplyr::select(final, SITE, everything())
+  final <- select(final, SITE, everything())
 
   return(final)
 }

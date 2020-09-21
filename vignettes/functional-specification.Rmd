@@ -241,7 +241,7 @@ R locally. Azure does provide error [documentation](https://docs.microsoft.com/e
 
 * Packages not loading (fix by re-running the experiment). 
 * Dataframes must have row.names when exported from one Azure module to the next. 
-* Using namespaces on some Non-standard evaluation functions can sometimes cause issues, for instance `dplyr::summarise(data, dplyr::n())` - the `dplyr::n()` won't work. 
+* Using namespaces on some Non-standard evaluation functions can sometimes cause issues, for instance `dplyr::summarise(data, n())` - the `n()` won't work on Azure. Solution is not to use namespace but add  `#' @importFrom dplyr summarise n` to top of file.
   
 For initial release (2019), the GB Single year, GB multi-year and NI single year for
 WFD classification have been produced. These three experiments are available in

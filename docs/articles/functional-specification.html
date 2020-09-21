@@ -293,7 +293,7 @@ outline: 0 ;
 <ul>
 <li>Packages not loading (fix by re-running the experiment).</li>
 <li>Dataframes must have row.names when exported from one Azure module to the next.</li>
-<li>Using namespaces on some Non-standard evaluation functions can sometimes cause issues, for instance <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">dplyr::summarise(data, dplyr::n())</a></code> - the <code><a href="https://dplyr.tidyverse.org/reference/context.html">dplyr::n()</a></code> won’t work.</li>
+<li>Using namespaces on some Non-standard evaluation functions can sometimes cause issues, for instance <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">dplyr::summarise(data, n())</a></code> - the <code>n()</code> won’t work on Azure. Solution is not to use namespace but add <code>#' @importFrom dplyr summarise n</code> to top of file.</li>
 </ul>
 <p>For initial release (2019), the GB Single year, GB multi-year and NI single year for WFD classification have been produced. These three experiments are available in the Azure ML Studio gallery.</p>
 <p>The diagram below shows a diagrammatical representation of the main functionality of the RICT2 tool with numbered links to more detailed information.</p>
@@ -1772,9 +1772,9 @@ Bias (Ntaxa_Bias) Must be numeric</p>
 <li>Replace values of some EVs to prevent arithmetical problems, such as division by zero</li>
 </ul>
 <p>The required conversion rules and some validation rules that need to be applied are described below.</p>
-<div id="deriving-latitude-and-longitude-from-grid-references" class="section level2">
+<div id="convert-grid-references-and-british-national-grid-to-latitude-and-longitude" class="section level2">
 <h2 class="hasAnchor">
-<a href="#deriving-latitude-and-longitude-from-grid-references" class="anchor"></a><span class="header-section-number">6.1</span> Deriving Latitude and Longitude from Grid References</h2>
+<a href="#convert-grid-references-and-british-national-grid-to-latitude-and-longitude" class="anchor"></a><span class="header-section-number">6.1</span> Convert Grid References and British National Grid to Latitude and Longitude</h2>
 <p>Grid references consists of:</p>
 <p>nat_grid_ref = 2 letters for the British National Grid (BNG) or 1 letter for the Irish grid specifying a 100km x 100km grid square</p>
 <p>easting = 3 digit Easting within the 100km grid square (to nearest 100m)</p>
@@ -1785,6 +1785,7 @@ Bias (Ntaxa_Bias) Must be numeric</p>
 <p><code>getLatLong &lt;- function(nat_grid_ref, easting, northing, coordsys_latlon, area)</code></p>
 <p>where:</p>
 <p><code>nat_grid_ref</code>, are the grid letter(s), <code>easting</code> and <code>northing</code> from the user input file, <code>coordsys_latlon</code> uses the WGS84 system as described above and <code>area</code> is <code>gb</code> or <code>ni</code>.</p>
+<p>NOte, GIS model 44 data provides Lat/Lon in BNR in SX and SY columns. These are converted to lat and lon in the rict_validate.R function.</p>
 </div>
 <div id="latitude-and-longitude-for-ni" class="section level2">
 <h2 class="hasAnchor">
@@ -1795,7 +1796,7 @@ Bias (Ntaxa_Bias) Must be numeric</p>
 <h2 class="hasAnchor">
 <a href="#calculating-mean-and-range-of-air-temperature-from-latitude-and-longitude" class="anchor"></a><span class="header-section-number">6.3</span> Calculating Mean and Range of Air Temperature from Latitude and Longitude</h2>
 <p>This conversion process is only applicable to GB model sites.</p>
-<p>When converting Latitude and Longitude to Long Term Average Mean Temperature and Range of Air Temperature, RICT2 uses a data file containing previously derived values for Mean air temperature and Air temperature range for points in the centres of 5km interval grid squares. This data file can be found in the inst/ext directory and is called AirTempGrid.</p>
+<p>When converting Latitude and Longitude to Long Term Average Mean Temperature and Range of Air Temperature, RICT2 uses a data file containing previously derived values for Mean air temperature and Air temperature range for points in the centres of 5km interval grid squares. This data file can be found in the inst/ext directory and is called <code>air-temp-grid.csv</code>.</p>
 <p>To calculate Long Term Average Mean Temperature and Range of Air Temperature, the Latitude and Longitude previously derived is run through <code>calc-temperatures.R</code> within the prediction support files folder.</p>
 <p>The specific function code used within <code>calc-temperatures.R</code> is as below:</p>
 <p><code>calculated_temps &lt;- calcTemps(coordinates)</code></p>
@@ -3887,6 +3888,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <table class="table">
 <colgroup>
 <col width="0%">
+<col width="0%">
 <col width="1%">
 <col width="0%">
 <col width="0%">
@@ -3947,7 +3949,6 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <col width="1%">
 <col width="1%">
 <col width="1%">
-<col width="0%">
 <col width="2%">
 <col width="1%">
 <col width="0%">
@@ -3971,6 +3972,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <col width="1%">
 </colgroup>
 <thead><tr class="header">
+<th align="left">SITE</th>
 <th align="right">YEAR</th>
 <th align="left">WATERBODY</th>
 <th align="left">H_NTAXA_spr</th>
@@ -4032,7 +4034,6 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <th align="left">mintawhpt_spr_aut_M</th>
 <th align="left">mintawhpt_spr_aut_P</th>
 <th align="left">mintawhpt_spr_aut_B</th>
-<th align="left">SITE</th>
 <th align="left">mintawhpt_spr_aut_mostProb_MINTA_</th>
 <th align="right">eqr_av_sum_aspt</th>
 <th align="left">H_ASPT_sum</th>
@@ -4056,6 +4057,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <th align="left">mostProb_MINTA</th>
 </tr></thead>
 <tbody><tr class="odd">
+<td align="left">MYR-GB-01-R</td>
 <td align="right">2016</td>
 <td align="left">Waterbody name</td>
 <td align="left">90.59</td>
@@ -4117,7 +4119,6 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <td align="left">3.73</td>
 <td align="left">0.01</td>
 <td align="left">0</td>
-<td align="left">MYR-GB-01-R</td>
 <td align="left">H</td>
 <td align="right">0.97809</td>
 <td align="left">57.46</td>

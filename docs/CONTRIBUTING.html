@@ -124,7 +124,7 @@
 
 <div id="how-to-contribute-code-draft" class="section level2">
 <h2 class="hasAnchor">
-<a href="#how-to-contribute-code-draft" class="anchor"></a>How to contribute code (DRAFT)</h2>
+<a href="#how-to-contribute-code-draft" class="anchor"></a>How to Contribute Code (DRAFT)</h2>
 <p><span class="emoji" data-emoji="+1">👍</span><span class="emoji" data-emoji="tada">🎉</span> Hello and a warm welcome to guidelines for contributing code! <span class="emoji" data-emoji="tada">🎉</span><span class="emoji" data-emoji="+1">👍</span></p>
 <p>Thanks for taking the time to read these guidelines. This helps keep this code repository easy to maintain and the code easy to follow. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.</p>
 <div id="most-changes-to-code-should-follow-this-route" class="section level3">
@@ -132,98 +132,87 @@
 <a href="#most-changes-to-code-should-follow-this-route" class="anchor"></a>Most changes to code should follow this route:</h3>
 <div id="open-issue" class="section level4">
 <h4 class="hasAnchor">
-<a href="#open-issue" class="anchor"></a>Open issue</h4>
-<ul>
-<li>Open an <a href="https://github.com/aquaMetrics/rict/issues">issue</a> and describe what your update is planning to address</li>
-<li>It’s usually helpful to include a worked example of the update or issue</li>
-<li>If you are not a maintainer, wait for feedback and comments - maybe there are different approaches that need exploring</li>
-</ul>
+<a href="#open-issue" class="anchor"></a>Open Issue</h4>
+<ol>
+<li>Open an <a href="https://github.com/aquaMetrics/rict/issues">issue</a> and describe what your update is planning to address.</li>
+<li>It’s usually helpful to include a worked example of the update or issue.</li>
+<li>If you are not a maintainer, wait for feedback and comments - maybe there are different approaches that need exploring.</li>
+</ol>
 </div>
 </div>
 <div id="install-software" class="section level3">
 <h3 class="hasAnchor">
-<a href="#install-software" class="anchor"></a>Install software</h3>
+<a href="#install-software" class="anchor"></a>Install Software</h3>
 <div id="via-the-cloud---quick-and-easy" class="section level4">
 <h4 class="hasAnchor">
 <a href="#via-the-cloud---quick-and-easy" class="anchor"></a>Via the “Cloud” - <em>Quick and Easy!</em>
 </h4>
-<ul>
+<ol>
+<li>Go to <a href="https://github.com/aquaMetrics/rict" class="uri">https://github.com/aquaMetrics/rict</a> and click ‘fork’ in top right.</li>
 <li>Sign-up to <a href="https://rstudio.cloud">R Studio Cloud</a>.</li>
 <li>Click on New Project dropdown menu and select ‘New Project from Git repo’.</li>
-<li>Paste <code>https://github.com/aquaMetrics/rict</code>.</li>
+<li>Paste <code>https://github.com/YOUR-GITHUB-USERNAME/rict</code>. - replace <code>YOUR-GITHUB-USERNAME</code> or navigate to the forked repo you on your profile and copy paste URL.</li>
 <li>You can now make changes to the files - look in the ‘Files’ tab and look for ‘R’ folder where most R code is held.</li>
 <li>Add <code><a href="https://rdrr.io/r/base/browser.html">browser()</a></code> to the line above where you wish to add a breakpoint in the code/function.</li>
 <li>Now run the function, try typing in the console: <code><a href="reference/rict.html">rict(observed_demo_values)</a></code> - this will run most functions in the package.</li>
 <li>The code will break where you added the <code><a href="https://rdrr.io/r/base/browser.html">browser()</a></code> and you can investigate the values and see what needs changing etc.</li>
 <li>Make changes as required then ‘Install and Restart’.</li>
-<li>Once you are happy with the code run the test go to Create new branch section.</li>
-</ul>
+<li>Once you are happy with the code, go to ‘Commit’ section below.</li>
+</ol>
 </div>
-<div id="local-machine" class="section level4">
+<div id="via-local-machine" class="section level4">
 <h4 class="hasAnchor">
-<a href="#local-machine" class="anchor"></a>Local machine</h4>
-<ul>
-<li>install <a href="https://git-scm.com/">Git</a> on to your machine</li>
-<li>install <a href="https://cran.r-project.org/">R</a>
-</li>
-<li>install <a href="https://www.rstudio.com/">Rstudio</a> - recommended - other editors are available</li>
-</ul>
-</div>
-</div>
-<div id="create-new-branch" class="section level3">
-<h3 class="hasAnchor">
-<a href="#create-new-branch" class="anchor"></a>Create new branch</h3>
-<p>If you have admin/contributor rights on aquaMetrics team, you can create a new branch there. Click ‘Branch: …’ button on the main repository page. Then clone the repository to your local machine:</p>
-<pre><code>git clone https://github.com/aquaMetrics/rict
-cd phytobenthosMetrics/
-git checkout -b issue-??</code></pre>
-<p>(Replacing <code>??</code> with the issue number found on Github issue you created)</p>
-<p>The first two lines above will clone the repository and open the directory where the files have been copied to. The last line will ‘checkout’ and create new branch called issue-??. Now you can start work editing your new branch.</p>
-<p>Or using RStudio, use open &gt; new project &gt; version control &gt; paste url:</p>
-<p><code>https://github.com/aquaMetrics/rict</code></p>
-<ul>
-<li>If you created the branch on Github remember to Pull to Rstudio and change into that branch using the ‘Git’ panel</li>
-</ul>
-<div id="coding-style" class="section level4">
-<h4 class="hasAnchor">
-<a href="#coding-style" class="anchor"></a>Coding style</h4>
-<ul>
-<li>Do some coding and/or write documentation etc</li>
-<li>Add comments as required to explain the <em>why</em> rather than the <em>how</em>
-</li>
-<li>Not every line needs comments - but any large or unusual sections</li>
-<li>
-<a href="http://r-pkgs.had.co.nz/">R Package</a> guidance is a very useful resource
-</li>
-<li>Document code and follow standard CRAN checks and file structure <code><a href="https://devtools.r-lib.org//reference/check.html">devtools::check()</a></code>
-</li>
-<li>Run checks and tests locally - before commit <code><a href="https://devtools.r-lib.org//reference/check.html">devtools::check()</a></code>
-</li>
-<li>Testing allows check coding ‘style’ with rules from <a href="https://github.com/jimhester/lintr">lintr</a> package</li>
-<li>See .lintr file for exact linting rules applied during testing.</li>
-</ul>
+<a href="#via-local-machine" class="anchor"></a>Via Local Machine</h4>
+<ol>
+<li>Install <a href="https://git-scm.com/">Git</a> on to your machine.</li>
+<li>Install <a href="https://cran.r-project.org/">R</a>.</li>
+<li>Install <a href="https://www.rstudio.com/">Rstudio</a> - recommended - other editors are available.</li>
+<li>Click on New Project dropdown menu and select ‘New Project from Git repo’.</li>
+<li>Follow instructions in ‘Via the Cloud’ section above from number 5.</li>
+</ol>
 </div>
 <div id="commit" class="section level4">
 <h4 class="hasAnchor">
 <a href="#commit" class="anchor"></a>Commit</h4>
-<ul>
-<li>Commit message should reference the issue number e.g. ‘docs: closes #1’- the ‘#1’ is the issue number</li>
-<li>Not sure how to write a commit message? Try to use this <a href="https://gist.github.com/stephenparish/9941e89d80e2bc58a153#subject-line">commit message guidance</a>, although this is not enforced</li>
-<li>Push changes to remote branch.</li>
-</ul>
+<ol>
+<li>In the ‘Git’ panel commit select all the files you changes and click commit.</li>
+<li>Add a commit message which should reference the issue number e.g. ‘docs: closes #1’- the ‘#1’ is the issue number</li>
+<li>Not sure how to write a commit message? Try to use this <a href="https://gist.github.com/stephenparish/9941e89d80e2bc58a153#subject-line">commit message guidance</a>, although this is not enforced.</li>
+<li>Select ‘Push’ changes.</li>
+</ol>
 </div>
-<div id="pull-request" class="section level4">
-<h4 class="hasAnchor">
-<a href="#pull-request" class="anchor"></a>Pull request</h4>
-<ul>
-<li>On Github create a Pull Request to master branch from your issue-?? branch</li>
-<li>Wait for a maintainer to review, they will check no tests break, and the code has been tested as required</li>
-<li>Changes are merged to master and the ‘test-1’ branch deleted</li>
-</ul>
 </div>
+<div id="create-pull-request" class="section level3">
+<h3 class="hasAnchor">
+<a href="#create-pull-request" class="anchor"></a>Create Pull Request</h3>
+<ol>
+<li>On your github profile page select the forked rict repo. This will now include the recent changes you made.</li>
+<li>Near the top there is an option to create pull request (PR).</li>
+<li>Select create pull request and enter message reference issue number ‘#1’ that it fixes.</li>
+<li>The PR will be submitted and testing automatically run.</li>
+<li>Wait for response from maintainers.</li>
+</ol>
 <div id="all-done-" class="section level4">
 <h4 class="hasAnchor">
 <a href="#all-done-" class="anchor"></a>All Done! ☺</h4>
+</div>
+<div id="notes-on-coding-style--testing" class="section level4">
+<h4 class="hasAnchor">
+<a href="#notes-on-coding-style--testing" class="anchor"></a>Notes on Coding Style &amp; Testing</h4>
+<ol>
+<li>Add comments as required to explain the <em>why</em> rather than the <em>how</em>.</li>
+<li>Not every line needs comments - but any large or unusual sections.</li>
+<li>
+<a href="http://r-pkgs.had.co.nz/">R Package</a> guidance is a very useful resource for writing packages.</li>
+<li>Linting / styling code is not enforced but easy to do.</li>
+<li>Install styler package.</li>
+<li>Run styler to from ‘Addins’ menu.</li>
+<li>Testing allows check coding ‘style’ with rules from <a href="https://github.com/jimhester/lintr">lintr</a> package.</li>
+<li>But linting/style is not enforced (so failures are okay but not desired).</li>
+<li>Document code and follow standard CRAN checks and file structure <code><a href="https://devtools.r-lib.org//reference/check.html">devtools::check()</a></code>.</li>
+<li>Run tests locally - before commit <code><a href="https://devtools.r-lib.org//reference/test.html">devtools::test()</a></code>.</li>
+<li>See .lintr file for exact linting rules applied during testing.</li>
+</ol>
 </div>
 </div>
 </div>

@@ -2,6 +2,8 @@
 title: "Functional Specification"
 author: ""
 date: "`r Sys.Date()`"
+pkgdown:
+  as_is: true
 output: 
  rmarkdown::html_vignette:
   number_sections: yes
@@ -795,7 +797,7 @@ follows:
 The required conversion rules and some validation rules that need to be applied
 are described below.
 
-## Deriving Latitude and Longitude from Grid References
+## Convert Grid References and British National Grid to Latitude and Longitude 
 
 Grid references consists of:  
   
@@ -821,6 +823,9 @@ where:
 `nat_grid_ref`, are the grid letter(s), `easting` and `northing` from the user input file,
 `coordsys_latlon` uses the WGS84 system as described above and `area` is `gb` or `ni`.
 
+NOte, GIS model 44 data provides Lat/Lon in BNR in SX and SY columns. These are converted to lat and lon
+in the rict_validate.R function.
+
 ##  Latitude and Longitude for NI
 
 Same as above - `using area = "ni"` within `getLatLong()` function.
@@ -833,7 +838,7 @@ When converting Latitude and Longitude to Long Term Average Mean Temperature and
 Range of Air Temperature, RICT2 uses a data file containing previously derived
 values for Mean air temperature and Air temperature range for points in the
 centres of 5km interval grid squares. This data file can be found in the
-inst/ext directory and is called AirTempGrid.
+inst/ext directory and is called `air-temp-grid.csv`.
   
 To calculate Long Term Average Mean Temperature and Range of Air Temperature,
 the Latitude and Longitude previously derived is run through

@@ -1,5 +1,8 @@
 destination: docs
 
+pkgdown:
+  as_is: true
+
 template:
   params:
     noindex: true

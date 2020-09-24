@@ -56,19 +56,6 @@ outline: 0 ;
 ")
 ```
 
-
-```{r results="asis", echo=FALSE}
-# directly adding css to output html without ruining css style https://stackoverflow.com/questions/29291633/adding-custom-css-tags-to-an-rmarkdown-html-document
-cat("
-<style>
-img {
-border: 0px;
-outline: 0 ;
-}
-</style>
-")
-```
-
 # Introduction
 
 DRAFT!
@@ -997,9 +984,9 @@ centre point
   
 **Key**
 
-`●` Available data point  
-`◎` Data point included in the sample  
-`◌` Nearest point on the existing temperature grid to the site
+`0` Available data point  
+`1` Data point included in the sample  
+`5` Nearest point on the existing temperature grid to the site
   
 1. If the site has exactly the same coordinates as the centre point
 
@@ -1007,62 +994,62 @@ If the point has exactly the same coordinates as the centre point it samples
 only the centre point to provide the temperature mean and range if that point
 exists in the dataset:
 ```  
-● ● ● ● ●  
-● ● ● ● ●  
-● ● ◎ ● ●  
-● ● ● ● ●  
-● ● ● ● ● 
+0 0 0 0 0  
+0 0 0 0 0  
+0 0 1 0 0  
+0 0 0 0 0  
+0 0 0 0 0 
 ```
 If the centre point doesn't exist in the above example then the surrounding 8
 points are sampled, if more than 4 of the 8 pts are present within the dataset a
 value is returned:
 ```
-● ● ● ● ●   
-● ◎ ◎ ◎ ●   
-● ◎ ◌ ◌ ◌   
-● ◎ ◎ ◌ ◌   
-● ● ● ● ●   
+0 0 0 0 0   
+0 1 1 1 0   
+0 1 5 5 5   
+0 1 1 5 5   
+0 0 0 0 0   
 ```
 If the above condition is not satisfied then the sampling is expanded to include
 the adjacent points, if at least 5 of the 24 possible points are available a
 result is returned - if less than 5 no result is returned:
 ```
-◎ ◎ ◎ ◎ ◎     
-◎ ◎ ◌ ◌ ◌ 
-◎ ◎ ◌ ◌ ◌  
-◎ ◎ ◌ ◌ ◌   
-◎ ◎ ◎ ◎ ◎   
+1 1 1 1 1     
+1 1 5 5 5 
+1 1 5 5 5  
+1 1 5 5 5   
+1 1 1 1 1   
 ```
 2. If the site lies exactly on the N/S line of the centre point
   
 If the point lies exactly on the N/S line of the centre point then the nearest
 point and the one above are sampled if both points are present in the dataset:
 ```
-● ● ● ● ●   
-● ● ◎ ● ●   
-● ● ◎ ● ●   
-● ● ● ● ●   
-● ● ● ● ●   
+0 0 0 0 0   
+0 0 1 0 0   
+0 0 1 0 0   
+0 0 0 0 0   
+0 0 0 0 0   
 ```
 If one of the two points above is not present in the dataset then the two either
 side are also sampled, if more than three points are present a result is
 returned:
 ``` 
-● ● ● ● ●  
-● ◎ ◌ ◎ ●  
-● ◎ ◎ ◎ ●  
-● ● ● ● ●  
-● ● ● ● ●  
+0 0 0 0 0  
+0 1 5 1 0  
+0 1 1 1 0  
+0 0 0 0 0  
+0 0 0 0 0  
 ```
 If less than 4 of the 6 points above are present in the dataset then the three
 above and below are also sampled if that at least 4 of the 12 are present a
 result is returned:
 ```
-● ◎ ◎ ◎ ●  
-● ◎ ◌ ◌ ●  
-● ◎ ◎ ◌ ●  
-● ◎ ◎ ◎ ●  
-● ● ● ● ●  
+0 1 1 1 0  
+0 1 5 5 0  
+0 1 1 5 0  
+0 1 1 1 0  
+0 0 0 0 0  
 ```  
 3. if the site lies exactly on the E/W line of the centre point
 
@@ -1070,50 +1057,50 @@ If the point lies exactly on the E/W line of the centre point then the nearest
 point and the east of it will be sampled if both points are present in the
 dataset:
 ```
-● ● ● ● ●  
-● ● ● ● ●  
-● ● ◎ ◎ ●  
-● ● ● ● ●  
-● ● ● ● ●  
+0 0 0 0 0  
+0 0 0 0 0  
+0 0 1 1 0  
+0 0 0 0 0  
+0 0 0 0 0  
 ```
 If one of the two pointts above are not present in the dataset then the two
 either side are also sampled, if more than three points are present a result is
 returned:
 ``` 
-● ● ● ● ●  
-● ● ◎ ◎ ●  
-● ● ◎ ◎ ●  
-● ● ◎ ◎ ●  
-● ● ● ● ●   
+0 0 0 0 0  
+0 0 1 1 0  
+0 0 1 1 0  
+0 0 1 1 0  
+0 0 0 0 0   
 ```
 If less than  4 of the 6 points above are  present in the dataset then the three
 east and west are also sampled assuming that at least 4 of the 12 are present:
 ```
-● ● ● ● ●  
-● ◎ ◌ ◌ ◎   
-● ◎ ◎ ◌ ◎   
-● ◎ ◎ ◎ ◎   
-● ● ● ● ●  
+0 0 0 0 0  
+0 1 5 5 1   
+0 1 1 5 1   
+0 1 1 1 1   
+0 0 0 0 0  
 ```  
 4. If none of the above are satisfied - the majority of sites. The site is not coincident with any point or the n/s or e/w line of any point.
   
 Interpolates between four values, 3 of the 4 points must be present to return a
 value:
 ```
-● ● ● ● ●  
-● ● ◎ ◎ ●  
-● ● ◎ ◎ ●  
-● ● ● ● ●  
-● ● ● ● ●  
+0 0 0 0 0  
+0 0 1 1 0  
+0 0 1 1 0  
+0 0 0 0 0  
+0 0 0 0 0  
 ```
 If the above is not satisfied then the sampling is expanded to take in 16 points
 of which 5 or more must be present:
 ```  
-● ◎ ◎ ◎ ◎  
-● ◎ ◎ ◌ ◌     
-● ◎ ◎ ◌ ◌    
-● ◎ ◎ ◎ ◎  
-● ● ● ● ●  
+0 1 1 1 1  
+0 1 1 5 5     
+0 1 1 5 5    
+0 1 1 1 1  
+0 0 0 0 0  
 ```
 ## Calculating Mean Substratum Composition
 
@@ -1216,7 +1203,7 @@ The algorithm for estimating Alkalinity from the other values is:
 
 ```
 IF HARD is provided THEN  
-ALK = 4.677 + 0.6393*HARD  
+ALK = 4.677 + 0.6393*HARD  sudo apt install font-manager
 ELSE  
 IF CALCIUM is provided THEN  
 ALK = 14.552 + 1.7606*CALCIUM  

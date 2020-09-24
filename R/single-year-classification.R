@@ -101,7 +101,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   # Part 3:  Calculation of Exp_ref from "AdjustedExpected_new" values, divide
   # by K ( = 1.0049 for NTAXA,  = 0.9921 for ASPT)
   n_runs <- 10000
-  # ******* FOR ASPT ************
+  ### FOR ASPT ----------------------------------------------------------------------------------------------------
   Exp_ref_aspt <- aspt_adjusted / 0.9921
   Ubias8 <- ubias_main
 
@@ -119,7 +119,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   EQRAverages_aspt_spr <- data.frame() # Store average EQRs for spr in a dataframe
   EQRAverages_aspt_aut <- data.frame() # Store average EQRs for spr in a dataframe
   EQRAverages_aspt_sum <- data.frame()
-  ### For NTAXA -------------------------------------------------------------------------------------
+  ### For NTAXA --------------------------------------------------------------------------------------------
   Exp_ref_ntaxa <- ntaxa_adjusted / 1.0049 # select(adjusted_expected_new, contains("_NTAXA_"))/1.0049
 
   # Find the non-bias corrected  EQR = obs/ExpRef, from the raw inputs,
@@ -414,8 +414,9 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     a_aspt_spr_aut <- cbind(a_aspt_spr_aut, mostProb)
     SiteProbabilityclasses_spr_aut_comb_aspt <- rbind(SiteProbabilityclasses_spr_aut_comb_aspt, a_aspt_spr_aut)
 
-    ###  Calculate the MINTA - worse class = 5 i.e. max of class from NTAXA and ASPT ---------------------------
-    matrix_ntaxa_spr <- as.matrix(classArray_siteOne_spr_ntaxa)
+    ###  Calculate the MINTA ---------------------------------------------------------------------
+    # worse class = 5 i.e. max of class from NTAXA and ASPT
+     matrix_ntaxa_spr <- as.matrix(classArray_siteOne_spr_ntaxa)
     matrix_aspt_spr <- as.matrix(classArray_siteOne_spr_aspt)
     minta_ntaxa_aspt_spr <- getMINTA_ntaxa_aspt(
       as.matrix(classArray_siteOne_spr_ntaxa),

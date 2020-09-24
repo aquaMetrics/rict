@@ -22,8 +22,10 @@
 2. Sign-up to [R Studio Cloud](https://rstudio.cloud).
 3. Click on New Project dropdown menu and select 'New Project from Git repo'.
 4. Paste `https://github.com/YOUR-GITHUB-USERNAME/rict`. - replace `YOUR-GITHUB-USERNAME` or navigate to the forked repo you on your profile and copy paste URL.
+5. Next install package dependencies. In the Console tab type: `install.packages("devtools")` then `devtools::install_deps()` then enter `1` to install latest versions.
 5. You can now make changes to the files - look in the 'Files' tab and look for 'R' folder where most R code is held.
 6. Add `browser()` to the line above where you wish to  add a breakpoint in the code/function.
+7. In the Build tab select 'Install and Build'. 
 7. Now run the function, try typing in the console: `rict(observed_demo_values)` - this will run most functions in the package.
 8. The code will break where you added the `browser()` and you can investigate the values and see what needs changing etc.
 9. Make changes as required then 'Install and Restart'.

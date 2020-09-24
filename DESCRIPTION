@@ -38,14 +38,14 @@ Imports:
  DT,
  htmltools,
  leaflet,
- formattable
+ formattable,
+ rgdal
 Suggests: 
     testthat (>= 2.1.0),
     knitr,
     rmarkdown,
     devtools,
     covr,
-    rgdal,
     tidyr,
     png,
     qpdf

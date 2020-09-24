@@ -12,7 +12,7 @@ Status](https://ci.appveyor.com/api/projects/status/github/aquaMetrics/rict?bran
 ## Overview
 
 An R package for calculating River Invertebrate Classification Tool
-(RICT) predictions
+(RICT) predictions.
 
 # Work in progress
 

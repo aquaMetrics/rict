@@ -17,7 +17,6 @@
 #'  \item Replace values if value is less than the ‘overall’ minimum value.
 #'  \item Returns dataframe with passing values, warnings, fails.
 #' }
-#' See `validation` vignette for full details.
 #'
 #' @param data dataframe of observed environmental variables
 #' \describe{

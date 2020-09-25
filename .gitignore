@@ -6,3 +6,6 @@ inst/doc
 doc
 Meta
 rict.Rproj
+rict.Rcheck/
+rict*.tar.gz
+rict*.tgz

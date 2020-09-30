@@ -205,9 +205,9 @@
 <li>These tests check the code for any problems and compatibility by running on Windows, Linux and Mac.</li>
 <li>On the README document (displayed on the repo in github) are the ‘build’ badge icons - these indicate that all tests are running correctly in the cloud.</li>
 <li>The second build badge: <a href="https://ci.appveyor.com/project/ecodata1/rict/branch/master"><img src="https://ci.appveyor.com/api/projects/status/github/aquaMetrics/rict?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a> links to the Appveyor website which builds the package on Windows.</li>
-<li>Click this icon and go to the Appveyor website, if the package is successfully built, select the ‘Artifacts’ tab.</li>
+<li>Click this icon and go to the Appveyor website, if the package is successfully built, select the ‘Artifacts’ tab. Or open <a href="https://ci.appveyor.com/project/ecodata1/rict/branch/master/artifacts">Artifacts</a> page to go straight there.</li>
 <li>Within the Artifacts tab download the Windows binary package (e.g. rict-1.0.0.zip).</li>
-<li>Next, create an empty folder called <code>support-files</code> and then zip (compress) this folder to give: <code>support-files.zip</code>.</li>
+<li>Next, on your local file system, create an empty folder called <code>support-files</code> and then zip (compress) this folder to give: <code>support-files.zip</code>.</li>
 <li>Add the rict-1.0.0.zip into the <code>support-files.zip</code> folder.</li>
 <li>Within Azure, upload the <code>support-files.zip</code> - this will replace the pre-existing <code>support-files.zip</code>.</li>
 <li>Connect the new version of the support-files.zip to the experiment needing to be updated.</li>

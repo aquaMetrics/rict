@@ -4,7 +4,7 @@
 \alias{rict_validate}
 \title{Validate observed values}
 \usage{
-rict_validate(data = NULL)
+rict_validate(data = NULL, row = FALSE)
 }
 \arguments{
 \item{data}{dataframe of observed environmental variables
@@ -13,6 +13,13 @@ rict_validate(data = NULL)
   \item{Waterbody}{Water body identifier}
   ...
 }}
+
+\item{row}{Boolean - if set to `TRUE` returns the row number from the input file
+(data) for each check. This makes linking checks (fails/warns etc) to the
+associated row in the input data easier. This is more relevant if multiple
+samples from the same site and year are input as separate row to the
+`rict_validate`. In this case, SITE and YEAR are not enough to link
+validation checks to specific rows in the input data.}
 }
 \description{
 Low level function to validate input `data`. Returns list of dataframes
@@ -32,10 +39,9 @@ validation rules as required. Here is a summary of checks:
  \item Replace values if value is less than the ‘overall’ minimum value.
  \item Returns dataframe with passing values, warnings, fails.
 }
-See `validation` vignette for full details.
 }
 \examples{
 \dontrun{
-validations <- rict_validate(demo_observed_values)
+validations <- rict_validate(demo_observed_values,  row == TRUE)
 }
 }

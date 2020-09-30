@@ -55,7 +55,8 @@ Additional columns/variables calculated for example mean temperate.
 Logs failures and warnings applied using `validation_rules` table.
 Replace values if value is less than the ‘overall’ minimum value.
 Returns dataframe with passing values, warnings, fails.
-See `validation` vignette for full details." />
+
+" />
 
 <meta name="robots" content="noindex" />
 
@@ -156,10 +157,11 @@ validation rules as required. Here is a summary of checks:</p><ol>
 <li><p>Logs failures and warnings applied using `validation_rules` table.</p></li>
 <li><p>Replace values if value is less than the ‘overall’ minimum value.</p></li>
 <li><p>Returns dataframe with passing values, warnings, fails.</p></li>
-</ol><p>See `validation` vignette for full details.</p>
+</ol>
+
     </div>
 
-    <pre class="usage"><span class='fu'>rict_validate</span>(data = <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>rict_validate</span>(data = <span class='kw'>NULL</span>, row = <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,12 +175,21 @@ validation rules as required. Here is a summary of checks:</p><ol>
 
 </dl></td>
     </tr>
+    <tr>
+      <th>row</th>
+      <td><p>Boolean - if set to `TRUE` returns the row number from the input file
+(data) for each check. This makes linking checks (fails/warns etc) to the
+associated row in the input data easier. This is more relevant if multiple
+samples from the same site and year are input as separate row to the
+`rict_validate`. In this case, SITE and YEAR are not enough to link
+validation checks to specific rows in the input data.</p></td>
+    </tr>
     </table>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='kw'>validations</span> <span class='op'>&lt;-</span> <span class='fu'>rict_validate</span>(<span class='kw'>demo_observed_values</span>)
+<span class='kw'>validations</span> <span class='op'>&lt;-</span> <span class='fu'>rict_validate</span>(<span class='kw'>demo_observed_values</span>,  <span class='kw'>row</span> <span class='op'>==</span> <span class='fl'>TRUE</span>)
 }
 </div></pre>
   </div>

@@ -11,9 +11,10 @@
 
 #### Open Issue
 
-1. Open an [issue](https://github.com/aquaMetrics/rict/issues) and describe what your update is planning to address.
-2. It's usually helpful to include a worked example of the update or issue.
-3. If you are not a maintainer, wait for feedback and comments - maybe there are different approaches that need exploring.
+1. Sign-up to [Github](https://github.com).
+2. Open an [issue](https://github.com/aquaMetrics/rict/issues) and describe what your update is planning to address.
+3. It's usually helpful to include a worked example of the feature update or issue.
+4. If you are not a maintainer, wait for feedback and comments - maybe there are different approaches that need exploring.
 
 ### Install Software
 

@@ -1,4 +1,4 @@
-## How to Contribute Code (DRAFT)
+# How to Contribute Code
 
 :+1::tada: Hello and a warm welcome to guidelines for contributing code! :tada::+1:
 

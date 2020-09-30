@@ -152,14 +152,14 @@
 <li>Sign-up to <a href="https://rstudio.cloud">R Studio Cloud</a>.</li>
 <li>Click on New Project dropdown menu and select ‘New Project from Git repo’.</li>
 <li>Paste <code>https://github.com/YOUR-GITHUB-USERNAME/rict</code>. - replace <code>YOUR-GITHUB-USERNAME</code> or navigate to the forked repo you on your profile and copy paste URL.</li>
-<li>Next install package dependencies. In the Console tab type: <code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages("devtools")</a></code> then <code><a href="https://devtools.r-lib.org//reference/install_deps.html">devtools::install_deps()</a></code> then enter <code>1</code> to install latest versions.</li>
+<li>Next install package dependencies. In the Console panel type: <code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages("devtools")</a></code> then <code><a href="https://devtools.r-lib.org//reference/install_deps.html">devtools::install_dev_deps()</a></code> then enter <code>1</code> to install latest versions.</li>
 <li>You can now make changes to the files - look in the ‘Files’ tab and look for ‘R’ folder where most R code is held.</li>
 <li>Add <code><a href="https://rdrr.io/r/base/browser.html">browser()</a></code> to the line above where you wish to add a breakpoint in the code/function.</li>
 <li>In the Build tab select ‘Install and Build’.</li>
 <li>Now run the function, try typing in the console: <code><a href="reference/rict.html">rict(observed_demo_values)</a></code> - this will run most functions in the package.</li>
 <li>The code will break where you added the <code><a href="https://rdrr.io/r/base/browser.html">browser()</a></code> and you can investigate the values and see what needs changing etc.</li>
 <li>Make changes as required then ‘Install and Restart’.</li>
-<li>Once you are happy with the code, go to ‘Commit’ section below.</li>
+<li>Once you are happy with the code, go to ‘Commit’ section below. Note, if you have updated documentation, run <code><a href="https://pkgdown.r-lib.org/reference/build_site.html">pkgdown::build_site()</a></code> in the console, this will update package website when your changes are merged: <a href="https://aquametrics.github.io/rict/" class="uri">https://aquametrics.github.io/rict/</a>.</li>
 </ol>
 </div>
 <div id="via-local-machine" class="section level4">
@@ -177,8 +177,10 @@
 <h4 class="hasAnchor">
 <a href="#commit" class="anchor"></a>Commit</h4>
 <ol>
-<li>In the ‘Git’ panel commit select all the files you changes and click commit.</li>
-<li>Add a commit message which should reference the issue number e.g. ‘docs: closes #1’- the ‘#1’ is the issue number</li>
+<li>This step is only needed on your first commit, select the Terminal panel (in lower left) type:<br><code>git config --global user.email "your.email@address.co.uk"</code><br><code>git config --global user.name "YOUR_GITHUB_USERNAME"</code><br>
+(changing the email and username to match your own)</li>
+<li>In the ‘Git’ panel (top-right) commit select all the files you changed and click commit.</li>
+<li>Add a commit message (which if applicable, includes the reference to the issue number e.g. ‘docs: closes #1’- the ‘#1’ is the issue number)</li>
 <li>Not sure how to write a commit message? Try to use this <a href="https://gist.github.com/stephenparish/9941e89d80e2bc58a153#subject-line">commit message guidance</a>, although this is not enforced.</li>
 <li>Select ‘Push’ changes.</li>
 </ol>
@@ -193,6 +195,22 @@
 <li>Select create pull request and enter message reference issue number ‘#1’ that it fixes.</li>
 <li>The PR will be submitted and testing automatically run.</li>
 <li>Wait for response from maintainers.</li>
+</ol>
+</div>
+<div id="updating-azure-experiments" class="section level3">
+<h3 class="hasAnchor">
+<a href="#updating-azure-experiments" class="anchor"></a>Updating Azure Experiments</h3>
+<ol>
+<li>After, your PR is merged to master branch, automatic tests and builds will be run in “the cloud”.</li>
+<li>These tests check the code for any problems and compatibility by running on Windows, Linux and Mac.</li>
+<li>On the README document (displayed on the repo in github) are the ‘build’ badge icons - these indicate that all tests are running correctly in the cloud.</li>
+<li>The second build badge: <a href="https://ci.appveyor.com/project/ecodata1/rict/branch/master"><img src="https://ci.appveyor.com/api/projects/status/github/aquaMetrics/rict?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a> links to the Appveyor website which builds the package on Windows.</li>
+<li>Click this icon and go to the Appveyor website, if the package is successfully built, select the ‘Artifacts’ tab.</li>
+<li>Within the Artifacts tab download the Windows binary package (e.g. rict-1.0.0.zip).</li>
+<li>Next, create an empty folder called <code>support-files</code> and then zip (compress) this folder to give: <code>support-files.zip</code>.</li>
+<li>Add the rict-1.0.0.zip into the <code>support-files.zip</code> folder.</li>
+<li>Within Azure, upload the <code>support-files.zip</code> - this will replace the pre-existing <code>support-files.zip</code>.</li>
+<li>Connect the new version of the support-files.zip to the experiment needing to be updated.</li>
 </ol>
 <div id="all-done-" class="section level4">
 <h4 class="hasAnchor">

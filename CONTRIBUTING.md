@@ -22,14 +22,14 @@
 2. Sign-up to [R Studio Cloud](https://rstudio.cloud).
 3. Click on New Project dropdown menu and select 'New Project from Git repo'.
 4. Paste `https://github.com/YOUR-GITHUB-USERNAME/rict`. - replace `YOUR-GITHUB-USERNAME` or navigate to the forked repo you on your profile and copy paste URL.
-5. Next install package dependencies. In the Console panel type: `install.packages("devtools")` then `devtools::install_deps()` then enter `1` to install latest versions.
+5. Next install package dependencies. In the Console panel type: `install.packages("devtools")` then `devtools::install_dev_deps()` then enter `1` to install latest versions.
 5. You can now make changes to the files - look in the 'Files' tab and look for 'R' folder where most R code is held.
 6. Add `browser()` to the line above where you wish to  add a breakpoint in the code/function.
 7. In the Build tab select 'Install and Build'. 
 7. Now run the function, try typing in the console: `rict(observed_demo_values)` - this will run most functions in the package.
 8. The code will break where you added the `browser()` and you can investigate the values and see what needs changing etc.
 9. Make changes as required then 'Install and Restart'.
-10. Once you are happy with the code, go to 'Commit' section below.
+10. Once you are happy with the code, go to 'Commit' section below. Note, if you have updated documentation, run `pkgdown::build_site()` in the console, this will update package website when your changes are merged: https://aquametrics.github.io/rict/.
 
 #### Via Local Machine
 1. Install [Git](https://git-scm.com/) on to your machine.
@@ -64,7 +64,7 @@
 3. On the README document (displayed on the repo in github) are the 'build' badge icons - these indicate that all tests are running correctly in the cloud.
 4. The second build badge: [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/aquaMetrics/rict?branch=master&svg=true)](https://ci.appveyor.com/project/ecodata1/rict/branch/master) links to the Appveyor website which builds the package on Windows.
 5. Click this icon and go to the Appveyor website, if the package is successfully built, select the 'Artifacts' tab.
-6. Within the Artifacts tab download the Windows binary package (rict-1.0.0.zip)
+6. Within the Artifacts tab download the Windows binary package (e.g. rict-1.0.0.zip).
 7. Next, create an empty folder called `support-files` and then zip (compress) this folder to give: `support-files.zip`.
 8. Add the rict-1.0.0.zip into the `support-files.zip` folder.
 9. Within Azure, upload the `support-files.zip` - this will replace the pre-existing `support-files.zip`.

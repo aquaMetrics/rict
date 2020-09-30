@@ -24,6 +24,12 @@
 #'   \item{Waterbody}{Water body identifier}
 #'   ...
 #' }
+#' @param row Boolean - if set to `TRUE` returns the row number from the input file
+#'   (data) for each check. This makes linking checks (fails/warns etc) to the
+#'   associated row in the input data easier. This is more relevant if multiple
+#'   samples from the same site and year are input as separate row to the
+#'   `rict_validate`. In this case, SITE and YEAR are not enough to link
+#'   validation checks to specific rows in the input data.
 #'
 #'
 #' @export
@@ -35,9 +41,9 @@
 #'
 #' @examples
 #' \dontrun{
-#' validations <- rict_validate(demo_observed_values)
+#' validations <- rict_validate(demo_observed_values,  row == TRUE)
 #' }
-rict_validate <- function(data = NULL) {
+rict_validate <- function(data = NULL, row = FALSE) {
   ### Sense checks --------------------------------------------------------------------
   # Check data object provided
   if (is.null(data)) {
@@ -322,13 +328,15 @@ These values will be used instead of calculating them from Grid Reference values
   data <- dplyr::bind_cols(data, columns)
 
   ### Check values pass validation rules ----------------------------------------------------------
+  # Add row variables to link data input rows to row in the validation check dataframe
+  data$ROW <- seq_len(nrow(data))
   # Loop through each variable in validation rules dataframe
   checks <- lapply(split(
     validation_rules[validation_rules$variable %in% names(data), ],
     validation_rules$variable[validation_rules$variable %in% names(data)]
   ), function(rule) {
     # find matching column in input data to validation rule
-    values <- data[, c(rule$variable, "SITE", "YEAR")]
+    values <- data[, c(rule$variable, "ROW", "SITE", "YEAR")]
     # skip optional column if contains only NA values - e.g. HARDNESS - this
     # column will be class logical and not as expected by validation rules
     if (!all(is.na(values[, rule$variable]) & rule$optional == TRUE)) {
@@ -336,6 +344,7 @@ These values will be used instead of calculating them from Grid Reference values
       checks <- lapply(split(values, row.names(values)), function(value) {
         # make dataframe to hold checks
         check <- data.frame(
+          "ROW" = "",
           "SITE" = "",
           "YEAR" = "",
           "FAIL" = "",
@@ -422,6 +431,7 @@ These values will be used instead of calculating them from Grid Reference values
         checks <- dplyr::bind_rows(
           check,
           test <- data.frame(
+            "ROW" = as.character(value$ROW),
             "SITE" = value$SITE,
             "YEAR" = as.character(value$YEAR),
             "FAIL" = fails,
@@ -440,6 +450,7 @@ These values will be used instead of calculating them from Grid Reference values
   ### Add discharge and velocity columns missing data fails ---------------------------
   discharge_velocity_fails <- data[is.na(data$DISCHARGE) & is.na(data$VELO_DUMMY), ]
   discharge_velocity_fails <- data.frame(
+    "ROW" = discharge_velocity_fails$ROW,
     "SITE" = discharge_velocity_fails$SITE,
     "YEAR" = discharge_velocity_fails$YEAR,
     stringsAsFactors = FALSE
@@ -516,6 +527,10 @@ These values will be used instead of calculating them from Grid Reference values
     stop("You provided data that has failure(s) on every row.
        We expect at least one row without any fails to proceed.
        HINT: Check fail messages, fix errors and re-try.", call. = FALSE)
+  }
+
+  if (row == FALSE) {
+    checks$ROW  <- NULL
   }
 
   return(list("data" = data, "checks" = checks, "model" = model, "area" = area))

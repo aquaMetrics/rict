@@ -204,4 +204,14 @@ test_that("changes/formatting that shouldn't impact calculations", {
   test <- rict_validate(test_data)[[1]]
   expect_equal(as.character(unique(test$EASTING)), "00354")
   expect_equal(as.character(unique(test$NORTHING)), "09200")
+  # test row = TRUE (used to match checks to input data)
+  data <- rict::demo_observed_values
+  data$Slope[2] <- 151
+  data$Altitude[2] <- 700
+  data$Slope[8] <- 151
+  data$Altitude[8] <- 700
+  data$ROW <- seq_len(nrow(data))
+  test <- rict_validate(data, row = TRUE)
+  checks_data <- merge(data, test$checks, by.x = "ROW", by.y = "ROW")
+  expect_equal(nrow(checks_data), 4)
 })

@@ -56,9 +56,10 @@ outline: 0 ;
 ")
 ```
 
-# Introduction
 
-DRAFT!
+`r embed_png("images/rict_logo.png", dpi = 420)`
+
+# Introduction 
 
 ## Purpose of the document
 
@@ -1137,7 +1138,7 @@ The conversion from user-supplied velocity category (VEL) to discharge category
 
 |Velocity category VELC(VEL) |Velocity Category(VEL) (cm.s^-1^) | Mid-range estimate VELC(VEL) (cm.s^-1^)|
 |:---------------------------|:-------------------------------|:-------------------------------------|
-|1                           |≤10                             |5                                     | 
+|1                           |$≤$10                           |5                                     | 
 |2                           |>10 – 25                        |17.5                                  | 
 |3                           |>25 – 50                        |37.5                                  | 
 |4                           |>50 – 100                       |75                                    | 
@@ -1687,7 +1688,7 @@ to each of the 43 GB Model End-groups, then:
   
 ```ParamJ_Prob = End_Group_Prob  x ParamJ```
 		  
-(iv) Use a software multi-way table function using columns (4, 3, 7, 5, 6, 8, 9, 10,) in that order) as multi-way table classifiers) and then sum the column ‘ParamJ_Prob’ across all 43 ‘End-groups’ which it will do by default in any sum function as ‘End_Group’ is not one of the table classifiers.  
+(iv) Use a software multi-way table function using columns (4, 3, 7, 5, 6, 8, 9, 10,) in that order as multi-way table classifiers and then sum the column ‘ParamJ_Prob’ across all 43 ‘End-groups’ which it will do by default in any sum function as ‘End_Group’ is not one of the table classifiers.  
   
 (v)	You actually want to use a multi-way table function which creates a new output set of columns with one new column for each table classifier and one for the sum across end-groups of the column ‘ParamJ_Prob’  
   

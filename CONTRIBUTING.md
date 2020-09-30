@@ -22,7 +22,7 @@
 2. Sign-up to [R Studio Cloud](https://rstudio.cloud).
 3. Click on New Project dropdown menu and select 'New Project from Git repo'.
 4. Paste `https://github.com/YOUR-GITHUB-USERNAME/rict`. - replace `YOUR-GITHUB-USERNAME` or navigate to the forked repo you on your profile and copy paste URL.
-5. Next install package dependencies. In the Console tab type: `install.packages("devtools")` then `devtools::install_deps()` then enter `1` to install latest versions.
+5. Next install package dependencies. In the Console panel type: `install.packages("devtools")` then `devtools::install_deps()` then enter `1` to install latest versions.
 5. You can now make changes to the files - look in the 'Files' tab and look for 'R' folder where most R code is held.
 6. Add `browser()` to the line above where you wish to  add a breakpoint in the code/function.
 7. In the Build tab select 'Install and Build'. 
@@ -40,10 +40,14 @@
 
 #### Commit
 
-1. In the 'Git' panel commit select all the files you changes and click commit.
-2. Add a commit message which should reference the issue number e.g. 'docs: closes #1'- the '#1' is the issue number
-3. Not sure how to write a commit message? Try to use this [commit message guidance](https://gist.github.com/stephenparish/9941e89d80e2bc58a153#subject-line), although this is not enforced.
-4. Select 'Push' changes.
+1. This step is only needed on your first commit, select the Terminal panel (in lower left) type:  
+ `git config --global user.email "your.email@address.co.uk"`  
+ `git config --global user.name "YOUR_GITHUB_USERNAME"`  
+ (changing the email and username to match your own)
+2. In the 'Git' panel (top-right) commit select all the files you changed and click commit.
+3. Add a commit message (which if applicable, includes the reference to the issue number e.g. 'docs: closes #1'- the '#1' is the issue number)
+4. Not sure how to write a commit message? Try to use this [commit message guidance](https://gist.github.com/stephenparish/9941e89d80e2bc58a153#subject-line), although this is not enforced.
+5. Select 'Push' changes.
 
 ### Create Pull Request
 
@@ -52,6 +56,19 @@
 3. Select create pull request and enter message reference issue number '#1' that it fixes.
 4. The PR will be submitted and testing automatically run.
 5. Wait for response from maintainers.
+
+### Updating Azure Experiments
+
+1. After, your PR is merged to master branch, automatic tests and builds will be run in "the cloud".
+2. These tests check the code for any problems and compatibility by running on Windows, Linux and Mac.
+3. On the README document (displayed on the repo in github) are the 'build' badge icons - these indicate that all tests are running correctly in the cloud.
+4. The second build badge: [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/aquaMetrics/rict?branch=master&svg=true)](https://ci.appveyor.com/project/ecodata1/rict/branch/master) links to the Appveyor website which builds the package on Windows.
+5. Click this icon and go to the Appveyor website, if the package is successfully built, select the 'Artifacts' tab.
+6. Within the Artifacts tab download the Windows binary package (rict-1.0.0.zip)
+7. Next, create an empty folder called `support-files` and then zip (compress) this folder to give: `support-files.zip`.
+8. Add the rict-1.0.0.zip into the `support-files.zip` folder.
+9. Within Azure, upload the `support-files.zip` - this will replace the pre-existing `support-files.zip`.
+10. Connect the new version of the support-files.zip to the experiment needing to be updated.
 
 #### All Done! ☺
 
@@ -68,7 +85,4 @@
 9. Document code and follow standard CRAN checks and file structure `devtools::check()`.
 10. Run tests locally - before commit `devtools::test()`.
 11. See .lintr file for exact linting rules applied during testing.
-
-
-
 

@@ -97,10 +97,10 @@ border: 0px;
 outline: 0 ;
 }
 </style>
+<p><img src="images/rict_logo.png" width="118" height="137"></p>
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a><span class="header-section-number">1</span> Introduction</h1>
-<p>DRAFT!</p>
 <div id="purpose-of-the-document" class="section level2">
 <h2 class="hasAnchor">
 <a href="#purpose-of-the-document" class="anchor"></a><span class="header-section-number">1.1</span> Purpose of the document</h2>
@@ -2049,7 +2049,7 @@ MSUBST = ( -7.75*BOULDER_COBBLES - 3.25*PEBBLES_GRAVEL + 2*SAND + 8*SILT_CLAY ) 
 <tbody>
 <tr class="odd">
 <td align="left">1</td>
-<td align="left">≤10</td>
+<td align="left">$≤$10</td>
 <td align="left">5</td>
 </tr>
 <tr class="even">
@@ -2580,7 +2580,7 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 </ol>
 <p><code>ParamJ_Prob = End_Group_Prob  x ParamJ</code></p>
 <ol start="4" style="list-style-type: lower-roman">
-<li><p>Use a software multi-way table function using columns (4, 3, 7, 5, 6, 8, 9, 10,) in that order) as multi-way table classifiers) and then sum the column ‘ParamJ_Prob’ across all 43 ‘End-groups’ which it will do by default in any sum function as ‘End_Group’ is not one of the table classifiers.</p></li>
+<li><p>Use a software multi-way table function using columns (4, 3, 7, 5, 6, 8, 9, 10,) in that order as multi-way table classifiers and then sum the column ‘ParamJ_Prob’ across all 43 ‘End-groups’ which it will do by default in any sum function as ‘End_Group’ is not one of the table classifiers.</p></li>
 <li><p>You actually want to use a multi-way table function which creates a new output set of columns with one new column for each table classifier and one for the sum across end-groups of the column ‘ParamJ_Prob’</p></li>
 <li><p>In fact, if you can do this for one of 8 taxonomic parameters, you could probably do it for all 8 parameters at one step, having first derived the 8 intermediary columns: Param1_Prob, Param2_Prob,… , Param8_Prob</p></li>
 </ol>

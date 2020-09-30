@@ -31,3 +31,8 @@ sticker(p,
   package = "rict", p_color = "#EEC900", p_size = 45, s_x = 1, s_y = 0.7, s_width = 1.2, s_height = 1, h_color = "#EEC900",
   filename = "man/figures/rict_logo.png", white_around_sticker = T, l_x = 1, l_y = 0.8, spotlight = TRUE
 )
+
+sticker(p,
+        package = "rict", p_color = "#EEC900", p_size = 45, s_x = 1, s_y = 0.7, s_width = 1.2, s_height = 1, h_color = "#EEC900",
+        filename = "inst/extdat/images/rict_logo.png", white_around_sticker = T, l_x = 1, l_y = 0.8, spotlight = TRUE
+)

@@ -48,6 +48,7 @@ Suggests:
     covr,
     tidyr,
     png,
-    qpdf
+    qpdf,
+    pkgdown
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

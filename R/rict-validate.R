@@ -41,7 +41,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' validations <- rict_validate(demo_observed_values,  row == TRUE)
+#' validations <- rict_validate(demo_observed_values,  row = TRUE)
 #' }
 rict_validate <- function(data = NULL, row = FALSE) {
   ### Sense checks --------------------------------------------------------------------

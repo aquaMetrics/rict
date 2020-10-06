@@ -8,6 +8,9 @@ warnings_are_errors: false
 r:
   - oldrel
 
+before_install:
+  - sudo apt-get -y install libharfbuzz-dev libfribidi-dev
+
 addons:
   apt:
     sources:

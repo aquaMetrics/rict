@@ -82,7 +82,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Functional Specification</h1>
             
-            <h4 class="date">2020-09-22</h4>
+            <h4 class="date">2020-09-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/aquaMetrics/rict/blob/master/vignettes/functional-specification.Rmd"><code>vignettes/functional-specification.Rmd</code></a></small>
       <div class="hidden name"><code>functional-specification.Rmd</code></div>
@@ -97,10 +97,10 @@ border: 0px;
 outline: 0 ;
 }
 </style>
+<p><img src="images/rict_logo.png" width="118" height="137"></p>
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a><span class="header-section-number">1</span> Introduction</h1>
-<p>DRAFT!</p>
 <div id="purpose-of-the-document" class="section level2">
 <h2 class="hasAnchor">
 <a href="#purpose-of-the-document" class="anchor"></a><span class="header-section-number">1.1</span> Purpose of the document</h2>
@@ -1934,85 +1934,85 @@ TempGrid_out&lt;-as.data.frame(TempGrid_out)
 }</code></pre>
 <p>The temperature grid below is used to obtain mean air temperature and mean air temperature range for RICT predictions. The dots represent points on the existing temperature grid if the site has exactly the same coordinates as the centre point</p>
 <p><strong>Key</strong></p>
-<p><code>●</code> Available data point<br><code>◎</code> Data point included in the sample<br><code>◌</code> Nearest point on the existing temperature grid to the site</p>
+<p><code>0</code> Available data point<br><code>1</code> Data point included in the sample<br><code>5</code> Nearest point on the existing temperature grid to the site</p>
 <ol style="list-style-type: decimal">
 <li>If the site has exactly the same coordinates as the centre point</li>
 </ol>
 <p>If the point has exactly the same coordinates as the centre point it samples only the centre point to provide the temperature mean and range if that point exists in the dataset:</p>
-<pre><code>● ● ● ● ●  
-● ● ● ● ●  
-● ● ◎ ● ●  
-● ● ● ● ●  
-● ● ● ● ● </code></pre>
+<pre><code>0 0 0 0 0  
+0 0 0 0 0  
+0 0 1 0 0  
+0 0 0 0 0  
+0 0 0 0 0 </code></pre>
 <p>If the centre point doesn’t exist in the above example then the surrounding 8 points are sampled, if more than 4 of the 8 pts are present within the dataset a value is returned:</p>
-<pre><code>● ● ● ● ●   
-● ◎ ◎ ◎ ●   
-● ◎ ◌ ◌ ◌   
-● ◎ ◎ ◌ ◌   
-● ● ● ● ●   </code></pre>
+<pre><code>0 0 0 0 0   
+0 1 1 1 0   
+0 1 5 5 5   
+0 1 1 5 5   
+0 0 0 0 0   </code></pre>
 <p>If the above condition is not satisfied then the sampling is expanded to include the adjacent points, if at least 5 of the 24 possible points are available a result is returned - if less than 5 no result is returned:</p>
-<pre><code>◎ ◎ ◎ ◎ ◎     
-◎ ◎ ◌ ◌ ◌ 
-◎ ◎ ◌ ◌ ◌  
-◎ ◎ ◌ ◌ ◌   
-◎ ◎ ◎ ◎ ◎   </code></pre>
+<pre><code>1 1 1 1 1     
+1 1 5 5 5 
+1 1 5 5 5  
+1 1 5 5 5   
+1 1 1 1 1   </code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>If the site lies exactly on the N/S line of the centre point</li>
 </ol>
 <p>If the point lies exactly on the N/S line of the centre point then the nearest point and the one above are sampled if both points are present in the dataset:</p>
-<pre><code>● ● ● ● ●   
-● ● ◎ ● ●   
-● ● ◎ ● ●   
-● ● ● ● ●   
-● ● ● ● ●   </code></pre>
+<pre><code>0 0 0 0 0   
+0 0 1 0 0   
+0 0 1 0 0   
+0 0 0 0 0   
+0 0 0 0 0   </code></pre>
 <p>If one of the two points above is not present in the dataset then the two either side are also sampled, if more than three points are present a result is returned:</p>
-<pre><code>● ● ● ● ●  
-● ◎ ◌ ◎ ●  
-● ◎ ◎ ◎ ●  
-● ● ● ● ●  
-● ● ● ● ●  </code></pre>
+<pre><code>0 0 0 0 0  
+0 1 5 1 0  
+0 1 1 1 0  
+0 0 0 0 0  
+0 0 0 0 0  </code></pre>
 <p>If less than 4 of the 6 points above are present in the dataset then the three above and below are also sampled if that at least 4 of the 12 are present a result is returned:</p>
-<pre><code>● ◎ ◎ ◎ ●  
-● ◎ ◌ ◌ ●  
-● ◎ ◎ ◌ ●  
-● ◎ ◎ ◎ ●  
-● ● ● ● ●  </code></pre>
+<pre><code>0 1 1 1 0  
+0 1 5 5 0  
+0 1 1 5 0  
+0 1 1 1 0  
+0 0 0 0 0  </code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>if the site lies exactly on the E/W line of the centre point</li>
 </ol>
 <p>If the point lies exactly on the E/W line of the centre point then the nearest point and the east of it will be sampled if both points are present in the dataset:</p>
-<pre><code>● ● ● ● ●  
-● ● ● ● ●  
-● ● ◎ ◎ ●  
-● ● ● ● ●  
-● ● ● ● ●  </code></pre>
+<pre><code>0 0 0 0 0  
+0 0 0 0 0  
+0 0 1 1 0  
+0 0 0 0 0  
+0 0 0 0 0  </code></pre>
 <p>If one of the two pointts above are not present in the dataset then the two either side are also sampled, if more than three points are present a result is returned:</p>
-<pre><code>● ● ● ● ●  
-● ● ◎ ◎ ●  
-● ● ◎ ◎ ●  
-● ● ◎ ◎ ●  
-● ● ● ● ●   </code></pre>
+<pre><code>0 0 0 0 0  
+0 0 1 1 0  
+0 0 1 1 0  
+0 0 1 1 0  
+0 0 0 0 0   </code></pre>
 <p>If less than 4 of the 6 points above are present in the dataset then the three east and west are also sampled assuming that at least 4 of the 12 are present:</p>
-<pre><code>● ● ● ● ●  
-● ◎ ◌ ◌ ◎   
-● ◎ ◎ ◌ ◎   
-● ◎ ◎ ◎ ◎   
-● ● ● ● ●  </code></pre>
+<pre><code>0 0 0 0 0  
+0 1 5 5 1   
+0 1 1 5 1   
+0 1 1 1 1   
+0 0 0 0 0  </code></pre>
 <ol start="4" style="list-style-type: decimal">
 <li>If none of the above are satisfied - the majority of sites. The site is not coincident with any point or the n/s or e/w line of any point.</li>
 </ol>
 <p>Interpolates between four values, 3 of the 4 points must be present to return a value:</p>
-<pre><code>● ● ● ● ●  
-● ● ◎ ◎ ●  
-● ● ◎ ◎ ●  
-● ● ● ● ●  
-● ● ● ● ●  </code></pre>
+<pre><code>0 0 0 0 0  
+0 0 1 1 0  
+0 0 1 1 0  
+0 0 0 0 0  
+0 0 0 0 0  </code></pre>
 <p>If the above is not satisfied then the sampling is expanded to take in 16 points of which 5 or more must be present:</p>
-<pre><code>● ◎ ◎ ◎ ◎  
-● ◎ ◎ ◌ ◌     
-● ◎ ◎ ◌ ◌    
-● ◎ ◎ ◎ ◎  
-● ● ● ● ●  </code></pre>
+<pre><code>0 1 1 1 1  
+0 1 1 5 5     
+0 1 1 5 5    
+0 1 1 1 1  
+0 0 0 0 0  </code></pre>
 </div>
 <div id="calculating-mean-substratum-composition" class="section level2">
 <h2 class="hasAnchor">
@@ -2049,7 +2049,7 @@ MSUBST = ( -7.75*BOULDER_COBBLES - 3.25*PEBBLES_GRAVEL + 2*SAND + 8*SILT_CLAY ) 
 <tbody>
 <tr class="odd">
 <td align="left">1</td>
-<td align="left">≤10</td>
+<td align="left">$≤$10</td>
 <td align="left">5</td>
 </tr>
 <tr class="even">
@@ -2158,7 +2158,7 @@ UNTIL RDCH&gt;CDCH(K)`</code></pre>
 <p>If none of these values are provided then an error should be recorded against the site and prediction and classification should not then take place for that site.</p>
 <p>The algorithm for estimating Alkalinity from the other values is:</p>
 <pre><code>IF HARD is provided THEN  
-ALK = 4.677 + 0.6393*HARD  
+ALK = 4.677 + 0.6393*HARD  sudo apt install font-manager
 ELSE  
 IF CALCIUM is provided THEN  
 ALK = 14.552 + 1.7606*CALCIUM  
@@ -2580,7 +2580,7 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 </ol>
 <p><code>ParamJ_Prob = End_Group_Prob  x ParamJ</code></p>
 <ol start="4" style="list-style-type: lower-roman">
-<li><p>Use a software multi-way table function using columns (4, 3, 7, 5, 6, 8, 9, 10,) in that order) as multi-way table classifiers) and then sum the column ‘ParamJ_Prob’ across all 43 ‘End-groups’ which it will do by default in any sum function as ‘End_Group’ is not one of the table classifiers.</p></li>
+<li><p>Use a software multi-way table function using columns (4, 3, 7, 5, 6, 8, 9, 10,) in that order as multi-way table classifiers and then sum the column ‘ParamJ_Prob’ across all 43 ‘End-groups’ which it will do by default in any sum function as ‘End_Group’ is not one of the table classifiers.</p></li>
 <li><p>You actually want to use a multi-way table function which creates a new output set of columns with one new column for each table classifier and one for the sum across end-groups of the column ‘ParamJ_Prob’</p></li>
 <li><p>In fact, if you can do this for one of 8 taxonomic parameters, you could probably do it for all 8 parameters at one step, having first derived the 8 intermediary columns: Param1_Prob, Param2_Prob,… , Param8_Prob</p></li>
 </ol>

@@ -1,6 +1,6 @@
 ---
 title: "White paper: Aquatic Joint Research Platform"
-output: html_document
+output: html_vignette
 editor_options: 
   chunk_output_type: console
 ---
@@ -12,15 +12,37 @@ library(tidyverse)
 
 NOTE - Some ideas on the collection > modelling > prediction/classification/forecast/scenario testing process. 
 
-## Joint research platform for aquatic modelling and classification
+## The problem
 
-Currently there are a large number of modelling and classification tools available for understanding and responding to environmental harm. They do not share common input or output formats. Making integration and holistic understanding of the environment challenging. 
+Currently there are a large number of modelling and classification tools available for understanding and responding to environmental harm in aquatic systems. They do not share common input or output formats. Making integration and holistic understanding of the environment challenging: 
 
-To aid collaboration and to response to the changing environmentally pressures, we propose creating a joint research platform to share understanding on the environment while sharing the burden of more mundane tasks involved in maintaining and deploying models.
+ - Tools use different data structures and formats for input and outputs
+ - There is no single repository of 'reference' sites and results.
+ - There is no single repository for predictive variables (slope, discharge, geology, alkalinity etc)
+ - There is no single taxonomic reference table or standard 
+ - Confidence and uncertainty in results are calculated and presented in different ways
+ - All tools/models are development in isolation
+ - There is limited use in scenario planning (for instance how landuse changes or new discharges could affect the environment)
+ - There is limited use in climate change or environmental forecasting
+ - Best practice and associated tools for auditing and quality control are not shared across methods
 
-This is influenced by the work climate change research and weather forecasting communities. As well as larger science projects such as CERN. 
+## Joint research platform
 
-### Shared input format
+To aid collaboration and to response to the changing environmentally pressures, we propose creating a joint research platform to share understanding on the environment while lightening the burden of more mundane tasks involved in maintaining and deploying models.
+
+This is influenced by the work of climate change research and weather forecasting communities. As well as larger science projects such as CERN. And smaller scale example such as ropenSci. 
+
+## Who should be included in the reseach platform
+
+Most regulatory modelling work is development under the UKTAG group. This group has a number of sub-groups for freshwater, marine etc. The organisation has worked well and is active. The UKTAG group and it's nominated leads in the devolved agencies would continue to develop methods and tools. However, these tools would be incorporated into a joint platform for delivery. Where tools are agency specific, these could also make use of the platform. 
+
+Currently some models for environmental are shared on github e.g. phybenthos, fsc2, rict. They are published in different areas and have different access controls. The proposal would seek to share these tools under a single repo once the tool is finalised.
+
+As agencies commission new tools to be developed, researchers can 
+
+### How can we collaborate on building models 
+
+> Aren't all methods snowflakes?
 
 Ecological modelling relies on sampling. The samples come in a range of forms from points, transects, images, areas, grabs etc. But the general feature of modelling is based on being able to predict what we expect to find from whatever sampling technique we deploy. The sample is the fundamental observation which we compare against our expectation. The samples are discreet and independent, either observed instantaneously or perhaps over a few minutes or hours (where dynamic changes are not significant).
 
@@ -57,8 +79,8 @@ UUID are used to provide unique IDs for this variables.
 
 ```{r}
 
- data <- nest(data, meta_variables = c(2:6, 9:26))
- data <- nest(meta_variables = c(2:6))
+ data <- tidyr::nest(data, meta_variables = c(2:6, 9:26))
+# data <- nest(meta_variables = c(2:6))
 knitr::kable(data[1:2,])
 
 ```

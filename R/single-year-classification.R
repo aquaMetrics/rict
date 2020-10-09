@@ -416,7 +416,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
 
     ###  Calculate the MINTA ---------------------------------------------------------------------
     # worse class = 5 i.e. max of class from NTAXA and ASPT
-     matrix_ntaxa_spr <- as.matrix(classArray_siteOne_spr_ntaxa)
+    matrix_ntaxa_spr <- as.matrix(classArray_siteOne_spr_ntaxa)
     matrix_aspt_spr <- as.matrix(classArray_siteOne_spr_aspt)
     minta_ntaxa_aspt_spr <- getMINTA_ntaxa_aspt(
       as.matrix(classArray_siteOne_spr_ntaxa),

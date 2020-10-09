@@ -328,4 +328,3 @@ test_that("test reproducibility", {
   # First results from test1 should match second result from test2
   expect_equal(as.numeric(as.character(test1$H_NTAXA_spr_aut)), as.numeric(as.character(test2$H_NTAXA_spr_aut[2])))
 })
-

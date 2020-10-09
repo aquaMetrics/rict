@@ -13,9 +13,9 @@
 #' @param year_type "single" or "multi" depending if multi-year classification
 #'   required - default is "multi".
 #' @param store_eqrs TRUE/FALSE if set to TRUE function will return simulate
-#'   EQRs only
+#'   EQRs.
 #' @return Dataframe of classification results (and simulated EQRs if store_eqrs
-#'   = TRUE)
+#'   = TRUE).
 #' @export
 #' @importFrom rlang .data
 #'

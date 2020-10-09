@@ -20,11 +20,11 @@ rict(data = NULL, year_type = "multi", store_eqrs = FALSE)
 required - default is "multi".}
 
 \item{store_eqrs}{TRUE/FALSE if set to TRUE function will return simulate
-EQRs only}
+EQRs.}
 }
 \value{
 Dataframe of classification results (and simulated EQRs if store_eqrs
-  = TRUE)
+  = TRUE).
 }
 \description{
 The \code{rict} function classifies observed environmental values.

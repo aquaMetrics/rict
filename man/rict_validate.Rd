@@ -47,14 +47,19 @@ validation rules as required. Here is a summary of checks:
  \item Conditional columns if present are correct class.
  \item Where multiple classes are allowed, convert columns to
  standardised class for example integer to numeric.
+ \item Assess if model 'gis' (model 44) or 'physical' (model 1) based on
+ input columns.
+ \item Assess if input 'gb' or 'ni' based grid reference.
  \item Additional columns/variables calculated for example mean temperate.
  \item Logs failures and warnings applied using `validation_rules` table.
- \item Replace values if value is less than the ‘overall’ minimum value.
- \item Returns dataframe with passing values, warnings, fails.
+ \item Replace values if input values is zero (or close to zero) to avoid
+ log10(0) and related errors.
+ \item Returns dataframe with passing values, notes on warnings, fails,
+ replacements. And model and area parameters.
 }
 }
 \examples{
 \dontrun{
-validations <- rict_validate(demo_observed_values,  row = TRUE)
+validations <- rict_validate(demo_observed_values, row = TRUE)
 }
 }

@@ -4,7 +4,7 @@
 \alias{rict_validate}
 \title{Validate observed values}
 \usage{
-rict_validate(data = NULL, row = FALSE)
+rict_validate(data = NULL, row = FALSE, stop_if_all_fail = TRUE)
 }
 \arguments{
 \item{data}{dataframe of observed environmental variables
@@ -20,6 +20,19 @@ associated row in the input data easier. This is more relevant if multiple
 samples from the same site and year are input as separate row to the
 `rict_validate`. In this case, SITE and YEAR are not enough to link
 validation checks to specific rows in the input data.}
+
+\item{stop_if_all_fail}{Boolean - if set to `FALSE` the validation function
+will return empty dataframe for valid `data`. This is useful if you want to
+run validation checks without stopping process.}
+}
+\value{
+List of dataframes and other parameters:
+\describe{
+  \item{data}{Dataframe of input data that passes validation rules}
+  \item{checks}{Dataframe listing fails, warnings and replacements}
+  \item{model}{Returns model detected based on columns in input file}
+  \item{area}{Returns area detected base don Grid Reference in input file}
+   }
 }
 \description{
 Low level function to validate input `data`. Returns list of dataframes
@@ -42,6 +55,6 @@ validation rules as required. Here is a summary of checks:
 }
 \examples{
 \dontrun{
-validations <- rict_validate(demo_observed_values,  row == TRUE)
+validations <- rict_validate(demo_observed_values,  row = TRUE)
 }
 }

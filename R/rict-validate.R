@@ -31,7 +31,17 @@
 #'   `rict_validate`. In this case, SITE and YEAR are not enough to link
 #'   validation checks to specific rows in the input data.
 #'
+#' @param stop_if_all_fail Boolean - if set to `FALSE` the validation function
+#'   will return empty dataframe for valid `data`. This is useful if you want to
+#'   run validation checks without stopping process.
 #'
+#' @return List of dataframes and other parameters:
+#' \describe{
+#'   \item{data}{Dataframe of input data that passes validation rules}
+#'   \item{checks}{Dataframe listing fails, warnings and replacements}
+#'   \item{model}{Returns model detected based on columns in input file}
+#'   \item{area}{Returns area detected base don Grid Reference in input file}
+#'    }
 #' @export
 #' @importFrom rlang .data
 #' @importFrom stats na.omit
@@ -41,9 +51,9 @@
 #'
 #' @examples
 #' \dontrun{
-#' validations <- rict_validate(demo_observed_values,  row = TRUE)
+#' validations <- rict_validate(demo_observed_values, row = TRUE)
 #' }
-rict_validate <- function(data = NULL, row = FALSE) {
+rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
   ### Sense checks --------------------------------------------------------------------
   # Check data object provided
   if (is.null(data)) {
@@ -523,14 +533,14 @@ These values will be used instead of calculating them from Grid Reference values
   this_failing <- checks[checks$FAIL != "---", ]
   # Subset the 'passing' instances to run in prediction by removing "this_failing"
   data <- data[!data$SITE %in% this_failing$SITE, ] # Note, can't use dplyr::anti_join() in ML AZURE
-  if (nrow(data) == 0) {
+  if (nrow(data) == 0 & stop_if_all_fail == TRUE) {
     stop("You provided data that has failure(s) on every row.
        We expect at least one row without any fails to proceed.
        HINT: Check fail messages, fix errors and re-try.", call. = FALSE)
   }
 
   if (row == FALSE) {
-    checks$ROW  <- NULL
+    checks$ROW <- NULL
   }
 
   return(list("data" = data, "checks" = checks, "model" = model, "area" = area))

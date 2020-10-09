@@ -77,6 +77,11 @@ test_that("outright fails stop process and create error message", {
 
 # ---------------------------------------------------------------------
 test_that("fails on some rows create fail messages (but process continues of validate data)", {
+  # check if stop_if_all_fail = FALSE works (produces empty validate dataframe)
+  data <- demo_observed_values
+  data$Altitude <- 2000
+  test <- rict_validate(data, stop_if_all_fail = FALSE)
+  expect_equal(nrow(test$data), 0)
   # Check NA caught
   test_data <- demo_gis_values_log
   test_data$Alkalinity[1] <- NA

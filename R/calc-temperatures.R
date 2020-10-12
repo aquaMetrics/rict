@@ -242,8 +242,10 @@ calcTemps <- function(coordinates) {
             SMEAN <- avcall[2]
             SRANGE <- avcall[3]
             if (NP < 4) {
-              TMEAN <- 0.0
-              TRANGE <- 0.0
+              TMEAN <- 0
+              TRANGE <- 0
+              warning("Grid Reference outside temperature grid - temperature set to default '0' degrees",
+                      call. = FALSE, immediate. = TRUE)
             } else {
               # print("else 14");
               TMEAN <- SMEAN

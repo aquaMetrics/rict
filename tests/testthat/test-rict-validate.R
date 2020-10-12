@@ -108,14 +108,16 @@ test_that("fails on some rows create fail messages (but process continues of val
   test_data$Easting[1] <- "57900"
   test_data$Northing[1] <- "59000"
   test <- rict_validate(test_data)
-  expect_equal(length(test[[2]][, 1]), 2)
+  test <- test$checks
+  expect_equal(length(test$FAIL[test$FAIL != "---"]), 2)
   # Test optional columns where one or the other column must be provided
   test_data <- demo_observed_values
   test_data$Velocity[1] <- NA
   test_data$Discharge[1] <- NA
   test_data$Dist_from_Source[1] <- NA
   test <- rict_validate(test_data)
-  expect_equal(length(test[[2]][, 1]), 4)
+  test <- test$checks
+  expect_equal(length(test$FAIL[test$FAIL != "---"]), 3)
 })
 
 # ---------------------------------------------------------------------

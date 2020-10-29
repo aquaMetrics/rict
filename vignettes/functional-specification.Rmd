@@ -57,7 +57,9 @@ outline: 0 ;
 ```
 
 
-`r embed_png("images/rict_logo.png", dpi = 420)`
+```{r}
+embed_png("images/rict_logo.png", dpi = 420)
+```
 
 # Introduction 
 

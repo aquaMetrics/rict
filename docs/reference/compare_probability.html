@@ -76,7 +76,7 @@ results." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rict</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
       </span>
     </div>
 
@@ -137,13 +137,13 @@ as results 'b'. Designed for comparing simulated Environmental Quality Ratios
 results.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>compare_probability</span>(
-  a = <span class='kw'>NULL</span>,
-  b = <span class='kw'>NULL</span>,
-  eqr_bands = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0.2</span>, <span class='fl'>0.4</span>, <span class='fl'>0.6</span>, <span class='fl'>0.8</span>, <span class='fl'>1</span>),
-  cap_eqrs = <span class='kw'>T</span>,
-  labels = <span class='fl'>5</span><span class='op'>:</span><span class='fl'>1</span>
-)</pre>
+    <pre class="usage"><span class='fu'>compare_probability</span><span class='op'>(</span>
+  a <span class='op'>=</span> <span class='cn'>NULL</span>,
+  b <span class='op'>=</span> <span class='cn'>NULL</span>,
+  eqr_bands <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0.2</span>, <span class='fl'>0.4</span>, <span class='fl'>0.6</span>, <span class='fl'>0.8</span>, <span class='fl'>1</span><span class='op'>)</span>,
+  cap_eqrs <span class='op'>=</span> <span class='cn'>T</span>,
+  labels <span class='op'>=</span> <span class='fl'>5</span><span class='op'>:</span><span class='fl'>1</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -178,13 +178,13 @@ results.</p>
     <div class='dont-index'><p><code><a href='rict_compare.html'>rict_compare</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='kw'>test</span> <span class='op'>&lt;-</span> <span class='fu'>compare_probability</span>(
-  a = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.3</span>, <span class='fl'>0.4</span>, <span class='fl'>0.6</span>),
-  b = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>0.9</span>, <span class='fl'>0.6</span>),
-  <span class='kw'>eqr_bands</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0.47</span>, <span class='fl'>0.56</span>, <span class='fl'>0.68</span>, <span class='fl'>0.8</span>, <span class='fl'>1</span>)
-)
-}
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>test</span> <span class='op'>&lt;-</span> <span class='fu'>compare_probability</span><span class='op'>(</span>
+  a <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.3</span>, <span class='fl'>0.4</span>, <span class='fl'>0.6</span><span class='op'>)</span>,
+  b <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>0.9</span>, <span class='fl'>0.6</span><span class='op'>)</span>,
+  <span class='va'>eqr_bands</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0.47</span>, <span class='fl'>0.56</span>, <span class='fl'>0.68</span>, <span class='fl'>0.8</span>, <span class='fl'>1</span><span class='op'>)</span>
+<span class='op'>)</span>
+<span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

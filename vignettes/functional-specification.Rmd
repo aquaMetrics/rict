@@ -1,26 +1,26 @@
 ---
-title: "Functional Specification"
-author: ""
+title: "River Invertebrate Classification Tool (RICT) Functional Specification"
+author: "RICT Steering Group"
 date: "`r Sys.Date()`"
 pkgdown:
-  as_is: true
-output: 
- rmarkdown::html_vignette:
-  number_sections: yes
-  toc: yes
-vignette: >
-  %\VignetteIndexEntry{Functional Specification}
-  \usepackage[utf8]{inputenc}
-  %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
+  as_is: yes
+output:
+  rmarkdown::html_vignette:
+    number_sections: yes
+    toc: yes
+  rmarkdown::word_document:
+    toc: yes
+    toc_depth: 2
+vignette: |
+  %\VignetteIndexEntry{Functional Specification} \usepackage[utf8]{inputenc} %\VignetteEngine{knitr::rmarkdown}
+editor_options:
   chunk_output_type: console
 ---
 
-```{r setup, message=F, echo=FALSE}
+```{r setup, message=F, echo=FALSE, warning=F}
 library(rict)
 library(knitr)
 library(dplyr)
-library(png)
 ```
 
 ```{r, include = FALSE}
@@ -29,17 +29,6 @@ knitr::opts_chunk$set(
   comment = "#>",
   echo = FALSE
 )
-
-embed_png <- function(path, dpi = NULL) {
-  meta <- attr(png::readPNG(path, native = TRUE, info = TRUE), "info")
-  if (!is.null(dpi)) meta$dpi <- rep(dpi, 2)
-  knitr::asis_output(paste0(
-    "<img src='", path, "'",
-    " width=", round(meta$dim[1] / (meta$dpi[1] / 96)),
-    " height=", round(meta$dim[2] / (meta$dpi[2] / 96)),
-    " />"
-  ))
-}
 
 options(scipen = 2, digits = 5)
 ```
@@ -57,9 +46,7 @@ outline: 0 ;
 ```
 
 
-```{r}
-embed_png("images/rict_logo.png", dpi = 420)
-```
+![](images/rict_logo.png){ width=20% }
 
 # Introduction 
 
@@ -241,11 +228,7 @@ The diagram below shows a diagrammatical representation of the main
 functionality of the RICT2 tool with numbered links to more detailed
 information.
 
-```{r}
-
-embed_png("images/application-flow-chart.png", dpi = 120)
-
-```
+![](images/application-flow-chart.png){ width=100% }
 
 **1. LOGIN TO RICT:** A new user will need to create a Microsoft account and log
 in to be able to access to the RICT tool as the tool uses the Microsoft Azure
@@ -1303,9 +1286,7 @@ The flow diagram below summarises the prediction process and calculations
 above) as well as identifying the relevant section for further information from
 the WFD72C final report:
 
-```{r}
-embed_png("images/rict-prediction.png", dpi = 120)
-```
+![](images/rict-prediction.png){ width=100% }
 
 ## Prediction Overview
   
@@ -1759,9 +1740,7 @@ The flow diagram below summarises the classification process and calculations as
 well as identifying the relevant section for further information from the WFD72C
 final report and other sources of information:
 
-```{r}
-embed_png("images/rict-classification.png", dpi = 120)
-```  
+![](images/rict-classification.png){ width=100% }
   
 Note that the blue boxes indicate processes that are simulated.
   
@@ -2258,10 +2237,7 @@ new RICT Compare procedure.
   
 Compare flow chart:
 
-```{r}
-embed_png("images/rict-compare.png", dpi = 160)
-```  
-  
+![](images/rict-compare.png){ width=100% }
   
 The Compare procedure allows the user to assess whether there is a real
 difference in EQR values and/or status class between a pair of samples and/or
@@ -2516,20 +2492,12 @@ files:
 The flow diagram below summarises the prediction process and calculations as
 well as identifying the relevant report for further information:
 
-```{r}
-
-embed_png("images/rict-prediction-model-44.png", dpi = 140)
-
-```
+![](images/rict-prediction-model-44.png){ width=100% }
 
 The flow diagram below summarises the classification process and calculations as
 well as identifying the relevant report for further information:
 
-```{r}
-
-embed_png("images/rict-classification-model-44.png", dpi = 140)
-
-```
+![](images/rict-classification-model-44.png){ width=100% }
 
 # Non-Functional Requirements
 
@@ -2646,19 +2614,19 @@ format to used and run with the experiment.
 GB - Model 1 input format
 
 ```{r}
-knitr::kable(demo_observed_values[1, ])
+knitr::kable(t(demo_observed_values[1, ]))
 ```
 
 NI - Model 1 input format
 
 ```{r}
-knitr::kable(demo_ni_observed_values[1, ])
+knitr::kable(t(demo_ni_observed_values[1, ]))
 ```
 
 GIS - Model 44 input format
 
 ```{r}
-knitr::kable(demo_gis_values_log[1, ])
+knitr::kable(t(demo_gis_values_log[1, ]))
 ```
 
 See the [Input
@@ -2682,7 +2650,7 @@ An example of the output file for prediction is linked below:
 ```{r, message=FALSE}
 
 predict <- rict_predict(demo_observed_values[1, ])
-knitr::kable(predict)
+knitr::kable(t(predict))
 
 ```
 
@@ -2692,14 +2660,14 @@ Multiple year:
 
 ```{r, message=FALSE}
 multi_class <- rict(demo_observed_values[1, ])
-knitr::kable(multi_class)
+knitr::kable(t(multi_class))
 ```
 
 Single year:
 
 ```{r, message=FALSE}
 single_class <- rict(demo_observed_values[1, ], year_type = "single")
-knitr::kable(single_class)
+knitr::kable(t(single_class))
 ```
 
 # Appendix C: Biotic included in all index prediction

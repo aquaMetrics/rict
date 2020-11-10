@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Functional Specification • rict</title>
+<title>River Invertebrate Classification Tool (RICT) Functional Specification • rict</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Functional Specification">
+<script src="../pkgdown.js"></script><meta property="og:title" content="River Invertebrate Classification Tool (RICT) Functional Specification">
 <meta property="og:description" content="rict">
 <meta name="robots" content="noindex">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -55,7 +55,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/functional-specification.html">Functional Specification</a>
+      <a href="../articles/functional-specification.html">River Invertebrate Classification Tool (RICT) Functional Specification</a>
     </li>
   </ul>
 </li>
@@ -80,9 +80,10 @@
       </header><script src="functional-specification_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Functional Specification</h1>
+      <h1 data-toc-skip>River Invertebrate Classification Tool (RICT) Functional Specification</h1>
+                        <h4 class="author">RICT Steering Group</h4>
             
-            <h4 class="date">2020-10-29</h4>
+            <h4 class="date">2020-11-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/aquaMetrics/rict/blob/master/vignettes/functional-specification.Rmd"><code>vignettes/functional-specification.Rmd</code></a></small>
       <div class="hidden name"><code>functional-specification.Rmd</code></div>
@@ -97,7 +98,7 @@ border: 0px;
 outline: 0 ;
 }
 </style>
-<p><img src="images/rict_logo.png" width="118" height="137"></p>
+<p><img src="images/rict_logo.png" style="width:20.0%"></p>
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a><span class="header-section-number">1</span> Introduction</h1>
@@ -291,7 +292,7 @@ outline: 0 ;
 </ul>
 <p>For initial release (2019), the GB Single year, GB multi-year and NI single year for WFD classification have been produced. These three experiments are available in the Azure ML Studio gallery.</p>
 <p>The diagram below shows a diagrammatical representation of the main functionality of the RICT2 tool with numbered links to more detailed information.</p>
-<p><img src="images/application-flow-chart.png" width="666" height="481"></p>
+<p><img src="images/application-flow-chart.png" style="width:100.0%"></p>
 <p><strong>1. LOGIN TO RICT:</strong> A new user will need to create a Microsoft account and log in to be able to access to the RICT tool as the tool uses the Microsoft Azure Machine Learning Studio as its platform. How to access RICT is outlined in the RICT user guide.</p>
 <p><strong>2. COMPLETE DATA INPUT:</strong> User will need to complete a CSV (comma delimited) input file containing the data for the run required. A standard template excel spreadsheet will be provided to enter this data which can be downloaded via a SharePoint link from the website.</p>
 <p>Validation will be done on the spreadsheet as the user enters the data via conditional formatting to warn the user if the data input will not meet certain validation limits.</p>
@@ -2314,7 +2315,7 @@ ALK = 0.3201*CONDUCT -8.0593</code></pre>
 <p>The most complex part of this is a), which involves the use of multiple discriminant analysis and specialised statistical techniques (e.g. Mahanalobis Distance).</p>
 <p>It needs to be carried out for every set of site data applicable to the run (a site may be present more than once where more than one years’ worth of environmental data has been provided).</p>
 <p>The flow diagram below summarises the prediction process and calculations (including the data input, validation, conversion and transform steps described above) as well as identifying the relevant section for further information from the WFD72C final report:</p>
-<p><img src="images/rict-prediction.png" width="585" height="444"></p>
+<p><img src="images/rict-prediction.png" style="width:100.0%"></p>
 </div>
 <div id="prediction-overview" class="section level2">
 <h2 class="hasAnchor">
@@ -2626,7 +2627,7 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 <h2 class="hasAnchor">
 <a href="#classification-process-summary" class="anchor"></a><span class="header-section-number">10.1</span> Classification Process Summary</h2>
 <p>The flow diagram below summarises the classification process and calculations as well as identifying the relevant section for further information from the WFD72C final report and other sources of information:</p>
-<p><img src="images/rict-classification.png" width="593" height="443"></p>
+<p><img src="images/rict-classification.png" style="width:100.0%"></p>
 <p>Note that the blue boxes indicate processes that are simulated.</p>
 </div>
 <div id="classification-overview" class="section level2">
@@ -2928,7 +2929,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <p>The relevant parts of the algorithms section of the SNIFFER WFD72C project 2008 Final Report have been extracted and adapted here to explain the algorithms needed to code the Compare procedure in the new R studio and Microsoft AZURE versions of the RICT software developed in 2019-20.</p>
 <p>The new RICT only refers to EQR values (which are bias-corrected observed (Obs) values divided by WFD reference-adjusted Expected (ExpRef) values, all WFD72C algorithms section references to former EQI (Obs/Exp) values are replaced by their new counterpart EQR values to improve explanation of how to program the new RICT Compare procedure.</p>
 <p>Compare flow chart:</p>
-<p><img src="images/rict-compare.png" width="638" height="481"></p>
+<p><img src="images/rict-compare.png" style="width:100.0%"></p>
 <p>The Compare procedure allows the user to assess whether there is a real difference in EQR values and/or status class between a pair of samples and/or sites and/or time periods. This is done using an extension of the simulation techniques and algorithms described above that are used to assess the EQRs and ecological status class and the associated uncertainty for individual samples/sites and time periods.</p>
 <p>The first sample in a pair is known as result A and the second as result B.</p>
 <p>In each simulation r, independent simulated EQR values are calculated for each index i for each of the two results using the methods described in section 8.9 Correct observed values for bias. In this context, independent simulations means that the various random uncertainty terms are different and completely independent for the two simulated samples A and B for any simulation r.</p>
@@ -3101,9 +3102,9 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <h2 class="hasAnchor">
 <a href="#summary-diagrams" class="anchor"></a><span class="header-section-number">14.3</span> Summary diagrams</h2>
 <p>The flow diagram below summarises the prediction process and calculations as well as identifying the relevant report for further information:</p>
-<p><img src="images/rict-prediction-model-44.png" width="658" height="494"></p>
+<p><img src="images/rict-prediction-model-44.png" style="width:100.0%"></p>
 <p>The flow diagram below summarises the classification process and calculations as well as identifying the relevant report for further information:</p>
-<p><img src="images/rict-classification-model-44.png" width="660" height="494"></p>
+<p><img src="images/rict-classification-model-44.png" style="width:100.0%"></p>
 </div>
 </div>
 <div id="non-functional-requirements" class="section level1">
@@ -3184,336 +3185,438 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <p>Below are examples of the import file format to help understand and verify the format to used and run with the experiment.</p>
 <p>GB - Model 1 input format</p>
 <table class="table">
-<colgroup>
-<col width="2%">
-<col width="3%">
-<col width="1%">
-<col width="0%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="2%">
-<col width="1%">
-<col width="3%">
-<col width="2%">
-<col width="2%">
-<col width="2%">
-<col width="3%">
-<col width="3%">
-<col width="1%">
-<col width="2%">
-<col width="1%">
-<col width="1%">
-<col width="2%">
-<col width="2%">
-<col width="6%">
-<col width="6%">
-<col width="3%">
-<col width="2%">
-<col width="6%">
-<col width="6%">
-<col width="3%">
-<col width="2%">
-<col width="6%">
-<col width="6%">
-<col width="3%">
-</colgroup>
 <thead><tr class="header">
-<th align="left">SITE</th>
-<th align="left">Waterbody</th>
-<th align="right">Year</th>
-<th align="left">NGR</th>
-<th align="right">Easting</th>
-<th align="right">Northing</th>
-<th align="right">Altitude</th>
-<th align="right">Slope</th>
-<th align="right">Discharge</th>
-<th align="left">Velocity</th>
-<th align="right">Dist_from_Source</th>
-<th align="right">Mean_Width</th>
-<th align="right">Mean_Depth</th>
-<th align="right">Alkalinity</th>
-<th align="right">Boulder_Cobbles</th>
-<th align="right">Pebbles_Gravel</th>
-<th align="right">Sand</th>
-<th align="right">Silt_Clay</th>
-<th align="left">Hardness</th>
-<th align="left">Calcium</th>
-<th align="left">Conductivity</th>
-<th align="right">Spr_Season_ID</th>
-<th align="right">Spr_TL2_WHPT_ASPT (AbW,DistFam)</th>
-<th align="right">Spr_TL2_WHPT_NTaxa (AbW,DistFam)</th>
-<th align="right">Spr_Ntaxa_Bias</th>
-<th align="right">Sum_Season_ID</th>
-<th align="right">Sum_TL2_WHPT_ASPT (AbW,DistFam)</th>
-<th align="right">Sum_TL2_WHPT_NTaxa (AbW,DistFam)</th>
-<th align="right">Sum_Ntaxa_Bias</th>
-<th align="right">Aut_Season_ID</th>
-<th align="right">Aut_TL2_WHPT_ASPT (AbW,DistFam)</th>
-<th align="right">Aut_TL2_WHPT_NTaxa (AbW,DistFam)</th>
-<th align="right">Aut_Ntaxa_Bias</th>
+<th align="left"></th>
+<th align="left">1</th>
 </tr></thead>
-<tbody><tr class="odd">
+<tbody>
+<tr class="odd">
+<td align="left">SITE</td>
 <td align="left">MYR-GB-01-R</td>
+</tr>
+<tr class="even">
+<td align="left">Waterbody</td>
 <td align="left">Waterbody name</td>
-<td align="right">2016</td>
+</tr>
+<tr class="odd">
+<td align="left">Year</td>
+<td align="left">2016</td>
+</tr>
+<tr class="even">
+<td align="left">NGR</td>
 <td align="left">SE</td>
-<td align="right">94200</td>
-<td align="right">91000</td>
-<td align="right">60</td>
-<td align="right">2.7</td>
-<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">Easting</td>
+<td align="left">94200</td>
+</tr>
+<tr class="even">
+<td align="left">Northing</td>
+<td align="left">91000</td>
+</tr>
+<tr class="odd">
+<td align="left">Altitude</td>
+<td align="left">60</td>
+</tr>
+<tr class="even">
+<td align="left">Slope</td>
+<td align="left">2.7</td>
+</tr>
+<tr class="odd">
+<td align="left">Discharge</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">Velocity</td>
 <td align="left">NA</td>
-<td align="right">10</td>
-<td align="right">6.4</td>
-<td align="right">21.7</td>
-<td align="right">101.4</td>
-<td align="right">58</td>
-<td align="right">36</td>
-<td align="right">3</td>
-<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Dist_from_Source</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">Mean_Width</td>
+<td align="left">6.4</td>
+</tr>
+<tr class="odd">
+<td align="left">Mean_Depth</td>
+<td align="left">21.7</td>
+</tr>
+<tr class="even">
+<td align="left">Alkalinity</td>
+<td align="left">101.4</td>
+</tr>
+<tr class="odd">
+<td align="left">Boulder_Cobbles</td>
+<td align="left">58</td>
+</tr>
+<tr class="even">
+<td align="left">Pebbles_Gravel</td>
+<td align="left">36</td>
+</tr>
+<tr class="odd">
+<td align="left">Sand</td>
+<td align="left">3</td>
+</tr>
+<tr class="even">
+<td align="left">Silt_Clay</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Hardness</td>
 <td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Calcium</td>
 <td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Conductivity</td>
 <td align="left">NA</td>
-<td align="right">1</td>
-<td align="right">6.512</td>
-<td align="right">24</td>
-<td align="right">1.62</td>
-<td align="right">2</td>
-<td align="right">6.663</td>
-<td align="right">27</td>
-<td align="right">1.62</td>
-<td align="right">3</td>
-<td align="right">6.348</td>
-<td align="right">27</td>
-<td align="right">1.62</td>
-</tr></tbody>
+</tr>
+<tr class="even">
+<td align="left">Spr_Season_ID</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Spr_TL2_WHPT_ASPT (AbW,DistFam)</td>
+<td align="left">6.512</td>
+</tr>
+<tr class="even">
+<td align="left">Spr_TL2_WHPT_NTaxa (AbW,DistFam)</td>
+<td align="left">24</td>
+</tr>
+<tr class="odd">
+<td align="left">Spr_Ntaxa_Bias</td>
+<td align="left">1.62</td>
+</tr>
+<tr class="even">
+<td align="left">Sum_Season_ID</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">Sum_TL2_WHPT_ASPT (AbW,DistFam)</td>
+<td align="left">6.663</td>
+</tr>
+<tr class="even">
+<td align="left">Sum_TL2_WHPT_NTaxa (AbW,DistFam)</td>
+<td align="left">27</td>
+</tr>
+<tr class="odd">
+<td align="left">Sum_Ntaxa_Bias</td>
+<td align="left">1.62</td>
+</tr>
+<tr class="even">
+<td align="left">Aut_Season_ID</td>
+<td align="left">3</td>
+</tr>
+<tr class="odd">
+<td align="left">Aut_TL2_WHPT_ASPT (AbW,DistFam)</td>
+<td align="left">6.348</td>
+</tr>
+<tr class="even">
+<td align="left">Aut_TL2_WHPT_NTaxa (AbW,DistFam)</td>
+<td align="left">27</td>
+</tr>
+<tr class="odd">
+<td align="left">Aut_Ntaxa_Bias</td>
+<td align="left">1.62</td>
+</tr>
+</tbody>
 </table>
 <p>NI - Model 1 input format</p>
 <table class="table">
-<colgroup>
-<col width="2%">
-<col width="3%">
-<col width="1%">
-<col width="0%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="2%">
-<col width="1%">
-<col width="3%">
-<col width="2%">
-<col width="2%">
-<col width="2%">
-<col width="3%">
-<col width="3%">
-<col width="1%">
-<col width="2%">
-<col width="1%">
-<col width="1%">
-<col width="2%">
-<col width="2%">
-<col width="6%">
-<col width="6%">
-<col width="3%">
-<col width="2%">
-<col width="6%">
-<col width="6%">
-<col width="3%">
-<col width="2%">
-<col width="6%">
-<col width="6%">
-<col width="3%">
-</colgroup>
 <thead><tr class="header">
-<th align="left">SITE</th>
-<th align="left">Waterbody</th>
-<th align="right">Year</th>
-<th align="left">NGR</th>
-<th align="right">Easting</th>
-<th align="right">Northing</th>
-<th align="right">Altitude</th>
-<th align="right">Slope</th>
-<th align="right">Discharge</th>
-<th align="left">Velocity</th>
-<th align="right">Dist_from_Source</th>
-<th align="right">Mean_Width</th>
-<th align="right">Mean_Depth</th>
-<th align="right">Alkalinity</th>
-<th align="right">Boulder_Cobbles</th>
-<th align="right">Pebbles_Gravel</th>
-<th align="right">Sand</th>
-<th align="right">Silt_Clay</th>
-<th align="left">Hardness</th>
-<th align="left">Calcium</th>
-<th align="left">Conductivity</th>
-<th align="right">Spr_Season_ID</th>
-<th align="right">Spr_TL2_WHPT_ASPT (AbW,DistFam)</th>
-<th align="right">Spr_TL2_WHPT_NTaxa (AbW,DistFam)</th>
-<th align="right">Spr_Ntaxa_Bias</th>
-<th align="right">Sum_Season_ID</th>
-<th align="right">Sum_TL2_WHPT_ASPT (AbW,DistFam)</th>
-<th align="right">Sum_TL2_WHPT_NTaxa (AbW,DistFam)</th>
-<th align="right">Sum_Ntaxa_Bias</th>
-<th align="right">Aut_Season_ID</th>
-<th align="right">Aut_TL2_WHPT_ASPT (AbW,DistFam)</th>
-<th align="right">Aut_TL2_WHPT_NTaxa (AbW,DistFam)</th>
-<th align="right">Aut_Ntaxa_Bias</th>
+<th align="left"></th>
+<th align="left">1</th>
 </tr></thead>
-<tbody><tr class="odd">
+<tbody>
+<tr class="odd">
+<td align="left">SITE</td>
 <td align="left">TST-NI-01-R</td>
+</tr>
+<tr class="even">
+<td align="left">Waterbody</td>
 <td align="left">Waterbody name</td>
-<td align="right">2018</td>
+</tr>
+<tr class="odd">
+<td align="left">Year</td>
+<td align="left">2018</td>
+</tr>
+<tr class="even">
+<td align="left">NGR</td>
 <td align="left">H</td>
-<td align="right">24720</td>
-<td align="right">36350</td>
-<td align="right">85</td>
-<td align="right">1.3</td>
-<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">Easting</td>
+<td align="left">24720</td>
+</tr>
+<tr class="even">
+<td align="left">Northing</td>
+<td align="left">36350</td>
+</tr>
+<tr class="odd">
+<td align="left">Altitude</td>
+<td align="left">85</td>
+</tr>
+<tr class="even">
+<td align="left">Slope</td>
+<td align="left">1.3</td>
+</tr>
+<tr class="odd">
+<td align="left">Discharge</td>
+<td align="left">4</td>
+</tr>
+<tr class="even">
+<td align="left">Velocity</td>
 <td align="left">NA</td>
-<td align="right">16.4</td>
-<td align="right">9</td>
-<td align="right">34</td>
-<td align="right">97.8</td>
-<td align="right">55</td>
-<td align="right">15</td>
-<td align="right">25</td>
-<td align="right">5</td>
+</tr>
+<tr class="odd">
+<td align="left">Dist_from_Source</td>
+<td align="left">16.4</td>
+</tr>
+<tr class="even">
+<td align="left">Mean_Width</td>
+<td align="left">9</td>
+</tr>
+<tr class="odd">
+<td align="left">Mean_Depth</td>
+<td align="left">34</td>
+</tr>
+<tr class="even">
+<td align="left">Alkalinity</td>
+<td align="left">97.8</td>
+</tr>
+<tr class="odd">
+<td align="left">Boulder_Cobbles</td>
+<td align="left">55</td>
+</tr>
+<tr class="even">
+<td align="left">Pebbles_Gravel</td>
+<td align="left">15</td>
+</tr>
+<tr class="odd">
+<td align="left">Sand</td>
+<td align="left">25</td>
+</tr>
+<tr class="even">
+<td align="left">Silt_Clay</td>
+<td align="left">5</td>
+</tr>
+<tr class="odd">
+<td align="left">Hardness</td>
 <td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Calcium</td>
 <td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Conductivity</td>
 <td align="left">NA</td>
-<td align="right">1</td>
-<td align="right">6.038</td>
-<td align="right">26</td>
-<td align="right">1.62</td>
-<td align="right">2</td>
-<td align="right">5.041</td>
-<td align="right">22</td>
-<td align="right">1.62</td>
-<td align="right">3</td>
-<td align="right">4.935</td>
-<td align="right">23</td>
-<td align="right">1.62</td>
-</tr></tbody>
+</tr>
+<tr class="even">
+<td align="left">Spr_Season_ID</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Spr_TL2_WHPT_ASPT (AbW,DistFam)</td>
+<td align="left">6.038</td>
+</tr>
+<tr class="even">
+<td align="left">Spr_TL2_WHPT_NTaxa (AbW,DistFam)</td>
+<td align="left">26</td>
+</tr>
+<tr class="odd">
+<td align="left">Spr_Ntaxa_Bias</td>
+<td align="left">1.62</td>
+</tr>
+<tr class="even">
+<td align="left">Sum_Season_ID</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">Sum_TL2_WHPT_ASPT (AbW,DistFam)</td>
+<td align="left">5.041</td>
+</tr>
+<tr class="even">
+<td align="left">Sum_TL2_WHPT_NTaxa (AbW,DistFam)</td>
+<td align="left">22</td>
+</tr>
+<tr class="odd">
+<td align="left">Sum_Ntaxa_Bias</td>
+<td align="left">1.62</td>
+</tr>
+<tr class="even">
+<td align="left">Aut_Season_ID</td>
+<td align="left">3</td>
+</tr>
+<tr class="odd">
+<td align="left">Aut_TL2_WHPT_ASPT (AbW,DistFam)</td>
+<td align="left">4.935</td>
+</tr>
+<tr class="even">
+<td align="left">Aut_TL2_WHPT_NTaxa (AbW,DistFam)</td>
+<td align="left">23</td>
+</tr>
+<tr class="odd">
+<td align="left">Aut_Ntaxa_Bias</td>
+<td align="left">1.62</td>
+</tr>
+</tbody>
 </table>
 <p>GIS - Model 44 input format</p>
 <table class="table">
-<colgroup>
-<col width="2%">
-<col width="1%">
-<col width="2%">
-<col width="2%">
-<col width="2%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="0%">
-<col width="0%">
-<col width="1%">
-<col width="2%">
-<col width="2%">
-<col width="1%">
-<col width="2%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="2%">
-<col width="1%">
-<col width="2%">
-<col width="2%">
-<col width="6%">
-<col width="6%">
-<col width="3%">
-<col width="2%">
-<col width="6%">
-<col width="6%">
-<col width="3%">
-<col width="2%">
-<col width="6%">
-<col width="6%">
-<col width="3%">
-</colgroup>
 <thead><tr class="header">
-<th align="left">SITE</th>
-<th align="right">YEAR</th>
-<th align="left">WATERBODY</th>
-<th align="right">Alkalinity</th>
-<th align="left">Conductivity</th>
-<th align="left">hardness</th>
-<th align="left">calcium</th>
-<th align="left">OBJECTID</th>
-<th align="right">SX</th>
-<th align="right">SY</th>
-<th align="left">EX</th>
-<th align="left">EY</th>
-<th align="right">Altitude</th>
-<th align="right">d_f_source</th>
-<th align="right">logaltbar</th>
-<th align="right">log_area</th>
-<th align="right">disch_cat</th>
-<th align="right">slope</th>
-<th align="right">chalk</th>
-<th align="right">clay</th>
-<th align="right">hardrock</th>
-<th align="right">limestone</th>
-<th align="right">peat</th>
-<th align="left">shape_Length</th>
-<th align="right">Spr_Season_ID</th>
-<th align="right">Spr_TL2_WHPT_ASPT (AbW,DistFam)</th>
-<th align="right">Spr_TL2_WHPT_NTaxa (AbW,DistFam)</th>
-<th align="right">Spr_Ntaxa_Bias</th>
-<th align="right">Sum_Season_ID</th>
-<th align="right">Sum_TL2_WHPT_ASPT (AbW,DistFam)</th>
-<th align="right">Sum_TL2_WHPT_NTaxa (AbW,DistFam)</th>
-<th align="right">Sum_Ntaxa_Bias</th>
-<th align="right">Aut_Season_ID</th>
-<th align="right">Aut_TL2_WHPT_ASPT (AbW,DistFam)</th>
-<th align="right">Aut_TL2_WHPT_NTaxa (AbW,DistFam)</th>
-<th align="right">Aut_Ntaxa_Bias</th>
+<th align="left"></th>
+<th align="left">1</th>
 </tr></thead>
-<tbody><tr class="odd">
+<tbody>
+<tr class="odd">
+<td align="left">SITE</td>
 <td align="left">TST-GB-01-R</td>
-<td align="right">2019</td>
+</tr>
+<tr class="even">
+<td align="left">YEAR</td>
+<td align="left">2019</td>
+</tr>
+<tr class="odd">
+<td align="left">WATERBODY</td>
 <td align="left">test</td>
-<td align="right">101.4</td>
+</tr>
+<tr class="even">
+<td align="left">Alkalinity</td>
+<td align="left">101.4</td>
+</tr>
+<tr class="odd">
+<td align="left">Conductivity</td>
 <td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">hardness</td>
 <td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">calcium</td>
 <td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">OBJECTID</td>
 <td align="left">NA</td>
-<td align="right">494200</td>
-<td align="right">491000</td>
+</tr>
+<tr class="odd">
+<td align="left">SX</td>
+<td align="left">494200</td>
+</tr>
+<tr class="even">
+<td align="left">SY</td>
+<td align="left">491000</td>
+</tr>
+<tr class="odd">
+<td align="left">EX</td>
 <td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">EY</td>
 <td align="left">NA</td>
-<td align="right">56</td>
-<td align="right">16877</td>
-<td align="right">2.2443</td>
-<td align="right">1.6954</td>
-<td align="right">3</td>
-<td align="right">2.5736</td>
-<td align="right">0.02743</td>
-<td align="right">0.13441</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Altitude</td>
+<td align="left">56</td>
+</tr>
+<tr class="even">
+<td align="left">d_f_source</td>
+<td align="left">16877</td>
+</tr>
+<tr class="odd">
+<td align="left">logaltbar</td>
+<td align="left">2.2443</td>
+</tr>
+<tr class="even">
+<td align="left">log_area</td>
+<td align="left">1.6954</td>
+</tr>
+<tr class="odd">
+<td align="left">disch_cat</td>
+<td align="left">3</td>
+</tr>
+<tr class="even">
+<td align="left">slope</td>
+<td align="left">2.5736</td>
+</tr>
+<tr class="odd">
+<td align="left">chalk</td>
+<td align="left">0.027426</td>
+</tr>
+<tr class="even">
+<td align="left">clay</td>
+<td align="left">0.13441</td>
+</tr>
+<tr class="odd">
+<td align="left">hardrock</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">limestone</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">peat</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">shape_Length</td>
 <td align="left">NA</td>
-<td align="right">1</td>
-<td align="right">6.512</td>
-<td align="right">24</td>
-<td align="right">1.62</td>
-<td align="right">2</td>
-<td align="right">6.663</td>
-<td align="right">27</td>
-<td align="right">1.62</td>
-<td align="right">3</td>
-<td align="right">6.348</td>
-<td align="right">27</td>
-<td align="right">1.62</td>
-</tr></tbody>
+</tr>
+<tr class="odd">
+<td align="left">Spr_Season_ID</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">Spr_TL2_WHPT_ASPT (AbW,DistFam)</td>
+<td align="left">6.512</td>
+</tr>
+<tr class="odd">
+<td align="left">Spr_TL2_WHPT_NTaxa (AbW,DistFam)</td>
+<td align="left">24</td>
+</tr>
+<tr class="even">
+<td align="left">Spr_Ntaxa_Bias</td>
+<td align="left">1.62</td>
+</tr>
+<tr class="odd">
+<td align="left">Sum_Season_ID</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">Sum_TL2_WHPT_ASPT (AbW,DistFam)</td>
+<td align="left">6.663</td>
+</tr>
+<tr class="odd">
+<td align="left">Sum_TL2_WHPT_NTaxa (AbW,DistFam)</td>
+<td align="left">27</td>
+</tr>
+<tr class="even">
+<td align="left">Sum_Ntaxa_Bias</td>
+<td align="left">1.62</td>
+</tr>
+<tr class="odd">
+<td align="left">Aut_Season_ID</td>
+<td align="left">3</td>
+</tr>
+<tr class="even">
+<td align="left">Aut_TL2_WHPT_ASPT (AbW,DistFam)</td>
+<td align="left">6.348</td>
+</tr>
+<tr class="odd">
+<td align="left">Aut_TL2_WHPT_NTaxa (AbW,DistFam)</td>
+<td align="left">27</td>
+</tr>
+<tr class="even">
+<td align="left">Aut_Ntaxa_Bias</td>
+<td align="left">1.62</td>
+</tr>
+</tbody>
 </table>
 <p>See the <a href="https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx">Input File</a> excel spreadsheet which includes test data and validation</p>
 <p>A full description of each column for the input table and how it is completed can be found within the <a href="https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx">RICT2 user guide</a>.</p>
@@ -3528,273 +3631,360 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <p>Prediction Output file</p>
 <p>An example of the output file for prediction is linked below:</p>
 <table class="table">
-<colgroup>
-<col width="1%">
-<col width="0%">
-<col width="0%">
-<col width="1%">
-<col width="2%">
-<col width="0%">
-<col width="0%">
-<col width="1%">
-<col width="1%">
-<col width="0%">
-<col width="1%">
-<col width="0%">
-<col width="1%">
-<col width="1%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="1%">
-<col width="2%">
-<col width="2%">
-<col width="2%">
-<col width="2%">
-<col width="2%">
-<col width="2%">
-<col width="2%">
-<col width="2%">
-<col width="2%">
-<col width="2%">
-<col width="2%">
-<col width="2%">
-<col width="1%">
-<col width="0%">
-<col width="1%">
-<col width="2%">
-<col width="2%">
-<col width="1%">
-<col width="1%">
-<col width="2%">
-<col width="2%">
-<col width="1%">
-<col width="1%">
-<col width="2%">
-<col width="2%">
-<col width="1%">
-<col width="0%">
-</colgroup>
 <thead><tr class="header">
-<th align="left">SITE</th>
-<th align="right">LATITUDE</th>
-<th align="right">LONGITUDE</th>
-<th align="right">LOG.ALTITUDE</th>
-<th align="right">LOG.DISTANCE.FROM.SOURCE</th>
-<th align="right">LOG.WIDTH</th>
-<th align="right">LOG.DEPTH</th>
-<th align="right">MEAN.SUBSTRATUM</th>
-<th align="right">DISCHARGE.CATEGORY</th>
-<th align="right">ALKALINITY</th>
-<th align="right">LOG.ALKALINITY</th>
-<th align="right">LOG.SLOPE</th>
-<th align="right">MEAN.AIR.TEMP</th>
-<th align="right">AIR.TEMP.RANGE</th>
-<th align="right">p1</th>
-<th align="right">p2</th>
-<th align="right">p3</th>
-<th align="right">p4</th>
-<th align="right">p5</th>
-<th align="right">p6</th>
-<th align="right">p7</th>
-<th align="right">p8</th>
-<th align="right">p9</th>
-<th align="right">p10</th>
-<th align="right">p11</th>
-<th align="right">p12</th>
-<th align="right">p13</th>
-<th align="right">p14</th>
-<th align="right">p15</th>
-<th align="right">p16</th>
-<th align="right">p17</th>
-<th align="right">p18</th>
-<th align="right">p19</th>
-<th align="right">p20</th>
-<th align="right">p21</th>
-<th align="right">p22</th>
-<th align="right">p23</th>
-<th align="right">p24</th>
-<th align="right">p25</th>
-<th align="right">p26</th>
-<th align="right">p27</th>
-<th align="right">p28</th>
-<th align="right">p29</th>
-<th align="right">p30</th>
-<th align="right">p31</th>
-<th align="right">p32</th>
-<th align="right">p33</th>
-<th align="right">p34</th>
-<th align="right">p35</th>
-<th align="right">p36</th>
-<th align="right">p37</th>
-<th align="right">p38</th>
-<th align="right">p39</th>
-<th align="right">p40</th>
-<th align="right">p41</th>
-<th align="right">p42</th>
-<th align="right">p43</th>
-<th align="left">SuitCode</th>
-<th align="left">SuitText</th>
-<th align="left">belongs_to_end_grp</th>
-<th align="right">TL2_WHPT_NTAXA_AbW_DistFam_spr</th>
-<th align="right">TL2_WHPT_ASPT_AbW_DistFam_spr</th>
-<th align="right">TL2_WHPT_NTAXA_AbW_DistFam_aut</th>
-<th align="right">TL2_WHPT_ASPT_AbW_DistFam_aut</th>
-<th align="right">TL2_WHPT_NTAXA_AbW_CompFam_spr</th>
-<th align="right">TL2_WHPT_NTAXA_ASPT_CompFam_spr</th>
-<th align="right">TL2_WHPT_NTAXA_AbW_CompFam_aut</th>
-<th align="right">TL2_WHPT_ASPT_AbW_CompFam_aut</th>
-<th align="right">TL2_WHPT_NTAXA_AbW_DistFam_sum</th>
-<th align="right">TL2_WHPT_ASPT_AbW_DistFam_sum</th>
-<th align="right">TL2_WHPT_NTAXA_AbW_CompFam_sum</th>
-<th align="right">TL2_WHPT_ASPT_AbW_CompFam_sum</th>
-<th align="left">WATERBODY</th>
-<th align="right">YEAR</th>
-<th align="right">SPR_SEASON_ID</th>
-<th align="right">SPR_TL2_WHPT_ASPT (ABW,DISTFAM)</th>
-<th align="right">SPR_TL2_WHPT_NTAXA (ABW,DISTFAM)</th>
-<th align="right">SPR_NTAXA_BIAS</th>
-<th align="right">SUM_SEASON_ID</th>
-<th align="right">SUM_TL2_WHPT_ASPT (ABW,DISTFAM)</th>
-<th align="right">SUM_TL2_WHPT_NTAXA (ABW,DISTFAM)</th>
-<th align="right">SUM_NTAXA_BIAS</th>
-<th align="right">AUT_SEASON_ID</th>
-<th align="right">AUT_TL2_WHPT_ASPT (ABW,DISTFAM)</th>
-<th align="right">AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)</th>
-<th align="right">AUT_NTAXA_BIAS</th>
-<th align="left">area</th>
+<th align="left"></th>
+<th align="left">1</th>
 </tr></thead>
-<tbody><tr class="odd">
+<tbody>
+<tr class="odd">
+<td align="left">SITE</td>
 <td align="left">MYR-GB-01-R</td>
-<td align="right">54.306</td>
-<td align="right">-0.55378</td>
-<td align="right">1.7781</td>
-<td align="right">1</td>
-<td align="right">0.80618</td>
-<td align="right">1.3365</td>
-<td align="right">-5.6378</td>
-<td align="right">2</td>
-<td align="right">101.4</td>
-<td align="right">2.006</td>
-<td align="right">0.43136</td>
-<td align="right">9.4863</td>
-<td align="right">11.953</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0.00001</td>
-<td align="right">0</td>
-<td align="right">0.00001</td>
-<td align="right">0.00065</td>
-<td align="right">0.00001</td>
-<td align="right">0.00008</td>
-<td align="right">0.00112</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0.00128</td>
-<td align="right">0.00024</td>
-<td align="right">0.00037</td>
-<td align="right">0.04613</td>
-<td align="right">0.11163</td>
-<td align="right">0.03547</td>
-<td align="right">0.00092</td>
-<td align="right">0.01501</td>
-<td align="right">0.26914</td>
-<td align="right">0.00736</td>
-<td align="right">0.14288</td>
-<td align="right">0.09139</td>
-<td align="right">0.1046</td>
-<td align="right">0.00007</td>
-<td align="right">0</td>
-<td align="right">0.00235</td>
-<td align="right">0.10759</td>
-<td align="right">0.00056</td>
-<td align="right">0.00001</td>
-<td align="right">0.03057</td>
-<td align="right">0.00237</td>
-<td align="right">0.01779</td>
-<td align="right">0.00831</td>
-<td align="right">0.00063</td>
-<td align="right">0.00145</td>
-<td align="right">0.00001</td>
-<td align="right">0</td>
-<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">LATITUDE</td>
+<td align="left">54.306</td>
+</tr>
+<tr class="odd">
+<td align="left">LONGITUDE</td>
+<td align="left">-0.55378</td>
+</tr>
+<tr class="even">
+<td align="left">LOG.ALTITUDE</td>
+<td align="left">1.7782</td>
+</tr>
+<tr class="odd">
+<td align="left">LOG.DISTANCE.FROM.SOURCE</td>
 <td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">LOG.WIDTH</td>
+<td align="left">0.80618</td>
+</tr>
+<tr class="odd">
+<td align="left">LOG.DEPTH</td>
+<td align="left">1.3365</td>
+</tr>
+<tr class="even">
+<td align="left">MEAN.SUBSTRATUM</td>
+<td align="left">-5.6378</td>
+</tr>
+<tr class="odd">
+<td align="left">DISCHARGE.CATEGORY</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">ALKALINITY</td>
+<td align="left">101.4</td>
+</tr>
+<tr class="odd">
+<td align="left">LOG.ALKALINITY</td>
+<td align="left">2.006</td>
+</tr>
+<tr class="even">
+<td align="left">LOG.SLOPE</td>
+<td align="left">0.43136</td>
+</tr>
+<tr class="odd">
+<td align="left">MEAN.AIR.TEMP</td>
+<td align="left">9.4863</td>
+</tr>
+<tr class="even">
+<td align="left">AIR.TEMP.RANGE</td>
+<td align="left">11.953</td>
+</tr>
+<tr class="odd">
+<td align="left">p1</td>
+<td align="left">9.3563e-09</td>
+</tr>
+<tr class="even">
+<td align="left">p2</td>
+<td align="left">6.9259e-07</td>
+</tr>
+<tr class="odd">
+<td align="left">p3</td>
+<td align="left">1.0532e-13</td>
+</tr>
+<tr class="even">
+<td align="left">p4</td>
+<td align="left">0.0000012433</td>
+</tr>
+<tr class="odd">
+<td align="left">p5</td>
+<td align="left">3.4923e-12</td>
+</tr>
+<tr class="even">
+<td align="left">p6</td>
+<td align="left">0.0000056303</td>
+</tr>
+<tr class="odd">
+<td align="left">p7</td>
+<td align="left">8.8589e-07</td>
+</tr>
+<tr class="even">
+<td align="left">p8</td>
+<td align="left">0.000012178</td>
+</tr>
+<tr class="odd">
+<td align="left">p9</td>
+<td align="left">0.00065037</td>
+</tr>
+<tr class="even">
+<td align="left">p10</td>
+<td align="left">0.000010195</td>
+</tr>
+<tr class="odd">
+<td align="left">p11</td>
+<td align="left">0.000075734</td>
+</tr>
+<tr class="even">
+<td align="left">p12</td>
+<td align="left">0.0011184</td>
+</tr>
+<tr class="odd">
+<td align="left">p13</td>
+<td align="left">0.0000019865</td>
+</tr>
+<tr class="even">
+<td align="left">p14</td>
+<td align="left">2.3112e-07</td>
+</tr>
+<tr class="odd">
+<td align="left">p15</td>
+<td align="left">1.1355e-08</td>
+</tr>
+<tr class="even">
+<td align="left">p16</td>
+<td align="left">0.0012824</td>
+</tr>
+<tr class="odd">
+<td align="left">p17</td>
+<td align="left">0.00023789</td>
+</tr>
+<tr class="even">
+<td align="left">p18</td>
+<td align="left">0.00037426</td>
+</tr>
+<tr class="odd">
+<td align="left">p19</td>
+<td align="left">0.04613</td>
+</tr>
+<tr class="even">
+<td align="left">p20</td>
+<td align="left">0.11163</td>
+</tr>
+<tr class="odd">
+<td align="left">p21</td>
+<td align="left">0.035469</td>
+</tr>
+<tr class="even">
+<td align="left">p22</td>
+<td align="left">0.00091873</td>
+</tr>
+<tr class="odd">
+<td align="left">p23</td>
+<td align="left">0.015014</td>
+</tr>
+<tr class="even">
+<td align="left">p24</td>
+<td align="left">0.26914</td>
+</tr>
+<tr class="odd">
+<td align="left">p25</td>
+<td align="left">0.0073552</td>
+</tr>
+<tr class="even">
+<td align="left">p26</td>
+<td align="left">0.14288</td>
+</tr>
+<tr class="odd">
+<td align="left">p27</td>
+<td align="left">0.091394</td>
+</tr>
+<tr class="even">
+<td align="left">p28</td>
+<td align="left">0.1046</td>
+</tr>
+<tr class="odd">
+<td align="left">p29</td>
+<td align="left">0.000074099</td>
+</tr>
+<tr class="even">
+<td align="left">p30</td>
+<td align="left">5.9053e-10</td>
+</tr>
+<tr class="odd">
+<td align="left">p31</td>
+<td align="left">0.0023516</td>
+</tr>
+<tr class="even">
+<td align="left">p32</td>
+<td align="left">0.10759</td>
+</tr>
+<tr class="odd">
+<td align="left">p33</td>
+<td align="left">0.0005559</td>
+</tr>
+<tr class="even">
+<td align="left">p34</td>
+<td align="left">0.0000056732</td>
+</tr>
+<tr class="odd">
+<td align="left">p35</td>
+<td align="left">0.030573</td>
+</tr>
+<tr class="even">
+<td align="left">p36</td>
+<td align="left">0.0023719</td>
+</tr>
+<tr class="odd">
+<td align="left">p37</td>
+<td align="left">0.017792</td>
+</tr>
+<tr class="even">
+<td align="left">p38</td>
+<td align="left">0.0083078</td>
+</tr>
+<tr class="odd">
+<td align="left">p39</td>
+<td align="left">0.00062569</td>
+</tr>
+<tr class="even">
+<td align="left">p40</td>
+<td align="left">0.0014487</td>
+</tr>
+<tr class="odd">
+<td align="left">p41</td>
+<td align="left">0.000011462</td>
+</tr>
+<tr class="even">
+<td align="left">p42</td>
+<td align="left">2.6168e-08</td>
+</tr>
+<tr class="odd">
+<td align="left">p43</td>
+<td align="left">4.287e-17</td>
+</tr>
+<tr class="even">
+<td align="left">SuitCode</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">SuitText</td>
 <td align="left">&gt;5%</td>
+</tr>
+<tr class="even">
+<td align="left">belongs_to_end_grp</td>
 <td align="left">EndGr24</td>
-<td align="right">27.303</td>
-<td align="right">6.6953</td>
-<td align="right">26.965</td>
-<td align="right">6.3415</td>
-<td align="right">26.633</td>
-<td align="right">6.6786</td>
-<td align="right">26.421</td>
-<td align="right">6.3293</td>
-<td align="right">25.181</td>
-<td align="right">6.2805</td>
-<td align="right">24.667</td>
-<td align="right">6.2639</td>
+</tr>
+<tr class="odd">
+<td align="left">TL2_WHPT_NTAXA_AbW_DistFam_spr</td>
+<td align="left">27.303</td>
+</tr>
+<tr class="even">
+<td align="left">TL2_WHPT_ASPT_AbW_DistFam_spr</td>
+<td align="left">6.6953</td>
+</tr>
+<tr class="odd">
+<td align="left">TL2_WHPT_NTAXA_AbW_DistFam_aut</td>
+<td align="left">26.965</td>
+</tr>
+<tr class="even">
+<td align="left">TL2_WHPT_ASPT_AbW_DistFam_aut</td>
+<td align="left">6.3415</td>
+</tr>
+<tr class="odd">
+<td align="left">TL2_WHPT_NTAXA_AbW_CompFam_spr</td>
+<td align="left">26.633</td>
+</tr>
+<tr class="even">
+<td align="left">TL2_WHPT_NTAXA_ASPT_CompFam_spr</td>
+<td align="left">6.6786</td>
+</tr>
+<tr class="odd">
+<td align="left">TL2_WHPT_NTAXA_AbW_CompFam_aut</td>
+<td align="left">26.421</td>
+</tr>
+<tr class="even">
+<td align="left">TL2_WHPT_ASPT_AbW_CompFam_aut</td>
+<td align="left">6.3293</td>
+</tr>
+<tr class="odd">
+<td align="left">TL2_WHPT_NTAXA_AbW_DistFam_sum</td>
+<td align="left">25.181</td>
+</tr>
+<tr class="even">
+<td align="left">TL2_WHPT_ASPT_AbW_DistFam_sum</td>
+<td align="left">6.2805</td>
+</tr>
+<tr class="odd">
+<td align="left">TL2_WHPT_NTAXA_AbW_CompFam_sum</td>
+<td align="left">24.667</td>
+</tr>
+<tr class="even">
+<td align="left">TL2_WHPT_ASPT_AbW_CompFam_sum</td>
+<td align="left">6.2639</td>
+</tr>
+<tr class="odd">
+<td align="left">WATERBODY</td>
 <td align="left">Waterbody name</td>
-<td align="right">2016</td>
-<td align="right">1</td>
-<td align="right">6.512</td>
-<td align="right">24</td>
-<td align="right">1.62</td>
-<td align="right">2</td>
-<td align="right">6.663</td>
-<td align="right">27</td>
-<td align="right">1.62</td>
-<td align="right">3</td>
-<td align="right">6.348</td>
-<td align="right">27</td>
-<td align="right">1.62</td>
+</tr>
+<tr class="even">
+<td align="left">YEAR</td>
+<td align="left">2016</td>
+</tr>
+<tr class="odd">
+<td align="left">SPR_SEASON_ID</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">SPR_TL2_WHPT_ASPT (ABW,DISTFAM)</td>
+<td align="left">6.512</td>
+</tr>
+<tr class="odd">
+<td align="left">SPR_TL2_WHPT_NTAXA (ABW,DISTFAM)</td>
+<td align="left">24</td>
+</tr>
+<tr class="even">
+<td align="left">SPR_NTAXA_BIAS</td>
+<td align="left">1.62</td>
+</tr>
+<tr class="odd">
+<td align="left">SUM_SEASON_ID</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">SUM_TL2_WHPT_ASPT (ABW,DISTFAM)</td>
+<td align="left">6.663</td>
+</tr>
+<tr class="odd">
+<td align="left">SUM_TL2_WHPT_NTAXA (ABW,DISTFAM)</td>
+<td align="left">27</td>
+</tr>
+<tr class="even">
+<td align="left">SUM_NTAXA_BIAS</td>
+<td align="left">1.62</td>
+</tr>
+<tr class="odd">
+<td align="left">AUT_SEASON_ID</td>
+<td align="left">3</td>
+</tr>
+<tr class="even">
+<td align="left">AUT_TL2_WHPT_ASPT (ABW,DISTFAM)</td>
+<td align="left">6.348</td>
+</tr>
+<tr class="odd">
+<td align="left">AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)</td>
+<td align="left">27</td>
+</tr>
+<tr class="even">
+<td align="left">AUT_NTAXA_BIAS</td>
+<td align="left">1.62</td>
+</tr>
+<tr class="odd">
+<td align="left">area</td>
 <td align="left">gb</td>
-</tr></tbody>
+</tr>
+</tbody>
 </table>
 </div>
 <div id="classification-2" class="section level4">
@@ -3802,339 +3992,445 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <a href="#classification-2" class="anchor"></a><span class="header-section-number">17.0.0.2</span> Classification</h4>
 <p>Multiple year:</p>
 <table class="table">
-<colgroup>
-<col width="2%">
-<col width="1%">
-<col width="3%">
-<col width="3%">
-<col width="3%">
-<col width="3%">
-<col width="3%">
-<col width="3%">
-<col width="5%">
-<col width="4%">
-<col width="3%">
-<col width="3%">
-<col width="3%">
-<col width="3%">
-<col width="3%">
-<col width="5%">
-<col width="4%">
-<col width="6%">
-<col width="6%">
-<col width="6%">
-<col width="6%">
-<col width="6%">
-<col width="7%">
-</colgroup>
 <thead><tr class="header">
-<th align="left">SITE</th>
-<th align="right">YEAR</th>
-<th align="left">WATERBODY</th>
-<th align="left">H_NTAXA_spr_aut</th>
-<th align="left">G_NTAXA_spr_aut</th>
-<th align="left">M_NTAXA_spr_aut</th>
-<th align="left">P_NTAXA_spr_aut</th>
-<th align="left">B_NTAXA_spr_aut</th>
-<th align="left">mostProb_NTAXA_spr_aut</th>
-<th align="right">NTAXA_aver_spr_aut</th>
-<th align="left">H_ASPT_spr_aut</th>
-<th align="left">G_ASPT_spr_aut</th>
-<th align="left">M_ASPT_spr_aut</th>
-<th align="left">P_ASPT_spr_aut</th>
-<th align="left">B_ASPT_spr_aut</th>
-<th align="left">mostProb_ASPT_spr_aut</th>
-<th align="right">ASPT_aver_spr_aut</th>
-<th align="left">mintawhpt_spr_aut_H_MINTA_</th>
-<th align="left">mintawhpt_spr_aut_G_MINTA_</th>
-<th align="left">mintawhpt_spr_aut_M_MINTA_</th>
-<th align="left">mintawhpt_spr_aut_P_MINTA_</th>
-<th align="left">mintawhpt_spr_aut_B_MINTA_</th>
-<th align="left">mintawhpt_spr_aut_mostProb_MINTA_</th>
+<th align="left"></th>
+<th align="left">1</th>
 </tr></thead>
-<tbody><tr class="odd">
+<tbody>
+<tr class="odd">
+<td align="left">SITE</td>
 <td align="left">MYR-GB-01-R</td>
-<td align="right">2016</td>
+</tr>
+<tr class="even">
+<td align="left">YEAR</td>
+<td align="left">2016</td>
+</tr>
+<tr class="odd">
+<td align="left">WATERBODY</td>
 <td align="left">Waterbody name</td>
+</tr>
+<tr class="even">
+<td align="left">H_NTAXA_spr_aut</td>
 <td align="left">96.9</td>
+</tr>
+<tr class="odd">
+<td align="left">G_NTAXA_spr_aut</td>
 <td align="left">3.02</td>
+</tr>
+<tr class="even">
+<td align="left">M_NTAXA_spr_aut</td>
 <td align="left">0.08</td>
+</tr>
+<tr class="odd">
+<td align="left">P_NTAXA_spr_aut</td>
 <td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">B_NTAXA_spr_aut</td>
 <td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">mostProb_NTAXA_spr_aut</td>
 <td align="left">H</td>
-<td align="right">1.0008</td>
+</tr>
+<tr class="even">
+<td align="left">NTAXA_aver_spr_aut</td>
+<td align="left">1.0008</td>
+</tr>
+<tr class="odd">
+<td align="left">H_ASPT_spr_aut</td>
 <td align="left">52.14</td>
+</tr>
+<tr class="even">
+<td align="left">G_ASPT_spr_aut</td>
 <td align="left">44.12</td>
+</tr>
+<tr class="odd">
+<td align="left">M_ASPT_spr_aut</td>
 <td align="left">3.73</td>
+</tr>
+<tr class="even">
+<td align="left">P_ASPT_spr_aut</td>
 <td align="left">0.01</td>
+</tr>
+<tr class="odd">
+<td align="left">B_ASPT_spr_aut</td>
 <td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">mostProb_ASPT_spr_aut</td>
 <td align="left">H</td>
-<td align="right">0.9708</td>
+</tr>
+<tr class="odd">
+<td align="left">ASPT_aver_spr_aut</td>
+<td align="left">0.9708</td>
+</tr>
+<tr class="even">
+<td align="left">mintawhpt_spr_aut_H_MINTA_</td>
 <td align="left">52.14</td>
+</tr>
+<tr class="odd">
+<td align="left">mintawhpt_spr_aut_G_MINTA_</td>
 <td align="left">44.12</td>
+</tr>
+<tr class="even">
+<td align="left">mintawhpt_spr_aut_M_MINTA_</td>
 <td align="left">3.73</td>
+</tr>
+<tr class="odd">
+<td align="left">mintawhpt_spr_aut_P_MINTA_</td>
 <td align="left">0.01</td>
+</tr>
+<tr class="even">
+<td align="left">mintawhpt_spr_aut_B_MINTA_</td>
 <td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">mintawhpt_spr_aut_mostProb_MINTA_</td>
 <td align="left">H</td>
-</tr></tbody>
+</tr>
+</tbody>
 </table>
 <p>Single year:</p>
 <table class="table">
-<colgroup>
-<col width="0%">
-<col width="0%">
-<col width="1%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="1%">
-<col width="1%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="1%">
-<col width="1%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="1%">
-<col width="2%">
-<col width="1%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="1%">
-<col width="1%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="1%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="0%">
-<col width="1%">
-</colgroup>
 <thead><tr class="header">
-<th align="left">SITE</th>
-<th align="right">YEAR</th>
-<th align="left">WATERBODY</th>
-<th align="left">H_NTAXA_spr</th>
-<th align="left">G_NTAXA_spr</th>
-<th align="left">M_NTAXA_spr</th>
-<th align="left">P_NTAXA_spr</th>
-<th align="left">B_NTAXA_spr</th>
-<th align="left">mostProb_NTAXA_spr</th>
-<th align="right">NTAXA_eqr_av_spr</th>
-<th align="left">H_NTAXA_aut</th>
-<th align="left">G_NTAXA_aut</th>
-<th align="left">M_NTAXA_aut</th>
-<th align="left">P_NTAXA_aut</th>
-<th align="left">B_NTAXA_aut</th>
-<th align="left">mostProb_NTAXA_aut</th>
-<th align="right">NTAXA_eqr_av_aut</th>
-<th align="left">H_NTAXA_spr_aut</th>
-<th align="left">G_NTAXA_spr_aut</th>
-<th align="left">M_NTAXA_spr_aut</th>
-<th align="left">P_NTAXA_spr_aut</th>
-<th align="left">B_NTAXA_spr_aut</th>
-<th align="left">mostProb_NTAXA_spr_aut</th>
-<th align="right">NTAXA_aver_spr_aut</th>
-<th align="left">H_ASPT_spr</th>
-<th align="left">G_ASPT_spr</th>
-<th align="left">M_ASPT_spr</th>
-<th align="left">P_ASPT_spr</th>
-<th align="left">B_ASPT_spr</th>
-<th align="left">mostProb_ASPT_spr</th>
-<th align="right">ASPT_eqr_av_spr</th>
-<th align="left">H_ASPT_aut</th>
-<th align="left">G_ASPT_aut</th>
-<th align="left">M_ASPT_aut</th>
-<th align="left">P_ASPT_aut</th>
-<th align="left">B_ASPT_aut</th>
-<th align="left">mostProb_ASPT_aut</th>
-<th align="right">ASPT_eqr_av_aut</th>
-<th align="left">H_ASPT_spr_aut</th>
-<th align="left">G_ASPT_spr_aut</th>
-<th align="left">M_ASPT_spr_aut</th>
-<th align="left">P_ASPT_spr_aut</th>
-<th align="left">B_ASPT_spr_aut</th>
-<th align="left">mostProb_ASPT_spr_aut</th>
-<th align="right">ASPT_aver_spr_aut</th>
-<th align="left">mintawhpt_spr_H</th>
-<th align="left">mintawhpt_spr_G</th>
-<th align="left">mintawhpt_spr_M</th>
-<th align="left">mintawhpt_spr_P</th>
-<th align="left">mintawhpt_spr_B</th>
-<th align="left">mintawhpt_spr_mostProb</th>
-<th align="left">mintawhpt_aut_H</th>
-<th align="left">mintawhpt_aut_G</th>
-<th align="left">mintawhpt_aut_M</th>
-<th align="left">mintawhpt_aut_P</th>
-<th align="left">mintawhpt_aut_B</th>
-<th align="left">mintawhpt_aut_mostProb</th>
-<th align="left">mintawhpt_spr_aut_H</th>
-<th align="left">mintawhpt_spr_aut_G</th>
-<th align="left">mintawhpt_spr_aut_M</th>
-<th align="left">mintawhpt_spr_aut_P</th>
-<th align="left">mintawhpt_spr_aut_B</th>
-<th align="left">mintawhpt_spr_aut_mostProb_MINTA_</th>
-<th align="right">eqr_av_sum_aspt</th>
-<th align="left">H_ASPT_sum</th>
-<th align="left">G_ASPT_sum</th>
-<th align="left">M_ASPT_sum</th>
-<th align="left">P_ASPT_sum</th>
-<th align="left">B_ASPT_sum</th>
-<th align="left">mostProb_ASPT_sum</th>
-<th align="right">NTAXA_eqr_av_sum</th>
-<th align="left">H_NTAXA_sum</th>
-<th align="left">G_NTAXA_sum</th>
-<th align="left">M_NTAXA_sum</th>
-<th align="left">P_NTAXA_sum</th>
-<th align="left">B_NTAXA_sum</th>
-<th align="left">mostProb_NTAXA_sum</th>
-<th align="left">H_MINTA</th>
-<th align="left">G_MINTA</th>
-<th align="left">M_MINTA</th>
-<th align="left">P_MINTA</th>
-<th align="left">B_MINTA</th>
-<th align="left">mostProb_MINTA</th>
+<th align="left"></th>
+<th align="left">1</th>
 </tr></thead>
-<tbody><tr class="odd">
+<tbody>
+<tr class="odd">
+<td align="left">SITE</td>
 <td align="left">MYR-GB-01-R</td>
-<td align="right">2016</td>
+</tr>
+<tr class="even">
+<td align="left">YEAR</td>
+<td align="left">2016</td>
+</tr>
+<tr class="odd">
+<td align="left">WATERBODY</td>
 <td align="left">Waterbody name</td>
+</tr>
+<tr class="even">
+<td align="left">H_NTAXA_spr</td>
 <td align="left">90.59</td>
+</tr>
+<tr class="odd">
+<td align="left">G_NTAXA_spr</td>
 <td align="left">8.82</td>
+</tr>
+<tr class="even">
+<td align="left">M_NTAXA_spr</td>
 <td align="left">0.59</td>
+</tr>
+<tr class="odd">
+<td align="left">P_NTAXA_spr</td>
 <td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">B_NTAXA_spr</td>
 <td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">mostProb_NTAXA_spr</td>
 <td align="left">H</td>
-<td align="right">0.93939</td>
+</tr>
+<tr class="even">
+<td align="left">NTAXA_eqr_av_spr</td>
+<td align="left">0.93939</td>
+</tr>
+<tr class="odd">
+<td align="left">H_NTAXA_aut</td>
 <td align="left">99.24</td>
+</tr>
+<tr class="even">
+<td align="left">G_NTAXA_aut</td>
 <td align="left">0.76</td>
+</tr>
+<tr class="odd">
+<td align="left">M_NTAXA_aut</td>
 <td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">P_NTAXA_aut</td>
 <td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">B_NTAXA_aut</td>
 <td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">mostProb_NTAXA_aut</td>
 <td align="left">H</td>
-<td align="right">1.0622</td>
+</tr>
+<tr class="odd">
+<td align="left">NTAXA_eqr_av_aut</td>
+<td align="left">1.0622</td>
+</tr>
+<tr class="even">
+<td align="left">H_NTAXA_spr_aut</td>
 <td align="left">96.9</td>
+</tr>
+<tr class="odd">
+<td align="left">G_NTAXA_spr_aut</td>
 <td align="left">3.02</td>
+</tr>
+<tr class="even">
+<td align="left">M_NTAXA_spr_aut</td>
 <td align="left">0.08</td>
+</tr>
+<tr class="odd">
+<td align="left">P_NTAXA_spr_aut</td>
 <td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">B_NTAXA_spr_aut</td>
 <td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">mostProb_NTAXA_spr_aut</td>
 <td align="left">H</td>
-<td align="right">1.0008</td>
+</tr>
+<tr class="even">
+<td align="left">NTAXA_aver_spr_aut</td>
+<td align="left">1.0008</td>
+</tr>
+<tr class="odd">
+<td align="left">H_ASPT_spr</td>
 <td align="left">41.97</td>
+</tr>
+<tr class="even">
+<td align="left">G_ASPT_spr</td>
 <td align="left">52.45</td>
+</tr>
+<tr class="odd">
+<td align="left">M_ASPT_spr</td>
 <td align="left">5.52</td>
+</tr>
+<tr class="even">
+<td align="left">P_ASPT_spr</td>
 <td align="left">0.06</td>
+</tr>
+<tr class="odd">
+<td align="left">B_ASPT_spr</td>
 <td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">mostProb_ASPT_spr</td>
 <td align="left">H</td>
-<td align="right">0.95609</td>
+</tr>
+<tr class="odd">
+<td align="left">ASPT_eqr_av_spr</td>
+<td align="left">0.95609</td>
+</tr>
+<tr class="even">
+<td align="left">H_ASPT_aut</td>
 <td align="left">62.36</td>
+</tr>
+<tr class="odd">
+<td align="left">G_ASPT_aut</td>
 <td align="left">35.26</td>
+</tr>
+<tr class="even">
+<td align="left">M_ASPT_aut</td>
 <td align="left">2.38</td>
+</tr>
+<tr class="odd">
+<td align="left">P_ASPT_aut</td>
 <td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">B_ASPT_aut</td>
 <td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">mostProb_ASPT_aut</td>
 <td align="left">H</td>
-<td align="right">0.9855</td>
+</tr>
+<tr class="even">
+<td align="left">ASPT_eqr_av_aut</td>
+<td align="left">0.9855</td>
+</tr>
+<tr class="odd">
+<td align="left">H_ASPT_spr_aut</td>
 <td align="left">52.14</td>
+</tr>
+<tr class="even">
+<td align="left">G_ASPT_spr_aut</td>
 <td align="left">44.12</td>
+</tr>
+<tr class="odd">
+<td align="left">M_ASPT_spr_aut</td>
 <td align="left">3.73</td>
+</tr>
+<tr class="even">
+<td align="left">P_ASPT_spr_aut</td>
 <td align="left">0.01</td>
+</tr>
+<tr class="odd">
+<td align="left">B_ASPT_spr_aut</td>
 <td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">mostProb_ASPT_spr_aut</td>
 <td align="left">H</td>
-<td align="right">0.9708</td>
+</tr>
+<tr class="odd">
+<td align="left">ASPT_aver_spr_aut</td>
+<td align="left">0.9708</td>
+</tr>
+<tr class="even">
+<td align="left">mintawhpt_spr_H</td>
 <td align="left">41.97</td>
+</tr>
+<tr class="odd">
+<td align="left">mintawhpt_spr_G</td>
 <td align="left">52.4</td>
+</tr>
+<tr class="even">
+<td align="left">mintawhpt_spr_M</td>
 <td align="left">5.57</td>
+</tr>
+<tr class="odd">
+<td align="left">mintawhpt_spr_P</td>
 <td align="left">0.06</td>
+</tr>
+<tr class="even">
+<td align="left">mintawhpt_spr_B</td>
 <td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">mintawhpt_spr_mostProb</td>
 <td align="left">G</td>
+</tr>
+<tr class="even">
+<td align="left">mintawhpt_aut_H</td>
 <td align="left">62.36</td>
+</tr>
+<tr class="odd">
+<td align="left">mintawhpt_aut_G</td>
 <td align="left">35.26</td>
+</tr>
+<tr class="even">
+<td align="left">mintawhpt_aut_M</td>
 <td align="left">2.38</td>
+</tr>
+<tr class="odd">
+<td align="left">mintawhpt_aut_P</td>
 <td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">mintawhpt_aut_B</td>
 <td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">mintawhpt_aut_mostProb</td>
 <td align="left">H</td>
+</tr>
+<tr class="even">
+<td align="left">mintawhpt_spr_aut_H</td>
 <td align="left">52.14</td>
+</tr>
+<tr class="odd">
+<td align="left">mintawhpt_spr_aut_G</td>
 <td align="left">44.12</td>
+</tr>
+<tr class="even">
+<td align="left">mintawhpt_spr_aut_M</td>
 <td align="left">3.73</td>
+</tr>
+<tr class="odd">
+<td align="left">mintawhpt_spr_aut_P</td>
 <td align="left">0.01</td>
+</tr>
+<tr class="even">
+<td align="left">mintawhpt_spr_aut_B</td>
 <td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">mintawhpt_spr_aut_mostProb_MINTA_</td>
 <td align="left">H</td>
-<td align="right">0.97809</td>
+</tr>
+<tr class="even">
+<td align="left">eqr_av_sum_aspt</td>
+<td align="left">0.97809</td>
+</tr>
+<tr class="odd">
+<td align="left">H_ASPT_sum</td>
 <td align="left">57.46</td>
+</tr>
+<tr class="even">
+<td align="left">G_ASPT_sum</td>
 <td align="left">40</td>
+</tr>
+<tr class="odd">
+<td align="left">M_ASPT_sum</td>
 <td align="left">2.54</td>
+</tr>
+<tr class="even">
+<td align="left">P_ASPT_sum</td>
 <td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">B_ASPT_sum</td>
 <td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">mostProb_ASPT_sum</td>
 <td align="left">H</td>
-<td align="right">1.0491</td>
+</tr>
+<tr class="odd">
+<td align="left">NTAXA_eqr_av_sum</td>
+<td align="left">1.049</td>
+</tr>
+<tr class="even">
+<td align="left">H_NTAXA_sum</td>
 <td align="left">98.97</td>
+</tr>
+<tr class="odd">
+<td align="left">G_NTAXA_sum</td>
 <td align="left">1.02</td>
+</tr>
+<tr class="even">
+<td align="left">M_NTAXA_sum</td>
 <td align="left">0.01</td>
+</tr>
+<tr class="odd">
+<td align="left">P_NTAXA_sum</td>
 <td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">B_NTAXA_sum</td>
 <td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">mostProb_NTAXA_sum</td>
 <td align="left">H</td>
+</tr>
+<tr class="even">
+<td align="left">H_MINTA</td>
 <td align="left">57.46</td>
+</tr>
+<tr class="odd">
+<td align="left">G_MINTA</td>
 <td align="left">40</td>
+</tr>
+<tr class="even">
+<td align="left">M_MINTA</td>
 <td align="left">2.54</td>
+</tr>
+<tr class="odd">
+<td align="left">P_MINTA</td>
 <td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">B_MINTA</td>
 <td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">mostProb_MINTA</td>
 <td align="left">H</td>
-</tr></tbody>
+</tr>
+</tbody>
 </table>
 </div>
 </div>

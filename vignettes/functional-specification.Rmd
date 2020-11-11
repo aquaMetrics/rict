@@ -9,6 +9,7 @@ output:
     number_sections: yes
     toc: yes
   rmarkdown::word_document:
+    reference_docx: template.docx
     toc: yes
     toc_depth: 2
 vignette: |
@@ -228,7 +229,7 @@ The diagram below shows a diagrammatical representation of the main
 functionality of the RICT2 tool with numbered links to more detailed
 information.
 
-![](images/application-flow-chart.png){ width=100% }
+![](images/application-flow-chart.png){ width=650px }
 
 **1. LOGIN TO RICT:** A new user will need to create a Microsoft account and log
 in to be able to access to the RICT tool as the tool uses the Microsoft Azure
@@ -313,6 +314,9 @@ format they choose.
 A screenshot of the RICT2 prediction and classification experiment for GB in
 Microsoft Azure ML Studio being used with the default GB test data from the
 input template is shown below:
+  
+
+![](images/rict-azure.png){ width=650px }
   
 # Supporting files
   
@@ -1346,6 +1350,8 @@ coefficients are referred to in the algorithm below as DFCoef.
 
 (Step 4 in diagram above) 
 
+![](images/rict-discriminant-function-score.png){ width=200px }
+
 The functions that RICT2 uses for the calculations in the steps below (steps 4 -
 8) can be found in the prediction-functions.R file. The algorithms and
 definitions provided below are copied from WFD72C and have been used to create
@@ -1372,6 +1378,8 @@ DFScore~d~	= discriminant function score on axis d for the current test site
 ## Calculate Mahanalobis Distance
 
 (Step 5 in diagram above)
+
+![](images/rict-mahalanobis-distance.png){ width=200px }
   
 For a particular End Group g, the probability of End Group Membership is
 calculated as follows:
@@ -1395,7 +1403,9 @@ MahDistg	= Mahalanobis distance of test site from end group g
 
 ## Use Mahanalobis Distance to Determine Probability of End Group Membership
 (Step 6 in diagram above)
-  
+
+![](images/rict-probability-end-group.png){ width=200px }
+
 - Calculate the PDistg for each End Group
   
 PDist~g~	= NRef ~g~ * EXP(-MahDist~g~/2)  
@@ -1421,6 +1431,8 @@ Membership, one for each End Group. These are referred to below as Prob~1~ to
 Prob~n~.
 
 ## Determine Environmental Suitability of the Test Site for Prediction
+
+![](images/rict-environmental-suitability.png){ width=200px }
 
 (Step 7 in diagram above)
 
@@ -1472,6 +1484,8 @@ suitability code calculated.
 ## Determine the Predicted Values of Indices
   
 (Step 8 in diagram above)
+
+![](images/rict-prediction-of-index.png){ width=200px }
   
 The indices that require to be processed will be identified from the project
 experiment settings. For the initial release of RICT2 this will be for WHPT ASPT
@@ -1533,6 +1547,8 @@ The biotic indices included in all index prediction are listed in Appendix B2.
   
 #	Taxa Prediction
   
+![](images/rict-prediction-of-taxa.png){ width=200px }
+  
 Although not required for status classification, an important feature of RIVPACS
 that is included in RICT is to be able to predict the taxa expected to be
 present at the site. For each taxon, the prediction provides:
@@ -1557,6 +1573,8 @@ experiment to be run.  The data inputs and support files are different for the
 GB and NI experiments.
   
 Click on Enter Data Manually
+
+![](images/rict-prediction-azure-1.png){ width=500px }
   
 At this point, you choose which sites to run, this is in a .csv format.
   
@@ -1575,10 +1593,14 @@ Example:  GB – 1,2  2,3  3,5  4,7  etc., however, for NI only two sites can be
 run at one time, 1,2 and 3,10 or 2,7 and 3,4 in whichever sequential order you
 choose.
   
+![](images/rict-prediction-azure-2.png){ width=500px }
+
 Figure 1 Example data entered to indicate two sites in the data input file
 selected for taxon prediction.
   
 ## Methods and Algorithms to predict Expected values for each taxon
+
+![](images/rict-prediction-azure-3.png){ width=500px }
 
 From Ralph Clarke 30/01/20
 
@@ -1671,6 +1693,8 @@ to each of the 43 GB Model End-groups, then:
   
 ```ParamJ_Prob = End_Group_Prob  x ParamJ```
 		  
+![](images/rict-prediction-azure-4.png){ width=500px }
+
 (iv) Use a software multi-way table function using columns (4, 3, 7, 5, 6, 8, 9, 10,) in that order as multi-way table classifiers and then sum the column ‘ParamJ_Prob’ across all 43 ‘End-groups’ which it will do by default in any sum function as ‘End_Group’ is not one of the table classifiers.  
   
 (v)	You actually want to use a multi-way table function which creates a new output set of columns with one new column for each table classifier and one for the sum across end-groups of the column ‘ParamJ_Prob’  
@@ -1718,7 +1742,7 @@ Sections below are based on notes from write up with Maybin (March 2020):
 
 * New Input File on Azure: `wValidation wTestData.csv`
 * `prediction-functions.R`
-+ `helper-functions.R` – contains all the functions used to run the experiment
+* `helper-functions.R` – contains all the functions used to run the experiment
 
 ## R code for taxa prediction
 
@@ -1766,6 +1790,8 @@ functions.
 ## Expected Values calculated by the Prediction programme
 
 (Step 1 in process diagram above and Section 7)
+
+![](images/rict-classification-1.png){ width=200px }
   
 This is the main result from RIVPACS prediction (Section 7), based on
 environmental variable data input by the user. It is the prediction of the value
@@ -1776,6 +1802,8 @@ sites.
 ## Adjust Expected Values to Standardise against the High/Good Boundary
 
 (Step 2 in process diagram above)
+
+![](images/rict-classification-2.png){ width=200px }
   
 The aim of this step is to standardise the raw predictions so that they relate
 to the same environmental quality (the high/good boundary quality) using
@@ -1829,6 +1857,8 @@ need to amend and create their own experiment.
 
 (Step 3 in process diagram above)
   
+![](images/rict-classification-3.png){ width=200px }
+  
 This is the conversion factor used to convert the adjusted predictions that
 relate to high/good boundary quality to reference values that relate to
 reference condition, which is somewhere in high status (reference values are the
@@ -1851,6 +1881,8 @@ draft report 2018):
 
 (Step 4 in process diagram above)
   
+![](images/rict-classification-4.png){ width=200px }
+
 The aim of this step is to convert the predictions from high/good boundary to
 reference values, which is somewhere in high status (actually the average value
 of the index at reference sites in high status), by applying the conversion
@@ -1881,6 +1913,8 @@ This calculation is done directly within RICT2 code and not via any function.
 ## Simulate uncertainty in expected
 
 (Step 5 in process diagram above)
+  
+![](images/rict-classification-5.png){ width=200px }
   
 The aim of this step is to take account of error in measurement of environmental
 variables used to predict the reference values.
@@ -1929,6 +1963,8 @@ number, i.e.:
 ## User input of observed index value and bias; calculation of bias adjustment
 
 (Step 6 in process diagram above)
+
+![](images/rict-classification-6.png){ width=200px }
   
 RICT2 classification requires users to input an observed value for an index
 (ObsIDXi), based on samples collected in the field. This value is provided by
@@ -1950,6 +1986,8 @@ not left blank or RICT2 will use a default value.
 ## Simulate uncertainty in observed values
 
 (Step 7 in process diagram above)
+
+![](images/rict-classification-7.png){ width=200px }
   
 These simulations take account of sampling error, estimated in replicated
 sampling studies, including the Biological Assessment Methods Study (BAMS) which
@@ -1977,6 +2015,8 @@ the `classification-functions.R`.
 ## Simulate variation in Bias
 
 (Step 8 in process diagram above)
+
+![](images/rict-classification-8.png){ width=200px }
   
 This is simulation of user input bias which is calculated in RICT2 using the
 `getUbias8r()` function found in the `classification-functions.R`.
@@ -2017,6 +2057,8 @@ Ubias~7r~ = Ubias~8r~ * Ubias~9r~   =  bias of abundance-weighted WHPT score for
 ## Correct observed values for bias
 
 (Step 9 in process diagram above)
+  
+![](images/rict-classification-9.png){ width=200px }
   
 The aim of this step is to use the values provided in the previous steps, add
 them together to give an overall calculated observed value corrected for Bias.
@@ -2059,6 +2101,8 @@ Compare experiment.
   
 (Step 10 in process diagram above)
   
+![](images/rict-classification-10.png){ width=200px }
+  
 The aim of this step is to express the observed value of the index as an
 indication of human impact by removing the effect of natural environmental
 conditions.
@@ -2085,6 +2129,8 @@ This calculation is done directly within RICT2 code and not via any function.
 ## Combine spring and autumn EQRs
   
 (Step 11 in process diagram above)
+
+![](images/rict-classification-11.png){ width=200px }
   
 The aim of this step is to increase precision of classification and take account
 of seasonal variations in environmental quality.
@@ -2113,7 +2159,9 @@ This is calculated in RICT2 using the `getAvgEQR_SpAut()` function found in the
 ## Determine the probability of the class being High, Good, Moderate, Poor and Bad status
 
 (Step 12 in process diagram above)
-  
+
+![](images/rict-classification-12.png){ width=200px }
+
 The aim of this step is to take account of imprecision in monitoring data in the
 classification.
   
@@ -2130,6 +2178,8 @@ So to summarise, the probability of each class is simply the sum of the simulati
 ## Determine the worst class indicated by WHPT ASPT and WHPT Ntaxa using MINTA
   
 (Step 13 in process diagram above)
+
+![](images/rict-classification-13.png){ width=200px }
   
 The aim for this step is to ensure that the classification reflects ecological
 impacts caused by any type of environmental pressure.
@@ -2492,12 +2542,12 @@ files:
 The flow diagram below summarises the prediction process and calculations as
 well as identifying the relevant report for further information:
 
-![](images/rict-prediction-model-44.png){ width=100% }
+![](images/rict-prediction-model-44.png){ width=650px }
 
 The flow diagram below summarises the classification process and calculations as
 well as identifying the relevant report for further information:
 
-![](images/rict-classification-model-44.png){ width=100% }
+![](images/rict-classification-model-44.png){ width=650px }
 
 # Non-Functional Requirements
 

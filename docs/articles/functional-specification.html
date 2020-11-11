@@ -83,7 +83,7 @@
       <h1 data-toc-skip>River Invertebrate Classification Tool (RICT) Functional Specification</h1>
                         <h4 class="author">RICT Steering Group</h4>
             
-            <h4 class="date">2020-11-10</h4>
+            <h4 class="date">2020-11-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/aquaMetrics/rict/blob/master/vignettes/functional-specification.Rmd"><code>vignettes/functional-specification.Rmd</code></a></small>
       <div class="hidden name"><code>functional-specification.Rmd</code></div>
@@ -292,7 +292,7 @@ outline: 0 ;
 </ul>
 <p>For initial release (2019), the GB Single year, GB multi-year and NI single year for WFD classification have been produced. These three experiments are available in the Azure ML Studio gallery.</p>
 <p>The diagram below shows a diagrammatical representation of the main functionality of the RICT2 tool with numbered links to more detailed information.</p>
-<p><img src="images/application-flow-chart.png" style="width:100.0%"></p>
+<p><img src="images/application-flow-chart.png" width="650"></p>
 <p><strong>1. LOGIN TO RICT:</strong> A new user will need to create a Microsoft account and log in to be able to access to the RICT tool as the tool uses the Microsoft Azure Machine Learning Studio as its platform. How to access RICT is outlined in the RICT user guide.</p>
 <p><strong>2. COMPLETE DATA INPUT:</strong> User will need to complete a CSV (comma delimited) input file containing the data for the run required. A standard template excel spreadsheet will be provided to enter this data which can be downloaded via a SharePoint link from the website.</p>
 <p>Validation will be done on the spreadsheet as the user enters the data via conditional formatting to warn the user if the data input will not meet certain validation limits.</p>
@@ -328,6 +328,7 @@ outline: 0 ;
 <p>Annex B of this document has a copy of the data output table in more detail.</p>
 <p>Users can also choose the R Device dataset option in Machine studio to visualise the data and, if required, could write code to create the output file in the format they choose.</p>
 <p>A screenshot of the RICT2 prediction and classification experiment for GB in Microsoft Azure ML Studio being used with the default GB test data from the input template is shown below:</p>
+<p><img src="images/rict-azure.png" width="650"></p>
 </div>
 <div id="supporting-files" class="section level1">
 <h1 class="hasAnchor">
@@ -2344,6 +2345,7 @@ ALK = 0.3201*CONDUCT -8.0593</code></pre>
 <h2 class="hasAnchor">
 <a href="#calculate-the-discriminant-function-scores" class="anchor"></a><span class="header-section-number">7.5</span> Calculate the Discriminant Function Scores</h2>
 <p>(Step 4 in diagram above)</p>
+<p><img src="images/rict-discriminant-function-score.png" width="200"></p>
 <p>The functions that RICT2 uses for the calculations in the steps below (steps 4 - 8) can be found in the prediction-functions.R file. The algorithms and definitions provided below are copied from WFD72C and have been used to create the functions.</p>
 <p>For each DF, the Discriminant Score needs to be calculated as follows:</p>
 <p>DFScore<sub>d</sub> = DFCoef<sub>1,d</sub> * Env1 + … + DFCoef<sub>vN,d</sub> * En<sub>vvN</sub>; for d = 1. … dN</p>
@@ -2362,6 +2364,7 @@ DFScore<sub>d</sub> = discriminant function score on axis d for the current test
 <h2 class="hasAnchor">
 <a href="#calculate-mahanalobis-distance" class="anchor"></a><span class="header-section-number">7.6</span> Calculate Mahanalobis Distance</h2>
 <p>(Step 5 in diagram above)</p>
+<p><img src="images/rict-mahalanobis-distance.png" width="200"></p>
 <p>For a particular End Group g, the probability of End Group Membership is calculated as follows:</p>
 <ul>
 <li>Calculate Mahanalobis distance (MahDistg) of test site from each End Group</li>
@@ -2378,6 +2381,7 @@ MahDistg = Mahalanobis distance of test site from end group g</p>
 <h2 class="hasAnchor">
 <a href="#use-mahanalobis-distance-to-determine-probability-of-end-group-membership" class="anchor"></a><span class="header-section-number">7.7</span> Use Mahanalobis Distance to Determine Probability of End Group Membership</h2>
 <p>(Step 6 in diagram above)</p>
+<p><img src="images/rict-probability-end-group.png" width="200"></p>
 <ul>
 <li>Calculate the PDistg for each End Group</li>
 </ul>
@@ -2398,6 +2402,7 @@ MahDistg = Mahalanobis distance of test site from end group g</p>
 <div id="determine-environmental-suitability-of-the-test-site-for-prediction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#determine-environmental-suitability-of-the-test-site-for-prediction" class="anchor"></a><span class="header-section-number">7.8</span> Determine Environmental Suitability of the Test Site for Prediction</h2>
+<p><img src="images/rict-environmental-suitability.png" width="200"></p>
 <p>(Step 7 in diagram above)</p>
 <p>In certain cases it may be calculated that there is a very low probability of the site being in any of the end groups based on the data provided.</p>
 <p>In order to highlight this to the user, a calculation is required to allocate an Environmental Suitability code to the site data indicating the probability the site belongs to any end group. The potential codes are:</p>
@@ -2454,6 +2459,7 @@ MahDistg = Mahalanobis distance of test site from end group g</p>
 <h2 class="hasAnchor">
 <a href="#determine-the-predicted-values-of-indices" class="anchor"></a><span class="header-section-number">7.9</span> Determine the Predicted Values of Indices</h2>
 <p>(Step 8 in diagram above)</p>
+<p><img src="images/rict-prediction-of-index.png" width="200"></p>
 <p>The indices that require to be processed will be identified from the project experiment settings. For the initial release of RICT2 this will be for WHPT ASPT and WHPT NTAXA sets which are the indices required for the WFD classification. However, for Prediction, all 80 indices (which includes WHPT ASPT and WHPT NTAXA sets), will be used at this point and for Prediction only.</p>
 <p><code>prediction-functions.R</code> contains the following functions which will do this calculation:</p>
 <p><code>rict:::getSeasonIndexScores()</code></p>
@@ -2495,6 +2501,7 @@ IDXMean<sub>i,s,g</sub> = Mean value of index i for season s for reference sites
 <div id="taxa-prediction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#taxa-prediction" class="anchor"></a><span class="header-section-number">9</span> Taxa Prediction</h1>
+<p><img src="images/rict-prediction-of-taxa.png" width="200"></p>
 <p>Although not required for status classification, an important feature of RIVPACS that is included in RICT is to be able to predict the taxa expected to be present at the site. For each taxon, the prediction provides:</p>
 <ul>
 <li>Expected probability of occurrence.</li>
@@ -2509,16 +2516,19 @@ IDXMean<sub>i,s,g</sub> = Mean value of index i for season s for reference sites
 <p>Notes from write up with Maybin (March 2020):</p>
 <p>The following images illustrate the process flow and data requirements for the experiment to be run. The data inputs and support files are different for the GB and NI experiments.</p>
 <p>Click on Enter Data Manually</p>
+<p><img src="images/rict-prediction-azure-1.png" width="500"></p>
 <p>At this point, you choose which sites to run, this is in a .csv format.</p>
 <p>Leave the HasHeader box unchecked, if checked it will have a header file.</p>
 <p>The data fields are the sites you choose to run for the experiment.</p>
 <p>Note, the GB model has no restrictions when it comes to the number of sites that can be run in the experiment, however, the NI model is restricted to a maximum of two sites that can be run for each experiment. Therefore, it is suggested that only two sites are run for the GB model at any one time for it to work effectively. If you want to run all the sites for the GB model you need to put a 0 in the data line.</p>
 <p>Example: GB – 1,2 2,3 3,5 4,7 etc., however, for NI only two sites can be run at one time, 1,2 and 3,10 or 2,7 and 3,4 in whichever sequential order you choose.</p>
+<p><img src="images/rict-prediction-azure-2.png" width="500"></p>
 <p>Figure 1 Example data entered to indicate two sites in the data input file selected for taxon prediction.</p>
 </div>
 <div id="methods-and-algorithms-to-predict-expected-values-for-each-taxon" class="section level2">
 <h2 class="hasAnchor">
 <a href="#methods-and-algorithms-to-predict-expected-values-for-each-taxon" class="anchor"></a><span class="header-section-number">9.2</span> Methods and Algorithms to predict Expected values for each taxon</h2>
+<p><img src="images/rict-prediction-azure-3.png" width="500"></p>
 <p>From Ralph Clarke 30/01/20</p>
 <div id="taxon-prediction-data-file" class="section level3">
 <h3 class="hasAnchor">
@@ -2580,6 +2590,7 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 <li><p>For any particular taxonomic parameter J (denoted here ParamJ and supplied in one of columns 11-18), calculate new column ParamJ_Prob as:</p></li>
 </ol>
 <p><code>ParamJ_Prob = End_Group_Prob  x ParamJ</code></p>
+<p><img src="images/rict-prediction-azure-4.png" width="500"></p>
 <ol start="4" style="list-style-type: lower-roman">
 <li><p>Use a software multi-way table function using columns (4, 3, 7, 5, 6, 8, 9, 10,) in that order as multi-way table classifiers and then sum the column ‘ParamJ_Prob’ across all 43 ‘End-groups’ which it will do by default in any sum function as ‘End_Group’ is not one of the table classifiers.</p></li>
 <li><p>You actually want to use a multi-way table function which creates a new output set of columns with one new column for each table classifier and one for the sum across end-groups of the column ‘ParamJ_Prob’</p></li>
@@ -2642,12 +2653,14 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 <h2 class="hasAnchor">
 <a href="#expected-values-calculated-by-the-prediction-programme" class="anchor"></a><span class="header-section-number">10.3</span> Expected Values calculated by the Prediction programme</h2>
 <p>(Step 1 in process diagram above and Section 7)</p>
+<p><img src="images/rict-classification-1.png" width="200"></p>
 <p>This is the main result from RIVPACS prediction (Section 7), based on environmental variable data input by the user. It is the prediction of the value of the index expected at the site if it was in the best quality available for that type of site, based on samples collected from best available reference sites.</p>
 </div>
 <div id="adjust-expected-values-to-standardise-against-the-highgood-boundary" class="section level2">
 <h2 class="hasAnchor">
 <a href="#adjust-expected-values-to-standardise-against-the-highgood-boundary" class="anchor"></a><span class="header-section-number">10.4</span> Adjust Expected Values to Standardise against the High/Good Boundary</h2>
 <p>(Step 2 in process diagram above)</p>
+<p><img src="images/rict-classification-2.png" width="200"></p>
 <p>The aim of this step is to standardise the raw predictions so that they relate to the same environmental quality (the high/good boundary quality) using algorithms first developed in WFD72b. This step is necessary to take account of variation in the environmental quality of RIVPACS reference sites.</p>
 <p>There are a number of processes involved in this step as described below:</p>
 <ul>
@@ -2701,6 +2714,7 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 <h2 class="hasAnchor">
 <a href="#eqr-conversion-factor" class="anchor"></a><span class="header-section-number">10.5</span> EQR Conversion Factor</h2>
 <p>(Step 3 in process diagram above)</p>
+<p><img src="images/rict-classification-3.png" width="200"></p>
 <p>This is the conversion factor used to convert the adjusted predictions that relate to high/good boundary quality to reference values that relate to reference condition, which is somewhere in high status (reference values are the average value of the metric at reference sites in reference condition = high status)</p>
 <p>Each index has a different conversion factor, based on the average value of the index at all RIVPACS Reference Sites divided by the value at RIVPACS reference sites that are in WFD high status (reflected in Biologists’ Assessment values for each reference site).</p>
 <p>For the default WFD classification in RICT2 the conversion factor value will be (as copied from Section 5.5 of the Testing RICT2 predictions and classifications draft report 2018):</p>
@@ -2713,6 +2727,7 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 <h2 class="hasAnchor">
 <a href="#convert-adjusted-expected-to-reference-value" class="anchor"></a><span class="header-section-number">10.6</span> Convert adjusted expected to reference value</h2>
 <p>(Step 4 in process diagram above)</p>
+<p><img src="images/rict-classification-4.png" width="200"></p>
 <p>The aim of this step is to convert the predictions from high/good boundary to reference values, which is somewhere in high status (actually the average value of the index at reference sites in high status), by applying the conversion factor.</p>
 <p>The conversion factor is applied to the adjusted expected value to give an expected reference value which will be used to calculate the EQRs expected by the Water Framework Directive.</p>
 <p>Specifically, ExpIDXRef,i is calculated as:</p>
@@ -2729,6 +2744,7 @@ i = do this for each specific site</p>
 <h2 class="hasAnchor">
 <a href="#simulate-uncertainty-in-expected" class="anchor"></a><span class="header-section-number">10.7</span> Simulate uncertainty in expected</h2>
 <p>(Step 5 in process diagram above)</p>
+<p><img src="images/rict-classification-5.png" width="200"></p>
 <p>The aim of this step is to take account of error in measurement of environmental variables used to predict the reference values.</p>
 <p>It should be noted that the “ +eir “ shown in the algorithm in the process step above is a summary of the algorithm values of ZExpir * SDExpi / √(NExpyear) as described in further detail below. It is the error term used to adjust the expected value.</p>
 <p>The simulation of uncertainty in ExpRef is obtained using the algorithms in Section 6.4 of the Clarke &amp; Davy-Bowker WHPT indices RICT2 Report of March 2014 report, but now where uncertainty in the Expected values is measured about the WFD Reference-adjusted value ExpRef., this has been amended as described below.</p>
@@ -2757,6 +2773,7 @@ SDExp<sub>9</sub> = 0.081 = Measurement error SD of Expected values of weighted 
 <h2 class="hasAnchor">
 <a href="#user-input-of-observed-index-value-and-bias-calculation-of-bias-adjustment" class="anchor"></a><span class="header-section-number">10.8</span> User input of observed index value and bias; calculation of bias adjustment</h2>
 <p>(Step 6 in process diagram above)</p>
+<p><img src="images/rict-classification-6.png" width="200"></p>
 <p>RICT2 classification requires users to input an observed value for an index (ObsIDXi), based on samples collected in the field. This value is provided by the user completing the relevant data field in the input file as described in section 5 and Annex B of this document. Values are required for each index and for all three seasons, spring, summer and autumn.</p>
 <p>Users may also input a bias value (UBiasis) for NTAXA, which reflects the impact of analytical error (measured by auditing) on the observed index values. This value is provided by the user completing the relevant data field in the input file as described in section 5 and Annex B of this document. RICT2 calculates bias for ASPT from bias for NTAXA and the observed NTAXA. If no input value for Bias is provided, RICT2 will use a default value of 1.62.</p>
 <p>If bias correction is not wanted, users should enter a bias value of zero into the relevant data field in the input file. The zero value must be entered and not left blank or RICT2 will use a default value.</p>
@@ -2765,6 +2782,7 @@ SDExp<sub>9</sub> = 0.081 = Measurement error SD of Expected values of weighted 
 <h2 class="hasAnchor">
 <a href="#simulate-uncertainty-in-observed-values" class="anchor"></a><span class="header-section-number">10.9</span> Simulate uncertainty in observed values</h2>
 <p>(Step 7 in process diagram above)</p>
+<p><img src="images/rict-classification-7.png" width="200"></p>
 <p>These simulations take account of sampling error, estimated in replicated sampling studies, including the Biological Assessment Methods Study (BAMS) which is needed so that statistical confidence of the status classification can be estimated.</p>
 <p>The main algorithm used:</p>
 <p>ObsIDX<sub>ir</sub> = ObsIDX<sub>i</sub> ZNorm<sub>ir</sub> * SDObs<sub>i</sub></p>
@@ -2783,6 +2801,7 @@ ObsIDX7r = ObsIDX<sub>8r</sub> * ObsIDX<sub>9r</sub> = rth simulated value for o
 <h2 class="hasAnchor">
 <a href="#simulate-variation-in-bias" class="anchor"></a><span class="header-section-number">10.10</span> Simulate variation in Bias</h2>
 <p>(Step 8 in process diagram above)</p>
+<p><img src="images/rict-classification-8.png" width="200"></p>
 <p>This is simulation of user input bias which is calculated in RICT2 using the <code>getUbias8r()</code> function found in the <code>classification-functions.R</code>.</p>
 <p>The algorithms used within this function are as below which is copied from Section 6.3.3.3 of the WHPT and other Abundance-Weighted Indices SEPA Report.</p>
 <p>Definitions</p>
@@ -2809,6 +2828,7 @@ ObsIDXirB = Bias-corrected observed value of index i for simulation r</code></pr
 <h2 class="hasAnchor">
 <a href="#correct-observed-values-for-bias" class="anchor"></a><span class="header-section-number">10.11</span> Correct observed values for bias</h2>
 <p>(Step 9 in process diagram above)</p>
+<p><img src="images/rict-classification-9.png" width="200"></p>
 <p>The aim of this step is to use the values provided in the previous steps, add them together to give an overall calculated observed value corrected for Bias. Bias is a measure of the impact of laboratory error on the value of observed indices. It is calculated from audits of laboratory performance and is input by users as described in Section 8.6 above.</p>
 <p>The main algorithm used is:</p>
 <p>ObsIDX<sub>irB</sub> = ObsIDX<sub>ir</sub> + Ubias<sub>ir</sub></p>
@@ -2833,6 +2853,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <h2 class="hasAnchor">
 <a href="#calculate-environmental-quality-ratio-eqr" class="anchor"></a><span class="header-section-number">10.12</span> Calculate Environmental Quality Ratio (EQR)</h2>
 <p>(Step 10 in process diagram above)</p>
+<p><img src="images/rict-classification-10.png" width="200"></p>
 <p>The aim of this step is to express the observed value of the index as an indication of human impact by removing the effect of natural environmental conditions.</p>
 <p>Status class boundaries for WFD are expressed as EQRs.</p>
 <p>Simulated EQRs, based on simulated observed and expected values, are needed to estimate probabilities of class.</p>
@@ -2848,6 +2869,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <h2 class="hasAnchor">
 <a href="#combine-spring-and-autumn-eqrs" class="anchor"></a><span class="header-section-number">10.13</span> Combine spring and autumn EQRs</h2>
 <p>(Step 11 in process diagram above)</p>
+<p><img src="images/rict-classification-11.png" width="200"></p>
 <p>The aim of this step is to increase precision of classification and take account of seasonal variations in environmental quality.</p>
 <p>The WFD status must be based on EQRs calculated from spring and autumn samples. These values must be calculated and available within the experiment for this step to calculate the seasonal average.</p>
 <p>The EQR values for spring and autumn samples are divided by the number of season (i.e. 2) to calculate the seasonal average for each simulation. The main algorithm is:</p>
@@ -2862,6 +2884,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <h2 class="hasAnchor">
 <a href="#determine-the-probability-of-the-class-being-high-good-moderate-poor-and-bad-status" class="anchor"></a><span class="header-section-number">10.14</span> Determine the probability of the class being High, Good, Moderate, Poor and Bad status</h2>
 <p>(Step 12 in process diagram above)</p>
+<p><img src="images/rict-classification-12.png" width="200"></p>
 <p>The aim of this step is to take account of imprecision in monitoring data in the classification.</p>
 <p>The probability of each class is simply the sum of the simulations resulting in that class and is included in the output file.</p>
 <p>As copied from Section 6.5 of the WHPT and other Abundance-Weighted Indices SEPA Report:</p>
@@ -2874,6 +2897,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <h2 class="hasAnchor">
 <a href="#determine-the-worst-class-indicated-by-whpt-aspt-and-whpt-ntaxa-using-minta" class="anchor"></a><span class="header-section-number">10.15</span> Determine the worst class indicated by WHPT ASPT and WHPT Ntaxa using MINTA</h2>
 <p>(Step 13 in process diagram above)</p>
+<p><img src="images/rict-classification-13.png" width="200"></p>
 <p>The aim for this step is to ensure that the classification reflects ecological impacts caused by any type of environmental pressure.</p>
 <p>The overall status class for a sample is defined to be the worst of classification based on number of taxa and ASPT. This is referred to as the MINTA class (i.e. MINimum of classes based on number of Taxa and ASPT).</p>
 <p>The WFD status of a site or water body is based on the worst class indicated by either WHPT ASPT or WHPT Ntaxa, following the ‘one out all out’ rule.</p>
@@ -3102,9 +3126,9 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <h2 class="hasAnchor">
 <a href="#summary-diagrams" class="anchor"></a><span class="header-section-number">14.3</span> Summary diagrams</h2>
 <p>The flow diagram below summarises the prediction process and calculations as well as identifying the relevant report for further information:</p>
-<p><img src="images/rict-prediction-model-44.png" style="width:100.0%"></p>
+<p><img src="images/rict-prediction-model-44.png" width="650"></p>
 <p>The flow diagram below summarises the classification process and calculations as well as identifying the relevant report for further information:</p>
-<p><img src="images/rict-classification-model-44.png" style="width:100.0%"></p>
+<p><img src="images/rict-classification-model-44.png" width="650"></p>
 </div>
 </div>
 <div id="non-functional-requirements" class="section level1">

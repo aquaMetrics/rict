@@ -156,7 +156,7 @@ test_that("replacement values work if value is less than the ‘overall’ minim
   test_data$Alkalinity[1] <- 0.001
   test_data$Slope[1] <- 0
   test <- rict_validate(test_data)
-  expect_equal(length(test[[2]][, 1]), 7)
+  expect_equal(length(test[[2]][, 1]), 6)
   expect_equal(test[[1]][1, c("ALTITUDE")], 1)
   expect_equal(test[[1]][1, c("DIST_FROM_SOURCE")], 0.1)
   expect_equal(test[[1]][1, c("MEAN_WIDTH")], 0.1)

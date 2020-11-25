@@ -34,11 +34,16 @@ test_that("outright fails stop process and create error message", {
   test_data <- demo_observed_values
   test_data$Alkalinity <- NA
   expect_error(rict_validate(test_data))
-  # Test NA in NGR will fail
+  # Test NAs in NGR will fail
   test_data <- demo_observed_values
   test_data$NGR[1] <- NA
   expect_error(rict_validate(test_data), "The data provided contains more than one area of the UK.
         Hint: Check your data contains NGR grid letters for either: NI or GB. ")
+  # Test if all NGR values NA will fail
+  test_data <- demo_observed_values
+  test_data$NGR <- NA
+  expect_error(rict_validate(test_data), "You provided data with all NGR values missing,
+       Hint: Check your NGR variable has letters. ")
   # NGR must all be less than three letters long
   # This stops process because NGR are processed in a batch (not individually for each site)
   # Therefore one wrong NGR in column stops whole process

@@ -236,6 +236,10 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
     # Check NGR length
     data$NGR <- as.character(data$NGR)
     data$NGR_LENGTH <- nchar(data$NGR)
+    if (all(is.na(data$NGR))) {
+      stop("You provided data with all NGR values missing,
+       Hint: Check your NGR variable has letters. ", call. = FALSE)
+    }
     if (any(data$NGR_LENGTH > 2)) {
       stop("You provided an NGR with more than two letters,
        Hint: Check your NGR variables have less than 3 three letters. ", call. = FALSE)

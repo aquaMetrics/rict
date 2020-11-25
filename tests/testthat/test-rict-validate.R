@@ -103,9 +103,10 @@ test_that("fails on some rows create fail messages (but process continues of val
   # test fail values
   test_data <- demo_observed_values
   test_data$Discharge[1] <- 1500
+  test_data$Discharge[2] <- 0
   test_data$Pebbles_Gravel[1] <- 90
   test <- rict_validate(test_data)
-  expect_equal(length(test[[2]][, 1]), 2)
+  expect_equal(length(test[[2]][, 1]), 3)
   # test temperature fails if outside temperature grid
   test_data <- demo_observed_values
   test_data$NGR <- as.character(test_data$NGR)
@@ -152,7 +153,6 @@ test_that("replacement values work if value is less than the ‘overall’ minim
   test_data$Dist_from_Source[1] <- 0.01
   test_data$Mean_Width[1] <- 0.01
   test_data$Mean_Depth[1] <- 0.1
-  test_data$Discharge[1] <- 0
   test_data$Alkalinity[1] <- 0.001
   test_data$Slope[1] <- 0
   test <- rict_validate(test_data)
@@ -161,7 +161,6 @@ test_that("replacement values work if value is less than the ‘overall’ minim
   expect_equal(test[[1]][1, c("DIST_FROM_SOURCE")], 0.1)
   expect_equal(test[[1]][1, c("MEAN_WIDTH")], 0.1)
   expect_equal(test[[1]][1, c("MEAN_DEPTH")], 1)
-  expect_equal(test[[1]][1, c("DISCHARGE")], 1)
   expect_equal(test[[1]][1, c("ALKALINITY")], 0.1)
   expect_equal(test[[1]][1, c("SLOPE")], 0.1)
 })

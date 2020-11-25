@@ -503,13 +503,6 @@ These values will be used instead of calculating them from Grid Reference values
   if (any(data$MEAN_DEPTH[!is.na(data$MEAN_DEPTH)] < MND_LIM)) {
     data$MEAN_DEPTH[data$MEAN_DEPTH < MND_LIM] <- MND_LIM
   }
-  DIS_LIM <- validation_rules_input[validation_rules_input$variable %in%
-    c("DISCHARGE", "DISCH_CAT"), "replacement_limit"]
-  DIS_VAL <- validation_rules_input[validation_rules_input$variable %in%
-    c("DISCHARGE", "DISCH_CAT"), "replacement_val"]
-  if (any(data$DISCHARGE[!is.na(data$DISCHARGE)] == DIS_LIM)) {
-    data$DISCHARGE[data$DISCHARGE == DIS_LIM] <- DIS_VAL
-  }
   ALK_LIM <- validation_rules_input[validation_rules_input$variable == "ALKALINITY", "replacement_limit"]
   if (any(data$ALKALINITY[!is.na(data$ALKALINITY)] < ALK_LIM)) {
     data$ALKALINITY[data$ALKALINITY < ALK_LIM] <- ALK_LIM

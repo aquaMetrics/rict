@@ -83,7 +83,7 @@
       <h1 data-toc-skip>River Invertebrate Classification Tool (RICT) Functional Specification</h1>
                         <h4 class="author">RICT Steering Group</h4>
             
-            <h4 class="date">2020-11-11</h4>
+            <h4 class="date">2020-11-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/aquaMetrics/rict/blob/master/vignettes/functional-specification.Rmd"><code>vignettes/functional-specification.Rmd</code></a></small>
       <div class="hidden name"><code>functional-specification.Rmd</code></div>
@@ -261,6 +261,11 @@ outline: 0 ;
 <td>v2.2</td>
 <td>18/09/2020</td>
 <td>Validations tables are based on the validation-rules.csv; The validation section has been split into three parts: variables; rules, replacements values; Updated future experiments (removed experiments which are now available); Updated Compare experiment details to note that individual seasons can be compared; Updated R file names for functions where these have changes; Updated R .csv file names where required; Added info on rict supporting files; Add info on common Azure / R compatibility bugs; Details on github version control; Validation tables/rules split into requited columns, validation rules and replacement values for clarity/ease of use; Updated validation to explain more detail of how the process/function currently work; Mention validation rules .csv (where all rules are contained); Updated inputs and outputs examples (In Annex) to show all GIS/NI/GB model 44/Model 1 etc; Slight change to order of headings (readability) and heading titles (for brevity); Merged NI and GB lat/lon calculations into a single section (as these are both dealt with in one R function and reduce repetition).</td>
+</tr>
+<tr class="even">
+<td>v2.3</td>
+<td>25/11/2020</td>
+<td>Updated validation rules</td>
 </tr>
 </tbody>
 </table>
@@ -912,7 +917,7 @@ outline: 0 ;
 <tr class="odd">
 <td align="left">SITE</td>
 <td align="left">all</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -920,7 +925,7 @@ outline: 0 ;
 <tr class="even">
 <td align="left">WATERBODY</td>
 <td align="left">all</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -928,7 +933,7 @@ outline: 0 ;
 <tr class="odd">
 <td align="left">YEAR</td>
 <td align="left">all</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
 <td align="right">1990.0000</td>
 <td align="right">NA</td>
@@ -960,55 +965,55 @@ outline: 0 ;
 <tr class="odd">
 <td align="left">LATITUDE</td>
 <td align="left">gb</td>
-<td align="right">49.0</td>
-<td align="right">71</td>
+<td align="right">49.95</td>
+<td align="right">60.86</td>
 <td align="right">49.9978</td>
 <td align="right">60.8035</td>
 </tr>
 <tr class="even">
 <td align="left">LATITUDE</td>
 <td align="left">ni</td>
-<td align="right">49.0</td>
-<td align="right">71</td>
-<td align="right">54.0000</td>
-<td align="right">55.2000</td>
+<td align="right">54.02</td>
+<td align="right">55.38</td>
+<td align="right">54.0684</td>
+<td align="right">55.1996</td>
 </tr>
 <tr class="odd">
 <td align="left">LONGITUDE</td>
 <td align="left">gb</td>
-<td align="right">-11.0</td>
-<td align="right">2</td>
+<td align="right">-7.67</td>
+<td align="right">1.76</td>
 <td align="right">-7.3652</td>
 <td align="right">1.3560</td>
 </tr>
 <tr class="even">
 <td align="left">LONGITUDE</td>
 <td align="left">ni</td>
-<td align="right">-11.0</td>
-<td align="right">2</td>
-<td align="right">-8.1000</td>
+<td align="right">-8.20</td>
+<td align="right">-5.43</td>
+<td align="right">-8.0916</td>
 <td align="right">-5.7731</td>
 </tr>
 <tr class="odd">
 <td align="left">ALTITUDE</td>
 <td align="left">gb</td>
-<td align="right">0.0</td>
-<td align="right">1345</td>
+<td align="right">0.00</td>
+<td align="right">1345.00</td>
 <td align="right">0.0000</td>
 <td align="right">590.0000</td>
 </tr>
 <tr class="even">
 <td align="left">ALTITUDE</td>
 <td align="left">ni</td>
-<td align="right">0.0</td>
-<td align="right">1345</td>
+<td align="right">0.00</td>
+<td align="right">850.00</td>
 <td align="right">3.0000</td>
 <td align="right">180.0000</td>
 </tr>
 <tr class="odd">
 <td align="left">SLOPE</td>
 <td align="left">gb</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
 <td align="right">0.0000</td>
 <td align="right">150.0000</td>
@@ -1016,7 +1021,7 @@ outline: 0 ;
 <tr class="even">
 <td align="left">SLOPE</td>
 <td align="left">ni</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
 <td align="right">0.1000</td>
 <td align="right">50.0000</td>
@@ -1024,39 +1029,39 @@ outline: 0 ;
 <tr class="odd">
 <td align="left">DISCHARGE</td>
 <td align="left">gb</td>
-<td align="right">0.0</td>
-<td align="right">10</td>
+<td align="right">0.00</td>
+<td align="right">10.00</td>
 <td align="right">1.0000</td>
 <td align="right">10.0000</td>
 </tr>
 <tr class="even">
 <td align="left">DISCHARGE</td>
 <td align="left">ni</td>
-<td align="right">0.0</td>
-<td align="right">10</td>
+<td align="right">0.00</td>
+<td align="right">10.00</td>
 <td align="right">1.0000</td>
 <td align="right">8.0000</td>
 </tr>
 <tr class="odd">
 <td align="left">VELOCITY</td>
 <td align="left">gb</td>
-<td align="right">0.0</td>
-<td align="right">5</td>
+<td align="right">0.00</td>
+<td align="right">5.00</td>
 <td align="right">1.0000</td>
 <td align="right">5.0000</td>
 </tr>
 <tr class="even">
 <td align="left">VELOCITY</td>
 <td align="left">ni</td>
-<td align="right">0.0</td>
-<td align="right">5</td>
+<td align="right">0.00</td>
+<td align="right">5.00</td>
 <td align="right">1.0000</td>
 <td align="right">5.0000</td>
 </tr>
 <tr class="odd">
 <td align="left">DIST_FROM_SOURCE</td>
 <td align="left">gb</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
 <td align="right">0.1000</td>
 <td align="right">202.8000</td>
@@ -1064,7 +1069,7 @@ outline: 0 ;
 <tr class="even">
 <td align="left">DIST_FROM_SOURCE</td>
 <td align="left">ni</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
 <td align="right">2.2000</td>
 <td align="right">75.0000</td>
@@ -1072,7 +1077,7 @@ outline: 0 ;
 <tr class="odd">
 <td align="left">MEAN_WIDTH</td>
 <td align="left">gb</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
 <td align="right">0.4000</td>
 <td align="right">117.0000</td>
@@ -1080,7 +1085,7 @@ outline: 0 ;
 <tr class="even">
 <td align="left">MEAN_WIDTH</td>
 <td align="left">ni</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
 <td align="right">2.0000</td>
 <td align="right">37.0000</td>
@@ -1088,7 +1093,7 @@ outline: 0 ;
 <tr class="odd">
 <td align="left">MEAN_DEPTH</td>
 <td align="left">gb</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
 <td align="right">1.7000</td>
 <td align="right">300.0000</td>
@@ -1096,7 +1101,7 @@ outline: 0 ;
 <tr class="even">
 <td align="left">MEAN_DEPTH</td>
 <td align="left">ni</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
 <td align="right">15.0000</td>
 <td align="right">183.0000</td>
@@ -1104,32 +1109,32 @@ outline: 0 ;
 <tr class="odd">
 <td align="left">BOULDER_COBBLES</td>
 <td align="left">all</td>
-<td align="right">0.0</td>
-<td align="right">100</td>
+<td align="right">0.00</td>
+<td align="right">100.00</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">PEBBLES_GRAVEL</td>
 <td align="left">all</td>
-<td align="right">0.0</td>
-<td align="right">100</td>
+<td align="right">0.00</td>
+<td align="right">100.00</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">SAND</td>
 <td align="left">all</td>
-<td align="right">0.0</td>
-<td align="right">100</td>
+<td align="right">0.00</td>
+<td align="right">100.00</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">SILT_CLAY</td>
 <td align="left">all</td>
-<td align="right">0.0</td>
-<td align="right">100</td>
+<td align="right">0.00</td>
+<td align="right">100.00</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
@@ -1138,7 +1143,7 @@ outline: 0 ;
 <td align="left">gb</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
-<td align="right">-7.7100</td>
+<td align="right">-7.7050</td>
 <td align="right">8.0000</td>
 </tr>
 <tr class="even">
@@ -1147,7 +1152,7 @@ outline: 0 ;
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">-7.7500</td>
-<td align="right">6.6100</td>
+<td align="right">6.6125</td>
 </tr>
 <tr class="odd">
 <td align="left">HARDNESS</td>
@@ -1176,7 +1181,7 @@ outline: 0 ;
 <tr class="even">
 <td align="left">TEMPM</td>
 <td align="left">gb</td>
-<td align="right">0.1</td>
+<td align="right">0.10</td>
 <td align="right">NA</td>
 <td align="right">7.5000</td>
 <td align="right">11.5000</td>
@@ -1184,15 +1189,15 @@ outline: 0 ;
 <tr class="odd">
 <td align="left">TEMPR</td>
 <td align="left">gb</td>
-<td align="right">0.1</td>
+<td align="right">0.10</td>
 <td align="right">NA</td>
-<td align="right">8.2000</td>
+<td align="right">8.2100</td>
 <td align="right">13.9000</td>
 </tr>
 <tr class="even">
 <td align="left">ALKALINITY</td>
 <td align="left">gb</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
 <td align="right">0.7000</td>
 <td align="right">365.5000</td>
@@ -1200,7 +1205,7 @@ outline: 0 ;
 <tr class="odd">
 <td align="left">ALKALINITY</td>
 <td align="left">ni</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
 <td align="right">2.5000</td>
 <td align="right">193.5000</td>
@@ -1208,8 +1213,8 @@ outline: 0 ;
 <tr class="even">
 <td align="left">TOTSUB</td>
 <td align="left">all</td>
-<td align="right">97.0</td>
-<td align="right">103</td>
+<td align="right">97.00</td>
+<td align="right">103.00</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
@@ -1293,33 +1298,33 @@ outline: 0 ;
 <tr class="even">
 <td align="left">LATITUDE</td>
 <td align="left">gb</td>
-<td align="right">49.0000</td>
-<td align="right">71.0000</td>
+<td align="right">49.9500</td>
+<td align="right">60.8600</td>
 <td align="right">49.9978</td>
 <td align="right">60.8035</td>
 </tr>
 <tr class="odd">
 <td align="left">LATITUDE</td>
 <td align="left">ni</td>
-<td align="right">49.0000</td>
-<td align="right">71.0000</td>
-<td align="right">54.0000</td>
-<td align="right">55.2000</td>
+<td align="right">54.0200</td>
+<td align="right">55.3800</td>
+<td align="right">54.0684</td>
+<td align="right">55.1996</td>
 </tr>
 <tr class="even">
 <td align="left">LONGITUDE</td>
 <td align="left">gb</td>
-<td align="right">-11.0000</td>
-<td align="right">2.0000</td>
+<td align="right">-7.6700</td>
+<td align="right">1.7600</td>
 <td align="right">-7.3652</td>
 <td align="right">1.3560</td>
 </tr>
 <tr class="odd">
 <td align="left">LONGITUDE</td>
 <td align="left">ni</td>
-<td align="right">-11.0000</td>
-<td align="right">2.0000</td>
-<td align="right">-8.1000</td>
+<td align="right">-8.2000</td>
+<td align="right">-5.4300</td>
+<td align="right">-8.0916</td>
 <td align="right">-5.7731</td>
 </tr>
 <tr class="even">
@@ -1335,7 +1340,7 @@ outline: 0 ;
 <td align="left">gb</td>
 <td align="right">0.1000</td>
 <td align="right">NA</td>
-<td align="right">8.2000</td>
+<td align="right">8.2100</td>
 <td align="right">13.9000</td>
 </tr>
 <tr class="even">

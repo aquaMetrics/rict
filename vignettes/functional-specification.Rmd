@@ -158,6 +158,7 @@ v1.10 JMB|06/04/20|Correction to 9.2.1 – table defining taxon levels replaces 
 v2.0|07/04/20|2.0 Draft version made after review by SC: removed old comments, updated the ToC.  
 v2.1|22/07/20|Tidied-up some headings; Section 2 updated screenshot of experiment in MS Azure ML Studio; note about NGR being upper-case added to table in Section 5.1; explanations of limit values added to Section 5.1.1. Section 6.3 about velocity re-written, Section 7.8 minor correction to suitability code 5 SuitText <0.1; Section 9 edited for clarity and erroneous headers removed. Numbering of sub-sections in Section 10 corrected; Annex A embedded input template updated to current Version 1.2
 v2.2|18/09/2020|Validations tables are based on the validation-rules.csv; The validation section has been split into three parts: variables; rules, replacements values; Updated future experiments (removed experiments which are now available); Updated Compare experiment details to note that individual seasons can be compared; Updated R file names for functions where these have changes; Updated R .csv file names where required; Added info on rict supporting files; Add info on common Azure / R compatibility bugs; Details on github version control; Validation tables/rules split into requited columns, validation rules and replacement values for clarity/ease of use; Updated validation to explain more detail of how the process/function currently work; Mention validation rules .csv (where all rules are contained); Updated inputs and outputs examples (In Annex) to show all GIS/NI/GB model 44/Model 1 etc; Slight change to order of headings (readability) and heading titles (for brevity); Merged NI and GB lat/lon calculations into a single section (as these are both dealt with in one R function and reduce repetition).
+v2.3|25/11/2020| Updated validation rules
 
 # Functional Overview 
 
@@ -2765,6 +2766,3 @@ The CSF specified below denotes the minimum requirements as agreed with the proj
 |10 |Tertiary   |Non critical bugs resolved                                    |    1|
 |11 |Tertiary   |Non critical functionality added                              |    1|
 |12 |Tertiary   |Produce an updated functional specification and architecture documentation  |    1| documentation
-
-
-

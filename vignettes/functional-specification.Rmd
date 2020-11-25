@@ -31,7 +31,7 @@ knitr::opts_chunk$set(
   echo = FALSE
 )
 
-options(scipen = 2, digits = 5)
+options(scipen = 2, digits = 9)
 ```
 
 ```{r results="asis", echo=FALSE}
@@ -44,7 +44,7 @@ outline: 0 ;
 }
 </style>
 ")
-```
+``` 
 
 
 ![](images/rict_logo.png){ width=20% }

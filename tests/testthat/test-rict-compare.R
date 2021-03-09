@@ -1,7 +1,7 @@
 test_that("rict_compare matches test data", {
   version <- paste0(R.version$major, ".", R.version$minor)
-  if(version == "3.5.0" | "3.4.4") {
-    version = "3.4.4"
+  if(version == "3.5.0" | (version ==  "3.4.4") {
+    version <- "3.4.4"
   }
   skip_if(version == "3.4.4",
     message = "Due to type.convert function not working on data.frames in R version <3.6 skip this test"

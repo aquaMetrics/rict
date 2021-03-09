@@ -101,7 +101,7 @@ modelled_temperatures <- map_df(temperature_increments, function(increment){
   # Add temperature increase column so we know which results match which temperature increment
   modelled$TEMP.INCREASE <- increment 
   modelled$SITE  <- as.character(modelled$SITE)
-  return(modelled)32
+  return(modelled)
 })
 
 # Filter on one year - to make results easier to display

@@ -1,6 +1,6 @@
 test_that("rict_compare matches test data", {
   version <- paste0(R.version$major, ".", R.version$minor)
-  if(version == "3.5.0" | version ==  "3.4.4") {
+  if(version == "3.5.3" | version ==  "3.4.4") {
     version <- "3.4.4"
   }
   skip_if(version == "3.4.4",

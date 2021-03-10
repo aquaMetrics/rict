@@ -6,7 +6,10 @@ output: github_document
 
 # rict <img src='man/figures/rict_logo.png' align="right" height="139" />
 
-[![codecov](https://codecov.io/gh/aquaMetrics/rict/branch/master/graph/badge.svg)](https://codecov.io/gh/aquaMetrics/rict?branch=master)
+<!-- badges: start -->
+[![R build status](https://github.com/aquaMetrics/rict/workflows/R-CMD-check/badge.svg)](https://github.com/aquaMetrics/rict/actions)
+[![R build status](https://github.com/aquaMetrics/rict/workflows/test-coverage/badge.svg)](https://github.com/aquaMetrics/rict/actions)
+<!-- badges: end -->
 
 ## Overview
 

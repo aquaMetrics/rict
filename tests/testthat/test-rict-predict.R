@@ -20,6 +20,9 @@ test_that("rict_predict for physical variables", {
 
   expected_predictions <- dplyr::arrange(expected_predictions, SITE, TL2_WHPT_NTAXA_AbW_DistFam_spr)
   predictions <- dplyr::arrange(predictions, SITE, TL2_WHPT_NTAXA_AbW_DistFam_spr)
+  # correct mis-match in types before test:
+  predictions$SuitCode <- as.numeric(predictions$SuitCode)
+  expected_predictions$SuitCode <- as.numeric(expected_predictions$SuitCode)
 
   equal <- all.equal(
     predictions[, names(predictions) %in% names(expected_predictions)],
@@ -56,7 +59,10 @@ test_that("end group means for GIS variables", {
   expect_true(max(test) < 0.00038)
 
   # Note: lat/lon calculation converts NGR slightly different to values and rounding on
-  # log values may also cause slight changes. So rounding output to 2 decimal places:
+  # log values may also cause slight changes. So rounding output to 1 decimal places:
+  predictions$TL2_WHPT_NTAXA_AbW_DistFam_aut <- round(predictions$TL2_WHPT_NTAXA_AbW_DistFam_aut, 1)
+  expected_predictions$TL2_WHPT_NTAXA_AbW_DistFam_aut <- round(expected_predictions$TL2_WHPT_NTAXA_AbW_DistFam_aut, 1)
+
   equal <- all.equal(
     round(predictions[, names(predictions) %in% names(expected_predictions)][2:5], 2),
     round(expected_predictions[, names(expected_predictions) %in% names(predictions)][2:5], 2)

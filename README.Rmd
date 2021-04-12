@@ -9,6 +9,7 @@ output: github_document
 <!-- badges: start -->
 [![R build status](https://github.com/aquaMetrics/rict/workflows/R-CMD-check/badge.svg)](https://github.com/aquaMetrics/rict/actions)
 [![R build status](https://github.com/aquaMetrics/rict/workflows/test-coverage/badge.svg)](https://github.com/aquaMetrics/rict/actions)
+[![codecov](https://codecov.io/gh/aquaMetrics/rict/branch/master/graph/badge.svg?token=KTezp5zwp8)](https://codecov.io/gh/aquaMetrics/rict)
 <!-- badges: end -->
 
 ## Overview

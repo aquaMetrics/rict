@@ -101,8 +101,8 @@ jobs:
         shell: bash
 
       - name: Upload check results
-        if: failure()
+        # if: failure() # upload articfacts to transfer package to Azure ML Studio .
         uses: actions/upload-artifact@main
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
-          path: check
+          path: check/rict.Rcheck

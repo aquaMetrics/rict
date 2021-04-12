@@ -3,5 +3,6 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   functional-specification: functional-specification.html
-last_built: 2020-11-25T17:12Z
+  tech-demo-temperature-change: tech-demo-temperature-change.html
+last_built: 2021-01-12T15:51Z
 

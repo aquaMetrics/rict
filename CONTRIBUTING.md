@@ -65,11 +65,14 @@
 3. On the README document (displayed on the repo in github) are the 'build' badge icons - these indicate that all tests are running correctly in the cloud.
 4. The first build badge: [![R-CMD-Check](https://github.com/aquaMetrics/rict/actions)](https://github.com/aquaMetrics/rict/actions) links to the Github actions page.
 5. Click this icon and go to the this Github actions page, select the most recent 'R-CMD-Check' build, and then select the 'Artifacts' tab. 
-6. Scroll down to Artifacts section and click on windows-latest(3.5) link to download binary package.
-7. Next, on your local file system, create an empty folder called `support-files` and then zip (compress) this folder to give: `support-files.zip`.
-8. Within the windows-latest(3.5) folder zip compress the 'rict' folder and add this `rict.zip` into the `support-files.zip` folder.
-9. Within Azure ML Studio, upload the `support-files.zip` file as a dartaset - this will replace the pre-existing `support-files.zip`. 
-10. Connect the new version of the support-files.zip to all experiments needing to be updated.
+6. Scroll down to Artifacts section and click on Windows-r3.5-results link to download binary package.
+7. Next, on your local file system, create an empty folder called `support-files`, right-click and compress this folder to create support-files.zip.
+8. Open the downloaded Windows-r3.5-results.zip folder right-click the `rict` folder and 'extract'. 
+9. Right-click and compress the rict folder to create `rict.zip`. Add this file to the `support-files.zip` folder.
+10. Within Azure ML Studio, upload the `support-files.zip` file as a dataset - this will replace the pre-existing `support-files.zip`. 
+11. Delete the existing support-files dataset from the experiment and drag the new supporting-files dataset from the 'Saved Dataset' > 'My Dataset' sidebar menu. Connect the new version of the support-files.zip to all experiments needing to be updated.
+12. For documentation reasons, you may wish to re-name the experiment/version number.
+12. Run the experiments to double-check everything is working. 
 
 #### All Done! ☺
 

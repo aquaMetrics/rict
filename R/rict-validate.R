@@ -329,23 +329,6 @@ These values will be used instead of calculating them from Grid Reference values
     data$D_F_SOURCE <- data$D_F_SOURCE / 1000
   }
 
-  # Add log10 values where required
-  log_rules <- validation_rules[validation_rules$log == TRUE, ]
-  # loop through variables and add log10 variable if required
-  columns <- lapply(
-    split(log_rules, row.names(log_rules)),
-    function(variable) {
-      log_col_name <- variable$log_col_name
-      data[, log_col_name] <- log10(data[, variable$variable])
-      column <- data.frame(data[, log_col_name])
-      names(column) <- log_col_name
-      return(column)
-    }
-  )
-  # bind log10 variables to input data
-  columns <- dplyr::bind_cols(columns)
-  data <- dplyr::bind_cols(data, columns)
-
   ### Check values pass validation rules ----------------------------------------------------------
   # Add row variables to link data input rows to row in the validation check dataframe
   data$ROW <- seq_len(nrow(data))
@@ -512,6 +495,23 @@ These values will be used instead of calculating them from Grid Reference values
   if (any(data$SLOPE[!is.na(data$SLOPE)] == SLP_LIM)) {
     data$SLOPE[data$SLOPE == SLP_LIM] <- SLP_VAL
   }
+
+  # Add log10 values where required
+  log_rules <- validation_rules[validation_rules$log == TRUE, ]
+  # loop through variables and add log10 variable if required
+  columns <- lapply(
+    split(log_rules, row.names(log_rules)),
+    function(variable) {
+      log_col_name <- variable$log_col_name
+      data[, log_col_name] <- log10(data[, variable$variable])
+      column <- data.frame(data[, log_col_name])
+      names(column) <- log_col_name
+      return(column)
+    }
+  )
+  # bind log10 variables to input data
+  columns <- dplyr::bind_cols(columns)
+  data <- dplyr::bind_cols(data, columns)
 
   ### Format checks and print check messages  --------------------------------------------------
   # Remove empty checks

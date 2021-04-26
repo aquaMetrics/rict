@@ -254,6 +254,25 @@ test_that("Single year: Only return results for seasons provided", {
   expect_equal(all(is.na(test$M_NTAXA_spr[3])), FALSE)
   expect_equal(all(is.na(test$M_NTAXA_sum[5])), TRUE)
   expect_equal(all(is.na(test$M_NTAXA_sum[8])), FALSE)
+
+  # Remove summer from GIS:
+  demo_gis_values_log <- rict::demo_gis_values_log
+  remove_cols <- grep("Sum_TL2_", names(demo_gis_values_log))
+  demo_gis_values_log[1:2, remove_cols] <- NA
+  remove_cols <- grep("Sum_Season_ID|Sum_Ntaxa_Bias", names(demo_gis_values_log))
+  demo_gis_values_log[1:2, remove_cols] <- NA
+  prediction <- rict_predict(demo_gis_values_log)
+  test <- rict(demo_gis_values_log, year_type = "single")
+
+  # Only summer from GIS:
+  demo_gis_values_log <- rict::demo_gis_values_log
+  remove_cols <- grep("Spr_TL2_|Aut_TL2_", names(demo_gis_values_log))
+  demo_gis_values_log[1:2, remove_cols] <- NA
+  remove_cols <- grep("Aut_Season_ID|Aut_Ntaxa_Bias|Spr_Season_ID|Spr_Ntaxa_Bias", names(demo_gis_values_log))
+  demo_gis_values_log[1:2, remove_cols] <- NA
+  test <- rict(demo_gis_values_log, year_type = "single")
+  test <- rict(demo_gis_values_log[1, ], year_type = "single")
+
 })
 
 test_that("Single year: Summer only", {

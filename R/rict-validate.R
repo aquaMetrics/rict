@@ -236,6 +236,10 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
     # Check NGR length
     data$NGR <- as.character(data$NGR)
     data$NGR_LENGTH <- nchar(data$NGR)
+    if (all(is.na(data$NGR))) {
+      stop("You provided data with all NGR values missing,
+       Hint: Check your NGR variable has letters. ", call. = FALSE)
+    }
     if (any(data$NGR_LENGTH > 2)) {
       stop("You provided an NGR with more than two letters,
        Hint: Check your NGR variables have less than 3 three letters. ", call. = FALSE)
@@ -324,23 +328,6 @@ These values will be used instead of calculating them from Grid Reference values
   if (model == "gis") {
     data$D_F_SOURCE <- data$D_F_SOURCE / 1000
   }
-
-  # Add log10 values where required
-  log_rules <- validation_rules[validation_rules$log == TRUE, ]
-  # loop through variables and add log10 variable if required
-  columns <- lapply(
-    split(log_rules, row.names(log_rules)),
-    function(variable) {
-      log_col_name <- variable$log_col_name
-      data[, log_col_name] <- log10(data[, variable$variable])
-      column <- data.frame(data[, log_col_name])
-      names(column) <- log_col_name
-      return(column)
-    }
-  )
-  # bind log10 variables to input data
-  columns <- dplyr::bind_cols(columns)
-  data <- dplyr::bind_cols(data, columns)
 
   ### Check values pass validation rules ----------------------------------------------------------
   # Add row variables to link data input rows to row in the validation check dataframe
@@ -499,13 +486,6 @@ These values will be used instead of calculating them from Grid Reference values
   if (any(data$MEAN_DEPTH[!is.na(data$MEAN_DEPTH)] < MND_LIM)) {
     data$MEAN_DEPTH[data$MEAN_DEPTH < MND_LIM] <- MND_LIM
   }
-  DIS_LIM <- validation_rules_input[validation_rules_input$variable %in%
-    c("DISCHARGE", "DISCH_CAT"), "replacement_limit"]
-  DIS_VAL <- validation_rules_input[validation_rules_input$variable %in%
-    c("DISCHARGE", "DISCH_CAT"), "replacement_val"]
-  if (any(data$DISCHARGE[!is.na(data$DISCHARGE)] == DIS_LIM)) {
-    data$DISCHARGE[data$DISCHARGE == DIS_LIM] <- DIS_VAL
-  }
   ALK_LIM <- validation_rules_input[validation_rules_input$variable == "ALKALINITY", "replacement_limit"]
   if (any(data$ALKALINITY[!is.na(data$ALKALINITY)] < ALK_LIM)) {
     data$ALKALINITY[data$ALKALINITY < ALK_LIM] <- ALK_LIM
@@ -515,6 +495,23 @@ These values will be used instead of calculating them from Grid Reference values
   if (any(data$SLOPE[!is.na(data$SLOPE)] == SLP_LIM)) {
     data$SLOPE[data$SLOPE == SLP_LIM] <- SLP_VAL
   }
+
+  # Add log10 values where required
+  log_rules <- validation_rules[validation_rules$log == TRUE, ]
+  # loop through variables and add log10 variable if required
+  columns <- lapply(
+    split(log_rules, row.names(log_rules)),
+    function(variable) {
+      log_col_name <- variable$log_col_name
+      data[, log_col_name] <- log10(data[, variable$variable])
+      column <- data.frame(data[, log_col_name])
+      names(column) <- log_col_name
+      return(column)
+    }
+  )
+  # bind log10 variables to input data
+  columns <- dplyr::bind_cols(columns)
+  data <- dplyr::bind_cols(data, columns)
 
   ### Format checks and print check messages  --------------------------------------------------
   # Remove empty checks

@@ -34,11 +34,16 @@ test_that("outright fails stop process and create error message", {
   test_data <- demo_observed_values
   test_data$Alkalinity <- NA
   expect_error(rict_validate(test_data))
-  # Test NA in NGR will fail
+  # Test NAs in NGR will fail
   test_data <- demo_observed_values
   test_data$NGR[1] <- NA
   expect_error(rict_validate(test_data), "The data provided contains more than one area of the UK.
         Hint: Check your data contains NGR grid letters for either: NI or GB. ")
+  # Test if all NGR values NA will fail
+  test_data <- demo_observed_values
+  test_data$NGR <- NA
+  expect_error(rict_validate(test_data), "You provided data with all NGR values missing,
+       Hint: Check your NGR variable has letters. ")
   # NGR must all be less than three letters long
   # This stops process because NGR are processed in a batch (not individually for each site)
   # Therefore one wrong NGR in column stops whole process
@@ -98,9 +103,10 @@ test_that("fails on some rows create fail messages (but process continues of val
   # test fail values
   test_data <- demo_observed_values
   test_data$Discharge[1] <- 1500
+  test_data$Discharge[2] <- 0
   test_data$Pebbles_Gravel[1] <- 90
   test <- rict_validate(test_data)
-  expect_equal(length(test[[2]][, 1]), 2)
+  expect_equal(length(test[[2]][, 1]), 3)
   # test temperature fails if outside temperature grid
   test_data <- demo_observed_values
   test_data$NGR <- as.character(test_data$NGR)
@@ -117,6 +123,14 @@ test_that("fails on some rows create fail messages (but process continues of val
   test <- rict_validate(test_data)
   test <- test$checks
   expect_equal(length(test$FAIL[test$FAIL != "---"]), 3)
+  # Test GIS values also value
+  test_data <- demo_gis_values_log
+  test_data$disch_cat[1] <- NA
+  test_data$disch_cat[2] <- 0
+  test_data$Altitude[1] <- -4
+  test <- rict_validate(test_data)
+  test <- test$checks
+  expect_equal(length(test$FAIL[test$FAIL != "---"]), 4)
 })
 
 # ---------------------------------------------------------------------
@@ -147,18 +161,29 @@ test_that("replacement values work if value is less than the ‘overall’ minim
   test_data$Dist_from_Source[1] <- 0.01
   test_data$Mean_Width[1] <- 0.01
   test_data$Mean_Depth[1] <- 0.1
-  test_data$Discharge[1] <- 0
   test_data$Alkalinity[1] <- 0.001
   test_data$Slope[1] <- 0
   test <- rict_validate(test_data)
-  expect_equal(length(test[[2]][, 1]), 7)
+  expect_equal(length(test[[2]][, 1]), 6)
   expect_equal(test[[1]][1, c("ALTITUDE")], 1)
   expect_equal(test[[1]][1, c("DIST_FROM_SOURCE")], 0.1)
   expect_equal(test[[1]][1, c("MEAN_WIDTH")], 0.1)
   expect_equal(test[[1]][1, c("MEAN_DEPTH")], 1)
-  expect_equal(test[[1]][1, c("DISCHARGE")], 1)
   expect_equal(test[[1]][1, c("ALKALINITY")], 0.1)
   expect_equal(test[[1]][1, c("SLOPE")], 0.1)
+
+  test_data <- demo_gis_values_log
+  test_data$Altitude[1] <- 0
+  test_data$d_f_source[1] <- 0.1
+  test_data$Alkalinity[1] <- 0.1
+  test_data$slope[1] <- 0
+  test <- rict_validate(test_data)
+  expect_equal(length(test[[2]][, 1]), 4)
+  expect_equal(test[[1]][1, c("ALTITUDE")], 1)
+  expect_equal(test[[1]][1, c("D_F_SOURCE")], 0.000100) # Now converted to Km from metres
+  expect_equal(test[[1]][1, c("ALKALINITY")], 0.1)
+  expect_equal(test[[1]][1, c("SLOPE")], 0.1)
+
 })
 
 # ---------------------------------------------------------------------

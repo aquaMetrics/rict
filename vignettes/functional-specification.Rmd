@@ -31,7 +31,7 @@ knitr::opts_chunk$set(
   echo = FALSE
 )
 
-options(scipen = 2, digits = 5)
+options(scipen = 2, digits = 9)
 ```
 
 ```{r results="asis", echo=FALSE}
@@ -44,7 +44,7 @@ outline: 0 ;
 }
 </style>
 ")
-```
+``` 
 
 
 ![](images/rict_logo.png){ width=20% }
@@ -158,6 +158,8 @@ v1.10 JMB|06/04/20|Correction to 9.2.1 – table defining taxon levels replaces 
 v2.0|07/04/20|2.0 Draft version made after review by SC: removed old comments, updated the ToC.  
 v2.1|22/07/20|Tidied-up some headings; Section 2 updated screenshot of experiment in MS Azure ML Studio; note about NGR being upper-case added to table in Section 5.1; explanations of limit values added to Section 5.1.1. Section 6.3 about velocity re-written, Section 7.8 minor correction to suitability code 5 SuitText <0.1; Section 9 edited for clarity and erroneous headers removed. Numbering of sub-sections in Section 10 corrected; Annex A embedded input template updated to current Version 1.2
 v2.2|18/09/2020|Validations tables are based on the validation-rules.csv; The validation section has been split into three parts: variables; rules, replacements values; Updated future experiments (removed experiments which are now available); Updated Compare experiment details to note that individual seasons can be compared; Updated R file names for functions where these have changes; Updated R .csv file names where required; Added info on rict supporting files; Add info on common Azure / R compatibility bugs; Details on github version control; Validation tables/rules split into requited columns, validation rules and replacement values for clarity/ease of use; Updated validation to explain more detail of how the process/function currently work; Mention validation rules .csv (where all rules are contained); Updated inputs and outputs examples (In Annex) to show all GIS/NI/GB model 44/Model 1 etc; Slight change to order of headings (readability) and heading titles (for brevity); Merged NI and GB lat/lon calculations into a single section (as these are both dealt with in one R function and reduce repetition).
+v2.3|25/11/2020| Updated validation rules
+v2.4|22/04/2021| Added M44 info in introduction to validation rules, corrected Helperfunctionv1.r to `helper-functions.R`, correct typo: $≤$10, input file reference from `wValidation wTestData.csv` to `New_Input_file_Data_to_use_multi_year`. 
 
 # Functional Overview 
 
@@ -502,7 +504,7 @@ In order to be able to predict and classify, the tool requires input data in one
 csv file which includes:
   
 * Site Identifier
-* Values for a number of Environmental Variables (e.g. NGR, width, depth, etc.)
+* Values for a number of Environmental Variables (e.g. NGR, slope, discharge, etc.)
 * Values for a number of Observed Tool Indices (e.g. ASPT, NTAXA, etc.) (only
 required for classification)
   
@@ -525,12 +527,12 @@ provided Environmental Variables and then converted. The complete set of input
 and derived Environmental Variables used by RICT2 are called Predictive
 Environmental Variables (PEVs).
   
-The table below refers to the Environmental Variable data required and the data
-field validation for the RIVPACS IV Great Britain Model M1 which requires input
-of 13 PEVs and for the RIVPACS IV Northern Ireland Model M1
-which requires input of 11 PEVs.
+The tables below refers to the Environmental Variable data required and the data
+field validation for the RIVPACS IV Great Britain and Northern Ireland Model M1
+and additionally the model M44. The M1 model requires input of 13 PEVs for Great
+Britain and 11 PEVs for Northern Ireland. M44 model required 17 PEVs.
   
-Input file screening will be carried out using the rules described in the table
+Input file screening will be carried out using the rules described in the tables
 below when a user enters data into the input file spreadsheet. This will be done
 by the conditional formatting tool within the MS Excel ribbon to check and
 highlight to the user where data does not meet validation requirements. It will
@@ -1127,7 +1129,7 @@ The conversion from user-supplied velocity category (VEL) to discharge category
 
 |Velocity category VELC(VEL) |Velocity Category(VEL) (cm.s^-1^) | Mid-range estimate VELC(VEL) (cm.s^-1^)|
 |:---------------------------|:-------------------------------|:-------------------------------------|
-|1                           |$≤$10                           |5                                     | 
+|1                           |≤10                             |5                                     | 
 |2                           |>10 – 25                        |17.5                                  | 
 |3                           |>25 – 50                        |37.5                                  | 
 |4                           |>50 – 100                       |75                                    | 
@@ -1219,8 +1221,8 @@ variables apart from air temperature mean (TEMPM) and air temperature range
 add discriminatory power within this relatively small geographic region.
   
 For the purposes of specifying the discriminant functions and inputting their
-coefficients (DFCoeff<sub>v,d</sub>), RICT2 will have a separate Helperfunctionv1.r folder
-(within the prediction support files) for the Northern Ireland model experiment.
+coefficients (DFCoeff<sub>v,d</sub>), RICT2 will have a `helper-functions.R` file
+(among the support files) for the Northern Ireland model experiment.
   
 Some of the environmental predictor variables are used in the discriminant
 functions in a logarithm to base 10 transformed form (denoted Log<sub>10</sub>), as
@@ -1740,7 +1742,7 @@ Sections below are based on notes from write up with Maybin (March 2020):
 
 ### GB & NI
 
-* New Input File on Azure: `wValidation wTestData.csv`
+* New Input File on Azure: `New_Input_file_Data_to_use_multi_year.csv`
 * `prediction-functions.R`
 * `helper-functions.R` – contains all the functions used to run the experiment
 
@@ -2765,6 +2767,3 @@ The CSF specified below denotes the minimum requirements as agreed with the proj
 |10 |Tertiary   |Non critical bugs resolved                                    |    1|
 |11 |Tertiary   |Non critical functionality added                              |    1|
 |12 |Tertiary   |Produce an updated functional specification and architecture documentation  |    1| documentation
-
-
-

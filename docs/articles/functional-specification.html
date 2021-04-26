@@ -80,14 +80,14 @@
 
       
 
-      </header><script src="functional-specification_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="functional-specification_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
+      </header><script src="functional-specification_files/header-attrs-2.5/header-attrs.js"></script><link href="functional-specification_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
 <script src="functional-specification_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>River Invertebrate Classification Tool (RICT) Functional Specification</h1>
                         <h4 class="author">RICT Steering Group</h4>
             
-            <h4 class="date">2021-01-12</h4>
+            <h4 class="date">2021-04-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/aquaMetrics/rict/blob/master/vignettes/functional-specification.Rmd"><code>vignettes/functional-specification.Rmd</code></a></small>
       <div class="hidden name"><code>functional-specification.Rmd</code></div>
@@ -103,18 +103,18 @@ outline: 0 ;
 }
 </style>
 <p><img src="images/rict_logo.png" style="width:20.0%"></p>
-<div id="introduction" class="section level1">
-<h1 class="hasAnchor">
+<div id="introduction" class="section level1" number="1">
+<h1 number="1" class="hasAnchor">
 <a href="#introduction" class="anchor"></a><span class="header-section-number">1</span> Introduction</h1>
-<div id="purpose-of-the-document" class="section level2">
-<h2 class="hasAnchor">
+<div id="purpose-of-the-document" class="section level2" number="1.1">
+<h2 number="1.1" class="hasAnchor">
 <a href="#purpose-of-the-document" class="anchor"></a><span class="header-section-number">1.1</span> Purpose of the document</h2>
 <p>The purpose of this document is to define the business, functional and non-functional capabilities of RICT2 to support the design and implementation of RICT2 software tool.</p>
 <p>The details will be sufficient to enable the software tool to be designed and built without having to continually refer queries to business representatives.</p>
 <p>Further, it will be of sufficient detail to provide supporting documented information for any future RICT development.</p>
 </div>
-<div id="background" class="section level2">
-<h2 class="hasAnchor">
+<div id="background" class="section level2" number="1.2">
+<h2 number="1.2" class="hasAnchor">
 <a href="#background" class="anchor"></a><span class="header-section-number">1.2</span> Background</h2>
 <p>The UK Regulatory Agencies have a requirement to classify ecological quality in rivers using data from invertebrate samples. The RIVPACS (River Invertebrate Prediction and Classification Tool) model and software tool, which was developed on behalf of the agencies by the Freshwater Biological Association (FBA) and subsequently by the Centre for Ecology and Hydrology (CEH), was originally used for this purpose. It incorporates a set of summarised reference data from sites assumed to be the best available of their type.</p>
 <p>The EU Water Framework Directive (WFD) introduced in 2000, included modifications to the regulatory requirements in relation to classification and therefore the RIVPACS software processing tool had to be amended.</p>
@@ -126,8 +126,8 @@ outline: 0 ;
 <p>The platform chosen for RICT2 is Microsoft Azure Machine Learning (ML) Studio with open source R programming language as the development choice. Users will need to create a Microsoft Azure ML Studio account to allow them to access the RICT2 software tool. The majority of users will be able to use the free account subscription provided which allows adequate processing time for the number of runs required for a typical user. For more intensive RICT2 users, a monthly subscription account can be used on an ad-hoc basis, i.e. a user could subscribe for a month during the month when intensive processing is required, then unsubscribe the following month. This will keep costs minimal. Further, advanced users can create their own experiments and edit the R code or the pipeline process to suit their own computing needs.</p>
 <p>The RICT2 service is accessible via ML with the latest documentation including the technical specification and user guide being hosted on a SharePoint site containing the link to the RICT2 tool along with information and guidance.</p>
 </div>
-<div id="document-version-history" class="section level2">
-<h2 class="hasAnchor">
+<div id="document-version-history" class="section level2" number="1.3">
+<h2 number="1.3" class="hasAnchor">
 <a href="#document-version-history" class="anchor"></a><span class="header-section-number">1.3</span> Document version history</h2>
 <table class="table">
 <colgroup>
@@ -266,12 +266,22 @@ outline: 0 ;
 <td>18/09/2020</td>
 <td>Validations tables are based on the validation-rules.csv; The validation section has been split into three parts: variables; rules, replacements values; Updated future experiments (removed experiments which are now available); Updated Compare experiment details to note that individual seasons can be compared; Updated R file names for functions where these have changes; Updated R .csv file names where required; Added info on rict supporting files; Add info on common Azure / R compatibility bugs; Details on github version control; Validation tables/rules split into requited columns, validation rules and replacement values for clarity/ease of use; Updated validation to explain more detail of how the process/function currently work; Mention validation rules .csv (where all rules are contained); Updated inputs and outputs examples (In Annex) to show all GIS/NI/GB model 44/Model 1 etc; Slight change to order of headings (readability) and heading titles (for brevity); Merged NI and GB lat/lon calculations into a single section (as these are both dealt with in one R function and reduce repetition).</td>
 </tr>
+<tr class="even">
+<td>v2.3</td>
+<td>25/11/2020</td>
+<td>Updated validation rules</td>
+</tr>
+<tr class="odd">
+<td>v2.4</td>
+<td>22/04/2021</td>
+<td>Added M44 info in introduction to validation rules, corrected Helperfunctionv1.r to <code>helper-functions.R</code>, correct typo: $≤$10, input file reference from <code>wValidation wTestData.csv</code> to <code>New_Input_file_Data_to_use_multi_year</code>.</td>
+</tr>
 </tbody>
 </table>
 </div>
 </div>
-<div id="functional-overview" class="section level1">
-<h1 class="hasAnchor">
+<div id="functional-overview" class="section level1" number="2">
+<h1 number="2" class="hasAnchor">
 <a href="#functional-overview" class="anchor"></a><span class="header-section-number">2</span> Functional Overview</h1>
 <p>RICT2 is an application that implements the RIVPACS IV predictive model. The primary requirement of the tool is to allocate WFD (Water Framework Directive) compliant classifications to rivers with regard to the quality of the river invertebrate community.</p>
 <p>The classifications are calculated and described as H() = high, G = good, M = moderate, P = poor or B = bad. This is achieved by comparing sample data from a river site against sample data previously taken from river sites considered to be the best available of their type.</p>
@@ -334,8 +344,8 @@ outline: 0 ;
 <p>A screenshot of the RICT2 prediction and classification experiment for GB in Microsoft Azure ML Studio being used with the default GB test data from the input template is shown below:</p>
 <p><img src="images/rict-azure.png" width="650"></p>
 </div>
-<div id="supporting-files" class="section level1">
-<h1 class="hasAnchor">
+<div id="supporting-files" class="section level1" number="3">
+<h1 number="3" class="hasAnchor">
 <a href="#supporting-files" class="anchor"></a><span class="header-section-number">3</span> Supporting files</h1>
 <p>RICT2 uses the RIVPACS reference data which contain sites that are considered to be the best available of their type. The latest version of the complete RIVPACS reference database for RICT can be downloaded from the RICT2 Website:</p>
 <p><a href="https://fba.org.uk/FBA/Public/Discover-and-Learn/Projects/RIVPACS-Reference-Sites-and-Reports.aspx" class="uri">https://fba.org.uk/FBA/Public/Discover-and-Learn/Projects/RIVPACS-Reference-Sites-and-Reports.aspx</a></p>
@@ -348,11 +358,11 @@ outline: 0 ;
 <p>The Microsoft Windows binary rict.zip package file (Azure requires a Windows binary package) is stored on the Appveyor <a href="https://ci.appveyor.com/project/ecodata1/rict/branch/master/artifacts">artifacts</a> page. It is currently built using R 3.5 (slightly above the Azure version R 3.4.4) for compatibility with Appveyor. But this has not caused any issues.</p>
 <p>Alternatively, the rict package binary can be compile/built locally on a Windows machine.</p>
 <p>The .zip binary package file, is then moved to a folder called ‘support-files’ and that folder is also zip compressed. This zipped folder is then uploaded to Azure Studio and drag and dropped into all experiments as required.</p>
-<div id="prediction" class="section level2">
-<h2 class="hasAnchor">
+<div id="prediction" class="section level2" number="3.1">
+<h2 number="3.1" class="hasAnchor">
 <a href="#prediction" class="anchor"></a><span class="header-section-number">3.1</span> Prediction</h2>
-<div id="support-tables" class="section level3">
-<h3 class="hasAnchor">
+<div id="support-tables" class="section level3" number="3.1.1">
+<h3 number="3.1.1" class="hasAnchor">
 <a href="#support-tables" class="anchor"></a><span class="header-section-number">3.1.1</span> Support Tables:</h3>
 <p>These files can be found in the inst/extdat folder within the rict package.</p>
 <p><strong>Model 1 specific:</strong></p>
@@ -381,8 +391,8 @@ outline: 0 ;
 <code>x-103-end-group-means-formatted-jdb-17-dec-2019.csv</code> – combined data for sites considered to be of a similar biological compositionthe End Group table used in RICT2 is called</li>
 </ul>
 </div>
-<div id="prediction-functions" class="section level3">
-<h3 class="hasAnchor">
+<div id="prediction-functions" class="section level3" number="3.1.2">
+<h3 number="3.1.2" class="hasAnchor">
 <a href="#prediction-functions" class="anchor"></a><span class="header-section-number">3.1.2</span> Prediction Functions:</h3>
 <p>Found in the <code>/R</code> package directory there are two main R functions files for predictions:</p>
 <p><code>rict-predict.R</code> - main function called to run prediction<br><code>rict-validate.R</code> - lower level function to validate input data <code>helper-functions.R</code> - support functions to carry out the Environmental Variables validation</p>
@@ -390,11 +400,11 @@ outline: 0 ;
 <p><code>prediction-functions.R</code><br><code>calc_temperatures.R</code></p>
 </div>
 </div>
-<div id="classification" class="section level2">
-<h2 class="hasAnchor">
+<div id="classification" class="section level2" number="3.2">
+<h2 number="3.2" class="hasAnchor">
 <a href="#classification" class="anchor"></a><span class="header-section-number">3.2</span> Classification</h2>
-<div id="files-supporting" class="section level3">
-<h3 class="hasAnchor">
+<div id="files-supporting" class="section level3" number="3.2.1">
+<h3 number="3.2.1" class="hasAnchor">
 <a href="#files-supporting" class="anchor"></a><span class="header-section-number">3.2.1</span> Files Supporting:</h3>
 <ul>
 <li>
@@ -413,16 +423,16 @@ outline: 0 ;
 <code>EndGrp_AssessScores.csv</code> file used for calculating proportion during prediction.</li>
 </ul>
 </div>
-<div id="classification-functions" class="section level3">
-<h3 class="hasAnchor">
+<div id="classification-functions" class="section level3" number="3.2.2">
+<h3 number="3.2.2" class="hasAnchor">
 <a href="#classification-functions" class="anchor"></a><span class="header-section-number">3.2.2</span> Classification Functions:</h3>
 <ul>
 <li>
 <code>classification-functions.R</code> - A large number of R code functions used during the prediction process as described in Section 8.</li>
 </ul>
 </div>
-<div id="classification-support-files" class="section level3">
-<h3 class="hasAnchor">
+<div id="classification-support-files" class="section level3" number="3.2.3">
+<h3 number="3.2.3" class="hasAnchor">
 <a href="#classification-support-files" class="anchor"></a><span class="header-section-number">3.2.3</span> Classification support files:</h3>
 <ul>
 <li>
@@ -434,11 +444,11 @@ outline: 0 ;
 </div>
 </div>
 </div>
-<div id="rict2-experiments" class="section level1">
-<h1 class="hasAnchor">
+<div id="rict2-experiments" class="section level1" number="4">
+<h1 number="4" class="hasAnchor">
 <a href="#rict2-experiments" class="anchor"></a><span class="header-section-number">4</span> RICT2 Experiments</h1>
-<div id="settings" class="section level2">
-<h2 class="hasAnchor">
+<div id="settings" class="section level2" number="4.1">
+<h2 number="4.1" class="hasAnchor">
 <a href="#settings" class="anchor"></a><span class="header-section-number">4.1</span> Settings</h2>
 <p>The “settings” will be determined by the project experiment which will use default values relevant for that project experiment. However, the tool will allow a user to open experiments in their own workspace and change the settings and values and save their own experiments. Standard published experiments can only be amended by an administrator user. These will be a “locked down” version displayed in the Azure Studio gallery.</p>
 <p>Below are described the default settings values for the WFD Classification experiments.</p>
@@ -448,8 +458,8 @@ outline: 0 ;
 <li>RIVPACS IV NI (M1) (Set ID = 2)</li>
 </ul>
 </div>
-<div id="default-values" class="section level2">
-<h2 class="hasAnchor">
+<div id="default-values" class="section level2" number="4.2">
+<h2 number="4.2" class="hasAnchor">
 <a href="#default-values" class="anchor"></a><span class="header-section-number">4.2</span> Default values</h2>
 <p>The list below describes the default values used:</p>
 <ul>
@@ -461,8 +471,8 @@ outline: 0 ;
 </ul>
 <p>Note that 1.62 is the default value currently being used for Bias as this was input as the default value in the previous version of RICT2 as used in SEPA for BMWP NTAXA. However, the EA uses a value of 1.68 as the Bias value for WHPT which was based on an audit of the analytical quality of Environment Agency laboratories. The Bias value for WHPT should be greater than the value for BMWP for the same level of analytical quality, because WHPT uses more taxa than BMWP. Plus WHPT taxa also includes additional Diptera families which are less easy to identify.</p>
 </div>
-<div id="future-experiments" class="section level2">
-<h2 class="hasAnchor">
+<div id="future-experiments" class="section level2" number="4.3">
+<h2 number="4.3" class="hasAnchor">
 <a href="#future-experiments" class="anchor"></a><span class="header-section-number">4.3</span> Future Experiments</h2>
 <p>A multi-site classification will be added to enable water bodies to be classified from more than one site. The GIS data location checker and delivery system and multi-site classification are currently in development and we hope to release them in a couple of months.</p>
 <p>Additional standard default experiments to calculate the output for more specific Index sets (e.g. for hydro-ecological evaluation) may be added later, if the need arises.</p>
@@ -470,32 +480,32 @@ outline: 0 ;
 <p>We may also correct or improve experiments. If we need to do that, or we add new experiments to the gallery, we will run them through testing to ensure that the modifications do not affect the results and if they do, we know what the effect is. Information about that will be added to this document and to user guides, as appropriate.</p>
 </div>
 </div>
-<div id="acceptance-and-validation-of-input-data" class="section level1">
-<h1 class="hasAnchor">
+<div id="acceptance-and-validation-of-input-data" class="section level1" number="5">
+<h1 number="5" class="hasAnchor">
 <a href="#acceptance-and-validation-of-input-data" class="anchor"></a><span class="header-section-number">5</span> Acceptance and validation of input data</h1>
 <p>In order to be able to predict and classify, the tool requires input data in one csv file which includes:</p>
 <ul>
 <li>Site Identifier</li>
-<li>Values for a number of Environmental Variables (e.g. NGR, width, depth, etc.)</li>
+<li>Values for a number of Environmental Variables (e.g. NGR, slope, discharge, etc.)</li>
 <li>Values for a number of Observed Tool Indices (e.g. ASPT, NTAXA, etc.) (only required for classification)</li>
 </ul>
 <p>An excel spreadsheet template will be provided for the user to enter input data into the relevant column headings. Validation rules will be applied to the data that has been input for each column to help the user meet the validation requirements detailed below.</p>
 <p>The input data spreadsheet template can be found in Annex A of this document. Once completed, this spreadsheet will need to be saved as a csv format and uploaded by the user to link to the required project experiment.</p>
-<div id="environmental-variable-values-and-validation" class="section level2">
-<h2 class="hasAnchor">
+<div id="environmental-variable-values-and-validation" class="section level2" number="5.1">
+<h2 number="5.1" class="hasAnchor">
 <a href="#environmental-variable-values-and-validation" class="anchor"></a><span class="header-section-number">5.1</span> Environmental Variable Values and Validation</h2>
 <p>Environmental Variables (EV) are needed to enable the prediction process to calculate the probability of end group membership. The values of some Environmental Variables are provided and input by the user. The values of other Environmental Variables have to be derived using the values of one or more provided Environmental Variables and then converted. The complete set of input and derived Environmental Variables used by RICT2 are called Predictive Environmental Variables (PEVs).</p>
-<p>The table below refers to the Environmental Variable data required and the data field validation for the RIVPACS IV Great Britain Model M1 which requires input of 13 PEVs and for the RIVPACS IV Northern Ireland Model M1 which requires input of 11 PEVs.</p>
-<p>Input file screening will be carried out using the rules described in the table below when a user enters data into the input file spreadsheet. This will be done by the conditional formatting tool within the MS Excel ribbon to check and highlight to the user where data does not meet validation requirements. It will highlight failures in red and warnings in orange. However, it will not stop the user from supplying that data to RICT2 for processing. When RICT2 processes the data, the appropriate Fail and Warn errors will be generated as described below.</p>
+<p>The tables below refers to the Environmental Variable data required and the data field validation for the RIVPACS IV Great Britain and Northern Ireland Model M1 and additionally the model M44. The M1 model requires input of 13 PEVs for Great Britain and 11 PEVs for Northern Ireland. M44 model required 17 PEVs.</p>
+<p>Input file screening will be carried out using the rules described in the tables below when a user enters data into the input file spreadsheet. This will be done by the conditional formatting tool within the MS Excel ribbon to check and highlight to the user where data does not meet validation requirements. It will highlight failures in red and warnings in orange. However, it will not stop the user from supplying that data to RICT2 for processing. When RICT2 processes the data, the appropriate Fail and Warn errors will be generated as described below.</p>
 <p>Validation has also been coded into RICT2 for validation of the value ranges, i.e. “all”, “gb” and “ni”.</p>
 <p>Note that at least one set of the following data will be required for each site but there may be up to three sets of data where the ‘raw’ data is being provided for up to three years for multi-year classification.</p>
-<div id="input-variables" class="section level4">
-<h4 class="hasAnchor">
+<div id="input-variables" class="section level4" number="5.1.0.1">
+<h4 number="5.1.0.1" class="hasAnchor">
 <a href="#input-variables" class="anchor"></a><span class="header-section-number">5.1.0.1</span> Input variables</h4>
 <p>All input variables as well as their validation rules are listed in the validation-rules.csv file within the package. The tables below are generated from this file.</p>
 </div>
-<div id="model-1-user-input-file-using-physical-predictors" class="section level4">
-<h4 class="hasAnchor">
+<div id="model-1-user-input-file-using-physical-predictors" class="section level4" number="5.1.0.2">
+<h4 number="5.1.0.2" class="hasAnchor">
 <a href="#model-1-user-input-file-using-physical-predictors" class="anchor"></a><span class="header-section-number">5.1.0.2</span> Model 1 User input file (using physical predictors)</h4>
 <p>Required columns:</p>
 <table class="table">
@@ -679,8 +689,8 @@ outline: 0 ;
 </tbody>
 </table>
 </div>
-<div id="model-44-input-files-using-gis-predictors" class="section level4">
-<h4 class="hasAnchor">
+<div id="model-44-input-files-using-gis-predictors" class="section level4" number="5.1.0.3">
+<h4 number="5.1.0.3" class="hasAnchor">
 <a href="#model-44-input-files-using-gis-predictors" class="anchor"></a><span class="header-section-number">5.1.0.3</span> Model 44 Input files (using GIS predictors)</h4>
 <p>Required columns:</p>
 <table class="table">
@@ -824,13 +834,13 @@ outline: 0 ;
 </tbody>
 </table>
 </div>
-<div id="optional-variables" class="section level4">
-<h4 class="hasAnchor">
+<div id="optional-variables" class="section level4" number="5.1.0.4">
+<h4 number="5.1.0.4" class="hasAnchor">
 <a href="#optional-variables" class="anchor"></a><span class="header-section-number">5.1.0.4</span> Optional variables</h4>
 <p>Optional columns: Must still be present in input data file but they may contain missing values or be entirely empty. However, they must comply with the following notes:</p>
 </div>
-<div id="model-1-optional-notes" class="section level4">
-<h4 class="hasAnchor">
+<div id="model-1-optional-notes" class="section level4" number="5.1.0.5">
+<h4 number="5.1.0.5" class="hasAnchor">
 <a href="#model-1-optional-notes" class="anchor"></a><span class="header-section-number">5.1.0.5</span> Model 1 Optional notes:</h4>
 <table class="table">
 <thead><tr class="header">
@@ -872,8 +882,8 @@ outline: 0 ;
 </tbody>
 </table>
 </div>
-<div id="model-44-optional-notes" class="section level4">
-<h4 class="hasAnchor">
+<div id="model-44-optional-notes" class="section level4" number="5.1.0.6">
+<h4 number="5.1.0.6" class="hasAnchor">
 <a href="#model-44-optional-notes" class="anchor"></a><span class="header-section-number">5.1.0.6</span> Model 44 Optional notes:</h4>
 <table class="table">
 <thead><tr class="header">
@@ -886,14 +896,14 @@ outline: 0 ;
 </tr></tbody>
 </table>
 </div>
-<div id="validation" class="section level4">
-<h4 class="hasAnchor">
+<div id="validation" class="section level4" number="5.1.0.7">
+<h4 number="5.1.0.7" class="hasAnchor">
 <a href="#validation" class="anchor"></a><span class="header-section-number">5.1.0.7</span> Validation</h4>
 <p>Warnings: Where the value of an environmental input variable exceeds a “Warn” limit, the prediction process will continue but warning message is created for that particular site.</p>
 <p>Fails: Where the value of an environmental input variable exceeds a “Fail” limit, the prediction process will not proceed for that particular site and flags the transgression in a fail message.</p>
 </div>
-<div id="validation-rules-for-model-1" class="section level4">
-<h4 class="hasAnchor">
+<div id="validation-rules-for-model-1" class="section level4" number="5.1.0.8">
+<h4 number="5.1.0.8" class="hasAnchor">
 <a href="#validation-rules-for-model-1" class="anchor"></a><span class="header-section-number">5.1.0.8</span> Validation rules for Model 1</h4>
 <table class="table">
 <colgroup>
@@ -916,7 +926,7 @@ outline: 0 ;
 <tr class="odd">
 <td align="left">SITE</td>
 <td align="left">all</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -924,7 +934,7 @@ outline: 0 ;
 <tr class="even">
 <td align="left">WATERBODY</td>
 <td align="left">all</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -932,9 +942,9 @@ outline: 0 ;
 <tr class="odd">
 <td align="left">YEAR</td>
 <td align="left">all</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
-<td align="right">1990.0000</td>
+<td align="right">1990.0000000</td>
 <td align="right">NA</td>
 </tr>
 <tr class="even">
@@ -964,176 +974,176 @@ outline: 0 ;
 <tr class="odd">
 <td align="left">LATITUDE</td>
 <td align="left">gb</td>
-<td align="right">49.0</td>
-<td align="right">71</td>
-<td align="right">49.9978</td>
-<td align="right">60.8035</td>
+<td align="right">49.95</td>
+<td align="right">60.86</td>
+<td align="right">49.9978431</td>
+<td align="right">60.8034893</td>
 </tr>
 <tr class="even">
 <td align="left">LATITUDE</td>
 <td align="left">ni</td>
-<td align="right">49.0</td>
-<td align="right">71</td>
-<td align="right">54.0000</td>
-<td align="right">55.2000</td>
+<td align="right">54.02</td>
+<td align="right">55.38</td>
+<td align="right">54.0684100</td>
+<td align="right">55.1995835</td>
 </tr>
 <tr class="odd">
 <td align="left">LONGITUDE</td>
 <td align="left">gb</td>
-<td align="right">-11.0</td>
-<td align="right">2</td>
-<td align="right">-7.3652</td>
-<td align="right">1.3560</td>
+<td align="right">-7.67</td>
+<td align="right">1.76</td>
+<td align="right">-7.3651894</td>
+<td align="right">1.3560119</td>
 </tr>
 <tr class="even">
 <td align="left">LONGITUDE</td>
 <td align="left">ni</td>
-<td align="right">-11.0</td>
-<td align="right">2</td>
-<td align="right">-8.1000</td>
-<td align="right">-5.7731</td>
+<td align="right">-8.20</td>
+<td align="right">-5.43</td>
+<td align="right">-8.0916181</td>
+<td align="right">-5.7731300</td>
 </tr>
 <tr class="odd">
 <td align="left">ALTITUDE</td>
 <td align="left">gb</td>
-<td align="right">0.0</td>
-<td align="right">1345</td>
-<td align="right">0.0000</td>
-<td align="right">590.0000</td>
+<td align="right">0.00</td>
+<td align="right">1345.00</td>
+<td align="right">0.0000000</td>
+<td align="right">590.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">ALTITUDE</td>
 <td align="left">ni</td>
-<td align="right">0.0</td>
-<td align="right">1345</td>
-<td align="right">3.0000</td>
-<td align="right">180.0000</td>
+<td align="right">0.00</td>
+<td align="right">850.00</td>
+<td align="right">3.0000000</td>
+<td align="right">180.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">SLOPE</td>
 <td align="left">gb</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
-<td align="right">0.0000</td>
-<td align="right">150.0000</td>
+<td align="right">0.0000000</td>
+<td align="right">150.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">SLOPE</td>
 <td align="left">ni</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
-<td align="right">0.1000</td>
-<td align="right">50.0000</td>
+<td align="right">0.1000000</td>
+<td align="right">50.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">DISCHARGE</td>
 <td align="left">gb</td>
-<td align="right">0.0</td>
-<td align="right">10</td>
-<td align="right">1.0000</td>
-<td align="right">10.0000</td>
+<td align="right">1.00</td>
+<td align="right">10.00</td>
+<td align="right">1.0000000</td>
+<td align="right">10.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">DISCHARGE</td>
 <td align="left">ni</td>
-<td align="right">0.0</td>
-<td align="right">10</td>
-<td align="right">1.0000</td>
-<td align="right">8.0000</td>
+<td align="right">1.00</td>
+<td align="right">10.00</td>
+<td align="right">1.0000000</td>
+<td align="right">8.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">VELOCITY</td>
 <td align="left">gb</td>
-<td align="right">0.0</td>
-<td align="right">5</td>
-<td align="right">1.0000</td>
-<td align="right">5.0000</td>
+<td align="right">1.00</td>
+<td align="right">5.00</td>
+<td align="right">1.0000000</td>
+<td align="right">5.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">VELOCITY</td>
 <td align="left">ni</td>
-<td align="right">0.0</td>
-<td align="right">5</td>
-<td align="right">1.0000</td>
-<td align="right">5.0000</td>
+<td align="right">1.00</td>
+<td align="right">5.00</td>
+<td align="right">1.0000000</td>
+<td align="right">5.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">DIST_FROM_SOURCE</td>
 <td align="left">gb</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
-<td align="right">0.1000</td>
-<td align="right">202.8000</td>
+<td align="right">0.1000000</td>
+<td align="right">202.8000000</td>
 </tr>
 <tr class="even">
 <td align="left">DIST_FROM_SOURCE</td>
 <td align="left">ni</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
-<td align="right">2.2000</td>
-<td align="right">75.0000</td>
+<td align="right">2.2000000</td>
+<td align="right">75.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">MEAN_WIDTH</td>
 <td align="left">gb</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
-<td align="right">0.4000</td>
-<td align="right">117.0000</td>
+<td align="right">0.4000000</td>
+<td align="right">116.7000000</td>
 </tr>
 <tr class="even">
 <td align="left">MEAN_WIDTH</td>
 <td align="left">ni</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
-<td align="right">2.0000</td>
-<td align="right">37.0000</td>
+<td align="right">2.0000000</td>
+<td align="right">37.2000000</td>
 </tr>
 <tr class="odd">
 <td align="left">MEAN_DEPTH</td>
 <td align="left">gb</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
-<td align="right">1.7000</td>
-<td align="right">300.0000</td>
+<td align="right">1.7000000</td>
+<td align="right">300.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">MEAN_DEPTH</td>
 <td align="left">ni</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
-<td align="right">15.0000</td>
-<td align="right">183.0000</td>
+<td align="right">15.0000000</td>
+<td align="right">183.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">BOULDER_COBBLES</td>
 <td align="left">all</td>
-<td align="right">0.0</td>
-<td align="right">100</td>
+<td align="right">0.00</td>
+<td align="right">100.00</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">PEBBLES_GRAVEL</td>
 <td align="left">all</td>
-<td align="right">0.0</td>
-<td align="right">100</td>
+<td align="right">0.00</td>
+<td align="right">100.00</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">SAND</td>
 <td align="left">all</td>
-<td align="right">0.0</td>
-<td align="right">100</td>
+<td align="right">0.00</td>
+<td align="right">100.00</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">SILT_CLAY</td>
 <td align="left">all</td>
-<td align="right">0.0</td>
-<td align="right">100</td>
+<td align="right">0.00</td>
+<td align="right">100.00</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
@@ -1142,16 +1152,16 @@ outline: 0 ;
 <td align="left">gb</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
-<td align="right">-7.7100</td>
-<td align="right">8.0000</td>
+<td align="right">-7.7050000</td>
+<td align="right">8.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">MSUBST</td>
 <td align="left">ni</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
-<td align="right">-7.7500</td>
-<td align="right">6.6100</td>
+<td align="right">-7.7500000</td>
+<td align="right">6.6125000</td>
 </tr>
 <tr class="odd">
 <td align="left">HARDNESS</td>
@@ -1180,40 +1190,40 @@ outline: 0 ;
 <tr class="even">
 <td align="left">TEMPM</td>
 <td align="left">gb</td>
-<td align="right">0.1</td>
+<td align="right">0.10</td>
 <td align="right">NA</td>
-<td align="right">7.5000</td>
-<td align="right">11.5000</td>
+<td align="right">7.5000000</td>
+<td align="right">11.5000000</td>
 </tr>
 <tr class="odd">
 <td align="left">TEMPR</td>
 <td align="left">gb</td>
-<td align="right">0.1</td>
+<td align="right">0.10</td>
 <td align="right">NA</td>
-<td align="right">8.2000</td>
-<td align="right">13.9000</td>
+<td align="right">8.2100000</td>
+<td align="right">13.9000000</td>
 </tr>
 <tr class="even">
 <td align="left">ALKALINITY</td>
 <td align="left">gb</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
-<td align="right">0.7000</td>
-<td align="right">365.5000</td>
+<td align="right">0.7000000</td>
+<td align="right">365.5000000</td>
 </tr>
 <tr class="odd">
 <td align="left">ALKALINITY</td>
 <td align="left">ni</td>
-<td align="right">0.0</td>
+<td align="right">0.00</td>
 <td align="right">NA</td>
-<td align="right">2.5000</td>
-<td align="right">193.5000</td>
+<td align="right">2.5000000</td>
+<td align="right">193.5000000</td>
 </tr>
 <tr class="even">
 <td align="left">TOTSUB</td>
 <td align="left">all</td>
-<td align="right">97.0</td>
-<td align="right">103</td>
+<td align="right">97.00</td>
+<td align="right">103.00</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
@@ -1249,16 +1259,16 @@ outline: 0 ;
 </tbody>
 </table>
 </div>
-<div id="validation-rules-for-model-44" class="section level4">
-<h4 class="hasAnchor">
+<div id="validation-rules-for-model-44" class="section level4" number="5.1.0.9">
+<h4 number="5.1.0.9" class="hasAnchor">
 <a href="#validation-rules-for-model-44" class="anchor"></a><span class="header-section-number">5.1.0.9</span> Validation rules for Model 44</h4>
 <table class="table">
 <colgroup>
-<col width="15%">
-<col width="5%">
-<col width="17%">
+<col width="14%">
+<col width="6%">
+<col width="18%">
 <col width="21%">
-<col width="17%">
+<col width="18%">
 <col width="21%">
 </colgroup>
 <thead><tr class="header">
@@ -1273,7 +1283,7 @@ outline: 0 ;
 <tr class="odd">
 <td align="left">SITE</td>
 <td align="left">all</td>
-<td align="right">0.0000</td>
+<td align="right">0.00000</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -1281,7 +1291,7 @@ outline: 0 ;
 <tr class="even">
 <td align="left">WATERBODY</td>
 <td align="left">all</td>
-<td align="right">0.0000</td>
+<td align="right">0.00000</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
@@ -1289,162 +1299,162 @@ outline: 0 ;
 <tr class="odd">
 <td align="left">YEAR</td>
 <td align="left">all</td>
-<td align="right">0.0000</td>
+<td align="right">0.00000</td>
 <td align="right">NA</td>
-<td align="right">1990.0000</td>
+<td align="right">1990.0000000</td>
 <td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">LATITUDE</td>
 <td align="left">gb</td>
-<td align="right">49.0000</td>
-<td align="right">71.0000</td>
-<td align="right">49.9978</td>
-<td align="right">60.8035</td>
+<td align="right">49.95000</td>
+<td align="right">60.86000</td>
+<td align="right">49.9978431</td>
+<td align="right">60.8034893</td>
 </tr>
 <tr class="odd">
 <td align="left">LATITUDE</td>
 <td align="left">ni</td>
-<td align="right">49.0000</td>
-<td align="right">71.0000</td>
-<td align="right">54.0000</td>
-<td align="right">55.2000</td>
+<td align="right">54.02000</td>
+<td align="right">55.38000</td>
+<td align="right">54.0684100</td>
+<td align="right">55.1995835</td>
 </tr>
 <tr class="even">
 <td align="left">LONGITUDE</td>
 <td align="left">gb</td>
-<td align="right">-11.0000</td>
-<td align="right">2.0000</td>
-<td align="right">-7.3652</td>
-<td align="right">1.3560</td>
+<td align="right">-7.67000</td>
+<td align="right">1.76000</td>
+<td align="right">-7.3651894</td>
+<td align="right">1.3560119</td>
 </tr>
 <tr class="odd">
 <td align="left">LONGITUDE</td>
 <td align="left">ni</td>
-<td align="right">-11.0000</td>
-<td align="right">2.0000</td>
-<td align="right">-8.1000</td>
-<td align="right">-5.7731</td>
+<td align="right">-8.20000</td>
+<td align="right">-5.43000</td>
+<td align="right">-8.0916181</td>
+<td align="right">-5.7731300</td>
 </tr>
 <tr class="even">
 <td align="left">TEMPM</td>
 <td align="left">gb</td>
-<td align="right">0.1000</td>
+<td align="right">0.10000</td>
 <td align="right">NA</td>
-<td align="right">7.5000</td>
-<td align="right">11.5000</td>
+<td align="right">7.5000000</td>
+<td align="right">11.5000000</td>
 </tr>
 <tr class="odd">
 <td align="left">TEMPR</td>
 <td align="left">gb</td>
-<td align="right">0.1000</td>
+<td align="right">0.10000</td>
 <td align="right">NA</td>
-<td align="right">8.2000</td>
-<td align="right">13.9000</td>
+<td align="right">8.2100000</td>
+<td align="right">13.9000000</td>
 </tr>
 <tr class="even">
 <td align="left">ALKALINITY</td>
 <td align="left">gb</td>
-<td align="right">0.0000</td>
+<td align="right">0.00000</td>
 <td align="right">NA</td>
-<td align="right">0.7000</td>
-<td align="right">366.0000</td>
+<td align="right">0.7000000</td>
+<td align="right">366.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">ALKALINITY</td>
 <td align="left">ni</td>
-<td align="right">0.0000</td>
+<td align="right">0.00000</td>
 <td align="right">NA</td>
-<td align="right">0.7000</td>
-<td align="right">194.0000</td>
+<td align="right">0.7000000</td>
+<td align="right">194.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">DISCH_CAT</td>
 <td align="left">all</td>
-<td align="right">1.0000</td>
-<td align="right">9.0000</td>
-<td align="right">1.0000</td>
-<td align="right">9.0000</td>
+<td align="right">1.00000</td>
+<td align="right">9.00000</td>
+<td align="right">1.0000000</td>
+<td align="right">9.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">PEAT</td>
 <td align="left">all</td>
-<td align="right">0.0000</td>
-<td align="right">1.0000</td>
+<td align="right">0.00000</td>
+<td align="right">1.00000</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">CHALK</td>
 <td align="left">all</td>
-<td align="right">0.0000</td>
-<td align="right">1.0000</td>
+<td align="right">0.00000</td>
+<td align="right">1.00000</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">CLAY</td>
 <td align="left">all</td>
-<td align="right">0.0000</td>
-<td align="right">1.0000</td>
+<td align="right">0.00000</td>
+<td align="right">1.00000</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">HARDROCK</td>
 <td align="left">all</td>
-<td align="right">0.0000</td>
-<td align="right">1.0000</td>
+<td align="right">0.00000</td>
+<td align="right">1.00000</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">LIMESTONE</td>
 <td align="left">all</td>
-<td align="right">0.0000</td>
-<td align="right">1.0000</td>
+<td align="right">0.00000</td>
+<td align="right">1.00000</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">LOG_AREA</td>
 <td align="left">all</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">0.0724</td>
-<td align="right">7193.0000</td>
+<td align="right">-2.60206</td>
+<td align="right">3.99875</td>
+<td align="right">-0.0530000</td>
+<td align="right">3.9000000</td>
 </tr>
 <tr class="odd">
 <td align="left">LOGALTBAR</td>
 <td align="left">all</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">1.3800</td>
-<td align="right">730.0000</td>
+<td align="right">-2.81558</td>
+<td align="right">3.12905</td>
+<td align="right">0.1400000</td>
+<td align="right">2.8600000</td>
 </tr>
 <tr class="even">
 <td align="left">ALTITUDE</td>
 <td align="left">all</td>
-<td align="right">-3.0000</td>
-<td align="right">1346.0000</td>
-<td align="right">0.0000</td>
-<td align="right">597.0000</td>
+<td align="right">-3.00000</td>
+<td align="right">1346.00000</td>
+<td align="right">0.0000000</td>
+<td align="right">597.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">D_F_SOURCE</td>
 <td align="left">all</td>
-<td align="right">0.0000</td>
-<td align="right">296037.0000</td>
-<td align="right">0.1000</td>
-<td align="right">245.0000</td>
+<td align="right">0.00000</td>
+<td align="right">296037.00000</td>
+<td align="right">0.1000000</td>
+<td align="right">245.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">SLOPE</td>
 <td align="left">all</td>
-<td align="right">0.0000</td>
-<td align="right">1576.8500</td>
-<td align="right">0.1000</td>
-<td align="right">142.0000</td>
+<td align="right">0.00000</td>
+<td align="right">1576.85000</td>
+<td align="right">0.1000000</td>
+<td align="right">142.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">SX</td>
@@ -1463,36 +1473,20 @@ outline: 0 ;
 <td align="right">NA</td>
 </tr>
 <tr class="odd">
-<td align="left">LgArea_CEH</td>
-<td align="left">all</td>
-<td align="right">-2.6021</td>
-<td align="right">3.9987</td>
-<td align="right">-0.0530</td>
-<td align="right">3.9000</td>
-</tr>
-<tr class="even">
-<td align="left">LgAltBar_CEH</td>
-<td align="left">all</td>
-<td align="right">-2.8156</td>
-<td align="right">3.1290</td>
-<td align="right">0.1400</td>
-<td align="right">2.8600</td>
-</tr>
-<tr class="odd">
 <td align="left">LgDFS_CEH</td>
 <td align="left">all</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
-<td align="right">-0.0170</td>
-<td align="right">2.3900</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">LgSlope_CEH</td>
 <td align="left">all</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
-<td align="right">-1.0000</td>
-<td align="right">2.1500</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 </tbody>
 </table>
@@ -1530,8 +1524,8 @@ outline: 0 ;
 </tbody>
 </table>
 </div>
-<div id="replacement-values" class="section level4">
-<h4 class="hasAnchor">
+<div id="replacement-values" class="section level4" number="5.1.0.10">
+<h4 number="5.1.0.10" class="hasAnchor">
 <a href="#replacement-values" class="anchor"></a><span class="header-section-number">5.1.0.10</span> Replacement values</h4>
 <p>If values are provided that are zero (or close to zero) they are replaced to avoid divide by zero errors. Specifically, variables that are used in the RIVPACS model discriminator functions in their log form (as you cannot take logs of zeroes):</p>
 <table class="table">
@@ -1577,22 +1571,6 @@ outline: 0 ;
 <td align="right">0.0</td>
 </tr>
 <tr class="odd">
-<td align="left">DISCHARGE</td>
-<td align="left">physical</td>
-<td align="left">gb</td>
-<td align="right">1.0</td>
-<td align="left">equals</td>
-<td align="right">0.0</td>
-</tr>
-<tr class="even">
-<td align="left">DISCHARGE</td>
-<td align="left">physical</td>
-<td align="left">ni</td>
-<td align="right">1.0</td>
-<td align="left">equals</td>
-<td align="right">0.0</td>
-</tr>
-<tr class="odd">
 <td align="left">DIST_FROM_SOURCE</td>
 <td align="left">physical</td>
 <td align="left">gb</td>
@@ -1699,13 +1677,13 @@ outline: 0 ;
 </tbody>
 </table>
 </div>
-<div id="validation-rules" class="section level3">
-<h3 class="hasAnchor">
+<div id="validation-rules" class="section level3" number="5.1.1">
+<h3 number="5.1.1" class="hasAnchor">
 <a href="#validation-rules" class="anchor"></a><span class="header-section-number">5.1.1</span> Validation rules</h3>
 <p>The min/max validation rules are stores in the <code>validation-rules.csv</code>. This can be updated with new min/max validation as required. The more complex validation rules for example checking the presence of optional columns are hard-coded into the <code>rict_validation()</code> function.</p>
 </div>
-<div id="environmental-variables-validation-process" class="section level3">
-<h3 class="hasAnchor">
+<div id="environmental-variables-validation-process" class="section level3" number="5.1.2">
+<h3 number="5.1.2" class="hasAnchor">
 <a href="#environmental-variables-validation-process" class="anchor"></a><span class="header-section-number">5.1.2</span> Environmental Variables Validation Process</h3>
 <p>Some initial validation is done if the user (as recommended) enters data into the input spreadsheet:</p>
 <ul>
@@ -1727,8 +1705,8 @@ outline: 0 ;
 <p>The warning limits are the minimum and maximum values of the variables in the RIVPACS reference database for reference sites included in RIVPACS IV GB or NI. Exceedences indicate that the site is beyond the scope of the model and may be the cause of poor suitability and they could indicate errors. Exceeding longitude and latitude is less serious that exceeding other parameters.</p>
 </div>
 </div>
-<div id="observed-biological-data-values-and-validation" class="section level2">
-<h2 class="hasAnchor">
+<div id="observed-biological-data-values-and-validation" class="section level2" number="5.2">
+<h2 number="5.2" class="hasAnchor">
 <a href="#observed-biological-data-values-and-validation" class="anchor"></a><span class="header-section-number">5.2</span> Observed Biological Data Values and Validation</h2>
 <p>Biological data is needed to enable the classification process. The values of the Biological data is provided by the user.</p>
 <p>The table below refers to the data items required and the data field validation for the RIVPACS IV Great Britain Model 1 and for the RIVPACS IV Northern Ireland Model 1.</p>
@@ -1758,8 +1736,8 @@ Must be numeric integer (i.e. whole number)<br>
 Bias (Ntaxa_Bias) Must be numeric</p>
 </div>
 </div>
-<div id="conversion-of-input-environmental-variables" class="section level1">
-<h1 class="hasAnchor">
+<div id="conversion-of-input-environmental-variables" class="section level1" number="6">
+<h1 number="6" class="hasAnchor">
 <a href="#conversion-of-input-environmental-variables" class="anchor"></a><span class="header-section-number">6</span> Conversion of Input Environmental Variables</h1>
 <p>The values for some input environmental variable data needs to be converted to particular values that are required for the prediction process. These are as follows:</p>
 <ul>
@@ -1772,8 +1750,8 @@ Bias (Ntaxa_Bias) Must be numeric</p>
 <li>Replace values of some EVs to prevent arithmetical problems, such as division by zero</li>
 </ul>
 <p>The required conversion rules and some validation rules that need to be applied are described below.</p>
-<div id="convert-grid-references-and-british-national-grid-to-latitude-and-longitude" class="section level2">
-<h2 class="hasAnchor">
+<div id="convert-grid-references-and-british-national-grid-to-latitude-and-longitude" class="section level2" number="6.1">
+<h2 number="6.1" class="hasAnchor">
 <a href="#convert-grid-references-and-british-national-grid-to-latitude-and-longitude" class="anchor"></a><span class="header-section-number">6.1</span> Convert Grid References and British National Grid to Latitude and Longitude</h2>
 <p>Grid references consists of:</p>
 <p>nat_grid_ref = 2 letters for the British National Grid (BNG) or 1 letter for the Irish grid specifying a 100km x 100km grid square</p>
@@ -1787,13 +1765,13 @@ Bias (Ntaxa_Bias) Must be numeric</p>
 <p><code>nat_grid_ref</code>, are the grid letter(s), <code>easting</code> and <code>northing</code> from the user input file, <code>coordsys_latlon</code> uses the WGS84 system as described above and <code>area</code> is <code>gb</code> or <code>ni</code>.</p>
 <p>NOte, GIS model 44 data provides Lat/Lon in BNR in SX and SY columns. These are converted to lat and lon in the rict_validate.R function.</p>
 </div>
-<div id="latitude-and-longitude-for-ni" class="section level2">
-<h2 class="hasAnchor">
+<div id="latitude-and-longitude-for-ni" class="section level2" number="6.2">
+<h2 number="6.2" class="hasAnchor">
 <a href="#latitude-and-longitude-for-ni" class="anchor"></a><span class="header-section-number">6.2</span> Latitude and Longitude for NI</h2>
 <p>Same as above - <code>using area = "ni"</code> within <code>getLatLong()</code> function.</p>
 </div>
-<div id="calculating-mean-and-range-of-air-temperature-from-latitude-and-longitude" class="section level2">
-<h2 class="hasAnchor">
+<div id="calculating-mean-and-range-of-air-temperature-from-latitude-and-longitude" class="section level2" number="6.3">
+<h2 number="6.3" class="hasAnchor">
 <a href="#calculating-mean-and-range-of-air-temperature-from-latitude-and-longitude" class="anchor"></a><span class="header-section-number">6.3</span> Calculating Mean and Range of Air Temperature from Latitude and Longitude</h2>
 <p>This conversion process is only applicable to GB model sites.</p>
 <p>When converting Latitude and Longitude to Long Term Average Mean Temperature and Range of Air Temperature, RICT2 uses a data file containing previously derived values for Mean air temperature and Air temperature range for points in the centres of 5km interval grid squares. This data file can be found in the inst/ext directory and is called <code>air-temp-grid.csv</code>.</p>
@@ -2020,8 +1998,8 @@ TempGrid_out&lt;-as.data.frame(TempGrid_out)
 0 1 1 1 1  
 0 0 0 0 0  </code></pre>
 </div>
-<div id="calculating-mean-substratum-composition" class="section level2">
-<h2 class="hasAnchor">
+<div id="calculating-mean-substratum-composition" class="section level2" number="6.4">
+<h2 number="6.4" class="hasAnchor">
 <a href="#calculating-mean-substratum-composition" class="anchor"></a><span class="header-section-number">6.4</span> Calculating Mean Substratum Composition</h2>
 <p>MSUBST (in phi units) is derived from the following user-supplied environmental variables from the input file for the river bed substratum composition observed at the sampling site:</p>
 <pre><code>BOULDER_COBBLES = percentage cover of Boulders/Cobbles  
@@ -2033,8 +2011,8 @@ PEBBLES_GRAVEL  = percentage cover of Pebbles/Gravel
 MSUBST = ( -7.75*BOULDER_COBBLES - 3.25*PEBBLES_GRAVEL + 2*SAND + 8*SILT_CLAY ) / TOTSUB</code></pre>
 <p>The specific function code <code>get_substrate</code> used can be found within helper-functions.R</p>
 </div>
-<div id="estimating-discharge-category-if-unavailable-from-stream-velocity" class="section level2">
-<h2 class="hasAnchor">
+<div id="estimating-discharge-category-if-unavailable-from-stream-velocity" class="section level2" number="6.5">
+<h2 number="6.5" class="hasAnchor">
 <a href="#estimating-discharge-category-if-unavailable-from-stream-velocity" class="anchor"></a><span class="header-section-number">6.5</span> Estimating Discharge Category (if unavailable) from Stream Velocity</h2>
 <p>If a value for discharge category (DCH) is not supplied by the user for the test site, it is to be estimated from a measurement of surface water velocity category (VEL) supplied by the user. If neither value is provided then an error will be recorded against the site and prediction and classification should not take place for that site.</p>
 <p>The conversion from user-supplied velocity category (VEL) to discharge category (DCH) is done by:</p>
@@ -2055,7 +2033,7 @@ MSUBST = ( -7.75*BOULDER_COBBLES - 3.25*PEBBLES_GRAVEL + 2*SAND + 8*SILT_CLAY ) 
 <tbody>
 <tr class="odd">
 <td align="left">1</td>
-<td align="left">$≤$10</td>
+<td align="left">≤10</td>
 <td align="left">5</td>
 </tr>
 <tr class="even">
@@ -2157,8 +2135,8 @@ K=K-1
 UNTIL RDCH&gt;CDCH(K)`</code></pre>
 <p>The specific function code is <code>get_discharge()</code> used can be found within helper-functions.R.</p>
 </div>
-<div id="estimating-alkalinity-if-unavailable-from-hardness-calcium-or-conductivity" class="section level2">
-<h2 class="hasAnchor">
+<div id="estimating-alkalinity-if-unavailable-from-hardness-calcium-or-conductivity" class="section level2" number="6.6">
+<h2 number="6.6" class="hasAnchor">
 <a href="#estimating-alkalinity-if-unavailable-from-hardness-calcium-or-conductivity" class="anchor"></a><span class="header-section-number">6.6</span> Estimating Alkalinity (if unavailable) from Hardness, Calcium or Conductivity</h2>
 <p>If a value for alkalinity (ALK) is not supplied by the user for the test site, then it is to be assumed that alkalinity is to be estimated from, in order of preference, the user-supplied values for either water hardness (HARD), calcium concentration (CALCIUM) or conductivity (CONDUCT).</p>
 <p>If none of these values are provided then an error should be recorded against the site and prediction and classification should not then take place for that site.</p>
@@ -2173,13 +2151,13 @@ IF CONDUCT is provided THEN
 ALK = 0.3201*CONDUCT -8.0593</code></pre>
 <p>The specific helper function is <code>get_alkalinity()</code>.</p>
 </div>
-<div id="transform-environmental-variables-to-logarithm-base-10-form" class="section level2">
-<h2 class="hasAnchor">
+<div id="transform-environmental-variables-to-logarithm-base-10-form" class="section level2" number="6.7">
+<h2 number="6.7" class="hasAnchor">
 <a href="#transform-environmental-variables-to-logarithm-base-10-form" class="anchor"></a><span class="header-section-number">6.7</span> Transform Environmental Variables to Logarithm Base 10 Form</h2>
 <p>Some environmental predictor variables are used in discriminant functions in a logarithm to base10 transformed form (denoted Log10). They, therefore, need to be converted prior to prediction.</p>
 <p>The discriminant functions for the Great Britain (GB) model (Reference end group set 1) use 13 environmental predictor variables (i.e. vN = 13), as detailed below.</p>
 <p>The Northern Ireland (NI) model (Reference end group set 2) uses the same set of variables apart from air temperature mean (TEMPM) and air temperature range (TEMPR), which were not available for Northern Ireland and probably would not add discriminatory power within this relatively small geographic region.</p>
-<p>For the purposes of specifying the discriminant functions and inputting their coefficients (DFCoeff<sub>v,d</sub>), RICT2 will have a separate Helperfunctionv1.r folder (within the prediction support files) for the Northern Ireland model experiment.</p>
+<p>For the purposes of specifying the discriminant functions and inputting their coefficients (DFCoeff<sub>v,d</sub>), RICT2 will have a <code>helper-functions.R</code> file (among the support files) for the Northern Ireland model experiment.</p>
 <p>Some of the environmental predictor variables are used in the discriminant functions in a logarithm to base 10 transformed form (denoted Log<sub>10</sub>), as detailed below.</p>
 <p>Specific functions within the <code>helper-functions.R</code> will do the conversions as described in Sections 6.1 – 6.6 above and will also calculate to log base 10 for any Environmental variables that require Log Base 10 form.</p>
 <p>The precise order and form of the environmental variables to be used as Env 1– Env<sub>vN</sub> in the discrimination functions equations used to calculate the discriminant function axis scores (DFScore) is as follows:</p>
@@ -2294,18 +2272,18 @@ ALK = 0.3201*CONDUCT -8.0593</code></pre>
 <p>** Alkalinity is involved in the discriminant functions in both untransformed form (as Env9) and in log transformed form (as Env10) to represent its non-linear impact on the biota.</p>
 <p>This table also shows which EVs are supplied by the user in the input file and which EVs are internally derived by RICT2 conversions.</p>
 </div>
-<div id="validation-of-derived-environmental-variables" class="section level2">
-<h2 class="hasAnchor">
+<div id="validation-of-derived-environmental-variables" class="section level2" number="6.8">
+<h2 number="6.8" class="hasAnchor">
 <a href="#validation-of-derived-environmental-variables" class="anchor"></a><span class="header-section-number">6.8</span> Validation of Derived Environmental Variables</h2>
 <p>Whenever the value of an Environmental variable is derived from any conversion applied, it needs to be validated against the various max/min values. There are two distinct max/min values; Fail and Warn and the required validation is as detailed previously in section 5.</p>
 <p>Once all the conversion processing has been carried out, then this should result in a value being present for every required Environmental variable. This complete set of Environmental variables is called the Predictive Environmental Variables (PEVS).</p>
 </div>
 </div>
-<div id="prediction-1" class="section level1">
-<h1 class="hasAnchor">
+<div id="prediction-1" class="section level1" number="7">
+<h1 number="7" class="hasAnchor">
 <a href="#prediction-1" class="anchor"></a><span class="header-section-number">7</span> Prediction</h1>
-<div id="prediction-process" class="section level2">
-<h2 class="hasAnchor">
+<div id="prediction-process" class="section level2" number="7.1">
+<h2 number="7.1" class="hasAnchor">
 <a href="#prediction-process" class="anchor"></a><span class="header-section-number">7.1</span> Prediction Process</h2>
 <p>The prediction functionality involves four distinct steps:</p>
 <ol style="list-style-type: lower-alpha">
@@ -2322,8 +2300,8 @@ ALK = 0.3201*CONDUCT -8.0593</code></pre>
 <p>The flow diagram below summarises the prediction process and calculations (including the data input, validation, conversion and transform steps described above) as well as identifying the relevant section for further information from the WFD72C final report:</p>
 <p><img src="images/rict-prediction.png" style="width:100.0%"></p>
 </div>
-<div id="prediction-overview" class="section level2">
-<h2 class="hasAnchor">
+<div id="prediction-overview" class="section level2" number="7.2">
+<h2 number="7.2" class="hasAnchor">
 <a href="#prediction-overview" class="anchor"></a><span class="header-section-number">7.2</span> Prediction Overview</h2>
 <p>The probability of a site belonging to an End Group is determined by the similarity of its Environmental Variables (EVs) to those of the relevant End Group.</p>
 <p>Due to the multivariate nature of the environmental variable data, Multiple Discriminant Analysis (MDA) is used to turn the environmental variable data into a format that can be used to discriminate between the end groups.</p>
@@ -2332,21 +2310,21 @@ ALK = 0.3201*CONDUCT -8.0593</code></pre>
 <p>where Z is the Discriminant Score (DS) for that particular discriminant function, c1…cn are the coefficients of that discriminant function and EV1…EVn are the values of the environmental variables.</p>
 <p>A DF is a linear combination of the EVs and the coefficients, which maximises the separation in data space of the end groups. In other words, if the discriminant function was solved for the mean values of the environmental variables of each end group and the results plotted on a line, the value from the solved formula for each end group would be as far apart from its nearest neighbour as could be achieved by using the available environmental variables to separate the end groups</p>
 </div>
-<div id="environmental-variables" class="section level2">
-<h2 class="hasAnchor">
+<div id="environmental-variables" class="section level2" number="7.3">
+<h2 number="7.3" class="hasAnchor">
 <a href="#environmental-variables" class="anchor"></a><span class="header-section-number">7.3</span> Environmental Variables</h2>
 <p>The values of the EVs relevant to the prediction run will have been determined during the acceptance, validation and subsequent conversion processing of the input data as described in section 5 and 6 of this document. These are referred to in the algorithm below as EnvvN.</p>
 </div>
-<div id="discriminant-functions-dfs-and-the-coefficients" class="section level2">
-<h2 class="hasAnchor">
+<div id="discriminant-functions-dfs-and-the-coefficients" class="section level2" number="7.4">
+<h2 number="7.4" class="hasAnchor">
 <a href="#discriminant-functions-dfs-and-the-coefficients" class="anchor"></a><span class="header-section-number">7.4</span> Discriminant Functions (DFs) and the Coefficients</h2>
 <p>The RIVPACS model used will determine the DFs that have to be run. For the GB model 1 with 13 EVs the DFs values can be found in the inst/ext folder for GB in a file called DFCOEFF_GB685.</p>
 <p>For the GB model 44 with 17 EVs the DFs values can be found in the prediction support files folder for GB in a file called <code>discrimant-function-coefficients-model-44.csv</code> - see section 12 for additional Model 44 information.</p>
 <p>For the NI model with 11 EVs, the DFs values can be found in the prediction support files folder for Northern Ireland in a file called <code>DFCOEFF_NI</code></p>
 <p>These are separate occurrences of DF. Each of these has a single ‘constant’ and, for each component EV, a co-efficient that is to be applied to the EV value. The coefficients are referred to in the algorithm below as DFCoef.</p>
 </div>
-<div id="calculate-the-discriminant-function-scores" class="section level2">
-<h2 class="hasAnchor">
+<div id="calculate-the-discriminant-function-scores" class="section level2" number="7.5">
+<h2 number="7.5" class="hasAnchor">
 <a href="#calculate-the-discriminant-function-scores" class="anchor"></a><span class="header-section-number">7.5</span> Calculate the Discriminant Function Scores</h2>
 <p>(Step 4 in diagram above)</p>
 <p><img src="images/rict-discriminant-function-score.png" width="200"></p>
@@ -2364,8 +2342,8 @@ Great Britain, DFCOEFF_NI file for Northern Ireland or discrimant-function-coeff
 Env<sub>v</sub> = value of environmental predictor variable v for the current test site<br>
 DFScore<sub>d</sub> = discriminant function score on axis d for the current test site</p>
 </div>
-<div id="calculate-mahanalobis-distance" class="section level2">
-<h2 class="hasAnchor">
+<div id="calculate-mahanalobis-distance" class="section level2" number="7.6">
+<h2 number="7.6" class="hasAnchor">
 <a href="#calculate-mahanalobis-distance" class="anchor"></a><span class="header-section-number">7.6</span> Calculate Mahanalobis Distance</h2>
 <p>(Step 5 in diagram above)</p>
 <p><img src="images/rict-mahalanobis-distance.png" width="200"></p>
@@ -2381,8 +2359,8 @@ NRef<sub>g</sub> = number of reference sites in end group g<br>
 DFMean<sub>g,d</sub> = mean discriminant function score of end group g on axis d Obtained from the ‘target’ values in the DFMEAN_GB685 file forObtained from the table x-103-end-group-means-formatted-jdb-17-dec-2019.csv which is within the inst/ext folder) Great Britain, DFMEAN_NI file for Northern Ireland or end-group-means-discriminant-scores-model-44.csv for Model 44.<br>
 MahDistg = Mahalanobis distance of test site from end group g</p>
 </div>
-<div id="use-mahanalobis-distance-to-determine-probability-of-end-group-membership" class="section level2">
-<h2 class="hasAnchor">
+<div id="use-mahanalobis-distance-to-determine-probability-of-end-group-membership" class="section level2" number="7.7">
+<h2 number="7.7" class="hasAnchor">
 <a href="#use-mahanalobis-distance-to-determine-probability-of-end-group-membership" class="anchor"></a><span class="header-section-number">7.7</span> Use Mahanalobis Distance to Determine Probability of End Group Membership</h2>
 <p>(Step 6 in diagram above)</p>
 <p><img src="images/rict-probability-end-group.png" width="200"></p>
@@ -2403,8 +2381,8 @@ MahDistg = Mahalanobis distance of test site from end group g</p>
 <p>where Probg is the Probability test site belongs to end group g</p>
 <p>At the end of this process we end up with a set of probabilities of End Group Membership, one for each End Group. These are referred to below as Prob<sub>1</sub> to Prob<sub>n</sub>.</p>
 </div>
-<div id="determine-environmental-suitability-of-the-test-site-for-prediction" class="section level2">
-<h2 class="hasAnchor">
+<div id="determine-environmental-suitability-of-the-test-site-for-prediction" class="section level2" number="7.8">
+<h2 number="7.8" class="hasAnchor">
 <a href="#determine-environmental-suitability-of-the-test-site-for-prediction" class="anchor"></a><span class="header-section-number">7.8</span> Determine Environmental Suitability of the Test Site for Prediction</h2>
 <p><img src="images/rict-environmental-suitability.png" width="200"></p>
 <p>(Step 7 in diagram above)</p>
@@ -2459,8 +2437,8 @@ MahDistg = Mahalanobis distance of test site from end group g</p>
 <p>If the MahDist<sub>min</sub> &gt;= value for CQ4 then Suitability Code = 5 and suitability text is &lt;0.1%</p>
 <p>The output file will provide the user with the Suitability Code and suitability text. The Suitability text gives the user information and warnings about the suitability code calculated.</p>
 </div>
-<div id="determine-the-predicted-values-of-indices" class="section level2">
-<h2 class="hasAnchor">
+<div id="determine-the-predicted-values-of-indices" class="section level2" number="7.9">
+<h2 number="7.9" class="hasAnchor">
 <a href="#determine-the-predicted-values-of-indices" class="anchor"></a><span class="header-section-number">7.9</span> Determine the Predicted Values of Indices</h2>
 <p>(Step 8 in diagram above)</p>
 <p><img src="images/rict-prediction-of-index.png" width="200"></p>
@@ -2482,8 +2460,8 @@ IDXMean<sub>i,s,g</sub> = Mean value of index i for season s for reference sites
 <p>A separate file called <code>x-103-end-group-means-formatted-jdb-17-dec-2019.csv</code> will be provides the values for:</p>
 <p>IDXMean<sub>i,s,g</sub> = Mean value of index i for season s for reference sites in end group g</p>
 </div>
-<div id="completion-and-outputs-of-prediction-processing" class="section level2">
-<h2 class="hasAnchor">
+<div id="completion-and-outputs-of-prediction-processing" class="section level2" number="7.10">
+<h2 number="7.10" class="hasAnchor">
 <a href="#completion-and-outputs-of-prediction-processing" class="anchor"></a><span class="header-section-number">7.10</span> Completion and Outputs of Prediction Processing</h2>
 <p>Once the prediction processing has been completed, the following data has been calculated for each occurrence of site data:</p>
 <ul>
@@ -2494,16 +2472,16 @@ IDXMean<sub>i,s,g</sub> = Mean value of index i for season s for reference sites
 <p>The expected index data is then passed to the classification process.</p>
 </div>
 </div>
-<div id="all-index-prediction" class="section level1">
-<h1 class="hasAnchor">
+<div id="all-index-prediction" class="section level1" number="8">
+<h1 number="8" class="hasAnchor">
 <a href="#all-index-prediction" class="anchor"></a><span class="header-section-number">8</span> All index prediction</h1>
 <p>This is a modification of the prediction undertaken in the predict and classify experiments. It provides predictions for a wide range of indices.</p>
 <p>However, it uses a different end group means data file derived from the RIVPACS database.</p>
 <p>The all indices output file will only show the output for prediction for the 80 indices.</p>
 <p>The biotic indices included in all index prediction are listed in Appendix B2.</p>
 </div>
-<div id="taxa-prediction" class="section level1">
-<h1 class="hasAnchor">
+<div id="taxa-prediction" class="section level1" number="9">
+<h1 number="9" class="hasAnchor">
 <a href="#taxa-prediction" class="anchor"></a><span class="header-section-number">9</span> Taxa Prediction</h1>
 <p><img src="images/rict-prediction-of-taxa.png" width="200"></p>
 <p>Although not required for status classification, an important feature of RIVPACS that is included in RICT is to be able to predict the taxa expected to be present at the site. For each taxon, the prediction provides:</p>
@@ -2513,8 +2491,8 @@ IDXMean<sub>i,s,g</sub> = Mean value of index i for season s for reference sites
 <li>Expected numerical abundance.</li>
 </ul>
 <p>The steps involved are described below.</p>
-<div id="identify-the-relevant-sites-for-the-run" class="section level2">
-<h2 class="hasAnchor">
+<div id="identify-the-relevant-sites-for-the-run" class="section level2" number="9.1">
+<h2 number="9.1" class="hasAnchor">
 <a href="#identify-the-relevant-sites-for-the-run" class="anchor"></a><span class="header-section-number">9.1</span> Identify the Relevant sites for the run</h2>
 <p>Because of a potentially overwhelming amount of data in the output files, the user must specify which sites included in the input file the prediction is to be carried out. This additional step is undertaken using the manual data entry, explained below.</p>
 <p>Notes from write up with Maybin (March 2020):</p>
@@ -2529,13 +2507,13 @@ IDXMean<sub>i,s,g</sub> = Mean value of index i for season s for reference sites
 <p><img src="images/rict-prediction-azure-2.png" width="500"></p>
 <p>Figure 1 Example data entered to indicate two sites in the data input file selected for taxon prediction.</p>
 </div>
-<div id="methods-and-algorithms-to-predict-expected-values-for-each-taxon" class="section level2">
-<h2 class="hasAnchor">
+<div id="methods-and-algorithms-to-predict-expected-values-for-each-taxon" class="section level2" number="9.2">
+<h2 number="9.2" class="hasAnchor">
 <a href="#methods-and-algorithms-to-predict-expected-values-for-each-taxon" class="anchor"></a><span class="header-section-number">9.2</span> Methods and Algorithms to predict Expected values for each taxon</h2>
 <p><img src="images/rict-prediction-azure-3.png" width="500"></p>
 <p>From Ralph Clarke 30/01/20</p>
-<div id="taxon-prediction-data-file" class="section level3">
-<h3 class="hasAnchor">
+<div id="taxon-prediction-data-file" class="section level3" number="9.2.1">
+<h3 number="9.2.1" class="hasAnchor">
 <a href="#taxon-prediction-data-file" class="anchor"></a><span class="header-section-number">9.2.1</span> Taxon prediction data file</h3>
 <p>All of the required taxon prediction data was supplied by John Davy-Bowker in a single file derived from the RIVPACS Reference Database: TAXA_AB_APR_PRAB.csv</p>
 <p>This file contains the following 18 columns:</p>
@@ -2573,8 +2551,8 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 </ul>
 <p>Season 1 = spring, 2 = summer, 3 = autumn.</p>
 </div>
-<div id="algorithm-to-calculate-expected-values-of-the-8-parameters-for-a-gb-test-site" class="section level3">
-<h3 class="hasAnchor">
+<div id="algorithm-to-calculate-expected-values-of-the-8-parameters-for-a-gb-test-site" class="section level3" number="9.2.2">
+<h3 number="9.2.2" class="hasAnchor">
 <a href="#algorithm-to-calculate-expected-values-of-the-8-parameters-for-a-gb-test-site" class="anchor"></a><span class="header-section-number">9.2.2</span> Algorithm to calculate Expected values of the 8 parameters for a GB test site</h3>
 <p>End-group means of the 8 parameters to be predicted are supplied in columns 11-18 of the above taxon prediction data file.</p>
 <p>When working on the GB model, you first need to subset the data in the taxon prediction file to eliminate the rows for NI (Model =2).</p>
@@ -2583,8 +2561,8 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 <p>Where M<sub>JKLS(i)</sub> = supplied End-group mean of taxonomic parameter J of taxa K at taxonomic level L in season S.</p>
 <p>In a mathematical sense that’s it and it appears easy. However, in practice it is not easy, not only because of the vast number of taxa, taxonomic level, end-group and season combinations for which Expected values are required, but also because the number of taxa included in the input file varies between seasons.</p>
 </div>
-<div id="computing-trick-to-calculate-all-taxonomic-expected-values-for-a-test-site" class="section level3">
-<h3 class="hasAnchor">
+<div id="computing-trick-to-calculate-all-taxonomic-expected-values-for-a-test-site" class="section level3" number="9.2.3">
+<h3 number="9.2.3" class="hasAnchor">
 <a href="#computing-trick-to-calculate-all-taxonomic-expected-values-for-a-test-site" class="anchor"></a><span class="header-section-number">9.2.3</span> Computing trick to calculate all taxonomic expected values for a test site</h3>
 <p>The following computing trick calculates the expected values of taxonomic parameters for all taxa at all levels in all seasons in one step.</p>
 <p>If (P<sub>1</sub> , P<sub>2</sub> , … P<sub>43</sub>) denote the probabilities of the current test site belonging to each of the 43 GB Model End-groups, then:</p>
@@ -2606,20 +2584,20 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 <p>The single output file of columns can now be re-sorted externally by the User or use to subset by SiteName, Season, Taxonomic Level and/or Tax code, as required. For example, to just get predictions of taxonomic parameters for taxa at taxonomic level TL1 (BMWP family level), you just subset the 18 output columns by column TL= TL2.</p>
 <p>If the user wishes to only view the prediction results, a csv output will be generated in the project experiment which can be downloaded and used for reports.</p>
 </div>
-<div id="taxon-prediction-output" class="section level3">
-<h3 class="hasAnchor">
+<div id="taxon-prediction-output" class="section level3" number="9.2.4">
+<h3 number="9.2.4" class="hasAnchor">
 <a href="#taxon-prediction-output" class="anchor"></a><span class="header-section-number">9.2.4</span> Taxon prediction Output</h3>
 <p>Taxon prediction output includes a row for each taxon predicted. For each site, expect about 3500 rows of data. The first block of rows will be for the first site selected and below it the results for the second site. Each row includes the same columns as the taxon prediction data file, together with siteName. Sections below are based on notes from write up with Maybin (March 2020):</p>
 </div>
 </div>
-<div id="data-input-files-in-addition-to-the-taxon-prediction-data-file" class="section level2">
-<h2 class="hasAnchor">
+<div id="data-input-files-in-addition-to-the-taxon-prediction-data-file" class="section level2" number="9.3">
+<h2 number="9.3" class="hasAnchor">
 <a href="#data-input-files-in-addition-to-the-taxon-prediction-data-file" class="anchor"></a><span class="header-section-number">9.3</span> Data Input files in addition to the taxon prediction data file</h2>
-<div id="gb-ni" class="section level3">
-<h3 class="hasAnchor">
+<div id="gb-ni" class="section level3" number="9.3.1">
+<h3 number="9.3.1" class="hasAnchor">
 <a href="#gb-ni" class="anchor"></a><span class="header-section-number">9.3.1</span> GB &amp; NI</h3>
 <ul>
-<li>New Input File on Azure: <code>wValidation wTestData.csv</code>
+<li>New Input File on Azure: <code>New_Input_file_Data_to_use_multi_year.csv</code>
 </li>
 <li><code>prediction-functions.R</code></li>
 <li>
@@ -2627,41 +2605,41 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 </ul>
 </div>
 </div>
-<div id="r-code-for-taxa-prediction" class="section level2">
-<h2 class="hasAnchor">
+<div id="r-code-for-taxa-prediction" class="section level2" number="9.4">
+<h2 number="9.4" class="hasAnchor">
 <a href="#r-code-for-taxa-prediction" class="anchor"></a><span class="header-section-number">9.4</span> R code for taxa prediction</h2>
 <p>The <code>rict_predict</code> function this is the same as previous predictions but for taxa prediction we need to find each site’s EndGroup, it uses columns 15:57 for GB and 13:23 for NI.</p>
 <p>An important file as it looks at the taxonomic info from the <code>TAXA_AB_APR_PRAB.csv</code> about the model to be used in the prediction. EndGroup found are used with this file to compute predictions.</p>
 <p>If the argument <code>taxa = TRUE</code> the function loops through each site and processes each site to do the predictions.</p>
 </div>
 </div>
-<div id="classification-1" class="section level1">
-<h1 class="hasAnchor">
+<div id="classification-1" class="section level1" number="10">
+<h1 number="10" class="hasAnchor">
 <a href="#classification-1" class="anchor"></a><span class="header-section-number">10</span> Classification</h1>
-<div id="classification-process-summary" class="section level2">
-<h2 class="hasAnchor">
+<div id="classification-process-summary" class="section level2" number="10.1">
+<h2 number="10.1" class="hasAnchor">
 <a href="#classification-process-summary" class="anchor"></a><span class="header-section-number">10.1</span> Classification Process Summary</h2>
 <p>The flow diagram below summarises the classification process and calculations as well as identifying the relevant section for further information from the WFD72C final report and other sources of information:</p>
 <p><img src="images/rict-classification.png" style="width:100.0%"></p>
 <p>Note that the blue boxes indicate processes that are simulated.</p>
 </div>
-<div id="classification-overview" class="section level2">
-<h2 class="hasAnchor">
+<div id="classification-overview" class="section level2" number="10.2">
+<h2 number="10.2" class="hasAnchor">
 <a href="#classification-overview" class="anchor"></a><span class="header-section-number">10.2</span> Classification overview</h2>
 <p>For every site in the experiment, the input to the classification process consists of Observed and Expected Index Values for the ‘current year’ for each applicable index.</p>
 <p>Multiyear classification will include Observed and Expected Index Values for up to two previous years for each applicable index.</p>
 <p>The indices that need to be classified will be relevant to the project experiment. For the WFD classification default experiment, RICT2 will use TL2 WHPT Abundance weighted with distinct taxa for ASPT and NTAXA indices.</p>
 <p>Any functions that RICT2 uses for the calculations described in the steps below (steps 1 - 13), can be found in the ClassificationfunctionsV2 within the classification support files folder. The algorithms and definitions provided below are copied from WFD72C plus other sources and have been used to create the functions.</p>
 </div>
-<div id="expected-values-calculated-by-the-prediction-programme" class="section level2">
-<h2 class="hasAnchor">
+<div id="expected-values-calculated-by-the-prediction-programme" class="section level2" number="10.3">
+<h2 number="10.3" class="hasAnchor">
 <a href="#expected-values-calculated-by-the-prediction-programme" class="anchor"></a><span class="header-section-number">10.3</span> Expected Values calculated by the Prediction programme</h2>
 <p>(Step 1 in process diagram above and Section 7)</p>
 <p><img src="images/rict-classification-1.png" width="200"></p>
 <p>This is the main result from RIVPACS prediction (Section 7), based on environmental variable data input by the user. It is the prediction of the value of the index expected at the site if it was in the best quality available for that type of site, based on samples collected from best available reference sites.</p>
 </div>
-<div id="adjust-expected-values-to-standardise-against-the-highgood-boundary" class="section level2">
-<h2 class="hasAnchor">
+<div id="adjust-expected-values-to-standardise-against-the-highgood-boundary" class="section level2" number="10.4">
+<h2 number="10.4" class="hasAnchor">
 <a href="#adjust-expected-values-to-standardise-against-the-highgood-boundary" class="anchor"></a><span class="header-section-number">10.4</span> Adjust Expected Values to Standardise against the High/Good Boundary</h2>
 <p>(Step 2 in process diagram above)</p>
 <p><img src="images/rict-classification-2.png" width="200"></p>
@@ -2714,8 +2692,8 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 <p>However, further work has been done which has resulted in slightly different values for these adjustment factors which are reflected in the <code>adjustParams_ntaxa_aspt.csv</code> file used by RICT2, It is expected that the Testing RICT2 predictions and classifications draft report 2018 will be shortly updated to include a Table 7 to show these changes.</p>
 <p>There is one set of adjustment factors for each index. Within current RICT2, adjustment factors for WHPT NTAXA and WHPT ASPT have been calculated for the default WFD experiment. If a user wants to try a different value then they will need to amend and create their own experiment.</p>
 </div>
-<div id="eqr-conversion-factor" class="section level2">
-<h2 class="hasAnchor">
+<div id="eqr-conversion-factor" class="section level2" number="10.5">
+<h2 number="10.5" class="hasAnchor">
 <a href="#eqr-conversion-factor" class="anchor"></a><span class="header-section-number">10.5</span> EQR Conversion Factor</h2>
 <p>(Step 3 in process diagram above)</p>
 <p><img src="images/rict-classification-3.png" width="200"></p>
@@ -2727,8 +2705,8 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 <li>0.9921 for WHPT ASPT</li>
 </ul>
 </div>
-<div id="convert-adjusted-expected-to-reference-value" class="section level2">
-<h2 class="hasAnchor">
+<div id="convert-adjusted-expected-to-reference-value" class="section level2" number="10.6">
+<h2 number="10.6" class="hasAnchor">
 <a href="#convert-adjusted-expected-to-reference-value" class="anchor"></a><span class="header-section-number">10.6</span> Convert adjusted expected to reference value</h2>
 <p>(Step 4 in process diagram above)</p>
 <p><img src="images/rict-classification-4.png" width="200"></p>
@@ -2744,8 +2722,8 @@ i = do this for each specific site</p>
 <p>This avoids the need for the intermediary step of calculating and referring to EQI (Environmental Quality Indices) values (which are calculated as EQI = Obs / ExpAdj) and means that the site classifications can use the published class limits for index EQR values directly.</p>
 <p>This calculation is done directly within RICT2 code and not via any function.</p>
 </div>
-<div id="simulate-uncertainty-in-expected" class="section level2">
-<h2 class="hasAnchor">
+<div id="simulate-uncertainty-in-expected" class="section level2" number="10.7">
+<h2 number="10.7" class="hasAnchor">
 <a href="#simulate-uncertainty-in-expected" class="anchor"></a><span class="header-section-number">10.7</span> Simulate uncertainty in expected</h2>
 <p>(Step 5 in process diagram above)</p>
 <p><img src="images/rict-classification-5.png" width="200"></p>
@@ -2773,8 +2751,8 @@ SDExp<sub>9</sub> = 0.081 = Measurement error SD of Expected values of weighted 
 <li><p>WHPT ASPT (index 9)</p></li>
 </ul>
 </div>
-<div id="user-input-of-observed-index-value-and-bias-calculation-of-bias-adjustment" class="section level2">
-<h2 class="hasAnchor">
+<div id="user-input-of-observed-index-value-and-bias-calculation-of-bias-adjustment" class="section level2" number="10.8">
+<h2 number="10.8" class="hasAnchor">
 <a href="#user-input-of-observed-index-value-and-bias-calculation-of-bias-adjustment" class="anchor"></a><span class="header-section-number">10.8</span> User input of observed index value and bias; calculation of bias adjustment</h2>
 <p>(Step 6 in process diagram above)</p>
 <p><img src="images/rict-classification-6.png" width="200"></p>
@@ -2782,8 +2760,8 @@ SDExp<sub>9</sub> = 0.081 = Measurement error SD of Expected values of weighted 
 <p>Users may also input a bias value (UBiasis) for NTAXA, which reflects the impact of analytical error (measured by auditing) on the observed index values. This value is provided by the user completing the relevant data field in the input file as described in section 5 and Annex B of this document. RICT2 calculates bias for ASPT from bias for NTAXA and the observed NTAXA. If no input value for Bias is provided, RICT2 will use a default value of 1.62.</p>
 <p>If bias correction is not wanted, users should enter a bias value of zero into the relevant data field in the input file. The zero value must be entered and not left blank or RICT2 will use a default value.</p>
 </div>
-<div id="simulate-uncertainty-in-observed-values" class="section level2">
-<h2 class="hasAnchor">
+<div id="simulate-uncertainty-in-observed-values" class="section level2" number="10.9">
+<h2 number="10.9" class="hasAnchor">
 <a href="#simulate-uncertainty-in-observed-values" class="anchor"></a><span class="header-section-number">10.9</span> Simulate uncertainty in observed values</h2>
 <p>(Step 7 in process diagram above)</p>
 <p><img src="images/rict-classification-7.png" width="200"></p>
@@ -2801,8 +2779,8 @@ ObsIDX9r = ObsIDX<sub>9</sub> + ZObs<sub>9r</sub> = rth simulated value for obse
 ObsIDX7r = ObsIDX<sub>8r</sub> * ObsIDX<sub>9r</sub> = rth simulated value for observed weighted WHPT Score</p>
 <p>Within RICT2, these calculations are done using functions which can be found in the <code>classification-functions.R</code>.</p>
 </div>
-<div id="simulate-variation-in-bias" class="section level2">
-<h2 class="hasAnchor">
+<div id="simulate-variation-in-bias" class="section level2" number="10.10">
+<h2 number="10.10" class="hasAnchor">
 <a href="#simulate-variation-in-bias" class="anchor"></a><span class="header-section-number">10.10</span> Simulate variation in Bias</h2>
 <p>(Step 8 in process diagram above)</p>
 <p><img src="images/rict-classification-8.png" width="200"></p>
@@ -2828,8 +2806,8 @@ ObsIDXirB = Bias-corrected observed value of index i for simulation r</code></pr
 <p>Then:</p>
 <p>Ubias<sub>7r</sub> = Ubias<sub>8r</sub> * Ubias<sub>9r</sub> = bias of abundance-weighted WHPT score for simulated sample r</p>
 </div>
-<div id="correct-observed-values-for-bias" class="section level2">
-<h2 class="hasAnchor">
+<div id="correct-observed-values-for-bias" class="section level2" number="10.11">
+<h2 number="10.11" class="hasAnchor">
 <a href="#correct-observed-values-for-bias" class="anchor"></a><span class="header-section-number">10.11</span> Correct observed values for bias</h2>
 <p>(Step 9 in process diagram above)</p>
 <p><img src="images/rict-classification-9.png" width="200"></p>
@@ -2853,8 +2831,8 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </ul>
 <p>The simulated EQRs are stored for each metric at this point if required for Compare experiment.</p>
 </div>
-<div id="calculate-environmental-quality-ratio-eqr" class="section level2">
-<h2 class="hasAnchor">
+<div id="calculate-environmental-quality-ratio-eqr" class="section level2" number="10.12">
+<h2 number="10.12" class="hasAnchor">
 <a href="#calculate-environmental-quality-ratio-eqr" class="anchor"></a><span class="header-section-number">10.12</span> Calculate Environmental Quality Ratio (EQR)</h2>
 <p>(Step 10 in process diagram above)</p>
 <p><img src="images/rict-classification-10.png" width="200"></p>
@@ -2869,8 +2847,8 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <p>ExpIDX<sub>Ref,ir</sub> = Reference-adjusted Expected value of index i in simulation r as calculated in section 8.5.</p>
 <p>This calculation is done directly within RICT2 code and not via any function.</p>
 </div>
-<div id="combine-spring-and-autumn-eqrs" class="section level2">
-<h2 class="hasAnchor">
+<div id="combine-spring-and-autumn-eqrs" class="section level2" number="10.13">
+<h2 number="10.13" class="hasAnchor">
 <a href="#combine-spring-and-autumn-eqrs" class="anchor"></a><span class="header-section-number">10.13</span> Combine spring and autumn EQRs</h2>
 <p>(Step 11 in process diagram above)</p>
 <p><img src="images/rict-classification-11.png" width="200"></p>
@@ -2884,8 +2862,8 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <p>EQR<sub>irB,Au</sub> = EQR value for autumn season as calculated in section 8.10</p>
 <p>This is calculated in RICT2 using the <code>getAvgEQR_SpAut()</code> function found in the <code>classification-functions.R</code> (within the classification support files folder).</p>
 </div>
-<div id="determine-the-probability-of-the-class-being-high-good-moderate-poor-and-bad-status" class="section level2">
-<h2 class="hasAnchor">
+<div id="determine-the-probability-of-the-class-being-high-good-moderate-poor-and-bad-status" class="section level2" number="10.14">
+<h2 number="10.14" class="hasAnchor">
 <a href="#determine-the-probability-of-the-class-being-high-good-moderate-poor-and-bad-status" class="anchor"></a><span class="header-section-number">10.14</span> Determine the probability of the class being High, Good, Moderate, Poor and Bad status</h2>
 <p>(Step 12 in process diagram above)</p>
 <p><img src="images/rict-classification-12.png" width="200"></p>
@@ -2897,8 +2875,8 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </blockquote>
 <p>So to summarise, the probability of each class is simply the sum of the simulations resulting in that class and this data is calculated and then included in the output file.</p>
 </div>
-<div id="determine-the-worst-class-indicated-by-whpt-aspt-and-whpt-ntaxa-using-minta" class="section level2">
-<h2 class="hasAnchor">
+<div id="determine-the-worst-class-indicated-by-whpt-aspt-and-whpt-ntaxa-using-minta" class="section level2" number="10.15">
+<h2 number="10.15" class="hasAnchor">
 <a href="#determine-the-worst-class-indicated-by-whpt-aspt-and-whpt-ntaxa-using-minta" class="anchor"></a><span class="header-section-number">10.15</span> Determine the worst class indicated by WHPT ASPT and WHPT Ntaxa using MINTA</h2>
 <p>(Step 13 in process diagram above)</p>
 <p><img src="images/rict-classification-13.png" width="200"></p>
@@ -2914,15 +2892,15 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <li>The <code>getMINTA_ntaxa_aspt()</code> function found in the <code>classification-functions.R</code> is used to find the maximum of the two classes and which is the worst class. The worst class in then recorded in the output file and displayed in the MINTA column</li>
 </ul>
 </div>
-<div id="classification-output" class="section level2">
-<h2 class="hasAnchor">
+<div id="classification-output" class="section level2" number="10.16">
+<h2 number="10.16" class="hasAnchor">
 <a href="#classification-output" class="anchor"></a><span class="header-section-number">10.16</span> Classification output</h2>
 <p>An output file will be created from running a project experiment to show the calculated data results of the experiment run for prediction and classification. The output file will also indicate any validation errors found during the run of the project experiment and specify which values resulted in either a “fail” or “warn”.</p>
 <p>The output file will be in csv format to be downloaded by the user and used for reporting. There will be an output file available for prediction and an output file available for classification.</p>
 </div>
 </div>
-<div id="multi-year-classification" class="section level1">
-<h1 class="hasAnchor">
+<div id="multi-year-classification" class="section level1" number="11">
+<h1 number="11" class="hasAnchor">
 <a href="#multi-year-classification" class="anchor"></a><span class="header-section-number">11</span> Multi Year Classification</h1>
 <p>The aim of the multi-year experiment is to take account of temporary differences in quality and improve precision if a user has more than one year of sample data.</p>
 <p>River Invertebrate status must be assessed every 3 years for WFD. Where sites are sampled in a 3 year monitoring cycle, WFD status can be based on samples collected in more than one year.</p>
@@ -2943,16 +2921,16 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </ul>
 <p>We assume simple averaging based on the same number of samples involved in each year, but not necessarily the same seasons. There is therefore no problem (from a statistical point of view) if spring one year and autumn the next, but we do have a problem if year 1 = single season and Year 2 = 2-season classification. Basically, we assume the same sampling effort each year. However, remember that official WFD status classification must always be based on 2-season spring + autumn data.</p>
 </div>
-<div id="multi-site-classification-experiment" class="section level1">
-<h1 class="hasAnchor">
+<div id="multi-site-classification-experiment" class="section level1" number="12">
+<h1 number="12" class="hasAnchor">
 <a href="#multi-site-classification-experiment" class="anchor"></a><span class="header-section-number">12</span> Multi-site classification experiment</h1>
 <p>The aim of multi-site classification experiment is to determine the overall status class for a water body based on samples collected from more than one site. The Environment Agency collects samples from some water bodies from more than one site.</p>
 <p>The Environment Agency currently uses VISCOUS software to calculate WFD status for water bodies monitored from more than one site, as well as sites sampled in more than one year before 2019. Multi-site will allow the Environment Agency to replace VISCOUS completely, and therefore streamline the classification process.</p>
 <p>Multi-site classification uses similar algorithms to multi-year classification. Additionally, its output indicates which sites have been used.</p>
 <p>As with multi-year, we assume simple averaging based on the same number of samples involved in each year within the water body (not necessarily the same seasons). There is therefore no problem (from the point of view of multi-year classification) if spring one year and autumn the next, but we do have a problem if year 1 = single season and Year 2 = 2-season classification. Basically, we assume the same sampling effort each year. However, remember that official WFD status classification must always be based on 2-season spring + autumn data.</p>
 </div>
-<div id="compare-project-experiment" class="section level1">
-<h1 class="hasAnchor">
+<div id="compare-project-experiment" class="section level1" number="13">
+<h1 number="13" class="hasAnchor">
 <a href="#compare-project-experiment" class="anchor"></a><span class="header-section-number">13</span> Compare Project Experiment</h1>
 <p>The relevant parts of the algorithms section of the SNIFFER WFD72C project 2008 Final Report have been extracted and adapted here to explain the algorithms needed to code the Compare procedure in the new R studio and Microsoft AZURE versions of the RICT software developed in 2019-20.</p>
 <p>The new RICT only refers to EQR values (which are bias-corrected observed (Obs) values divided by WFD reference-adjusted Expected (ExpRef) values, all WFD72C algorithms section references to former EQI (Obs/Exp) values are replaced by their new counterpart EQR values to improve explanation of how to program the new RICT Compare procedure.</p>
@@ -3100,8 +3078,8 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <p><strong>Probability Result A in High &amp; Result B in High</strong><br><strong>Probability Result A in High &amp; Result B in Good</strong> <strong>Probability Result A in High &amp; Result B in Moderate</strong><br><strong>Probability Result A in High &amp; Result B in Poor </strong><br><strong>Probability Result A in High &amp; Result B in Bad </strong><br><strong>Probability Result A in Good &amp; Result B in High </strong><br><strong>Probability Result A in Good &amp; Result B in Good </strong><br><strong>Probability Result A in Good &amp; Result B in Moderate </strong><br><strong>Probability Result A in Good &amp; Result B in Poor </strong><br><strong>Probability Result A in Good &amp; Result B in Bad </strong><br><strong>Probability Result A in Moderate &amp; Result B in High </strong><br><strong>Probability Result A in Moderate &amp; Result B in Good </strong> <strong>Probability Result A in Moderate &amp; Result B in Moderate</strong><br><strong>Probability Result A in Moderate &amp; Result B in Poor</strong><br><strong>Probability Result A in Moderate &amp; Result B in Bad</strong> <strong>Probability Result A in Poor &amp; Result B in High</strong><br><strong>Probability Result A in Poor &amp; Result B in Good</strong><br><strong>Probability Result A in Poor &amp; Result B in Moderate</strong><br><strong>Probability Result A in Poor &amp; Result B in Poor</strong><br><strong>Probability Result A in Poor &amp; Result B in Bad</strong><br><strong>Probability Result A in Bad &amp; Result B in High</strong><br><strong>Probability Result A in Bad &amp; Result B in Good</strong><br><strong>Probability Result A in Bad &amp; Result B in Moderate</strong><br><strong>Probability Result A in Bad &amp; Result B in Poor</strong><br><strong>Probability Result A in Bad &amp; Result B in Bad</strong></p>
 <p>Pivot all calculated variables (in bold above) to give one column per variable. Each row represents a pair of classification results.</p>
 </div>
-<div id="model-44-prediction-and-classification" class="section level1">
-<h1 class="hasAnchor">
+<div id="model-44-prediction-and-classification" class="section level1" number="14">
+<h1 number="14" class="hasAnchor">
 <a href="#model-44-prediction-and-classification" class="anchor"></a><span class="header-section-number">14</span> Model 44 Prediction and Classification</h1>
 <p>The Centre for Ecology and Hydrology (CEH) have produced a database of GIS environmental variables data for every 50m of steam or river for use with the new RIVPACS GB Model M44. T</p>
 <p>This database will have a map-based location checker, to enable users to check that the Ordnance survey grid reference that they enter returns data for the catchment that they intended. Many monitoring sites are at the downstream end of rivers close to tributaries, so small error in the grid reference or GIS river line can cause the system to return data for the wrong river, and the database holds data only for one river within each 50m grid. The database holds all the environmental data for Model 44, derived from GIS, including discharge category but not including alkalinity.</p>
@@ -3111,14 +3089,14 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <p>The majority of the coding that has been done in RICT2 for prediction and classification will also be suitable when running the experiment for the Model 44 prediction and classification.</p>
 <p>With minor adjustments, the RICT2 prediction and classification code is suitable for running both Model 1 and Model 44 experiments.</p>
 <p>The main areas of development involved understanding how to extract the data from RIVPACS and to link to a location checker as outlined in the picture below:</p>
-<div id="model-44-validation" class="section level2">
-<h2 class="hasAnchor">
+<div id="model-44-validation" class="section level2" number="14.1">
+<h2 number="14.1" class="hasAnchor">
 <a href="#model-44-validation" class="anchor"></a><span class="header-section-number">14.1</span> Model 44 Validation</h2>
 <p>The GIS input file spreadsheet may be needed for these values (tbc). However, it should be noted that these values will be provided by the model and not entered by a user.</p>
 <p>Detailed validation requirements for model 44 are outlined in the acceptance and validation - section 5 of this document.</p>
 </div>
-<div id="discriminant-function-scores" class="section level2">
-<h2 class="hasAnchor">
+<div id="discriminant-function-scores" class="section level2" number="14.2">
+<h2 number="14.2" class="hasAnchor">
 <a href="#discriminant-function-scores" class="anchor"></a><span class="header-section-number">14.2</span> Discriminant function scores</h2>
 <p>Another difference is that there are now 17 discriminant function scores and discriminant function end group means scores rather than 13. See supporting files:</p>
 <ul>
@@ -3126,8 +3104,8 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <li>end-group-means-discriminant-scores-model-44.csv</li>
 </ul>
 </div>
-<div id="summary-diagrams" class="section level2">
-<h2 class="hasAnchor">
+<div id="summary-diagrams" class="section level2" number="14.3">
+<h2 number="14.3" class="hasAnchor">
 <a href="#summary-diagrams" class="anchor"></a><span class="header-section-number">14.3</span> Summary diagrams</h2>
 <p>The flow diagram below summarises the prediction process and calculations as well as identifying the relevant report for further information:</p>
 <p><img src="images/rict-prediction-model-44.png" width="650"></p>
@@ -3135,36 +3113,36 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <p><img src="images/rict-classification-model-44.png" width="650"></p>
 </div>
 </div>
-<div id="non-functional-requirements" class="section level1">
-<h1 class="hasAnchor">
+<div id="non-functional-requirements" class="section level1" number="15">
+<h1 number="15" class="hasAnchor">
 <a href="#non-functional-requirements" class="anchor"></a><span class="header-section-number">15</span> Non-Functional Requirements</h1>
-<div id="operational-support" class="section level2">
-<h2 class="hasAnchor">
+<div id="operational-support" class="section level2" number="15.1">
+<h2 number="15.1" class="hasAnchor">
 <a href="#operational-support" class="anchor"></a><span class="header-section-number">15.1</span> Operational Support</h2>
 <p>The tool needs to be freely available for anyone to access online.</p>
 <p>User support for EA users will be via the Defra service desk (at Tier 4 service level) who will route the issue to the appropriate team to deal with. This routing could be to RICT2 support email or to the Environmental systems team depending on the nature of the issue. EA users will also be able to access an article in MyIT which will provide FAQs to help users with common issues.</p>
 <p>User support for other UK regulatory agency users will be via the support email box called RICT2 support.</p>
 <p>There will be no official contracted support for external users but they can send issues and comments to the RICT2 support inbox</p>
 </div>
-<div id="look-and-feel-of-user-interface" class="section level2">
-<h2 class="hasAnchor">
+<div id="look-and-feel-of-user-interface" class="section level2" number="15.2">
+<h2 number="15.2" class="hasAnchor">
 <a href="#look-and-feel-of-user-interface" class="anchor"></a><span class="header-section-number">15.2</span> Look and Feel of User Interface</h2>
 <p>The user interface will be provided via Azure Studio which is intuitive and ‘user friendly’ and consistent with similar windows-based or web-based user interface applications.</p>
 <p>Official RICT2 experiments will be collated in a designated “Collection” in Microsoft Azure Learning Studio to help users find all the experiments relevant to RICT2.</p>
 </div>
-<div id="input-and-output-files" class="section level2">
-<h2 class="hasAnchor">
+<div id="input-and-output-files" class="section level2" number="15.3">
+<h2 number="15.3" class="hasAnchor">
 <a href="#input-and-output-files" class="anchor"></a><span class="header-section-number">15.3</span> Input and Output Files</h2>
 <p>Input files will be a standard template in Excel which can be downloaded, completed by the user and then uploaded as a CSV file to RICT2. A user guide will be available to help users understand and complete the input file.</p>
 <p>The output file will be produced by RICT2 as a CSV file following the run. A CSV file can easily be opened in Excel or other applications to view the results.</p>
 </div>
-<div id="hosting" class="section level2">
-<h2 class="hasAnchor">
+<div id="hosting" class="section level2" number="15.4">
+<h2 number="15.4" class="hasAnchor">
 <a href="#hosting" class="anchor"></a><span class="header-section-number">15.4</span> Hosting</h2>
 <p>RICT2 is cloud hosted within Microsoft Azure Learning Studio.</p>
 </div>
-<div id="accessibility" class="section level2">
-<h2 class="hasAnchor">
+<div id="accessibility" class="section level2" number="15.5">
+<h2 number="15.5" class="hasAnchor">
 <a href="#accessibility" class="anchor"></a><span class="header-section-number">15.5</span> Accessibility</h2>
 <p>Access to RICT2 functionality may be required by a number of different device types. RICT2 will be useable at a minimum by the following device types (model not specified):</p>
 <ul>
@@ -3180,8 +3158,8 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </ul>
 <p>Users will only have access to their own data and cannot access data input or output from other users.</p>
 </div>
-<div id="performance" class="section level2">
-<h2 class="hasAnchor">
+<div id="performance" class="section level2" number="15.6">
+<h2 number="15.6" class="hasAnchor">
 <a href="#performance" class="anchor"></a><span class="header-section-number">15.6</span> Performance</h2>
 <p>RICT2 will be accessible by multiple concurrent users at any one time without degradation of performance or limitation of features. Users will be internal EA, other UK regulatory body users (SEPA, NRW and NIEA) and external users.</p>
 <p>RICT2 will be capable of processing the prediction and classification of a very large number of sites (approx. 5,000) once per year.</p>
@@ -3194,21 +3172,21 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </ul>
 <p>RICT2 availability must be at an acceptable level. Planned downtime for maintenance must be advised in advance (minimum 48 hours’ notice). Unplanned downtime must be communicated regularly with up to date information on tools/services affected and projected downtime.</p>
 </div>
-<div id="system-administration" class="section level2">
-<h2 class="hasAnchor">
+<div id="system-administration" class="section level2" number="15.7">
+<h2 number="15.7" class="hasAnchor">
 <a href="#system-administration" class="anchor"></a><span class="header-section-number">15.7</span> System Administration</h2>
 <p>An “expert” user (system administrator) will be identified and given permission to publish new standard experiments using default values to the “official” Microsoft Azure ML Studio gallery collection.</p>
 <p>These experiments will be “locked down” for normal users and can only be amended by downloading to the users own work area to create their own copy of a project experiment.</p>
 <p>The System administrator will be permitted to amend the published standard experiments and the data tables used by the experiment (e.g. amend end group data) if required.</p>
 </div>
-<div id="data-protection" class="section level2">
-<h2 class="hasAnchor">
+<div id="data-protection" class="section level2" number="15.8">
+<h2 number="15.8" class="hasAnchor">
 <a href="#data-protection" class="anchor"></a><span class="header-section-number">15.8</span> Data Protection</h2>
 <p>Data protection requirements are handled by Microsoft as the tool is hosted on Microsoft ML Studio. It is freely available to access but requires the user to use an existing/or create a Microsoft account. This account requires an email address and password. These credentials are held solely by Microsoft and the usage is outlined in the Microsoft Privacy Statement (<a href="https://privacy.microsoft.com/en-gb/privacystatement" class="uri">https://privacy.microsoft.com/en-gb/privacystatement</a>).</p>
 </div>
 </div>
-<div id="annex-a-input-file" class="section level1">
-<h1 class="hasAnchor">
+<div id="annex-a-input-file" class="section level1" number="16">
+<h1 number="16" class="hasAnchor">
 <a href="#annex-a-input-file" class="anchor"></a><span class="header-section-number">16</span> Annex A: Input File</h1>
 <p>Below are examples of the import file format to help understand and verify the format to used and run with the experiment.</p>
 <p>GB - Model 1 input format</p>
@@ -3554,15 +3532,15 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="even">
 <td align="left">d_f_source</td>
-<td align="left">16877</td>
+<td align="left">16877.141</td>
 </tr>
 <tr class="odd">
 <td align="left">logaltbar</td>
-<td align="left">2.2443</td>
+<td align="left">2.24428105</td>
 </tr>
 <tr class="even">
 <td align="left">log_area</td>
-<td align="left">1.6954</td>
+<td align="left">1.69537222</td>
 </tr>
 <tr class="odd">
 <td align="left">disch_cat</td>
@@ -3570,15 +3548,15 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="even">
 <td align="left">slope</td>
-<td align="left">2.5736</td>
+<td align="left">2.57359314</td>
 </tr>
 <tr class="odd">
 <td align="left">chalk</td>
-<td align="left">0.027426</td>
+<td align="left">0.0274263</td>
 </tr>
 <tr class="even">
 <td align="left">clay</td>
-<td align="left">0.13441</td>
+<td align="left">0.134409</td>
 </tr>
 <tr class="odd">
 <td align="left">hardrock</td>
@@ -3649,11 +3627,11 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <p>See the <a href="https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx">Input File</a> excel spreadsheet which includes test data and validation</p>
 <p>A full description of each column for the input table and how it is completed can be found within the <a href="https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx">RICT2 user guide</a>.</p>
 </div>
-<div id="annex-b-output-files-predict-and-classify" class="section level1">
-<h1 class="hasAnchor">
+<div id="annex-b-output-files-predict-and-classify" class="section level1" number="17">
+<h1 number="17" class="hasAnchor">
 <a href="#annex-b-output-files-predict-and-classify" class="anchor"></a><span class="header-section-number">17</span> Annex B: Output Files predict and classify</h1>
-<div id="prediction-outputs" class="section level4">
-<h4 class="hasAnchor">
+<div id="prediction-outputs" class="section level4" number="17.0.0.1">
+<h4 number="17.0.0.1" class="hasAnchor">
 <a href="#prediction-outputs" class="anchor"></a><span class="header-section-number">17.0.0.1</span> Prediction outputs</h4>
 <p>RICT2 predict and classify experiments will produce two output files; one for prediction, one for classification</p>
 <p>Prediction Output file</p>
@@ -3670,15 +3648,15 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="even">
 <td align="left">LATITUDE</td>
-<td align="left">54.306</td>
+<td align="left">54.3059249</td>
 </tr>
 <tr class="odd">
 <td align="left">LONGITUDE</td>
-<td align="left">-0.55378</td>
+<td align="left">-0.553780286</td>
 </tr>
 <tr class="even">
 <td align="left">LOG.ALTITUDE</td>
-<td align="left">1.7782</td>
+<td align="left">1.77815125</td>
 </tr>
 <tr class="odd">
 <td align="left">LOG.DISTANCE.FROM.SOURCE</td>
@@ -3686,15 +3664,15 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="even">
 <td align="left">LOG.WIDTH</td>
-<td align="left">0.80618</td>
+<td align="left">0.806179974</td>
 </tr>
 <tr class="odd">
 <td align="left">LOG.DEPTH</td>
-<td align="left">1.3365</td>
+<td align="left">1.33645973</td>
 </tr>
 <tr class="even">
 <td align="left">MEAN.SUBSTRATUM</td>
-<td align="left">-5.6378</td>
+<td align="left">-5.6377551</td>
 </tr>
 <tr class="odd">
 <td align="left">DISCHARGE.CATEGORY</td>
@@ -3706,191 +3684,191 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="odd">
 <td align="left">LOG.ALKALINITY</td>
-<td align="left">2.006</td>
+<td align="left">2.00603795</td>
 </tr>
 <tr class="even">
 <td align="left">LOG.SLOPE</td>
-<td align="left">0.43136</td>
+<td align="left">0.431363764</td>
 </tr>
 <tr class="odd">
 <td align="left">MEAN.AIR.TEMP</td>
-<td align="left">9.4863</td>
+<td align="left">9.48625834</td>
 </tr>
 <tr class="even">
 <td align="left">AIR.TEMP.RANGE</td>
-<td align="left">11.953</td>
+<td align="left">11.9531393</td>
 </tr>
 <tr class="odd">
 <td align="left">p1</td>
-<td align="left">9.3563e-09</td>
+<td align="left">9.35625191e-09</td>
 </tr>
 <tr class="even">
 <td align="left">p2</td>
-<td align="left">6.9259e-07</td>
+<td align="left">6.9258721e-07</td>
 </tr>
 <tr class="odd">
 <td align="left">p3</td>
-<td align="left">1.0532e-13</td>
+<td align="left">1.05324199e-13</td>
 </tr>
 <tr class="even">
 <td align="left">p4</td>
-<td align="left">0.0000012433</td>
+<td align="left">0.00000124332917</td>
 </tr>
 <tr class="odd">
 <td align="left">p5</td>
-<td align="left">3.4923e-12</td>
+<td align="left">3.49226117e-12</td>
 </tr>
 <tr class="even">
 <td align="left">p6</td>
-<td align="left">0.0000056303</td>
+<td align="left">0.00000563026764</td>
 </tr>
 <tr class="odd">
 <td align="left">p7</td>
-<td align="left">8.8589e-07</td>
+<td align="left">8.85886928e-07</td>
 </tr>
 <tr class="even">
 <td align="left">p8</td>
-<td align="left">0.000012178</td>
+<td align="left">0.0000121781599</td>
 </tr>
 <tr class="odd">
 <td align="left">p9</td>
-<td align="left">0.00065037</td>
+<td align="left">0.000650372352</td>
 </tr>
 <tr class="even">
 <td align="left">p10</td>
-<td align="left">0.000010195</td>
+<td align="left">0.0000101954775</td>
 </tr>
 <tr class="odd">
 <td align="left">p11</td>
-<td align="left">0.000075734</td>
+<td align="left">0.0000757338524</td>
 </tr>
 <tr class="even">
 <td align="left">p12</td>
-<td align="left">0.0011184</td>
+<td align="left">0.00111837349</td>
 </tr>
 <tr class="odd">
 <td align="left">p13</td>
-<td align="left">0.0000019865</td>
+<td align="left">0.00000198648293</td>
 </tr>
 <tr class="even">
 <td align="left">p14</td>
-<td align="left">2.3112e-07</td>
+<td align="left">2.31121211e-07</td>
 </tr>
 <tr class="odd">
 <td align="left">p15</td>
-<td align="left">1.1355e-08</td>
+<td align="left">1.13547466e-08</td>
 </tr>
 <tr class="even">
 <td align="left">p16</td>
-<td align="left">0.0012824</td>
+<td align="left">0.00128235533</td>
 </tr>
 <tr class="odd">
 <td align="left">p17</td>
-<td align="left">0.00023789</td>
+<td align="left">0.000237885641</td>
 </tr>
 <tr class="even">
 <td align="left">p18</td>
-<td align="left">0.00037426</td>
+<td align="left">0.00037426176</td>
 </tr>
 <tr class="odd">
 <td align="left">p19</td>
-<td align="left">0.04613</td>
+<td align="left">0.0461301439</td>
 </tr>
 <tr class="even">
 <td align="left">p20</td>
-<td align="left">0.11163</td>
+<td align="left">0.111632614</td>
 </tr>
 <tr class="odd">
 <td align="left">p21</td>
-<td align="left">0.035469</td>
+<td align="left">0.0354693052</td>
 </tr>
 <tr class="even">
 <td align="left">p22</td>
-<td align="left">0.00091873</td>
+<td align="left">0.000918726922</td>
 </tr>
 <tr class="odd">
 <td align="left">p23</td>
-<td align="left">0.015014</td>
+<td align="left">0.015013709</td>
 </tr>
 <tr class="even">
 <td align="left">p24</td>
-<td align="left">0.26914</td>
+<td align="left">0.269136018</td>
 </tr>
 <tr class="odd">
 <td align="left">p25</td>
-<td align="left">0.0073552</td>
+<td align="left">0.00735522713</td>
 </tr>
 <tr class="even">
 <td align="left">p26</td>
-<td align="left">0.14288</td>
+<td align="left">0.142875017</td>
 </tr>
 <tr class="odd">
 <td align="left">p27</td>
-<td align="left">0.091394</td>
+<td align="left">0.091394313</td>
 </tr>
 <tr class="even">
 <td align="left">p28</td>
-<td align="left">0.1046</td>
+<td align="left">0.104596167</td>
 </tr>
 <tr class="odd">
 <td align="left">p29</td>
-<td align="left">0.000074099</td>
+<td align="left">0.0000740990176</td>
 </tr>
 <tr class="even">
 <td align="left">p30</td>
-<td align="left">5.9053e-10</td>
+<td align="left">5.90527952e-10</td>
 </tr>
 <tr class="odd">
 <td align="left">p31</td>
-<td align="left">0.0023516</td>
+<td align="left">0.00235158298</td>
 </tr>
 <tr class="even">
 <td align="left">p32</td>
-<td align="left">0.10759</td>
+<td align="left">0.107588442</td>
 </tr>
 <tr class="odd">
 <td align="left">p33</td>
-<td align="left">0.0005559</td>
+<td align="left">0.000555897078</td>
 </tr>
 <tr class="even">
 <td align="left">p34</td>
-<td align="left">0.0000056732</td>
+<td align="left">0.000005673203</td>
 </tr>
 <tr class="odd">
 <td align="left">p35</td>
-<td align="left">0.030573</td>
+<td align="left">0.03057304</td>
 </tr>
 <tr class="even">
 <td align="left">p36</td>
-<td align="left">0.0023719</td>
+<td align="left">0.0023718675</td>
 </tr>
 <tr class="odd">
 <td align="left">p37</td>
-<td align="left">0.017792</td>
+<td align="left">0.0177924343</td>
 </tr>
 <tr class="even">
 <td align="left">p38</td>
-<td align="left">0.0083078</td>
+<td align="left">0.00830783677</td>
 </tr>
 <tr class="odd">
 <td align="left">p39</td>
-<td align="left">0.00062569</td>
+<td align="left">0.000625693191</td>
 </tr>
 <tr class="even">
 <td align="left">p40</td>
-<td align="left">0.0014487</td>
+<td align="left">0.0014486586</td>
 </tr>
 <tr class="odd">
 <td align="left">p41</td>
-<td align="left">0.000011462</td>
+<td align="left">0.0000114618661</td>
 </tr>
 <tr class="even">
 <td align="left">p42</td>
-<td align="left">2.6168e-08</td>
+<td align="left">2.61677226e-08</td>
 </tr>
 <tr class="odd">
 <td align="left">p43</td>
-<td align="left">4.287e-17</td>
+<td align="left">4.28703879e-17</td>
 </tr>
 <tr class="even">
 <td align="left">SuitCode</td>
@@ -3906,51 +3884,51 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="odd">
 <td align="left">TL2_WHPT_NTAXA_AbW_DistFam_spr</td>
-<td align="left">27.303</td>
+<td align="left">27.3034177</td>
 </tr>
 <tr class="even">
 <td align="left">TL2_WHPT_ASPT_AbW_DistFam_spr</td>
-<td align="left">6.6953</td>
+<td align="left">6.69529166</td>
 </tr>
 <tr class="odd">
 <td align="left">TL2_WHPT_NTAXA_AbW_DistFam_aut</td>
-<td align="left">26.965</td>
+<td align="left">26.964738</td>
 </tr>
 <tr class="even">
 <td align="left">TL2_WHPT_ASPT_AbW_DistFam_aut</td>
-<td align="left">6.3415</td>
+<td align="left">6.34146345</td>
 </tr>
 <tr class="odd">
 <td align="left">TL2_WHPT_NTAXA_AbW_CompFam_spr</td>
-<td align="left">26.633</td>
+<td align="left">26.6333663</td>
 </tr>
 <tr class="even">
 <td align="left">TL2_WHPT_NTAXA_ASPT_CompFam_spr</td>
-<td align="left">6.6786</td>
+<td align="left">6.6786404</td>
 </tr>
 <tr class="odd">
 <td align="left">TL2_WHPT_NTAXA_AbW_CompFam_aut</td>
-<td align="left">26.421</td>
+<td align="left">26.4207811</td>
 </tr>
 <tr class="even">
 <td align="left">TL2_WHPT_ASPT_AbW_CompFam_aut</td>
-<td align="left">6.3293</td>
+<td align="left">6.32932751</td>
 </tr>
 <tr class="odd">
 <td align="left">TL2_WHPT_NTAXA_AbW_DistFam_sum</td>
-<td align="left">25.181</td>
+<td align="left">25.1806036</td>
 </tr>
 <tr class="even">
 <td align="left">TL2_WHPT_ASPT_AbW_DistFam_sum</td>
-<td align="left">6.2805</td>
+<td align="left">6.28047581</td>
 </tr>
 <tr class="odd">
 <td align="left">TL2_WHPT_NTAXA_AbW_CompFam_sum</td>
-<td align="left">24.667</td>
+<td align="left">24.666582</td>
 </tr>
 <tr class="even">
 <td align="left">TL2_WHPT_ASPT_AbW_CompFam_sum</td>
-<td align="left">6.2639</td>
+<td align="left">6.26393808</td>
 </tr>
 <tr class="odd">
 <td align="left">WATERBODY</td>
@@ -4015,8 +3993,8 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tbody>
 </table>
 </div>
-<div id="classification-2" class="section level4">
-<h4 class="hasAnchor">
+<div id="classification-2" class="section level4" number="17.0.0.2">
+<h4 number="17.0.0.2" class="hasAnchor">
 <a href="#classification-2" class="anchor"></a><span class="header-section-number">17.0.0.2</span> Classification</h4>
 <p>Multiple year:</p>
 <table class="table">
@@ -4063,7 +4041,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="even">
 <td align="left">NTAXA_aver_spr_aut</td>
-<td align="left">1.0008</td>
+<td align="left">1.00079713</td>
 </tr>
 <tr class="odd">
 <td align="left">H_ASPT_spr_aut</td>
@@ -4091,7 +4069,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="odd">
 <td align="left">ASPT_aver_spr_aut</td>
-<td align="left">0.9708</td>
+<td align="left">0.97079562</td>
 </tr>
 <tr class="even">
 <td align="left">mintawhpt_spr_aut_H_MINTA_</td>
@@ -4164,7 +4142,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="even">
 <td align="left">NTAXA_eqr_av_spr</td>
-<td align="left">0.93939</td>
+<td align="left">0.939394037</td>
 </tr>
 <tr class="odd">
 <td align="left">H_NTAXA_aut</td>
@@ -4192,7 +4170,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="odd">
 <td align="left">NTAXA_eqr_av_aut</td>
-<td align="left">1.0622</td>
+<td align="left">1.06220021</td>
 </tr>
 <tr class="even">
 <td align="left">H_NTAXA_spr_aut</td>
@@ -4220,7 +4198,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="even">
 <td align="left">NTAXA_aver_spr_aut</td>
-<td align="left">1.0008</td>
+<td align="left">1.00079713</td>
 </tr>
 <tr class="odd">
 <td align="left">H_ASPT_spr</td>
@@ -4248,7 +4226,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="odd">
 <td align="left">ASPT_eqr_av_spr</td>
-<td align="left">0.95609</td>
+<td align="left">0.956092544</td>
 </tr>
 <tr class="even">
 <td align="left">H_ASPT_aut</td>
@@ -4276,7 +4254,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="even">
 <td align="left">ASPT_eqr_av_aut</td>
-<td align="left">0.9855</td>
+<td align="left">0.985498696</td>
 </tr>
 <tr class="odd">
 <td align="left">H_ASPT_spr_aut</td>
@@ -4304,7 +4282,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="odd">
 <td align="left">ASPT_aver_spr_aut</td>
-<td align="left">0.9708</td>
+<td align="left">0.97079562</td>
 </tr>
 <tr class="even">
 <td align="left">mintawhpt_spr_H</td>
@@ -4380,7 +4358,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="even">
 <td align="left">eqr_av_sum_aspt</td>
-<td align="left">0.97809</td>
+<td align="left">0.97809005</td>
 </tr>
 <tr class="odd">
 <td align="left">H_ASPT_sum</td>
@@ -4408,7 +4386,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="odd">
 <td align="left">NTAXA_eqr_av_sum</td>
-<td align="left">1.049</td>
+<td align="left">1.04904543</td>
 </tr>
 <tr class="even">
 <td align="left">H_NTAXA_sum</td>
@@ -4462,8 +4440,8 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </table>
 </div>
 </div>
-<div id="appendix-c-biotic-included-in-all-index-prediction" class="section level1">
-<h1 class="hasAnchor">
+<div id="appendix-c-biotic-included-in-all-index-prediction" class="section level1" number="18">
+<h1 number="18" class="hasAnchor">
 <a href="#appendix-c-biotic-included-in-all-index-prediction" class="anchor"></a><span class="header-section-number">18</span> Appendix C: Biotic included in all index prediction</h1>
 <p>*Please note the format changes to the labels of the indices – see table of changes below:</p>
 <table class="table">
@@ -4882,8 +4860,8 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </table>
 <p>A full description of each column for the prediction output table and what the values indicate can be found within the RICT2 user guide. A summary list of the column headings is given in the <code>rict_predict</code> function.</p>
 </div>
-<div id="annex-d-critical-success-factors" class="section level1">
-<h1 class="hasAnchor">
+<div id="annex-d-critical-success-factors" class="section level1" number="19">
+<h1 number="19" class="hasAnchor">
 <a href="#annex-d-critical-success-factors" class="anchor"></a><span class="header-section-number">19</span> Annex D: Critical Success Factors</h1>
 <p>The CSF specified below denotes the minimum requirements as agreed with the project team and stakeholders as agreed in the outline business case:</p>
 <table class="table">

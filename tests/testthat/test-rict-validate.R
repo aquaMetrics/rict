@@ -26,8 +26,14 @@ test_that("outright fails stop process and create error message", {
     "You provided column 'ALKALINITY' with class 'character', we expect class 'numeric'."
   )
   # Test optional columns where one or the other column must be provided
-  test_data <- demo_observed_values
+  test_data <- rict::demo_observed_values
   test_data$Velocity <- NA
+  test_data$Discharge <- NA
+  expect_error(rict_validate(test_data))
+  # Velocity over limits
+  test_data <- demo_observed_values
+  test_data$Velocity <- 6
+  test_data$Velocity[1] <- 0
   test_data$Discharge <- NA
   expect_error(rict_validate(test_data))
   # Empty ALKALINITY, HARDNESS, CONDUCT and CALCIUM values
@@ -101,12 +107,14 @@ test_that("fails on some rows create fail messages (but process continues of val
   test_data$Silt_Clay[1] <- NA
   expect_equal(class(rict_validate(test_data)), "list")
   # test fail values
-  test_data <- demo_observed_values
-  test_data$Discharge[1] <- 1500
+  test_data <- rict::demo_observed_values
+  test_data$Discharge[1] <- 11
   test_data$Discharge[2] <- 0
+  test_data$Velocity[3] <- 6
+  test_data$Discharge[3] <- NA
   test_data$Pebbles_Gravel[1] <- 90
   test <- rict_validate(test_data)
-  expect_equal(length(test[[2]][, 1]), 3)
+  expect_equal(length(test[[2]][, 1]), 4)
   # test temperature fails if outside temperature grid
   test_data <- demo_observed_values
   test_data$NGR <- as.character(test_data$NGR)
@@ -122,15 +130,16 @@ test_that("fails on some rows create fail messages (but process continues of val
   test_data$Discharge[1] <- NA
   test <- rict_validate(test_data)
   test <- test$checks
-  expect_equal(length(test$FAIL[test$FAIL != "---"]), 3)
+  expect_equal(length(test$FAIL[test$FAIL != "---"]), 5)
   # Test GIS values also value
-  test_data <- demo_gis_values_log
+  test_data <- rict::demo_gis_values_log
   test_data$disch_cat[1] <- NA
   test_data$disch_cat[2] <- 0
-  test_data$Altitude[1] <- -4
+  test_data$disch_cat[3] <- 11
+  test_data$Altitude[1] <- -2
   test <- rict_validate(test_data)
   test <- test$checks
-  expect_equal(length(test$FAIL[test$FAIL != "---"]), 4)
+  expect_equal(length(test$FAIL[test$FAIL != "---"]), 5)
 })
 
 # ---------------------------------------------------------------------
@@ -140,8 +149,16 @@ test_that("warnings work", {
   test_data$Slope[2] <- 0
   test_data$Slope[3] <- 0.1
   test_data$Year[1] <- 1989
+  test_data$Velocity[2] <- 6 # Stored in velo_dummy column??!!
+  test_data$Discharge[2] <- NA
+  test_data$Discharge[1] <- 10
   test <- rict_validate(test_data)
-  expect_equal(length(test[[2]][, 1]), 3)
+  expect_equal(length(test[[2]][, 1]), 5)
+
+  test_data <- demo_ni_observed_values
+  test_data$Discharge[1] <- 9
+  test <- rict_validate(test_data[1, ])
+  expect_equal(length(test[[2]][, 1]), 1)
   # Test user supplied temperatures override calculate temperatures
   test_data <- demo_observed_values
   test_data$MEAN.AIR.TEMP <- 15
@@ -152,6 +169,13 @@ test_that("warnings work", {
   test_data <- demo_observed_values
   test_data$Velocity <- 1
   expect_warning(rict_validate(test_data))
+  # GIS model warnings work
+  test_data <- rict::demo_gis_values_log
+  test_data$disch_cat[1] <- 10
+  test_data$d_f_source[1] <- 246000
+  test <- rict_validate(test_data)
+  test <- test$checks
+  expect_equal(length(test$FAIL[test$WARN != "---"]), 2)
 })
 
 # ---------------------------------------------------------------------
@@ -174,13 +198,13 @@ test_that("replacement values work if value is less than the ‘overall’ minim
 
   test_data <- demo_gis_values_log
   test_data$Altitude[1] <- 0
-  test_data$d_f_source[1] <- 0.1
+  test_data$d_f_source[1] <- 90
   test_data$Alkalinity[1] <- 0.1
   test_data$slope[1] <- 0
   test <- rict_validate(test_data)
   expect_equal(length(test[[2]][, 1]), 4)
   expect_equal(test[[1]][1, c("ALTITUDE")], 1)
-  expect_equal(test[[1]][1, c("D_F_SOURCE")], 0.000100) # Now converted to Km from metres
+  expect_equal(test[[1]][1, c("D_F_SOURCE")], 0.1) # Now converted to Km from metres
   expect_equal(test[[1]][1, c("ALKALINITY")], 0.1)
   expect_equal(test[[1]][1, c("SLOPE")], 0.1)
 
@@ -205,10 +229,49 @@ test_that("alkalinity, hardness, conductivity and calcium calculations work", {
 
 # ---------------------------------------------------------------------
 test_that("velocity calculation work", {
-  test_data <- demo_observed_values
+  test_data <- rict::demo_observed_values
   test_data$Velocity[1:5] <- 5
   test <- rict_validate(test_data)
   expect_equal(length(test[[2]][, 1]), 0)
+
+  # Test discharge_value of exactly 0.31 returns discharge value of 2. The
+  # discharge_value is calculated in `get_discharge` function.
+  test_data <- rict::demo_observed_values[1, ]
+  test_data$Mean_Width <- 6.2
+  test_data$Mean_Depth <- 100
+  test_data$Velocity <- 1
+  test_data$Discharge <- NA
+  test <- rict_validate(test_data)
+  expect_equal(test$data$DISCHARGE, 2)
+  # Test discharge_value of less than 0.31 returns discharge value of 2. The
+  # discharge_value is calculated in `get_discharge` function.
+  test_data <- rict::demo_observed_values[1, ]
+  test_data$Mean_Width <- 6
+  test_data$Mean_Depth <- 100
+  test_data$Velocity <- 1
+  test_data$Discharge <- NA
+  test <- rict_validate(test_data)
+  expect_equal(test$data$DISCHARGE, 1)
+  # Test discharge_value of less than 80 returns discharge value of 9. The
+  # discharge_value is calculated in `get_discharge` function. NOTE- cannot get
+  # discharge_value to return exactly 80 part have manually tested that value of
+  # 80 returns 9 and greater than 80 returns 10.
+  test_data <- rict::demo_observed_values[1, ]
+  test_data$Mean_Width <- 53.333333
+  test_data$Mean_Depth <- 100
+  test_data$Velocity <- 5
+  test_data$Discharge <- NA
+  test <- rict_validate(test_data)
+  expect_equal(test$data$DISCHARGE, 9)
+  # Test discharge_value of greater than 80 returns discharge value of 10. The
+  # discharge_value is calculated in `get_discharge` function.
+  test_data <- rict::demo_observed_values[1, ]
+  test_data$Mean_Width <- 53.34
+  test_data$Mean_Depth <- 100
+  test_data$Velocity <- 5
+  test_data$Discharge <- NA
+  test <- rict_validate(test_data)
+  expect_equal(test$data$DISCHARGE, 10)
 })
 
 # ---------------------------------------------------------------------

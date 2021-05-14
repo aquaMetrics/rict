@@ -555,7 +555,7 @@ from this file.
 
 #### Model 1 User input file (using physical predictors) 
 
-Required columns:
+Required values:
 
 ```{r}
  validation_rules <-
@@ -573,7 +573,7 @@ kable(filter(validation_rules, models %in% c("all", "physical") & source == "inp
 
 #### Model 44 Input files (using GIS predictors) 
 
-Required columns:
+Required values:
   
 ```{r}
 kable(filter(validation_rules, models %in% c("all", "gis") & source == "input") %>%
@@ -584,11 +584,11 @@ kable(filter(validation_rules, models %in% c("all", "gis") & source == "input") 
                               Optional = "optional") %>%  unique())
 ```
 
-#### Optional variables
+#### Optional values
 
-Optional columns: Must still be present in input data file but they may contain
-missing values or be entirely empty. However, they must comply with the
-following notes:
+Columns containing optional values must still be present in input data file but
+all or some of their values may be missing (data type NA). However, they must
+comply with the following notes:
 
 #### Model 1 Optional notes:
 

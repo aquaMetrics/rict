@@ -212,10 +212,6 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
       all(!is.na(data$VELOCITY))) {
       warning("You provided both VELOCITY and DISCHARGE values,
           DISCHARGE will be used by default. ", call. = FALSE)
-      # remove VELOCITY from validation rules so no rule will be applied
-      # validation_rules <- validation_rules[validation_rules$variable != "VELOCITY", ]
-      # remove VELOCITY from input data
-      # data$VELOCITY <- NULL
     }
   }
   ### Add calculated variables based on input data -----------------------------------------

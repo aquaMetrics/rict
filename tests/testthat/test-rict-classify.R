@@ -71,8 +71,8 @@ test_that("Outputs match azure NI single-year outputs", {
   expect_true(equal == T)
   # Check spr ASPT  ### (not all the same) - broken because some changes to set.seed/randomness: -----
   equal <- all.equal(
-    classification$mostProb_ASPT_spr[c(9,10,11,15)],
-    azure_classification$mostProb_ASPT_spr[c(9,10,11,15)]
+    classification$mostProb_ASPT_spr[c(7,8,9,12,13,14,15)],
+    azure_classification$mostProb_ASPT_spr[c(7,8,9,12,13,14,15)]
   )
   expect_true(equal == T)
 

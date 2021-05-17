@@ -351,10 +351,10 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     colnames(a_aspt_sum) <- getProbClassLabelFromEQR()[, 1]
     rownames(a_aspt_sum) <- c(paste0("TST-", k))
     # Find most probable class, i.e the maximum, and add it to the site
-    mostProb_s <- getMostProbableClass(a_aspt_spr)
+    mostProb_spr <- getMostProbableClass(a_aspt_spr)
     mostProb_sum <- getMostProbableClass(a_aspt_sum)
     # add the site to the dataframe
-    a_aspt_spr <- cbind(a_aspt_spr, mostProb_s)
+    a_aspt_spr <- cbind(a_aspt_spr, mostProb_spr)
     a_aspt_sum <- cbind(a_aspt_sum, mostProb_sum)
 
     SiteProbabilityclasses_spr_aspt <- rbind(SiteProbabilityclasses_spr_aspt, a_aspt_spr)

@@ -111,25 +111,57 @@ getBNG <- function(nat_grid_ref, easting, northing, coordsys_bng) {
 # Calculate discharge from velocity and river width if discharge category not supplied
 get_discharge <- function(data) {
   # Calculate discharge category from velocity and width if required
-  discharge_categories <- c(0.31, 0.62, 1.25, 2.5, 5.0, 10.0, 20.0, 40.0, 80.0, 1000000)
-  velocity_categories <- c(5.0, 17.5, 37.5, 75.0, 150.0, 1000000)
+  discharge_categories <- c(-Inf, 0.31, 0.62, 1.25, 2.5, 5.0, 10.0, 20.0, 40.0, 80.0, Inf)
+  velocity_categories <- c(5.0, 17.5, 37.5, 75.0, 150.0)
 
   discharge <- lapply(split(data, paste(data$SITE, data$YEAR)), function(data_row) {
     if (!any(is.null(data_row$VELOCITY)) && !any(is.na(data_row$VELOCITY))) {
+      velocity <- data_row$VELOCITY
+      # The velocity value has not be validated at this point so use within
+      # limit value. The input velocity cat will later be validated and if
+      # fails these discharge values will be removed from results before
+      # predictions.
+      if (velocity > 5) {
+        velocity <- 5
+      }
+      if (velocity < 1) {
+        velocity <- 1
+      }
       discharge_value <- data_row$MEAN_DEPTH / 100 *
         data_row$MEAN_WIDTH *
-        velocity_categories[data_row$VELOCITY] / 100
-      data_row$DISCHARGE <- min(which(discharge_categories > discharge_value))
-      message("Using velocity, width and depth to calculate discharge category")
+        velocity_categories[velocity] / 100
+      if(discharge_value == 0.31) {
+        # If 0.31, cut function will include in lowest category,
+        # so increasing value to move into category 2
+        discharge_value <- 0.32
+      }
+      # Sort discharge value into matching discharge category
+      data_row$DISCHARGE  <- cut(discharge_value,
+                  breaks = discharge_categories,
+                  labels = c(1:10),
+                  include.lowest = TRUE
+      )
+      data_row$DISCHARGE <- as.character(data_row$DISCHARGE)
+      data_row$DISCHARGE <- as.numeric(data_row$DISCHARGE)
+      message(paste(
+        "Using velocity, width and depth to calculate discharge category for site and year:",
+        paste(data_row$SITE, data_row$YEAR)))
     }
-    # hack - to avoid errors if some VELOCITY rows are NA - but avoids velocity validation rules..
-    data_row$VELO_DUMMY <- data_row$VELOCITY
-    data_row$VELOCITY <- NULL
+    # hack - to avoid errors if some VELOCITY rows are NA. The VELO_TRUE value
+    # is stored temporarily and added back after the validation checks have been
+    # done. Note is NA velocity, then DISCHARGE CAT is used. If both NA, then
+    # error.
+    data_row$VELO_TRUE <- data_row$VELOCITY
     return(data_row)
   })
   discharge <- dplyr::bind_rows(discharge)
   # Keep order and row.names the same as original input data for consistent output
   data <- discharge[order(match(discharge[, "SITE"], data[, "SITE"])), ]
   row.names(data) <- seq_len(nrow(data))
+  # hack - if VELOCITY is NA - replace with '1' to pass validation check. The
+  # true value is later replaced with VELO_TRUE after the validation has passed
+  if (!is.null(data$VELOCITY)) {
+  data$VELOCITY[is.na(data$VELOCITY) & !is.na(data$DISCHARGE)] <- 1
+  }
   return(data)
 }

@@ -87,7 +87,7 @@
       <h1 data-toc-skip>River Invertebrate Classification Tool (RICT) Functional Specification</h1>
                         <h4 class="author">RICT Steering Group</h4>
             
-            <h4 class="date">2021-04-22</h4>
+            <h4 class="date">2021-05-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/aquaMetrics/rict/blob/master/vignettes/functional-specification.Rmd"><code>vignettes/functional-specification.Rmd</code></a></small>
       <div class="hidden name"><code>functional-specification.Rmd</code></div>
@@ -507,7 +507,7 @@ outline: 0 ;
 <div id="model-1-user-input-file-using-physical-predictors" class="section level4" number="5.1.0.2">
 <h4 number="5.1.0.2" class="hasAnchor">
 <a href="#model-1-user-input-file-using-physical-predictors" class="anchor"></a><span class="header-section-number">5.1.0.2</span> Model 1 User input file (using physical predictors)</h4>
-<p>Required columns:</p>
+<p>Required values:</p>
 <table class="table">
 <thead><tr class="header">
 <th align="left"></th>
@@ -692,7 +692,7 @@ outline: 0 ;
 <div id="model-44-input-files-using-gis-predictors" class="section level4" number="5.1.0.3">
 <h4 number="5.1.0.3" class="hasAnchor">
 <a href="#model-44-input-files-using-gis-predictors" class="anchor"></a><span class="header-section-number">5.1.0.3</span> Model 44 Input files (using GIS predictors)</h4>
-<p>Required columns:</p>
+<p>Required values:</p>
 <table class="table">
 <thead><tr class="header">
 <th align="left"></th>
@@ -737,94 +737,102 @@ outline: 0 ;
 </tr>
 <tr class="odd">
 <td align="left">6</td>
+<td align="left">DISCH_CAT</td>
+<td align="left"></td>
+<td align="left">Discharge Category</td>
+<td align="left">numeric</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">7</td>
 <td align="left">PEAT</td>
 <td align="left">Proportion</td>
 <td align="left">Peat</td>
 <td align="left">numeric</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
-<td align="left">7</td>
+<tr class="odd">
+<td align="left">8</td>
 <td align="left">CHALK</td>
 <td align="left">Proportion</td>
 <td align="left">Chalk</td>
 <td align="left">numeric</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
-<td align="left">8</td>
+<tr class="even">
+<td align="left">9</td>
 <td align="left">CLAY</td>
 <td align="left">Proportion</td>
 <td align="left">Clay</td>
 <td align="left">numeric</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
-<td align="left">9</td>
+<tr class="odd">
+<td align="left">10</td>
 <td align="left">HARDROCK</td>
 <td align="left">Proportion</td>
 <td align="left">Hardrock</td>
 <td align="left">numeric</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
-<td align="left">10</td>
+<tr class="even">
+<td align="left">11</td>
 <td align="left">LIMESTONE</td>
 <td align="left">Proportion</td>
 <td align="left">Limestone</td>
 <td align="left">numeric</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
-<td align="left">11</td>
+<tr class="odd">
+<td align="left">12</td>
 <td align="left">LOG_AREA</td>
 <td align="left">Log (km2)</td>
 <td align="left">Log Area</td>
 <td align="left">numeric</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
-<td align="left">12</td>
-<td align="left">LOGALTBAR</td>
-<td align="left">Metres</td>
-<td align="left">Mean Altitude of Catchment</td>
-<td align="left">numeric</td>
-<td align="left">FALSE</td>
-</tr>
 <tr class="even">
 <td align="left">13</td>
-<td align="left">ALTITUDE</td>
-<td align="left">Metres</td>
-<td align="left">Site Altitude</td>
+<td align="left">LOGALTBAR</td>
+<td align="left">m</td>
+<td align="left">Mean Altitude of Catchment</td>
 <td align="left">numeric</td>
 <td align="left">FALSE</td>
 </tr>
 <tr class="odd">
 <td align="left">14</td>
+<td align="left">ALTITUDE</td>
+<td align="left">m</td>
+<td align="left">Site Altitude</td>
+<td align="left">numeric</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">15</td>
 <td align="left">D_F_SOURCE</td>
 <td align="left">m</td>
 <td align="left">Distance from Source</td>
 <td align="left">numeric</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
-<td align="left">15</td>
+<tr class="odd">
+<td align="left">16</td>
 <td align="left">SLOPE</td>
 <td align="left">m/km</td>
 <td align="left">Slope at site</td>
 <td align="left">numeric</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="odd">
-<td align="left">16</td>
+<tr class="even">
+<td align="left">17</td>
 <td align="left">SX</td>
 <td align="left"></td>
 <td align="left">Sampling Site X Coordinate (BNG)</td>
 <td align="left">numeric</td>
 <td align="left">FALSE</td>
 </tr>
-<tr class="even">
-<td align="left">17</td>
+<tr class="odd">
+<td align="left">18</td>
 <td align="left">SY</td>
 <td align="left"></td>
 <td align="left">Sampling Site Y Coordinate (BNG)</td>
@@ -834,10 +842,10 @@ outline: 0 ;
 </tbody>
 </table>
 </div>
-<div id="optional-variables" class="section level4" number="5.1.0.4">
+<div id="optional-values" class="section level4" number="5.1.0.4">
 <h4 number="5.1.0.4" class="hasAnchor">
-<a href="#optional-variables" class="anchor"></a><span class="header-section-number">5.1.0.4</span> Optional variables</h4>
-<p>Optional columns: Must still be present in input data file but they may contain missing values or be entirely empty. However, they must comply with the following notes:</p>
+<a href="#optional-values" class="anchor"></a><span class="header-section-number">5.1.0.4</span> Optional values</h4>
+<p>Columns containing optional values must still be present in input data file but all or some of their values may be missing (data type NA). However, they must comply with the following notes:</p>
 </div>
 <div id="model-1-optional-notes" class="section level4" number="5.1.0.5">
 <h4 number="5.1.0.5" class="hasAnchor">
@@ -1024,7 +1032,7 @@ outline: 0 ;
 <td align="left">gb</td>
 <td align="right">0.00</td>
 <td align="right">NA</td>
-<td align="right">0.0000000</td>
+<td align="right">0.1000000</td>
 <td align="right">150.0000000</td>
 </tr>
 <tr class="even">
@@ -1040,15 +1048,15 @@ outline: 0 ;
 <td align="left">gb</td>
 <td align="right">1.00</td>
 <td align="right">10.00</td>
-<td align="right">1.0000000</td>
-<td align="right">10.0000000</td>
+<td align="right">NA</td>
+<td align="right">9.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">DISCHARGE</td>
 <td align="left">ni</td>
 <td align="right">1.00</td>
 <td align="right">10.00</td>
-<td align="right">1.0000000</td>
+<td align="right">NA</td>
 <td align="right">8.0000000</td>
 </tr>
 <tr class="odd">
@@ -1056,16 +1064,16 @@ outline: 0 ;
 <td align="left">gb</td>
 <td align="right">1.00</td>
 <td align="right">5.00</td>
-<td align="right">1.0000000</td>
-<td align="right">5.0000000</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">VELOCITY</td>
 <td align="left">ni</td>
 <td align="right">1.00</td>
 <td align="right">5.00</td>
-<td align="right">1.0000000</td>
-<td align="right">5.0000000</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="left">DIST_FROM_SOURCE</td>
@@ -1372,8 +1380,8 @@ outline: 0 ;
 <td align="left">DISCH_CAT</td>
 <td align="left">all</td>
 <td align="right">1.00000</td>
-<td align="right">9.00000</td>
-<td align="right">1.0000000</td>
+<td align="right">10.00000</td>
+<td align="right">NA</td>
 <td align="right">9.0000000</td>
 </tr>
 <tr class="odd">
@@ -1435,9 +1443,9 @@ outline: 0 ;
 <tr class="even">
 <td align="left">ALTITUDE</td>
 <td align="left">all</td>
-<td align="right">-3.00000</td>
+<td align="right">0.00000</td>
 <td align="right">1346.00000</td>
-<td align="right">0.0000000</td>
+<td align="right">NA</td>
 <td align="right">597.0000000</td>
 </tr>
 <tr class="odd">
@@ -1445,8 +1453,8 @@ outline: 0 ;
 <td align="left">all</td>
 <td align="right">0.00000</td>
 <td align="right">296037.00000</td>
-<td align="right">0.1000000</td>
-<td align="right">245.0000000</td>
+<td align="right">100.0000000</td>
+<td align="right">245000.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">SLOPE</td>
@@ -1662,9 +1670,9 @@ outline: 0 ;
 <td align="left">D_F_SOURCE</td>
 <td align="left">gis</td>
 <td align="left">all</td>
-<td align="right">0.1</td>
-<td align="left">equals</td>
-<td align="right">0.1</td>
+<td align="right">100.0</td>
+<td align="left">lessthan</td>
+<td align="right">100.0</td>
 </tr>
 <tr class="odd">
 <td align="left">SLOPE</td>
@@ -3488,7 +3496,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="odd">
 <td align="left">WATERBODY</td>
-<td align="left">test</td>
+<td align="left">TST-GB-01-R</td>
 </tr>
 <tr class="even">
 <td align="left">Alkalinity</td>
@@ -4222,7 +4230,7 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 </tr>
 <tr class="even">
 <td align="left">mostProb_ASPT_spr</td>
-<td align="left">H</td>
+<td align="left">G</td>
 </tr>
 <tr class="odd">
 <td align="left">ASPT_eqr_av_spr</td>
@@ -4413,27 +4421,27 @@ ObsIDX<sub>9rB</sub> = ObsIDX<sub>7rB</sub> / ObsIDX<sub>8rB</sub> = bias-correc
 <td align="left">H</td>
 </tr>
 <tr class="even">
-<td align="left">H_MINTA</td>
+<td align="left">mintawhpt_sum_H</td>
 <td align="left">57.46</td>
 </tr>
 <tr class="odd">
-<td align="left">G_MINTA</td>
+<td align="left">mintawhpt_sum_G</td>
 <td align="left">40</td>
 </tr>
 <tr class="even">
-<td align="left">M_MINTA</td>
+<td align="left">mintawhpt_sum_M</td>
 <td align="left">2.54</td>
 </tr>
 <tr class="odd">
-<td align="left">P_MINTA</td>
+<td align="left">mintawhpt_sum_P</td>
 <td align="left">0</td>
 </tr>
 <tr class="even">
-<td align="left">B_MINTA</td>
+<td align="left">mintawhpt_sum_B</td>
 <td align="left">0</td>
 </tr>
 <tr class="odd">
-<td align="left">mostProb_MINTA</td>
+<td align="left">mintawhpt_sum_mostProb</td>
 <td align="left">H</td>
 </tr>
 </tbody>

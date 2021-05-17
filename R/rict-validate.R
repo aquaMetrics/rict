@@ -212,10 +212,12 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
       all(!is.na(data$VELOCITY))) {
       warning("You provided both VELOCITY and DISCHARGE values,
           DISCHARGE will be used by default. ", call. = FALSE)
-      # remove VELOCITY from validation rules so no rule will be applied
-      # validation_rules <- validation_rules[validation_rules$variable != "VELOCITY", ]
-      # remove VELOCITY from input data
-      # data$VELOCITY <- NULL
+      # Store VELOCITY in VELO_TRUE column (this will be replaced after
+      # validation checks)
+      data$VELO_TRUE <-data$VELOCITY
+      # And remove VELOCITY column so doesn't go through validation rules, it
+      # will be replaced afterwards
+      data$VELOCITY <- NA
     }
   }
   ### Add calculated variables based on input data -----------------------------------------
@@ -322,11 +324,6 @@ These values will be used instead of calculating them from Grid Reference values
   # Calculate total substrate and phi grain size scale
   if (model == "physical") {
     data <- get_substrate(data)
-  }
-
-  # convert metres to km in Distance from source GIS attribute
-  if (model == "gis") {
-    data$D_F_SOURCE <- data$D_F_SOURCE / 1000
   }
 
   ### Check values pass validation rules ----------------------------------------------------------
@@ -450,7 +447,7 @@ These values will be used instead of calculating them from Grid Reference values
   # Bind checks into data frame
   checks <- dplyr::bind_rows(checks)
   ### Add discharge and velocity columns missing data fails ---------------------------
-  discharge_velocity_fails <- data[is.na(data$DISCHARGE) & is.na(data$VELO_DUMMY), ]
+  discharge_velocity_fails <- data[is.na(data$DISCHARGE) & is.na(data$VELO_TRUE), ]
   discharge_velocity_fails <- data.frame(
     "ROW" = discharge_velocity_fails$ROW,
     "SITE" = discharge_velocity_fails$SITE,
@@ -478,6 +475,9 @@ These values will be used instead of calculating them from Grid Reference values
   if (any(data$DIST_FROM_SOURCE[!is.na(data$DIST_FROM_SOURCE)] < DFS_LIM)) {
     data$DIST_FROM_SOURCE[data$DIST_FROM_SOURCE < DFS_LIM] <- DFS_LIM
   }
+  if (any(data$D_F_SOURCE[!is.na(data$D_F_SOURCE)] < DFS_LIM)) {
+    data$D_F_SOURCE[data$D_F_SOURCE < DFS_LIM] <- DFS_LIM
+  }
   MNW_LIM <- validation_rules_input[validation_rules_input$variable == "MEAN_WIDTH", "replacement_limit"]
   if (any(data$MEAN_WIDTH[!is.na(data$MEAN_WIDTH)] < MNW_LIM)) {
     data$MEAN_WIDTH[data$MEAN_WIDTH < MNW_LIM] <- MNW_LIM
@@ -494,6 +494,11 @@ These values will be used instead of calculating them from Grid Reference values
   SLP_VAL <- validation_rules_input[validation_rules_input$variable == "SLOPE", "replacement_val"]
   if (any(data$SLOPE[!is.na(data$SLOPE)] == SLP_LIM)) {
     data$SLOPE[data$SLOPE == SLP_LIM] <- SLP_VAL
+  }
+
+  # convert metres to km in Distance from source GIS attribute
+  if (model == "gis") {
+    data$D_F_SOURCE <- data$D_F_SOURCE / 1000
   }
 
   # Add log10 values where required
@@ -513,6 +518,11 @@ These values will be used instead of calculating them from Grid Reference values
   columns <- dplyr::bind_cols(columns)
   data <- dplyr::bind_cols(data, columns)
 
+  # Replace dummy velocity values (where NAs were entered) with real values (i.e. NA values)
+  # The NAs would have failed validation checks so were replaced with '1'.
+  if(!is.null(data$VELO_TRUE)) {
+    data$VELOCITY <- data$VELO_TRUE
+  }
   ### Format checks and print check messages  --------------------------------------------------
   # Remove empty checks
   checks <- checks[checks$FAIL != "" | checks$WARNING != "" | checks$REPLACEMENT != "", ]

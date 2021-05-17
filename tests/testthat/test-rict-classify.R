@@ -28,6 +28,13 @@ test_that("Outputs match azure single-year outputs", {
     azure_classification$mintawhpt_spr_aut_mostProb[1]
   )
   expect_true(equal == T)
+
+  equal <- all.equal(
+    round(classification$NTAXA_eqr_av_spr, 2),
+    round(azure_classification$NTAXA_eqr_av_spr[1], 2)
+  )
+  expect_true(equal == T)
+
 })
 
 ### ---------------------------------------------------------------------------------------
@@ -56,6 +63,19 @@ test_that("Outputs match azure NI single-year outputs", {
     azure_classification$mintawhpt_spr_aut_mostProb[4:21]
   )
   expect_true(equal == T)
+  # Check spr NTAXA equal (EQR different but by luck no changes in class caused but set.seed change)
+  equal <- all.equal(
+    as.character(classification$mostProb_NTAXA_spr[4:21]),
+  as.character(azure_classification$mostProb_NTAXA_spr[4:21])
+  )
+  expect_true(equal == T)
+  # Check spr ASPT  ### (not all the same) - broken because some changes to set.seed/randomness: -----
+  equal <- all.equal(
+    as.character(classification$mostProb_ASPT_spr[c(7,8,9,12,13,14,15)]),
+    as.character(azure_classification$mostProb_ASPT_spr[c(7,8,9,12,13,14,15)])
+  )
+  expect_true(equal == T)
+
 })
 
 ### -----------------------------------------------------------------------------------------
@@ -254,6 +274,25 @@ test_that("Single year: Only return results for seasons provided", {
   expect_equal(all(is.na(test$M_NTAXA_spr[3])), FALSE)
   expect_equal(all(is.na(test$M_NTAXA_sum[5])), TRUE)
   expect_equal(all(is.na(test$M_NTAXA_sum[8])), FALSE)
+
+  # Remove summer from GIS:
+  demo_gis_values_log <- rict::demo_gis_values_log
+  remove_cols <- grep("Sum_TL2_", names(demo_gis_values_log))
+  demo_gis_values_log[1:2, remove_cols] <- NA
+  remove_cols <- grep("Sum_Season_ID|Sum_Ntaxa_Bias", names(demo_gis_values_log))
+  demo_gis_values_log[1:2, remove_cols] <- NA
+  prediction <- rict_predict(demo_gis_values_log)
+  test <- rict(demo_gis_values_log, year_type = "single")
+
+  # Only summer from GIS:
+  demo_gis_values_log <- rict::demo_gis_values_log
+  remove_cols <- grep("Spr_TL2_|Aut_TL2_", names(demo_gis_values_log))
+  demo_gis_values_log[1:2, remove_cols] <- NA
+  remove_cols <- grep("Aut_Season_ID|Aut_Ntaxa_Bias|Spr_Season_ID|Spr_Ntaxa_Bias", names(demo_gis_values_log))
+  demo_gis_values_log[1:2, remove_cols] <- NA
+  test <- rict(demo_gis_values_log, year_type = "single")
+  test <- rict(demo_gis_values_log[1, ], year_type = "single")
+
 })
 
 test_that("Single year: Summer only", {
@@ -270,7 +309,7 @@ test_that("Single year: Summer only", {
   ) # changed from -138.52 due to set.seed changes
 
   expect_equal(
-    as.character(classification$mostProb_MINTA[c(21:24, 13:19)]),
+    as.character(classification$mintawhpt_sum_mostProb[c(21:24, 13:19)]),
     as.character(verfied_classification$mostProb_MINTA[c(21:24, 13:19)])
   )
 })

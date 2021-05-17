@@ -106,9 +106,9 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   Ubias8 <- ubias_main
 
   # Find the non-bias corrected  EQR = obs/ExpRef
-  nonBiasCorrected_WHPT_aspt_spr <- obs_aspt_spr / dplyr::select(Exp_ref_aspt, dplyr::contains("_spr"))
-  nonBiasCorrected_WHPT_aspt_aut <- obs_aspt_aut / dplyr::select(Exp_ref_aspt, dplyr::contains("_aut"))
-  nonBiasCorrected_WHPT_aspt_sum <- Obs_aspt_sum / dplyr::select(Exp_ref_aspt, dplyr::matches("_sum"))
+  # nonBiasCorrected_WHPT_aspt_spr <- obs_aspt_spr / dplyr::select(Exp_ref_aspt, dplyr::contains("_spr"))
+  # nonBiasCorrected_WHPT_aspt_aut <- obs_aspt_aut / dplyr::select(Exp_ref_aspt, dplyr::contains("_aut"))
+  # nonBiasCorrected_WHPT_aspt_sum <- Obs_aspt_sum / dplyr::select(Exp_ref_aspt, dplyr::matches("_sum"))
   # Now do the Obs_rb withONE SITE obs_aspt_spr[1]
   sdobs_aspt <- sdobs_one_year_new(0.269, 0.279, 1)
 
@@ -124,9 +124,9 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
 
   # Find the non-bias corrected  EQR = obs/ExpRef, from the raw inputs,
   # not used but useful for output checing purposes only
-  nonBiasCorrected_WHPT_ntaxa_spr <- obs_ntaxa_spr / dplyr::select(Exp_ref_ntaxa, dplyr::contains("_spr"))
-  nonBiasCorrected_WHPT_ntaxa_aut <- Obs_ntaxa_aut / dplyr::select(Exp_ref_ntaxa, dplyr::contains("_aut"))
-  nonBiasCorrected_WHPT_ntaxa_sum <- Obs_ntaxa_sum / dplyr::select(Exp_ref_ntaxa, dplyr::matches("_sum"))
+  # nonBiasCorrected_WHPT_ntaxa_spr <- obs_ntaxa_spr / dplyr::select(Exp_ref_ntaxa, dplyr::contains("_spr"))
+  # nonBiasCorrected_WHPT_ntaxa_aut <- Obs_ntaxa_aut / dplyr::select(Exp_ref_ntaxa, dplyr::contains("_aut"))
+  # nonBiasCorrected_WHPT_ntaxa_sum <- Obs_ntaxa_sum / dplyr::select(Exp_ref_ntaxa, dplyr::matches("_sum"))
   # Now do the obs_rb with ONE SITE obs_ntaxa_spr[1]
   sdobs_ntaxa <- sdobs_one_year_new(0.247, 0.211, 1)
 
@@ -320,7 +320,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     # Part 1: for "Spring"
     # Find the averages of both spr and autum, declare a function to compute this
     eqr_av_spr_aspt <- getAvgEQR_SprAut(EQR_aspt_spr, EQR_aspt_aut, k, row_name = T)
-    eqr_av_sum_aspt <- getAvgEQR_SprAut(EQR_aspt_sum, EQR_aspt_sum)
+    eqr_av_sum_aspt <- getAvgEQR_SprAut(EQR_aspt_sum, EQR_aspt_sum) # summer
     a <- data.frame(eqr_av_sum_aspt = eqr_av_sum_aspt[, 1])
     rownames(a) <- rownames(eqr_av_sum_aspt)
     eqr_av_sum_aspt <- a
@@ -347,7 +347,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     colnames(a_aspt_spr) <- getProbClassLabelFromEQR()[, 1]
     rownames(a_aspt_spr) <- as.character(predictions[k, "SITE"])
 
-    a_aspt_sum <- t(probClass_sum) # spr
+    a_aspt_sum <- t(probClass_sum) # sum
     colnames(a_aspt_sum) <- getProbClassLabelFromEQR()[, 1]
     rownames(a_aspt_sum) <- c(paste0("TST-", k))
     # Find most probable class, i.e the maximum, and add it to the site
@@ -375,6 +375,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     EQRAverages_aspt_sum <- rbind(EQRAverages_aspt_sum, eqr_av_sum_aspt)
     matrix_ntaxa_sum <- as.matrix(classArray_siteOne_sum_ntaxa)
     matrix_aspt_sum <- as.matrix(classArray_siteOne_sum_aspt)
+
     minta_ntaxa_aspt_sum <- getMINTA_ntaxa_aspt(
       as.matrix(classArray_siteOne_sum_ntaxa),
       as.matrix(classArray_siteOne_sum_aspt)
@@ -386,7 +387,8 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     }
 
     # probabilityClass <- getProbClassLabelFromEQR()
-    aa <- t(minta_probClass_sum) # spr
+
+    aa <- t(minta_probClass_sum) # sum
     colnames(aa) <- getProbClassLabelFromEQR()[, 1]
 
     rownames(aa) <- as.character(predictions[k, "SITE"]) # c(paste0("TST-",k))
@@ -406,7 +408,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
         sum(classArray_siteOne_combined_spr_aspt[classArray_siteOne_combined_spr_aspt == i, ] / i) / n_runs
     }
 
-    a_aspt_spr_aut <- t(probClass_spr_aut_comb) # spr
+    a_aspt_spr_aut <- t(probClass_spr_aut_comb) # spr_aut
     colnames(a_aspt_spr_aut) <- getProbClassLabelFromEQR()[, 1] # Rename the columns to H G M P B
     rownames(a_aspt_spr_aut) <- as.character(predictions[k, "SITE"])
     # Find most probable class, i.e the maximum, and add it to the site
@@ -453,7 +455,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
       minta_probClass_aut[i] <- 100 * sum(minta_ntaxa_aspt_aut[minta_ntaxa_aspt_aut == i, ] / i) / n_runs
     }
 
-    aa <- t(minta_probClass_aut) # spr
+    aa <- t(minta_probClass_aut) # aut
     colnames(aa) <- getProbClassLabelFromEQR()[, 1]
     rownames(aa) <- as.character(predictions[k, "SITE"])
     # Find most probable MINTA class, i.e the maximum, and add it to the site
@@ -475,7 +477,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
       minta_probClass_spr_aut[i] <- 100 * sum(minta_ntaxa_aspt_spr_aut[minta_ntaxa_aspt_spr_aut == i, ] / i) / n_runs
     }
 
-    aa <- t(minta_probClass_spr_aut) # spr
+    aa <- t(minta_probClass_spr_aut) # spr_aut
     colnames(aa) <- getProbClassLabelFromEQR()[, 1]
     rownames(aa) <- as.character(predictions[k, "SITE"])
     # Find most probable MINTA class, i.e the maximum, and add it to the site
@@ -525,8 +527,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   colnames(SiteMINTA_whpt_spr) <- c(paste0("mintawhpt_spr_", names(SiteMINTA_whpt_spr)))
   colnames(SiteMINTA_whpt_aut) <- c(paste0("mintawhpt_aut_", names(SiteMINTA_whpt_aut)))
   colnames(SiteMINTA_whpt_spr_aut) <- c(paste0("mintawhpt_spr_aut_", names(SiteMINTA_whpt_spr_aut)))
-
-  colnames(SiteMINTA_whpt_sum) <- c(paste0(names(SiteMINTA_whpt_sum), "_MINTA"))
+  colnames(SiteMINTA_whpt_sum) <- c(paste0("mintawhpt_sum_", names(SiteMINTA_whpt_sum)))
   # Combine all MINTA
   allMINTA_whpt <- cbind(SiteMINTA_whpt_spr, SiteMINTA_whpt_aut)
   allMINTA_whpt <- cbind(allMINTA_whpt, SiteMINTA_whpt_spr_aut)

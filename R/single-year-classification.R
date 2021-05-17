@@ -635,7 +635,6 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
 
   final <- allResults_ntaxa_aspt_minta_combined
   # rename...
-  browser()
   names(final)[names(final)=="mostProb_sum_ASPT_sum"] <- "mostProb_ASPT_sum"
   names(final)[names(final)=="mostProb_spr_ASPT_spr"] <- "mostProb_ASPT_spr"
   names(final)[names(final)=="mostProb_aut_ASPT_aut"] <- "mostProb_ASPT_aut"

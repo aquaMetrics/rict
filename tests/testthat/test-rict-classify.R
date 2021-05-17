@@ -309,7 +309,7 @@ test_that("Single year: Summer only", {
   ) # changed from -138.52 due to set.seed changes
 
   expect_equal(
-    as.character(classification$mostProb_MINTA[c(21:24, 13:19)]),
+    as.character(classification$mintawhpt_sum_mostProb[c(21:24, 13:19)]),
     as.character(verfied_classification$mostProb_MINTA[c(21:24, 13:19)])
   )
 })

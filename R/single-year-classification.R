@@ -634,7 +634,13 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   }
 
   final <- allResults_ntaxa_aspt_minta_combined
-
+  # rename...
+  final$mostProb_ASPT_sum <-  final$mostProb_sum_ASPT_sum
+  final$mostProb_sum_ASPT_sum <- NULL
+  final$mostProb_ASPT_spr <-  final$mostProb_pr_ASPT_spr
+  final$mostProb_spr_ASPT_spr <- NULL
+  final$mostProb_ASPT_aut <-  final$mostProb_aut_ASPT_aut
+  final$mostProb_aut_ASPT_aut <- NULL
   # If spring, autumn or summer scores not provided remove from end result
   final[is.na(final$ASPT_eqr_av_spr), grep("spr", names(final))] <- NA
   final[is.na(final$ASPT_eqr_av_aut), grep("aut", names(final))] <- NA

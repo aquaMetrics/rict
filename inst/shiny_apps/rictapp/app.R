@@ -12,67 +12,99 @@ library(htmltools)
 
 # Define UI for application
 
-  ui <- tagList(
+ui <- tagList(
   #  shinythemes::themeSelector(),
-    navbarPage(
-      # theme = "cerulean",  # <--- To use a theme, uncomment this
-      "RICT",
-      tabPanel("Predict & Classify",
-               sidebarPanel(
-                   h4("This app is a work in progress -
+  navbarPage(
+    # theme = "cerulean",  # <--- To use a theme, uncomment this
+    "RICT",
+    tabPanel(
+      "Predict & Classify",
+      sidebarPanel(
+        h4("This app is a work in progress -
                       use the following for official uses: "),
-                   a("Azure Experiments", href="https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/RICT%20Application.aspx"),
-                   p(),
-                   fileInput("dataset", "Choose CSV File",
-                             accept = c(
-                               "text/csv",
-                               "text/comma-separated-values,text/plain",
-                               ".csv"
-                             )
-                   ),
-                    h3("Options"),
-      radioButtons(
-        "year_type", "Year Type:",
-        c(
-          "Single-year" = "single",
-          "Multi-year" = "multi"
+        a("Azure Experiments",
+          href = "https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/RICT%20Application.aspx"
+        ),
+        p(),
+        fileInput("dataset", "Choose CSV input file",
+          accept = c(
+            "text/csv",
+            "text/comma-separated-values,text/plain",
+            ".csv"
+          )
+        ),
+        h4("Options"),
+        radioButtons(
+          "year_type", "Year Type",
+          c(
+            "Single-year" = "single",
+            "Multi-year" = "multi"
+          )
+        ),
+        radioButtons(
+          "output", "Outputs",
+          c(
+            "Prediction & Classification" = "predict_classify",
+            "Prediction Only" = "predict"
+          )
+        ),
+        checkboxGroupInput(
+          "include", "Include",
+          c(
+            "Don't include taxa or predictions" = "none",
+            "Include Taxa Prediction" = "taxa",
+            "All Indices" = "all_indices"
+          ),
+          selected = "none"
+        ),
+        checkboxGroupInput(
+          "tl", "Taxa Lists",
+          c(
+            "TL1" = "TL1",
+            "TL2" = "TL2",
+            "TL3" = "TL3",
+            "TL4" = "TL4",
+            "TL5" = "TL5"
+          ),
+          selected = "TL2"
         )
       ),
-      radioButtons(
-        "output", "Output:",
-        c(
-          "Prediction & Classification" = "predict_classify",
-          "Prediction Only" = "predict"
-        )
-      ),
-      checkboxGroupInput(
-        "include", "Include: ",
-        c(
-          "Don't include taxa or predictions" = "none",
-          "Include Taxa Prediction" = "taxa",
-          "All Indices" = "all_indices"
-        ), selected = "none"
-      ),
-      checkboxGroupInput(
-        "tl", "Taxa Lists: ",
-        c(
-          "TL1" = "TL1",
-          "TL2" = "TL2",
-          "TL3" = "TL3",
-          "TL4" = "TL4",
-          "TL5" = "TL5"
-        ), selected = "TL2"
+      # Show tables
+      mainPanel(
+        leafletOutput("map"),
+        p(),
+        htmlOutput("tables")
       )
     ),
+    tabPanel("Compare",
+      sidebarPanel(
+        h4("This app is a work in progress -
+                      use the following for official uses: "),
+        a("Azure Experiments",
+          href = "https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/RICT%20Application.aspx"
+        ),
+        p(),
+        fileInput("dataset_one", "Choose CSV input file 1",
+                  accept = c(
+                    "text/csv",
+                    "text/comma-separated-values,text/plain",
+                    ".csv"
+                  )
+        ),
+        fileInput("dataset_two", "Choose CSV input file 2",
+                  accept = c(
+                    "text/csv",
+                    "text/comma-separated-values,text/plain",
+                    ".csv"
+                  )
+        )
+      ),
     # Show tables
     mainPanel(
-      leafletOutput("map"),
-      p(),
-      htmlOutput("tables")
+      htmlOutput("compare")
     )
-  ),
-  tabPanel("GIS variables", "This panel is intentionally left blank. This will be for future GIS variables map")
-)
+  )
+  )
 )
 
 # Define server logic ------------------------------------------------------------------
@@ -80,7 +112,7 @@ server <- function(input, output) {
   output$tables <- renderUI({
     inFile <- input$dataset
     if (is.null(inFile)) {
-      return(NULL)
+      return(HTML('<h1 style="color:lightgrey;">Please choose .csv file...</h1></style>'))
     }
     # Create a Progress object
     progress <- shiny::Progress$new()
@@ -90,7 +122,6 @@ server <- function(input, output) {
     data <- read.csv(inFile$datapath, check.names = F)
     predictions <- rict_predict(data)
     predictions_table <- predictions
-
     output_files <- list(predictions)
     results <- data.frame()
     if (!is.null(predictions) & input$output == "predict_classify") {
@@ -115,7 +146,7 @@ server <- function(input, output) {
     indices_table <- indices
 
     output_files <- list(predictions, results, taxa, indices)
-
+    names(output_files) <- c("predictions", "classification", "taxa", "indices")
 
     output$download_file <- downloadHandler(
       filename = function() {
@@ -126,9 +157,11 @@ server <- function(input, output) {
         tmpdir <- tempdir()
         setwd(tempdir())
         for (i in seq_along(output_files)) {
-          path <- paste0("output_", i, ".csv")
+          if(nrow(output_files[[i]] > 0)) {
+          path <- paste0(names(output_files)[i], ".csv")
           fs <- c(fs, path)
           write.csv(output_files[[i]], file = path)
+          }
         }
         zip(zipfile = fname, files = fs)
       }
@@ -139,8 +172,8 @@ server <- function(input, output) {
     })
 
     map <- leaflet(predictions) %>%
-             addTiles() %>%
-              addMarkers(~LONGITUDE, ~LATITUDE, popup = ~ htmlEscape(SITE))
+      addTiles() %>%
+      addMarkers(~LONGITUDE, ~LATITUDE, popup = ~ htmlEscape(SITE))
 
     output$map <- renderLeaflet(map)
 
@@ -157,6 +190,30 @@ server <- function(input, output) {
       }),
       h3("All Indices"), DT::renderDataTable({
         indices_table
+      })
+    ))
+  })
+
+  output$compare <- renderUI({
+    inFile_one <- input$dataset_one
+    inFile_two <- input$dataset_two
+    if (is.null(inFile_one) || is.null(inFile_two)) {
+      return(HTML('<h1 style="color:lightgrey;">Please choose .csv file...</h1></style>'))
+    }
+
+    progress <- shiny::Progress$new()
+    # Make sure it closes when we exit this reactive, even if there's an error
+    on.exit(progress$close())
+    progress$set(message = "Calculating", value = 1)
+    data_one <- read.csv(inFile_one$datapath, check.names = F)
+    data_two <- read.csv(inFile_two$datapath, check.names = F)
+    data_one <- rict(data_one, store_eqrs = T)
+    data_two <- rict(data_two, store_eqrs = T)
+    compare <- rict_compare(results_a = data_one, results_b = data_two)
+    compare <- compare
+    return(list(
+      h3("Compare"), DT::renderDataTable({
+        compare
       })
     ))
   })

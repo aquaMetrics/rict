@@ -120,6 +120,7 @@ server <- function(input, output) {
     on.exit(progress$close())
     progress$set(message = "Calculating", value = 1)
     data <- read.csv(inFile$datapath, check.names = F)
+    validations <- rict_validate(data)
     predictions <- rict_predict(data)
     predictions_table <- predictions
     output_files <- list(predictions)
@@ -150,7 +151,7 @@ server <- function(input, output) {
 
     output$download_file <- downloadHandler(
       filename = function() {
-        paste("rict-output", "zip", sep = ".")
+        paste0("rict-", packageVersion("rict"), "-output.zip")
       },
       content = function(fname) {
         fs <- c()
@@ -177,8 +178,16 @@ server <- function(input, output) {
 
     output$map <- renderLeaflet(map)
 
+    if(nrow(validations$checks) != 0) {
+      validation <- list(h3("Validations"), DT::renderDataTable({
+        validations$checks
+      }))} else {
+        validation <- HTML('<h3>Validation</h3><h4 style="color:lightgray;">All input data valid</h1></style>')
+      }
+
     return(list(
       download_data,
+      validation,
       h3("Predictions"), DT::renderDataTable({
         predictions_table
       }),

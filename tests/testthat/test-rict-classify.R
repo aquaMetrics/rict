@@ -370,5 +370,5 @@ test_that("missing observations in multi-year return NA", {
   test$`Aut_TL2_WHPT_ASPT (AbW,DistFam)` <- NA
   test$`Aut_TL2_WHPT_NTaxa (AbW,DistFam)` <- NA
   test <- rict(test)
-  expect_equal(length(test[is.na(test)]), 230)
+  expect_equal(length(test[is.na(test)]), 200)
 })

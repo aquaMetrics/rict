@@ -546,8 +546,8 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
     colnames(SiteMINTA_whpt_spr_aut) <- paste0(colnames(SiteMINTA_whpt_spr_aut), "_MINTA_")
     classification_results <- cbind(allResults, SiteMINTA_whpt_spr_aut)
     # Remove rows with missing observation data
-    if(all(is.na(classification_results$ASPT_aver_spr_aut))) {
-      classification_results[!is.na(classification_results)] <- NA
+    if (all(is.na(classification_results$ASPT_aver_spr_aut))) {
+      classification_results[, !names(classification_results) %in% c("SITE", "WATERBODY", "YEAR")] <- NA
     }
 
     if (store_eqrs == T) {

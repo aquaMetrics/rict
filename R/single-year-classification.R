@@ -494,18 +494,22 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
         EQR_aspt_avg, EQR_ntaxa_avg,
         EQR_aspt_spr, EQR_ntaxa_spr,
         EQR_aspt_aut, EQR_ntaxa_aut,
+        EQR_aspt_sum, EQR_ntaxa_sum,
         data.frame(minta_ntaxa_aspt_spr),
         data.frame(minta_ntaxa_aspt_aut),
-        data.frame(minta_ntaxa_aspt_spr_aut)
+        data.frame(minta_ntaxa_aspt_spr_aut),
+        data.frame(minta_ntaxa_aspt_sum)
       )
       # Create variable to store list of 'pretty' names for eqr metrics
       eqr_names <- list(
         "AVG_ASPT", "AVG_NTAXA",
         "SPR_ASPT", "SPR_NTAXA",
         "AUT_ASPT", "AUT_NTAXA",
+        "SUM_ASPT", "SUM_NTAXA",
         "MINTA_SPR",
         "MINTA_AUT",
-        "MINTA"
+        "MINTA",
+        "MINTA_SUM"
       )
       # To make it easier to merge and process simulated EQRs and
       # classification results, bind all simulated EQRs into single dataframe
@@ -635,9 +639,9 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
 
   final <- allResults_ntaxa_aspt_minta_combined
   # rename...
-  names(final)[names(final)=="mostProb_sum_ASPT_sum"] <- "mostProb_ASPT_sum"
-  names(final)[names(final)=="mostProb_spr_ASPT_spr"] <- "mostProb_ASPT_spr"
-  names(final)[names(final)=="mostProb_aut_ASPT_aut"] <- "mostProb_ASPT_aut"
+  names(final)[names(final) == "mostProb_sum_ASPT_sum"] <- "mostProb_ASPT_sum"
+  names(final)[names(final) == "mostProb_spr_ASPT_spr"] <- "mostProb_ASPT_spr"
+  names(final)[names(final) == "mostProb_aut_ASPT_aut"] <- "mostProb_ASPT_aut"
 
   # If spring, autumn or summer scores not provided remove from end result
   final[is.na(final$ASPT_eqr_av_spr), grep("spr", names(final))] <- NA

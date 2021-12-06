@@ -1,6 +1,6 @@
 test_that("rict_compare matches test data", {
   version <- paste0(R.version$major, ".", R.version$minor)
-  if(version == "3.5.3" | version ==  "3.4.4") {
+  if (version == "3.5.3" | version == "3.4.4") {
     version <- "3.4.4"
   }
   skip_if(version == "3.4.4",
@@ -32,6 +32,9 @@ test_that("rict_compare matches test data", {
     test_rict_compare[test_rict_compare$`Result A` %in% test$`Result A`, 2:45]
 
   test <- type.convert(test)
+  # remove summer values (weren't in original test dataset)
+  test <- test[!seq_len(nrow(test)) %in% grep("SUM", test$`EQR metric compared`), ]
+
   test_rict_compare <- type.convert(test_rict_compare)
 
   expect_equal(

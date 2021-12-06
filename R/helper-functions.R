@@ -22,16 +22,14 @@ get_alkalinity <- function(data) {
           "Using Hardness value to calculate Alkalinity at ",
           data_row$SITE, " - ", data_row$YEAR, ". "
         ))
-      }
-      else
+      } else
       if (!any(is.null(data_row$CALCIUM)) && !any(is.na(data_row$CALCIUM))) {
         data_row$ALKALINITY <- 14.552 + 1.7606 * data_row$CALCIUM
         message(paste0(
           "Using Calcium value to calculate Alkalinity at ",
           data_row$SITE, " - ", data_row$YEAR, ". "
         ))
-      }
-      else
+      } else
       if (!any(is.null(data_row$CONDUCTIVITY)) && !any(is.na(data_row$CONDUCTIVITY))) {
         data_row$ALKALINITY <- 0.3201 * data_row$CONDUCTIVITY - 8.0593
         message(paste0(
@@ -130,22 +128,23 @@ get_discharge <- function(data) {
       discharge_value <- data_row$MEAN_DEPTH / 100 *
         data_row$MEAN_WIDTH *
         velocity_categories[velocity] / 100
-      if(discharge_value == 0.31) {
+      if (discharge_value == 0.31) {
         # If 0.31, cut function will include in lowest category,
         # so increasing value to move into category 2
         discharge_value <- 0.32
       }
       # Sort discharge value into matching discharge category
-      data_row$DISCHARGE  <- cut(discharge_value,
-                  breaks = discharge_categories,
-                  labels = c(1:10),
-                  include.lowest = TRUE
+      data_row$DISCHARGE <- cut(discharge_value,
+        breaks = discharge_categories,
+        labels = c(1:10),
+        include.lowest = TRUE
       )
       data_row$DISCHARGE <- as.character(data_row$DISCHARGE)
       data_row$DISCHARGE <- as.numeric(data_row$DISCHARGE)
       message(paste(
         "Using velocity, width and depth to calculate discharge category for site and year:",
-        paste(data_row$SITE, data_row$YEAR)))
+        paste(data_row$SITE, data_row$YEAR)
+      ))
     }
     # hack - to avoid errors if some VELOCITY rows are NA. The VELO_TRUE value
     # is stored temporarily and added back after the validation checks have been
@@ -161,7 +160,7 @@ get_discharge <- function(data) {
   # hack - if VELOCITY is NA - replace with '1' to pass validation check. The
   # true value is later replaced with VELO_TRUE after the validation has passed
   if (!is.null(data$VELOCITY)) {
-  data$VELOCITY[is.na(data$VELOCITY) & !is.na(data$DISCHARGE)] <- 1
+    data$VELOCITY[is.na(data$VELOCITY) & !is.na(data$DISCHARGE)] <- 1
   }
   return(data)
 }

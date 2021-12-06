@@ -214,7 +214,7 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
           DISCHARGE will be used by default. ", call. = FALSE)
       # Store VELOCITY in VELO_TRUE column (this will be replaced after
       # validation checks)
-      data$VELO_TRUE <-data$VELOCITY
+      data$VELO_TRUE <- data$VELOCITY
       # And remove VELOCITY column so doesn't go through validation rules, it
       # will be replaced afterwards
       data$VELOCITY <- NA
@@ -520,7 +520,7 @@ These values will be used instead of calculating them from Grid Reference values
 
   # Replace dummy velocity values (where NAs were entered) with real values (i.e. NA values)
   # The NAs would have failed validation checks so were replaced with '1'.
-  if(!is.null(data$VELO_TRUE)) {
+  if (!is.null(data$VELO_TRUE)) {
     data$VELOCITY <- data$VELO_TRUE
   }
   ### Format checks and print check messages  --------------------------------------------------

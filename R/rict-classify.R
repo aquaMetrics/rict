@@ -545,6 +545,10 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
     # Rename columns for MINTA, so they dont conflict
     colnames(SiteMINTA_whpt_spr_aut) <- paste0(colnames(SiteMINTA_whpt_spr_aut), "_MINTA_")
     classification_results <- cbind(allResults, SiteMINTA_whpt_spr_aut)
+    # Remove rows with missing observation data
+    if(all(is.na(classification_results$ASPT_aver_spr_aut))) {
+      classification_results[!is.na(classification_results)] <- NA
+    }
 
     if (store_eqrs == T) {
       # Bind stored eqrs

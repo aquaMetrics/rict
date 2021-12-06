@@ -34,7 +34,6 @@ test_that("Outputs match azure single-year outputs", {
     round(azure_classification$NTAXA_eqr_av_spr[1], 2)
   )
   expect_true(equal == T)
-
 })
 
 ### ---------------------------------------------------------------------------------------
@@ -66,16 +65,15 @@ test_that("Outputs match azure NI single-year outputs", {
   # Check spr NTAXA equal (EQR different but by luck no changes in class caused but set.seed change)
   equal <- all.equal(
     as.character(classification$mostProb_NTAXA_spr[4:21]),
-  as.character(azure_classification$mostProb_NTAXA_spr[4:21])
+    as.character(azure_classification$mostProb_NTAXA_spr[4:21])
   )
   expect_true(equal == T)
   # Check spr ASPT  ### (not all the same) - broken because some changes to set.seed/randomness: -----
   equal <- all.equal(
-    as.character(classification$mostProb_ASPT_spr[c(7,8,9,12,13,14,15)]),
-    as.character(azure_classification$mostProb_ASPT_spr[c(7,8,9,12,13,14,15)])
+    as.character(classification$mostProb_ASPT_spr[c(7, 8, 9, 12, 13, 14, 15)]),
+    as.character(azure_classification$mostProb_ASPT_spr[c(7, 8, 9, 12, 13, 14, 15)])
   )
   expect_true(equal == T)
-
 })
 
 ### -----------------------------------------------------------------------------------------
@@ -292,7 +290,6 @@ test_that("Single year: Only return results for seasons provided", {
   demo_gis_values_log[1:2, remove_cols] <- NA
   test <- rict(demo_gis_values_log, year_type = "single")
   test <- rict(demo_gis_values_log[1, ], year_type = "single")
-
 })
 
 test_that("Single year: Summer only", {
@@ -366,4 +363,12 @@ test_that("test reproducibility", {
   test2 <- rict(test)
   # First results from test1 should match second result from test2
   expect_equal(as.numeric(as.character(test1$H_NTAXA_spr_aut)), as.numeric(as.character(test2$H_NTAXA_spr_aut[2])))
+})
+
+test_that("missing observations in multi-year return NA", {
+  test <- demo_observed_values
+  test$`Aut_TL2_WHPT_ASPT (AbW,DistFam)` <- NA
+  test$`Aut_TL2_WHPT_NTaxa (AbW,DistFam)` <- NA
+  test <- rict(test)
+  expect_equal(length(test[is.na(test)]), 230)
 })

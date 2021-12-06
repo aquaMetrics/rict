@@ -89,25 +89,25 @@ getMostProbableClass <- function(dframe) {
 
 # Find the class array of each site
 getClassarray_ntaxa <- function(EQR_ntaxa) {
-  EQR_ntaxa[, 1][is.na(EQR_ntaxa)] <- 5 # really?
   EQR_ntaxa[, 1][EQR_ntaxa >= 0.8] <- 1 # class = H
   EQR_ntaxa[, 1][EQR_ntaxa >= 0.68 & EQR_ntaxa < 0.8] <- 2 # class = G
   EQR_ntaxa[, 1][EQR_ntaxa >= 0.56 & EQR_ntaxa < 0.68] <- 3 # class = M
   EQR_ntaxa[, 1][EQR_ntaxa >= 0.47 & EQR_ntaxa < 0.56] <- 4 # class = P
   EQR_ntaxa[, 1][EQR_ntaxa >= 0.0 & EQR_ntaxa < 0.47] <- 5 # class = B
   EQR_ntaxa[, 1][EQR_ntaxa < 0.0] <- 9 # Default if no condition is satisfied?
+  EQR_ntaxa[, 1][is.na(EQR_ntaxa)] <- 9 # Default if observation is missing
   return(EQR_ntaxa)
 }
 
 # Find the class array
 getClassarray_aspt <- function(EQR_aspt) {
-  EQR_aspt[, 1][is.na(EQR_aspt)] <- 5 # really?
   EQR_aspt[, 1][EQR_aspt >= 0.97] <- 1 # class = H
   EQR_aspt[, 1][EQR_aspt >= 0.86 & EQR_aspt < 0.97] <- 2 # class = G
   EQR_aspt[, 1][EQR_aspt >= 0.72 & EQR_aspt < 0.86] <- 3 # class = M
   EQR_aspt[, 1][EQR_aspt >= 0.59 & EQR_aspt < 0.72] <- 4 # class = P
   EQR_aspt[, 1][EQR_aspt >= 0.0 & EQR_aspt < 0.59] <- 5 # class = B
   EQR_aspt[, 1][EQR_aspt < 0.0] <- 9 # Default if no condition is satisfied?
+  EQR_aspt[, 1][is.na(EQR_aspt)] <- 9 # Default if observation is missing
   return(EQR_aspt)
 }
 # Find the averages of both spr and autum, declare a function to compute this

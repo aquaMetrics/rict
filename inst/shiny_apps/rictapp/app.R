@@ -76,7 +76,8 @@ ui <- tagList(
         htmlOutput("tables")
       )
     ),
-    tabPanel("Compare",
+    tabPanel(
+      "Compare",
       sidebarPanel(
         h4("This app is a work in progress -
                       use the following for official uses: "),
@@ -85,25 +86,33 @@ ui <- tagList(
         ),
         p(),
         fileInput("dataset_one", "Choose CSV input file 1",
-                  accept = c(
-                    "text/csv",
-                    "text/comma-separated-values,text/plain",
-                    ".csv"
-                  )
+          accept = c(
+            "text/csv",
+            "text/comma-separated-values,text/plain",
+            ".csv"
+          )
         ),
         fileInput("dataset_two", "Choose CSV input file 2",
-                  accept = c(
-                    "text/csv",
-                    "text/comma-separated-values,text/plain",
-                    ".csv"
-                  )
+          accept = c(
+            "text/csv",
+            "text/comma-separated-values,text/plain",
+            ".csv"
+          )
+        ),
+        h4("Options"),
+        radioButtons(
+          "year_type_compare", "Year Type",
+          c(
+            "Single-year" = "single",
+            "Multi-year" = "multi"
+          )
         )
       ),
-    # Show tables
-    mainPanel(
-      htmlOutput("compare")
+      # Show tables
+      mainPanel(
+        htmlOutput("compare")
+      )
     )
-  )
   )
 )
 
@@ -158,10 +167,10 @@ server <- function(input, output) {
         tmpdir <- tempdir()
         setwd(tempdir())
         for (i in seq_along(output_files)) {
-          if(nrow(output_files[[i]] > 0)) {
-          path <- paste0(names(output_files)[i], ".csv")
-          fs <- c(fs, path)
-          write.csv(output_files[[i]], file = path)
+          if (nrow(output_files[[i]] > 0)) {
+            path <- paste0(names(output_files)[i], ".csv")
+            fs <- c(fs, path)
+            write.csv(output_files[[i]], file = path)
           }
         }
         zip(zipfile = fname, files = fs)
@@ -178,12 +187,13 @@ server <- function(input, output) {
 
     output$map <- renderLeaflet(map)
 
-    if(nrow(validations$checks) != 0) {
+    if (nrow(validations$checks) != 0) {
       validation <- list(h3("Validations"), DT::renderDataTable({
         validations$checks
-      }))} else {
-        validation <- HTML('<h3>Validation</h3><h4 style="color:lightgray;">All input data valid</h1></style>')
-      }
+      }))
+    } else {
+      validation <- HTML('<h3>Validation</h3><h4 style="color:lightgray;">All input data valid</h1></style>')
+    }
 
     return(list(
       download_data,
@@ -216,8 +226,8 @@ server <- function(input, output) {
     progress$set(message = "Calculating", value = 1)
     data_one <- read.csv(inFile_one$datapath, check.names = F)
     data_two <- read.csv(inFile_two$datapath, check.names = F)
-    data_one <- rict(data_one, store_eqrs = T)
-    data_two <- rict(data_two, store_eqrs = T)
+    data_one <- rict(data_one, store_eqrs = T, year_type = input$year_type_compare)
+    data_two <- rict(data_two, store_eqrs = T, year_type = input$year_type_compare)
     compare <- rict_compare(results_a = data_one, results_b = data_two)
     compare <- compare
     return(list(

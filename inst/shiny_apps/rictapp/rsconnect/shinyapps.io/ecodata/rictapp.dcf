@@ -5,6 +5,9 @@ account: ecodata
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1589989
-bundleId: 2659634
+bundleId: 5161952
 url: https://ecodata.shinyapps.io/rictapp/
-when: 1576086456.30059
+when: 1634812876.56914
+lastSyncTime: 1634812876.56917
+asMultiple: FALSE
+asStatic: FALSE

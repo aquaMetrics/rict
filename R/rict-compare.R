@@ -152,6 +152,9 @@ rict_compare <- function(results_a = NULL, results_b = NULL) {
   results[grep("MINTA", results$`EQR metric compared`), 4:10] <- NA
   # Tidy messy row.names
   row.names(results) <- seq_len(nrow(results))
+  # Remove empty rows
+  results <- results[!is.na(results$`Probability B more than one class Worse than A`), ]
+
   message("Simulated EQR comparison completed")
   return(results)
 }

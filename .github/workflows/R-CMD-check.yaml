@@ -108,6 +108,7 @@ jobs:
           path: check/rict.Rcheck
 
       - name: Deploy to shinyapps.io
+        if: runner.os == 'Linux'
         uses: qwert666/shinyapps-actions@main
         env:
             SHINY_USERNAME: 'Ian.humpheryes@environment-agency.gov.uk'

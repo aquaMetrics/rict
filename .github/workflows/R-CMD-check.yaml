@@ -28,12 +28,12 @@ jobs:
         config:
           - {os: macOS-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
-          - {os: windows-latest, r: '3.5'}
-            # We explicitly set the user agent for R devel to the current release version of R so RSPM serves the release binaries.
-          - {os: ubuntu-18.04,   r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest", http-user-agent: "R/4.0.0 (ubuntu-16.04) R (4.0.0 x86_64-pc-linux-gnu x86_64 linux-gnu) on GitHub Actions" }
-          - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
-          - {os: ubuntu-18.04,   r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
-          - {os: ubuntu-18.04,   r: '3.5',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
+          - {os: windows-latest, r: '3.6'}
+          # Use older ubuntu to maximise backward compatibility
+          - {os: ubuntu-18.04,   r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-18.04,   r: 'release'}
+          - {os: ubuntu-18.04,   r: 'oldrel-1'}
+          - {os: ubuntu-18.04,   r: r: '3.6'}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -101,8 +101,17 @@ jobs:
         shell: bash
 
       - name: Upload check results
-        # if: failure() # upload articfacts to transfer package to Azure ML Studio .
+        # upload artifacts to transfer package to Azure ML Studio.
         uses: actions/upload-artifact@main
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check/rict.Rcheck
+
+      - name: Deploy to shinyapps.io
+        uses: qwert666/shinyapps-actions@main
+        env:
+            SHINY_USERNAME: 'Ian.humpheryes@environment-agency.gov.uk'
+            SHINY_TOKEN: ${{ secrets.SHINYAPP_TOKEN }}
+            SHINY_SECRET: ${{ secrets.SHINYAPP_SECRET }}
+            APP_NAME: 'rict'
+            APP_DIR: 'inst/shiny_apps/rictapp'

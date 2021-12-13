@@ -111,7 +111,7 @@ jobs:
         if: runner.os == 'Linux'
         uses: qwert666/shinyapps-actions@main
         env:
-            SHINY_USERNAME: 'Ian.humpheryes@environment-agency.gov.uk'
+            SHINY_USERNAME: 'eawaterquality'
             SHINY_TOKEN: ${{ secrets.SHINYAPP_TOKEN }}
             SHINY_SECRET: ${{ secrets.SHINYAPP_SECRET }}
             APP_NAME: 'rict'

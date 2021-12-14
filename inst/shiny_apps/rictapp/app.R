@@ -7,6 +7,7 @@
 #    http://shiny.rstudio.com/
 library(shiny)
 library(leaflet)
+library(rict)
 library(htmltools)
 
 # Define UI for application

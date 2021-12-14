@@ -124,8 +124,15 @@ jobs:
             "stringi",
             "stringr",
             "tinytex",
-            "xfun"
+            "xfun",
+            "devtools"
           ))
+        shell: Rscript {0}
+
+        - name: Install dependencies
+        if: runner.os == 'Linux'
+        run: |
+          devtools::install_github("aquaMetrics/rict")
         shell: Rscript {0}
 
                 # Connect on shinyapps server

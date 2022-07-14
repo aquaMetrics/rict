@@ -83,7 +83,7 @@ programming language and did not have flexibility to allow changes without
 significant cost. Therefore, a new tool was developed that allowed future
 changes to be made with minimal cost in many cases (e.g. the addition of a new
 index). This was the River Invertebrate Classification Tool (RICT) which went
-live in 2007. This version of RICT was a web-served application which was
+live in 2008. This version of RICT was a web-served application which was
 accessed via a website hosted by SEPA. The SEPA website also hosted copies of
 the manual, guidance and background documents.
   

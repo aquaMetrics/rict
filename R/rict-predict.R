@@ -58,6 +58,7 @@
 #' @export
 #' @importFrom rlang .data
 #' @importFrom dplyr mutate n group_by filter
+#' @importFrom stats complete.cases
 #'
 #' @examples
 #' \dontrun{
@@ -84,19 +85,19 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
     skip = 1
     )
     model_type <- ifelse(area == "gb", 1, 2)
-    taxa.input.data <- filter(taxa.input.data, Model == model_type)
+    taxa.input.data <- filter(taxa.input.data, .data$Model == model_type)
   }
 
   end_group_index <- utils::read.csv(system.file("extdat",
     "x-103-end-group-means-formatted-jdb-17-dec-2019.csv",
     package = "rict"
   ),
-  check.names = F
+  check.names = FALSE
   )
   end_group_index <- rename_end_group_means(end_group_index)
   nr_efg_groups <- utils::read.csv(system.file("extdat", "end-grp-assess-scores.csv", package = "rict"))
 
-  if (model == "physical" & area == "gb") {
+  if (model == "physical" && area == "gb") {
     df_mean_gb685 <-
       utils::read.delim(
         system.file("extdat", "df-mean-gb-685.DAT", package = "rict"),
@@ -167,7 +168,7 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
   }
 
   # Final Data for classification e.g. Linear discriminant Analysis (LDA) classifier/predictor
-  if (model == "physical" & area == "gb") {
+  if (model == "physical" && area == "gb") {
     final_predictors <- data.frame(
       "SITE"                      =  data$SITE,
       "LATITUDE"                  =  data$LATITUDE,
@@ -289,7 +290,7 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
   belongs_to_end_grp <- colnames(final_predictors_try2[, DistNames])[apply(
     data.frame(matrix(unlist(final_predictors_try2[, DistNames]),
       nrow = nrow(final_predictors_try2[, DistNames]),
-      byrow = T
+      byrow = TRUE
     ),
     stringsAsFactors = FALSE
     ), 1, which.max
@@ -302,11 +303,11 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
   # 4 Prediction: WE1.5 Algorithms for prediction of expected values of any index based on probability of end group
   # membership and average values of the index amongst reference sites in each end group.
   # We predict WHPT NTAXA, and WHPT ASP
-  endgroup_index_frame <- end_group_index[grep(area, end_group_index$RIVPACS_Model, ignore.case = T), ]
-  endgroup_index_frame <- dplyr::select(endgroup_index_frame, -RIVPACS_Model)
+  endgroup_index_frame <- end_group_index[grep(area, end_group_index$RIVPACS_Model, ignore.case = TRUE), ]
+  endgroup_index_frame <- dplyr::select(endgroup_index_frame, -.data$RIVPACS_Model)
   endgroup_index_frame <- dplyr::rename(endgroup_index_frame,
-    EndGrp = End_Group,
-    SeasonCode = Season_Code
+    EndGrp = .data$End_Group,
+    SeasonCode = .data$Season_Code
   )
 
   # Sort by the columns "EndGrp", "SeasonCode"
@@ -348,10 +349,12 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
         "Prob_Log1", "Prob_Log2", "Prob_Log3", "Prob_Log4", "Prob_Log5"
       )]
       names_measuredColumns <- names(measuredColumns)
-      site1$EndGrp_Probs <- EndGrpProb_Replacement(site1$EndGrp_Probs, final_predictors_try3, which(chooseSite == i))
+      site1$EndGrp_Probs <- EndGrpProb_Replacement(site1$EndGrp_Probs,
+                                                   final_predictors_try3,
+                                                   which(chooseSite == i))
       b1 <- site1 %>%
-        group_by(Season_Code, TL, Furse_Code) %>%
-        mutate(count = n(), mlist_endGrps = list(EndGrp_Probs)) # `End Group`
+        group_by(.data$Season_Code, .data$TL, .data$Furse_Code) %>%
+        mutate(count = n(), mlist_endGrps = list(.data$EndGrp_Probs)) # `End Group`
       # gives 3,522 rows.or unique b1 Multiply by 12 sites gives us 3,532x12 = 42,384 groups in TOTAL.
       allUniqueSites <- unique(b1[, c(4, 3, 5, 6, 7, 20, 21)])
 
@@ -366,7 +369,11 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
     # Remove the "End.Group" column
     taxa_predictions$End.Group <- NULL
     # Arrange the sites by siteName, TL, Season_Code, Furse_code
-    dplyr::arrange(taxa_predictions, siteName, TL, Season_Code, Furse_Code)
+    dplyr::arrange(taxa_predictions,
+                   .data$siteName,
+                   .data$TL,
+                   .data$Season_Code,
+                   .data$Furse_Code)
     return(taxa_predictions)
   }
 

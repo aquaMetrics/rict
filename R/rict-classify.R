@@ -84,7 +84,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
       "gb" = 1.68
     )
     # If user does not provide any bias value select default from values
-    if (is.na(ubias_main) | ubias_main == -9) {
+    if (is.na(ubias_main) || ubias_main == -9) {
       ubias_main <- default_bias[, grep(area, names(default_bias))]
       message("Bias not provided in input file - using default bias of ", ubias_main)
     }
@@ -205,7 +205,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
     namesOfSites <- data.frame()
 
     # Create store for EQRs to retain for compare function
-    if (store_eqrs == T) {
+    if (store_eqrs == TRUE) {
       eqr_metrics <- list()
     }
     # Variable that flags if last site has not been processed
@@ -215,7 +215,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
     indicesDistinct <- data.frame()
     k <- 1
 
-    while (k <= nrow(data) | (lastSiteProcessed == FALSE)) {
+    while (k <= nrow(data) || (lastSiteProcessed == FALSE)) {
       # initalise all MultiYear AGAIN for each site
       multiYear_EQRAverages_ntaxa_spr <- data.frame(n = n_runs)
       multiYear_EQRAverages_ntaxa_aut <- data.frame(n = n_runs)
@@ -340,7 +340,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
       }
 
       if (multipleSite_encoutered == TRUE) {
-        if ((j == nrow(data)) | (j - 1 == nrow(data))) {
+        if ((j == nrow(data)) || (j - 1 == nrow(data))) {
           # Means last site was a duplicate, and so is processed
           lastSiteProcessed <- TRUE
         }
@@ -363,8 +363,8 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
       }
 
       # Calculate EQRs here, i.e. rowSums if multipleTrue else just getAvgEQR() for single season
-      eqr_av_spr <- data.frame(rowMeans(getAvgEQR_SprAut(EQR_ntaxa_spr, EQR_ntaxa_aut, k, row_name = T)))
-      eqr_av_spr_aspt <- data.frame(rowMeans(getAvgEQR_SprAut(EQR_aspt_spr, EQR_aspt_aut, k, row_name = T)))
+      eqr_av_spr <- data.frame(rowMeans(getAvgEQR_SprAut(EQR_ntaxa_spr, EQR_ntaxa_aut, k, row_name = TRUE)))
+      eqr_av_spr_aspt <- data.frame(rowMeans(getAvgEQR_SprAut(EQR_aspt_spr, EQR_aspt_aut, k, row_name = TRUE)))
 
       # START TO CALCULATE probability of class
       # Part 2: Start calculating for NTAXA probability of CLASS
@@ -469,7 +469,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
       ##### MINTA ENDS HERE  #####
 
       #### Store EQRs in list
-      if (store_eqrs == T) {
+      if (store_eqrs == TRUE) {
         # Create variable to store list of simulated EQRs for each metric
         eqrs <- list(
           multiYear_EQRAverages_aspt_spr_aut,
@@ -550,7 +550,7 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
       classification_results[, !names(classification_results) %in% c("SITE", "WATERBODY", "YEAR")] <- NA
     }
 
-    if (store_eqrs == T) {
+    if (store_eqrs == TRUE) {
       # Bind stored eqrs
       eqr_metrics <- dplyr::bind_rows(eqr_metrics)
       # Create a ID for joining EQRs to classification results

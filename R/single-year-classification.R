@@ -1,4 +1,5 @@
 #' @importFrom dplyr select everything
+#' @importFrom rlang .data
 
 singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NULL) {
 
@@ -59,7 +60,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     "gb" = 1.68
   )
   # If user does not provide any bias value select default from values
-  if (is.na(ubias_main) | ubias_main == -9) {
+  if (is.na(ubias_main) || ubias_main == -9) {
     ubias_main <- default_bias[, grep(area, names(default_bias))]
     message("Bias not provided in input file - using default bias of ", ubias_main)
   }
@@ -196,7 +197,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     eqr_av_sum <- a
     # Part 1: for "Spring" - DO FOR NTAXA
     # Find the averages of both spr and autum, declare a function to compute this
-    eqr_av_spr <- getAvgEQR_SprAut(EQR_spr = EQR_ntaxa_spr, EQR_aut = EQR_ntaxa_aut, k, row_name = T)
+    eqr_av_spr <- getAvgEQR_SprAut(EQR_spr = EQR_ntaxa_spr, EQR_aut = EQR_ntaxa_aut, k, row_name = TRUE)
 
     # Classify these for each SITE using the EQR just for spring
     classArray_siteOne_spr_ntaxa <- getClassarray_ntaxa(EQR_ntaxa_spr)
@@ -319,7 +320,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
 
     # Part 1: for "Spring"
     # Find the averages of both spr and autum, declare a function to compute this
-    eqr_av_spr_aspt <- getAvgEQR_SprAut(EQR_aspt_spr, EQR_aspt_aut, k, row_name = T)
+    eqr_av_spr_aspt <- getAvgEQR_SprAut(EQR_aspt_spr, EQR_aspt_aut, k, row_name = TRUE)
     eqr_av_sum_aspt <- getAvgEQR_SprAut(EQR_aspt_sum, EQR_aspt_sum) # summer
     a <- data.frame(eqr_av_sum_aspt = eqr_av_sum_aspt[, 1])
     rownames(a) <- rownames(eqr_av_sum_aspt)
@@ -488,7 +489,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     ### MINTA ENDS HERE  -----------------------------------------------------
 
     #### Store EQRs in list --------------------------------------------------
-    if (store_eqrs == T) {
+    if (store_eqrs == TRUE) {
       # Create variable to store list of simulated EQRs for each metric
       eqrs <- list(
         EQR_aspt_avg, EQR_ntaxa_avg,
@@ -626,7 +627,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   # Add summer in
   allResults_ntaxa_aspt_minta_combined <- cbind(allResults_ntaxa_aspt_minta_combined, all_summer[, c(4:17, 39:44)])
 
-  if (store_eqrs == T) {
+  if (store_eqrs == TRUE) {
     eqr_metrics <- dplyr::bind_rows(eqr_metrics)
     eqr_metrics <- eqr_metrics[!is.na(eqr_metrics$EQR), ]
     # Merge simluated eqrs with classification results based on 'ID' (row number)
@@ -649,7 +650,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   final[is.na(final$eqr_av_sum_aspt), grep("sum", names(final))] <- NA
 
   # Place SITE column at start
-  final <- select(final, SITE, everything())
+  final <- select(final, .data$SITE, everything())
 
   return(final)
 }

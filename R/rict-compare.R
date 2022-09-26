@@ -106,19 +106,19 @@ rict_compare <- function(results_a = NULL, results_b = NULL) {
   comparisons <- lapply(split(results_a, results_a$`EQR Metrics`), function(eqr_metric) {
     # Special case handling - provide 'EQR' boundaries, labels and cap_eqr parameters
     # in preparation for compare_probability() function
-    if (grepl("minta", unique(eqr_metric$`EQR Metrics`), ignore.case = T)) {
+    if (grepl("minta", unique(eqr_metric$`EQR Metrics`), ignore.case = TRUE)) {
       eqr_bands <- 1:6 # Minta uses class not EQR boundaries
-      cap_eqrs <- F
+      cap_eqrs <- FALSE
       labels <- 1:5
     }
-    if (grepl("aspt", unique(eqr_metric$`EQR Metrics`), ignore.case = T)) {
+    if (grepl("aspt", unique(eqr_metric$`EQR Metrics`), ignore.case = TRUE)) {
       eqr_bands <- c(0, 0.59, 0.72, 0.86, 0.97, 1)
-      cap_eqrs <- T
+      cap_eqrs <- TRUE
       labels <- 5:1
     }
-    if (grepl("ntaxa", unique(eqr_metric$`EQR Metrics`), ignore.case = T)) {
+    if (grepl("ntaxa", unique(eqr_metric$`EQR Metrics`), ignore.case = TRUE)) {
       eqr_bands <- c(0, 0.47, 0.56, 0.68, 0.8, 1)
-      cap_eqrs <- T
+      cap_eqrs <- TRUE
       labels <- 5:1
     }
     # Loop through all unique results in 'a'

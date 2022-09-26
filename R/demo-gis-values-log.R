@@ -7,7 +7,7 @@ demo_gis_values_log <- utils::read.csv(system.file("extdat",
   package = "rict"
 ),
 check.names =
-  F
+  FALSE
 )
 #'
 #' @format A data frame with 12 rows and 18 variables:

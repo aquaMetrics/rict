@@ -30,5 +30,5 @@ rict_app <- function() {
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `rict`.", call. = FALSE)
   }
-  shiny::runApp(appDir, display.mode = "normal", launch.browser = T)
+  shiny::runApp(appDir, display.mode = "normal", launch.browser = TRUE)
 }

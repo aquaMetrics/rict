@@ -82,7 +82,7 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
   names(validation_rules$variable) <- toupper(validation_rules$variable)
 
   # Check data contains at least some required column names
-  if (dplyr::filter(validation_rules, variable %in% names(data)) %>% nrow() < 1) {
+  if (dplyr::filter(validation_rules, .data$variable %in% names(data)) %>% nrow() < 1) {
     stop("The data provided contains none of the required column names
           Hint: Double-check your data  contains correct column names. ", call. = FALSE)
   }
@@ -208,7 +208,7 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
   }
   ### Check columns that may or may not be provided -----------------------------------------
   if (model == "physical") {
-    if (all(!is.na(data$DISCHARGE)) &
+    if (all(!is.na(data$DISCHARGE)) &&
       all(!is.na(data$VELOCITY))) {
       warning("You provided both VELOCITY and DISCHARGE values,
           DISCHARGE will be used by default. ", call. = FALSE)
@@ -251,7 +251,7 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
     data$EASTING <- as.numeric(data$EASTING)
     data$NORTHING <- as.numeric(data$NORTHING)
     # Check for length <5, add a leading zeros "0" to get proper Easting/Northing 5 digit codes
-    if (any(is.na(data$EASTING)) | any(is.na(data$NORTHING))) {
+    if (any(is.na(data$EASTING)) || any(is.na(data$NORTHING))) {
       stop("EASTING or NORTHING value(s) have not been supplied, we expect
        all rows to have Easting and Northing values.
        Hint: Check all rows of input data have Easting and Northing values. ", call. = FALSE)
@@ -262,14 +262,14 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
   }
 
   # Calculate Longitude & Latitude
-  if (area == "gb" & model == "physical") {
+  if (area == "gb" && model == "physical") {
     # suppress warning: In showSRID(uprojargs, format = "PROJ", multiline = "NO"):
     # Discarded datum OSGB_1936 in CRS definition
     lat_long <- with(data, suppressWarnings(getLatLong(NGR, EASTING, NORTHING, "WGS84", area)))
     data$LONGITUDE <- lat_long$lon
     data$LATITUDE <- lat_long$lat
   }
-  if (area == "ni" & model == "physical") {
+  if (area == "ni" && model == "physical") {
     # suppress warning: In showSRID(uprojargs, format = "PROJ", multiline = "NO"):
     # Discarded datum OSGB_1936 in CRS definition
     lat_long <- with(data, suppressWarnings(getLatLong_NI(EASTING, NORTHING)))
@@ -297,8 +297,8 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
     }
     # Calculate mean temperature (TMEAN), range temperature (TRANGE) only if
     # users have not provided temperatures e.g. could be studying climate change etc...
-    if ((is.null(data$MEAN.AIR.TEMP) | is.null(data$AIR.TEMP.RANGE)) ||
-      (any(is.na(data$MEAN.AIR.TEMP)) | any(is.na(data$AIR.TEMP.RANGE)))) {
+    if ((is.null(data$MEAN.AIR.TEMP) || is.null(data$AIR.TEMP.RANGE)) ||
+      (any(is.na(data$MEAN.AIR.TEMP)) || any(is.na(data$AIR.TEMP.RANGE)))) {
       my_temperatures <- calcTemps(data.frame(
         Site_ID = as.character(data$SITE),
         Easting4 = bng$easting / 100,
@@ -545,7 +545,7 @@ These values will be used instead of calculating them from Grid Reference values
   this_failing <- checks[checks$FAIL != "---", ]
   # Subset the 'passing' instances to run in prediction by removing "this_failing"
   data <- data[!data$SITE %in% this_failing$SITE, ] # Note, can't use dplyr::anti_join() in ML AZURE
-  if (nrow(data) == 0 & stop_if_all_fail == TRUE) {
+  if (nrow(data) == 0 && stop_if_all_fail == TRUE) {
     stop("You provided data that has failure(s) on every row.
        We expect at least one row without any fails to proceed.
        HINT: Check fail messages, fix errors and re-try.", call. = FALSE)

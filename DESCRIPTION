@@ -20,35 +20,27 @@ LazyData: true
 Depends: 
  R (>= 3.1.0)
 Imports: 
- dplyr,
- purrr,
- magrittr,
- httr, 
- xml2, 
- xts, 
- rjson, 
- ggmap, 
- ggplot2, 
- sp,
- sf,
- readxl,
- rlang,
- gridExtra,
- shiny,
- DT,
- htmltools,
- leaflet,
- formattable,
- rgdal
+  dplyr,
+  DT,
+  htmltools,
+  leaflet,
+  magrittr,
+  purrr,
+  rlang,
+  sp,
+  sf,
+  shiny
 Suggests: 
-    testthat (>= 2.1.0),
-    knitr,
-    rmarkdown,
-    devtools,
-    covr,
-    tidyr,
-    png,
-    qpdf,
-    pkgdown
-RoxygenNote: 7.1.2
+  ggplot2, 
+  httr, 
+  knitr,
+  rmarkdown,
+  devtools,
+  covr,
+  testthat (>= 2.1.0),
+  tidyr,
+  tidyverse,
+  png,
+  pkgdown
+RoxygenNote: 7.2.1
 VignetteBuilder: knitr

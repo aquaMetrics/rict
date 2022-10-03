@@ -17,7 +17,7 @@
 #'
 #' @return vector made of two elements: the easting and northing (by default) or
 #' latitude and longitude coordinates.
-#'
+#' @importFrom sf st_transform as_Spatial st_as_sf
 #' @export
 #'
 #' @examples
@@ -110,11 +110,14 @@ osg_parse <- function(grid_refs, coord_system = c("BNG", "WGS84")) {
         "+init=epsg:",
         from
       ))
-      xy.new <- sp::spTransform(xy, sp::CRS(paste0(
+      xy <- st_as_sf(xy)
+      xy.new <- sf::st_transform(xy, sp::CRS(paste0(
         "+init=epsg:",
         to
       )))
+      xy.new <- as_Spatial(xy.new)
       as.data.frame(sp::coordinates(xy.new))
+
     }
     grouped <- split(df, f = df[, c("from", "to")])
     unsplit(lapply(grouped, .transform), f = df[, c(

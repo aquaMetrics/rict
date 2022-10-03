@@ -9,6 +9,7 @@ library(shiny)
 library(leaflet)
 library(rict)
 library(htmltools)
+library(DT)
 
 # Define UI for application
 
@@ -124,11 +125,11 @@ server <- function(input, output) {
       return(HTML('<h1 style="color:lightgrey;">Please choose .csv file...</h1></style>'))
     }
     # Create a Progress object
-    progress <- shiny::Progress$new()
+    progress <- Progress$new()
     # Make sure it closes when we exit this reactive, even if there's an error
     on.exit(progress$close())
     progress$set(message = "Calculating", value = 1)
-    data <- read.csv(inFile$datapath, check.names = F)
+    data <- read.csv(inFile$datapath, check.names = FALSE)
     validations <- rict_validate(data)
     predictions <- rict_predict(data)
     predictions_table <- predictions
@@ -144,14 +145,14 @@ server <- function(input, output) {
 
     taxa <- data.frame()
     if (!is.null(predictions) & any(input$include %in% "taxa")) {
-      taxa <- rict_predict(data, taxa = T, taxa_list = input$tl)
+      taxa <- rict_predict(data, taxa = TRUE, taxa_list = input$tl)
     }
     taxa_table <- taxa
 
 
     indices <- data.frame()
     if (!is.null(predictions) & any(input$include %in% "all_indices")) {
-      indices <- rict_predict(data, all_indices = T)
+      indices <- rict_predict(data, all_indices = TRUE)
     }
     indices_table <- indices
 
@@ -181,14 +182,13 @@ server <- function(input, output) {
       downloadButton("download_file", "Download Outputs")
     })
 
-    map <- leaflet(predictions) %>%
-      addTiles() %>%
-      addMarkers(~LONGITUDE, ~LATITUDE, popup = ~ htmlEscape(SITE))
-
+    map <- leaflet(predictions)
+    map <- addTiles(map)
+    map <- addMarkers(map, ~LONGITUDE, ~LATITUDE, popup = ~ htmlEscape(SITE))
     output$map <- renderLeaflet(map)
 
     if (nrow(validations$checks) != 0) {
-      validation <- list(h3("Validations"), DT::renderDataTable({
+      validation <- list(h3("Validations"), renderDataTable({
         validations$checks
       }))
     } else {
@@ -198,16 +198,16 @@ server <- function(input, output) {
     return(list(
       download_data,
       validation,
-      h3("Predictions"), DT::renderDataTable({
+      h3("Predictions"), renderDataTable({
         predictions_table
       }),
-      h3("Classification"), DT::renderDataTable({
+      h3("Classification"), renderDataTable({
         classification_table
       }),
-      h3("Taxa"), DT::renderDataTable({
+      h3("Taxa"), renderDataTable({
         taxa_table
       }),
-      h3("All Indices"), DT::renderDataTable({
+      h3("All Indices"), renderDataTable({
         indices_table
       })
     ))
@@ -220,18 +220,18 @@ server <- function(input, output) {
       return(HTML('<h1 style="color:lightgrey;">Please choose .csv file...</h1></style>'))
     }
 
-    progress <- shiny::Progress$new()
+    progress <- Progress$new()
     # Make sure it closes when we exit this reactive, even if there's an error
     on.exit(progress$close())
     progress$set(message = "Calculating", value = 1)
-    data_one <- read.csv(inFile_one$datapath, check.names = F)
-    data_two <- read.csv(inFile_two$datapath, check.names = F)
-    data_one <- rict(data_one, store_eqrs = T, year_type = input$year_type_compare)
-    data_two <- rict(data_two, store_eqrs = T, year_type = input$year_type_compare)
+    data_one <- read.csv(inFile_one$datapath, check.names = FALSE)
+    data_two <- read.csv(inFile_two$datapath, check.names = FALSE)
+    data_one <- rict(data_one, store_eqrs = TRUE, year_type = input$year_type_compare)
+    data_two <- rict(data_two, store_eqrs = TRUE, year_type = input$year_type_compare)
     compare <- rict_compare(results_a = data_one, results_b = data_two)
     compare <- compare
     return(list(
-      h3("Compare"), DT::renderDataTable({
+      h3("Compare"), renderDataTable({
         compare
       })
     ))

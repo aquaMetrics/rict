@@ -15,7 +15,10 @@ AVCALL <- function(ME1, ME2, MN1, MN2, KE, KN, air_temp_grid) {
   smean <- 0.000000
   srange <- 0.000000
   subsetATG <- NULL
-  subsetATG <- subset(air_temp_grid, Easting >= ME1 & Easting <= ME2 & Northing >= MN1 & Northing <= MN2)
+  subsetATG <- air_temp_grid[air_temp_grid$Easting >= ME1 &
+                             air_temp_grid$Easting <= ME2 &
+                             air_temp_grid$Northing >= MN1 &
+                             air_temp_grid$Northing <= MN2, ]
 
   subsetATG$D <- (subsetATG$Easting - (KE + 25))^2 + (subsetATG$Northing - (KN + 25))^2
 
@@ -78,13 +81,16 @@ calcTemps <- function(coordinates) {
     IREMN <- IGNORTH - KSQN
 
     # test if at a 5km-point or a vertical or horizontal between
-    if (IREME == 0 & IREMN == 0) { # 1
+    if (IREME == 0 && IREMN == 0) { # 1
       # print("if 1")
       ME1 <- KSQE
       ME2 <- ME1
       MN1 <- KSQN
       MN2 <- MN1
-      subsetATG1 <- subset(air_temp_grid, Easting >= ME1 & Easting <= ME2 & Northing >= MN1 & Northing <= MN2)
+      subsetATG1 <- air_temp_grid[air_temp_grid$Easting >= ME1 &
+                                  air_temp_grid$Easting <= ME2 &
+                                  air_temp_grid$Northing >= MN1 &
+                                  air_temp_grid$Northing <= MN2, ]
       NP <- nrow(subsetATG1)
       SMEAN <- subsetATG1$TEMPM
       SRANGE <- subsetATG1$TEMPR

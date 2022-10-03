@@ -8,7 +8,7 @@ compare_probability(
   a = NULL,
   b = NULL,
   eqr_bands = c(0, 0.2, 0.4, 0.6, 0.8, 1),
-  cap_eqrs = T,
+  cap_eqrs = TRUE,
   labels = 5:1
 )
 }

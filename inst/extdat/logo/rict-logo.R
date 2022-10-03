@@ -29,18 +29,18 @@ p <- ggplot(data = demo_observed_values, aes(x = SITE, y = `Sum_TL2_WHPT_ASPT (A
 
 sticker(p,
   package = "RICT", p_color = "#EEC900", p_size = 35, s_x = 1, s_y = 0.7, s_width = 1.2, s_height = 1,
-  h_color = "#EEC900", filename = "man/figures/rict_logo.png", white_around_sticker = T, l_x = 1, l_y = 0.8,
+  h_color = "#EEC900", filename = "man/figures/rict_logo.png", white_around_sticker = TRUE, l_x = 1, l_y = 0.8,
   spotlight = TRUE
 )
 
 sticker(p,
   package = "RICT", p_color = "#EEC900", p_size = 35, s_x = 1, s_y = 0.7, s_width = 1.2, s_height = 1,
-  h_color = "#EEC900", filename = "inst/extdat/images/rict_logo.png", white_around_sticker = T,
+  h_color = "#EEC900", filename = "inst/extdat/images/rict_logo.png", white_around_sticker = TRUE,
   l_x = 1, l_y = 0.8, spotlight = TRUE
 )
 
 sticker(p,
   package = "RICT", p_color = "#EEC900", p_size = 35, s_x = 1, s_y = 0.7, s_width = 1.2, s_height = 1,
-  h_color = "#EEC900", filename = "vignettes/images/rict_logo.png", white_around_sticker = T,
+  h_color = "#EEC900", filename = "vignettes/images/rict_logo.png", white_around_sticker = TRUE,
   l_x = 1, l_y = 0.8, spotlight = TRUE
 )

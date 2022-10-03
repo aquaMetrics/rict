@@ -6,9 +6,9 @@
 # supplied, else returns the input dataframe with the alkalinity provided.
 get_alkalinity <- function(data) {
   names(data) <- toupper(names(data))
-  if (all(is.na(data$HARDNESS)) &
-    all(is.na(data$CALCIUM)) &
-    all(is.na(data$CONDUCTIVITY)) &
+  if (all(is.na(data$HARDNESS)) &&
+    all(is.na(data$CALCIUM)) &&
+    all(is.na(data$CONDUCTIVITY)) &&
     all(is.na(data$ALKALINITY))
   ) {
     stop("You provided empty ALKALINITY, HARDNESS, CONDUCTIVITY and CALCIUM values,

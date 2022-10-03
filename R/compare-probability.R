@@ -27,11 +27,11 @@
 #' }
 compare_probability <- function(a = NULL, b = NULL,
                                 eqr_bands = c(0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
-                                cap_eqrs = T,
+                                cap_eqrs = TRUE,
                                 labels = 5:1) {
 
   # By default cap EQRs between 0-1
-  if (cap_eqrs == T) {
+  if (cap_eqrs == TRUE) {
     a <- sapply(a, function(eqr) {
       if (eqr < 0) {
         eqr <- 0
@@ -56,11 +56,11 @@ compare_probability <- function(a = NULL, b = NULL,
   # classificaiton function etc...but this is flexible for Minta classes etc
   Results_A <- data.frame(cut(a,
     breaks = eqr_bands, labels,
-    include.lowest = T, right = F
+    include.lowest = TRUE, right = FALSE
   ))
   Results_B <- data.frame(cut(b,
     breaks = eqr_bands, labels,
-    include.lowest = T, right = F
+    include.lowest = TRUE, right = FALSE
   ))
 
   # Need to factorise the results to create table
@@ -70,24 +70,24 @@ compare_probability <- function(a = NULL, b = NULL,
   Results_A <- cut(as.numeric(Results_A),
     breaks = c(0, 1, 2, 3, 4, 5),
     labels = c(1:5),
-    include.lowest = T
+    include.lowest = TRUE
   )
   Results_B <- cut(as.numeric(Results_B),
     breaks = c(0, 1, 2, 3, 4, 5),
     labels = c(1:5),
-    include.lowest = T
+    include.lowest = TRUE
   )
 
   # Cut EQRs into High to Bad status (for display purposes)
   results_a_class <- cut(as.numeric(Results_A),
     breaks = c(0, 1, 2, 3, 4, 5),
     labels = c("High", "Good", "Moderate", "Poor", "Bad"),
-    include.lowest = T
+    include.lowest = TRUE
   )
   results_b_class <- cut(as.numeric(Results_B),
     breaks = c(0, 1, 2, 3, 4, 5),
     labels = c("High", "Good", "Moderate", "Poor", "Bad"),
-    include.lowest = T
+    include.lowest = TRUE
   )
 
   # Create table for both class and status (for display purposes)
@@ -98,25 +98,25 @@ compare_probability <- function(a = NULL, b = NULL,
   prob_class_result_a <- as.integer(cut(which.max(table(Results_A)),
     breaks = c(0, 1, 2, 3, 4, 5),
     labels = 1:5,
-    include.lowest = T
+    include.lowest = TRUE
   ))
 
   prob_class_result_b <- as.integer(cut(which.max(table(Results_B)),
     breaks = c(0, 1, 2, 3, 4, 5),
     labels = 1:5,
-    include.lowest = T
+    include.lowest = TRUE
   ))
 
   # Calculate most probable status for A (for display purposes)
   prob_status_result_a <- cut(which.max(table(Results_A)),
     breaks = c(0, 1, 2, 3, 4, 5),
     labels = c("H", "G", "M", "P", "B"),
-    include.lowest = T
+    include.lowest = TRUE
   )
   prob_status_result_b <- cut(which.max(table(Results_B)),
     breaks = c(0, 1, 2, 3, 4, 5),
     labels = c("H", "G", "M", "P", "B"),
-    include.lowest = T
+    include.lowest = TRUE
   )
 
   # Format table
@@ -155,7 +155,7 @@ compare_probability <- function(a = NULL, b = NULL,
     "Probability B more than one class Better than A" =
       sum(table_prop$Freq[table_prop$Results_B < table_prop$Results_A - 1]),
 
-    check.names = F, stringsAsFactors = F
+    check.names = FALSE, stringsAsFactors = FALSE
   )
 
   # Label probablities with pretty names

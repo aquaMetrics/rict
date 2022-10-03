@@ -29,7 +29,7 @@ test_that("rict_predict for physical variables", {
     expected_predictions
   )
 
-  expect_true(equal == T)
+  expect_true(equal == TRUE)
 })
 
 test_that("end group means for GIS variables", {
@@ -40,12 +40,12 @@ test_that("end group means for GIS variables", {
   expected_predictions <- utils::read.csv(system.file("extdat",
     "expected-unadjusted-biotic-scores-model-44.csv",
     package = "rict"
-  ), check.names = F)
+  ), check.names = FALSE)
 
   expected_end_group <- utils::read.csv(system.file("extdat",
     "test-expected-end-group-model-44.csv",
     package = "rict"
-  ), check.names = F, header = F)
+  ), check.names = FALSE, header = FALSE)
   expected_end_group <- data.frame(t(expected_end_group))
   names(expected_end_group) <- paste0("p", 1:43)
 
@@ -68,7 +68,7 @@ test_that("end group means for GIS variables", {
     round(expected_predictions[, names(expected_predictions) %in% names(predictions)][2:5], 2)
   )
 
-  expect_true(equal == T)
+  expect_true(equal == TRUE)
 })
 
 
@@ -104,7 +104,7 @@ test_that("taxa predictions work GB", {
     utils::read.csv(system.file("extdat",
       "rict-gb-taxa-prediction.csv",
       package = "rict"
-    ), check.names = FALSE, stringsAsFactors = T)
+    ), check.names = FALSE, stringsAsFactors = TRUE)
 
   indices_prediction <- indices_prediction[, names(indices_prediction) %in% names(verified_predictions)]
   verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(indices_prediction)]
@@ -119,7 +119,7 @@ test_that("All indices predictions work NI", {
     utils::read.csv(system.file("extdat",
       "rict-ni-all-indices-predictions.csv",
       package = "rict"
-    ), check.names = FALSE, stringsAsFactors = T) # from tested Azure data
+    ), check.names = FALSE, stringsAsFactors = TRUE) # from tested Azure data
 
   indices_prediction <- indices_prediction[, names(indices_prediction) %in% names(verified_predictions)]
   verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(indices_prediction)]

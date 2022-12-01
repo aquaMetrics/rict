@@ -39,6 +39,8 @@
 #' @param stop_if_all_fail Boolean - if set to `FALSE` the validation function
 #'   will return empty dataframe for valid `data`. This is useful if you want to
 #'   run validation checks without stopping process.
+#' @param area Area is by detected by default from the NGR, but you can provide
+#'   the area parameter either 'iom', 'gb, 'ni' for testing purposes.
 #'
 #' @return List of dataframes and other parameters:
 #' \describe{
@@ -58,7 +60,10 @@
 #' \dontrun{
 #' validations <- rict_validate(demo_observed_values, row = TRUE)
 #' }
-rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
+rict_validate <- function(data = NULL,
+                          row = FALSE,
+                          stop_if_all_fail = TRUE,
+                          area = NULL) {
   ### Sense checks --------------------------------------------------------------------
   # Check data object provided
   if (is.null(data)) {
@@ -66,12 +71,18 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
        We expected 'data' with environmental values.", call. = FALSE)
   }
   # Check data object is a dataframe
-  if (class(data) != "data.frame") {
+  if (!any(class(data) %in% "data.frame")) {
     stop("You provided 'data' object with class '", class(data), "'.
        We expect 'data' to have class 'data.frame'
        Hint: Does your 'data' object contain your observed environmental
        values? ", call. = FALSE)
   }
+  # Ensure only data.frame class (could also be tibble, tbl etc at this point).
+  # Unique behaviour of data.frame required later (selecting single column will
+  # create a list not a data.frame)
+  data <- data.frame(data, check.names = FALSE)
+
+
   # Load validation rules
   validation_rules <-
     utils::read.csv(system.file("extdat", "validation-rules.csv", package = "rict"),
@@ -134,7 +145,7 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
   # Display which model type has been detected
   message("Variables for the '", model, "' model detected - applying relevant checks. ")
 
-  if (model == "physical") {
+  if (model == "physical" && is.null(area)) {
     ### Detect NI / GB grid references --------------------------------------------------------
     areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", toupper(data$NGR)), "gb", "ni"))
 
@@ -148,13 +159,15 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
       area <- areas
     }
   } else {
+    if(is.null(area)) {
     area <- "gb" # model 44 currently always "gb" but could change in future
+    }
   }
 
   # Display which model area has been detected
   message("Grid reference values detected for '", toupper(area), "' - applying relevant checks.")
 
-  # Re-assigning area due to issue with filtering column and variable sharing same name
+    # Re-assigning area due to issue with filtering column and variable sharing same name
   area_selected <- area
 
   ### Filter rules based on which model and area selected -------------------------------------------
@@ -177,7 +190,14 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
   data$SITE <- as.character(data$SITE)
   data$WATERBODY <- as.character(data$WATERBODY)
 
-  ### Check class of each column is correct --------------------------------------------
+  # If model GIS - then NGR easting and northing maybe not be provided. So only
+  # convert to character if present in data.
+  if (sum(names(data) %in% c("EASTING", "NORTHING")) == 2) {
+    # Convert to character as required by specification
+    data$EASTING <- as.character(data$EASTING)
+    data$NORTHING <- as.character(data$NORTHING)
+  }
+  ### Check class of each column is correct ------------------------------------
   # Loop through each 'variable' in rules dataframe
   fails <- lapply(
     split(
@@ -231,9 +251,6 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
   # If model GIS - then NGR easting and northing maybe not be provided. So only calculate
   # Easting and Northings for physical data.
   if (model == "physical") {
-    # Convert to character as required by specification
-    data$EASTING <- as.character(data$EASTING)
-    data$NORTHING <- as.character(data$NORTHING)
 
     # Check NGR length
     data$NGR <- as.character(data$NGR)

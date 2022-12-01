@@ -14,6 +14,8 @@
 #'   required - default is "multi".
 #' @param store_eqrs TRUE/FALSE if set to TRUE function will return simulate
 #'   EQRs.
+#' @param area Area is by detected by default from the NGR, but you can provide
+#'   the area parameter either 'iom', 'gb, 'ni' for testing purposes.
 #' @return Dataframe of classification results (and simulated EQRs if store_eqrs
 #'   = TRUE).
 #' @export
@@ -23,8 +25,10 @@
 #' \dontrun{
 #' results <- rict(demo_observed_values)
 #' }
-rict <- function(data = NULL, year_type = "multi", store_eqrs = FALSE) {
-  predictions <- rict_predict(data)
+rict <- function(data = NULL, year_type = "multi",
+                 store_eqrs = FALSE,
+                 area = NULL) {
+  predictions <- rict_predict(data, area = area)
   results <- rict_classify(predictions, year_type, store_eqrs = store_eqrs)
   return(results)
 }

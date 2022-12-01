@@ -18,9 +18,13 @@
 #' classifications <- rict_classify(predictions)
 #' }
 #'
-rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, n_runs = 10000) {
+rict_classify <- function(data = NULL,
+                          year_type = "multi",
+                          store_eqrs = FALSE,
+                          n_runs = 10000) {
   message("Classifying...")
-  # Create area variable to pass as parameter to classification functions (based on grid reference)
+  # Create area variable to pass as parameter to classification functions (based
+  # on grid reference)
   area <- unique(data$area)
   # arrange in fixed order so random set.seed is ap
   # data <- dplyr::arrange(data, SITE, YEAR)

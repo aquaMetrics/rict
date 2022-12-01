@@ -308,4 +308,12 @@ test_that("changes/formatting that shouldn't impact calculations", {
   test <- rict_validate(data, row = TRUE)
   checks_data <- merge(data, test$checks, by.x = "ROW", by.y = "ROW")
   expect_equal(nrow(checks_data), 4)
+  # data is tibble (if using readr package etc)
+  data <- rict::demo_observed_values
+  data <- tibble::tibble(data)
+  data <- data[1, ]
+  test <- rict_validate(data)
+  expect_equal(length(test), 4)
+  # iom area
+  test <- rict_validate(demo_iom_observed_values, area = "iom")
 })

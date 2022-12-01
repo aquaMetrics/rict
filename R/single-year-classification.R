@@ -12,6 +12,11 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   if (area == "ni") {
     gb685_assess_score <- utils::read.csv(system.file("extdat", "EndGrp_AssessScoresNI.csv", package = "rict"))
   }
+
+  if (area == "iom") {
+    gb685_assess_score <- utils::read.csv(system.file("extdat", "end-group-assess-scores-iom.csv", package = "rict"))
+
+  }
   # Enter source files
   # Use the column header as site names in the final output
   all_sites <- predictions[, 1]
@@ -49,6 +54,10 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
     prob_names <- paste0("p", 1:11)
   }
 
+  if (area == "iom") {
+    prob_names <- paste0("p", 1:5)
+  }
+
   all_probabilities <- predictions[, toupper(prob_names)] # Needs to change when not uppercase
   # Input Adjustment factors for reference site quality scores (Q1, Q2, Q3, Q4, Q5)
 
@@ -57,7 +66,8 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   # Create default bias value of 1.68 or 0 depending on area
   default_bias <- data.frame(
     "ni" = 0,
-    "gb" = 1.68
+    "gb" = 1.68,
+    "iom" = 1.68
   )
   # If user does not provide any bias value select default from values
   if (is.na(ubias_main) || ubias_main == -9) {

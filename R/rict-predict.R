@@ -49,12 +49,17 @@
 #'   \item{Limestone_O1_CEH}{}
 #'   \item{area}{ni or gb}
 #' }
-#' @param all_indices Boolean - Return all indices in output (default only returns WHPT indices).
+#' @param all_indices Boolean - Return all indices in output (default only
+#'   returns WHPT indices).
 #' @param taxa Boolean - Return taxa predictions (default  returns indices).
-#' @param taxa_list Vector of taxa lists to predict default all lists i.e. c("TL1", "TL2", "TL3", "TL4", "TL5").
-#' @param rows Number (integer) of rows (one site per row) to predict taxa. Default is all rows.
-#' @return Dataframe of predicted biotic scores and probability of observed values
-#' falling into each statistical grouping of rivers.
+#' @param taxa_list Vector of taxa lists to predict default all lists i.e.
+#'   c("TL1", "TL2", "TL3", "TL4", "TL5").
+#' @param rows Number (integer) of rows (one site per row) to predict taxa.
+#'   Default is all rows.
+#' @param area Area is by detected by default from the NGR, but you can provide
+#'   the area parameter either 'iom', 'gb, 'ni' for testing purposes.
+#' @return Dataframe of predicted biotic scores and probability of observed
+#'   values falling into each statistical grouping of rivers.
 #' @export
 #' @importFrom rlang .data
 #' @importFrom dplyr mutate n group_by filter
@@ -64,12 +69,15 @@
 #' \dontrun{
 #' predictions <- rict_predict(demo_observed_values)
 #' }
-rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
+rict_predict <- function(data = NULL,
+                         all_indices = FALSE,
+                         taxa = FALSE,
                          taxa_list = c("TL1", "TL2", "TL3", "TL4", "TL5"),
-                         rows = NULL) {
+                         rows = NULL,
+                         area = NULL) {
 
   # Validate predictive input data
-  all_validation <- rict_validate(data)
+  all_validation <- rict_validate(data, area = area)
   model <- all_validation[["model"]] # returns model based on input headers
   area <- all_validation[["area"]] # returns area based on NGR
   # Change all column names to uppercase
@@ -95,7 +103,26 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
   check.names = FALSE
   )
   end_group_index <- rename_end_group_means(end_group_index)
-  nr_efg_groups <- utils::read.csv(system.file("extdat", "end-grp-assess-scores.csv", package = "rict"))
+  if (area == "iom") {
+    end_group_index <- utils::read.csv(system.file("extdat",
+      "x-103-end-group-means-formatted-iom.csv",
+      package = "rict"
+    ),
+    check.names = FALSE
+    )
+
+    end_group_index$`TL2 33 Group ARMI NTaxa` <- NA
+    end_group_index$`TL2 33 Group ARMI Score` <- NA
+    end_group_index$`TL2 33 Group Flow  Silt NTaxa` <- NA
+    end_group_index$`TL2 33 Group Flow  Silt Score` <- NA
+
+    end_group_index <- rename_end_group_means(end_group_index)
+  }
+
+  nr_efg_groups <- utils::read.csv(system.file("extdat",
+    "end-grp-assess-scores.csv",
+    package = "rict"
+  ))
 
   if (model == "physical" && area == "gb") {
     df_mean_gb685 <-
@@ -115,11 +142,13 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
   }
   if (area == "ni") {
     df_mean_gb685 <-
-      utils::read.delim(system.file("extdat", "DFMEAN_NI_RALPH.DAT", package = "rict"),
+      utils::read.delim(system.file("extdat", "DFMEAN_NI_RALPH.DAT",
+        package = "rict"),
         header = FALSE, sep = "", as.is = TRUE
       )
     df_coeff_gb685 <-
-      utils::read.delim(system.file("extdat", "DFCOEFF_NI.DAT", package = "rict"),
+      utils::read.delim(system.file("extdat", "DFCOEFF_NI.DAT",
+                                    package = "rict"),
         header = FALSE, sep = "", as.is = TRUE
       )
     nr_efg_groups <-
@@ -130,7 +159,8 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
   if (model == "gis") {
     df_mean_gb685 <-
       utils::read.csv(
-        system.file("extdat", "end-group-means-discriminant-scores-model-44.csv",
+        system.file("extdat",
+                    "end-group-means-discriminant-scores-model-44.csv",
           package = "rict"
         )
       )
@@ -141,6 +171,23 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
           package = "rict"
         )
       )
+  }
+
+  if (area == "iom") {
+    df_mean_gb685 <-
+      utils::read.delim(system.file("extdat", "df-mean-iom.DAT",
+                                    package = "rict"),
+        header = FALSE, sep = "", as.is = TRUE
+      )
+    df_coeff_gb685 <-
+      utils::read.delim(system.file("extdat", "df-coeff-iom.DAT",
+                                    package = "rict"),
+        header = FALSE, sep = "", as.is = TRUE
+      )
+    nr_efg_groups <-
+      utils::read.csv(system.file("extdat", "end-group-assess-scores-iom.csv",
+        package = "rict"
+      ))
   }
 
   # check season provided
@@ -167,62 +214,74 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
     data$`TEST SITECODE` <- NULL
   }
 
-  # Final Data for classification e.g. Linear discriminant Analysis (LDA) classifier/predictor
+  # Final Data for classification e.g. Linear discriminant Analysis (LDA)
+  # classifier/predictor
   if (model == "physical" && area == "gb") {
     final_predictors <- data.frame(
-      "SITE"                      =  data$SITE,
-      "LATITUDE"                  =  data$LATITUDE,
-      "LONGITUDE"                 =  data$LONGITUDE,
-      "LOG.ALTITUDE"              =  data$vld_alt_src_log,
-      "LOG.DISTANCE.FROM.SOURCE"  =  data$vld_dist_src_log,
-      "LOG.WIDTH"                 =  data$mn_width_log,
-      "LOG.DEPTH"                 =  data$mn_depth_log,
-      "MEAN.SUBSTRATUM"           =  data$vld_substr_log,
-      "DISCHARGE.CATEGORY"        =  data$DISCHARGE, # data$disch_log,
-      "ALKALINITY"                =  data$ALKALINITY,
-      "LOG.ALKALINITY"            =  data$vld_alkal_log,
-      "LOG.SLOPE"                 =  data$vld_slope_log,
-      "MEAN.AIR.TEMP"             =  data$TEMPM,
-      "AIR.TEMP.RANGE"            =  data$TEMPR
+      "SITE" = data$SITE,
+      "LATITUDE" = data$LATITUDE,
+      "LONGITUDE" = data$LONGITUDE,
+      "LOG.ALTITUDE" = data$vld_alt_src_log,
+      "LOG.DISTANCE.FROM.SOURCE" = data$vld_dist_src_log,
+      "LOG.WIDTH" = data$mn_width_log,
+      "LOG.DEPTH" = data$mn_depth_log,
+      "MEAN.SUBSTRATUM" = data$vld_substr_log,
+      "DISCHARGE.CATEGORY" = data$DISCHARGE, # data$disch_log,
+      "ALKALINITY" = data$ALKALINITY,
+      "LOG.ALKALINITY" = data$vld_alkal_log,
+      "LOG.SLOPE" = data$vld_slope_log,
+      "MEAN.AIR.TEMP" = data$TEMPM,
+      "AIR.TEMP.RANGE" = data$TEMPR
     )
   }
+
+  if (area == "iom") {
+    final_predictors <- data.frame(
+      "SITE" = data$SITE,
+      "LOG.ALTITUDE" = data$vld_alt_src_log,
+      "LOG.DISTANCE.FROM.SOURCE" = data$vld_dist_src_log,
+      "LOG.ALKALINITY" = data$vld_alkal_log,
+      "LOG.SLOPE" = data$vld_slope_log
+    )
+  }
+
   if (area == "ni") {
     final_predictors <- data.frame(
-      "SITE"                     =  data$SITE,
-      "LATITUDE"                 =  data$LATITUDE,
-      "LONGITUDE"                =  data$LONGITUDE,
-      "LOG.ALTITUDE"             =  data$vld_alt_src_log,
-      "LOG.DISTANCE.FROM.SOURCE" =  data$vld_dist_src_log,
-      "LOG.WIDTH"                =  data$mn_width_log,
-      "LOG.DEPTH"                =  data$mn_depth_log,
-      "MEAN.SUBSTRATUM"          =  data$vld_substr_log,
-      "DISCHARGE.CATEGORY"       =  data$DISCHARGE, # data$disch_log,
-      "ALKALINITY"               =  data$ALKALINITY,
-      "LOG.ALKALINITY"           =  data$vld_alkal_log,
-      "LOG.SLOPE"                =  data$vld_slope_log
+      "SITE" = data$SITE,
+      "LATITUDE" = data$LATITUDE,
+      "LONGITUDE" = data$LONGITUDE,
+      "LOG.ALTITUDE" = data$vld_alt_src_log,
+      "LOG.DISTANCE.FROM.SOURCE" = data$vld_dist_src_log,
+      "LOG.WIDTH" = data$mn_width_log,
+      "LOG.DEPTH" = data$mn_depth_log,
+      "MEAN.SUBSTRATUM" = data$vld_substr_log,
+      "DISCHARGE.CATEGORY" = data$DISCHARGE, # data$disch_log,
+      "ALKALINITY" = data$ALKALINITY,
+      "LOG.ALKALINITY" = data$vld_alkal_log,
+      "LOG.SLOPE" = data$vld_slope_log
     )
   }
 
   if (model == "gis") {
     final_predictors <- data.frame(
-      "SITE"                     =  data$SITE,
-      "LATITUDE"                 =  data$LATITUDE,
-      "LONGITUDE"                =  data$LONGITUDE,
-      "TEMPM"                    =  data$TEMPM,
-      "TEMPR"                    =  data$TEMPR,
-      "ALKALINITY"               =  data$ALKALINITY,
-      "LgAlk"                    =  data$LgAlk,
-      "LgArea_CEH"               =  data$LOG_AREA,
-      "LgAltBar_CEH"             =  data$LOGALTBAR,
-      "LgAlt_CEH"                =  data$LgAlt_CEH,
-      "LgDFS_CEH"                =  data$LgDFS_CEH,
-      "LgSlope_CEH"              =  data$LgSlope_CEH,
-      "QCat_CEH"                 =  data$DISCH_CAT,
-      "Peat_CEH"                 =  data$PEAT,
-      "Chalk_O1_CEH"             =  data$CHALK,
-      "Clay_O1_CEH"              =  data$CLAY,
-      "Hardrock_O1_CEH"          =  data$HARDROCK,
-      "Limestone_O1_CEH"         =  data$LIMESTONE
+      "SITE" = data$SITE,
+      "LATITUDE" = data$LATITUDE,
+      "LONGITUDE" = data$LONGITUDE,
+      "TEMPM" = data$TEMPM,
+      "TEMPR" = data$TEMPR,
+      "ALKALINITY" = data$ALKALINITY,
+      "LgAlk" = data$LgAlk,
+      "LgArea_CEH" = data$LOG_AREA,
+      "LgAltBar_CEH" = data$LOGALTBAR,
+      "LgAlt_CEH" = data$LgAlt_CEH,
+      "LgDFS_CEH" = data$LgDFS_CEH,
+      "LgSlope_CEH" = data$LgSlope_CEH,
+      "QCat_CEH" = data$DISCH_CAT,
+      "Peat_CEH" = data$PEAT,
+      "Chalk_O1_CEH" = data$CHALK,
+      "Clay_O1_CEH" = data$CLAY,
+      "Hardrock_O1_CEH" = data$HARDROCK,
+      "Limestone_O1_CEH" = data$LIMESTONE
     )
     # browser("check lat/lon conversion using st_transform Vs parse_osg?
     #          - check this is the problem first?")
@@ -235,41 +294,36 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
   # Prediction Settings
   # 2. Find the df_scores of each row using one line of coefficients
   # Note: df_coeff_gb685[1,-1] # removes the first column
-  # NRefg equals number of reference sites in end group g , for GB = 685, for NI = 11
+  # NRefg equals number of reference sites in end group g , for GB = 685, for NI
+  # = 11
   NRefg_all <- rowSums(nr_efg_groups[, -1])
-  # #DFScore_g <- DFCoef1 * Env1 + ... + DFCoefn * Envn ; remove "SITE" col=1 from final_predictors,
-  # and  remove col=1 from df_coeff_gb685
+  # #DFScore_g <- DFCoef1 * Env1 + ... + DFCoefn * Envn ; remove "SITE" col=1
+  # from final_predictors, and  remove col=1 from df_coeff_gb685
   df_scores <- as.data.frame(getDFScores(
     EnvValues = final_predictors,
     DFCoeff = df_coeff_gb685
   ))
-  # Calculate the Mahanalobis disance of point x from site g for all reference sites
+  # Calculate the Mahanalobis distance of point x from site g for all reference
+  # sites
   MahDist_g <- getMahDist(DFscore = df_scores, meanvalues = df_mean_gb685)
 
-  if (area == "ni") {
-    DistNames <- c("p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", "p11")
-    MahDistNames <- gsub("p", "Mah", DistNames)
-    colnames(MahDist_g) <- MahDistNames
-  } else {
-    DistNames <- paste0("p", 1:43)
-    MahDistNames <- gsub("p", "Mah", DistNames)
-    colnames(MahDist_g) <- MahDistNames
-  }
+  # Make column names
+  DistNames <- paste0("p", seq_len(ncol(MahDist_g))) # reused later
+  MahDistNames <- gsub("p", "Mah", DistNames)
+  colnames(MahDist_g) <- MahDistNames
 
-  # Calculate the minimum Mahanalobis disance of point x from site g
+  # Calculate the minimum Mahanalobis distance of point x from site g
   MahDist_min <- getMahDist_min(df_scores, df_mean_gb685)
   # Calculate the probability distribution
   PDist_g <- PDist(NRefg_all, MahDist_g)
-  # Main dataframe needed:: Calculate probabilities of sites belonging to the endgroups,
-  # prob_g, l,as last column 44 contrains the total "PGdistTot
-  PDistTot <- as.data.frame(PDistTotal(PDist_g)) ## ALL probabilities p1..pn,  rowsums() add to 1,
-  # except when last row which it "total" is removed i.e. rowSums(PDistTot[,-ncol(PDistTot)])=1
-  # Rename the columns to probabilities p1,p2,...,p43
-  if (area == "ni") {
-    colnames(PDistTot) <- c("p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", "p11", "Total")
-  } else {
-    colnames(PDistTot) <- c(paste0("p", 1:43), "Total")
-  }
+  # Calculate probabilities of sites belonging to the endgroups, prob_g, l,as
+  # last column 44 contains the total "PGdistTot"
+  # ALL probabilities p1..pn,  rowsums() add to 1, except when last row which it
+  # "total" is removed i.e. rowSums(PDistTot[,-ncol(PDistTot)])=1
+  PDistTot <- as.data.frame(PDistTotal(PDist_g))
+  # Rename the columns to probabilities with "Total" at the end.
+  colnames(PDistTot) <- c(DistNames, "Total")
+
   final_predictors_try1 <- cbind(final_predictors, PDistTot[, -ncol(PDistTot)])
 
   # 3. Use chisquare to find suitability codes. Start for Britain GB, # Could
@@ -349,9 +403,11 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
         "Prob_Log1", "Prob_Log2", "Prob_Log3", "Prob_Log4", "Prob_Log5"
       )]
       names_measuredColumns <- names(measuredColumns)
-      site1$EndGrp_Probs <- EndGrpProb_Replacement(site1$EndGrp_Probs,
-                                                   final_predictors_try3,
-                                                   which(chooseSite == i))
+      site1$EndGrp_Probs <- EndGrpProb_Replacement(
+        site1$EndGrp_Probs,
+        final_predictors_try3,
+        which(chooseSite == i)
+      )
       b1 <- site1 %>%
         group_by(.data$Season_Code, .data$TL, .data$Furse_Code) %>%
         mutate(count = n(), mlist_endGrps = list(.data$EndGrp_Probs)) # `End Group`
@@ -369,11 +425,13 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
     # Remove the "End.Group" column
     taxa_predictions$End.Group <- NULL
     # Arrange the sites by siteName, TL, Season_Code, Furse_code
-    dplyr::arrange(taxa_predictions,
-                   .data$siteName,
-                   .data$TL,
-                   .data$Season_Code,
-                   .data$Furse_Code)
+    dplyr::arrange(
+      taxa_predictions,
+      .data$siteName,
+      .data$TL,
+      .data$Season_Code,
+      .data$Furse_Code
+    )
     return(taxa_predictions)
   }
 
@@ -386,7 +444,6 @@ rict_predict <- function(data = NULL, all_indices = FALSE, taxa = FALSE,
     DistNames = DistNames,
     all_indices = all_indices
   )
-
   # Append the biological data to the main output dataframe
   # Get all the bioligical data
   names_biological <- c(

@@ -111,11 +111,11 @@ getClassarray_aspt <- function(EQR_aspt) {
   return(EQR_aspt)
 }
 # Find the averages of both spr and autum, declare a function to compute this
-getAvgEQR_SprAut <- function(EQR_spr, EQR_aut, k, row_name = F) {
+getAvgEQR_SprAut <- function(EQR_spr, EQR_aut, k, row_name = FALSE) {
   eqr_av_spr <- colMeans(EQR_spr)
   eqr_av_aut <- colMeans(EQR_aut)
   eqr_av <- cbind(eqr_av_spr, eqr_av_aut)
-  if (row_name == T) {
+  if (row_name == TRUE) {
     rownames(eqr_av) <- c(paste0("TST-", k))
   }
   return(eqr_av)

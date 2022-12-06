@@ -45,7 +45,7 @@ compare_test <- function(a, b) {
         length(diff[diff <= 0]) / length(diff),
         length(diff[diff >= 0]) / length(diff)
       ),
-    check.names = F, stringsAsFactors = F
+    check.names = FALSE, stringsAsFactors = FALSE
   )
   return(compare)
 }

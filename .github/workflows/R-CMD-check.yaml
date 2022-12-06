@@ -29,9 +29,7 @@ jobs:
           - {os: macOS-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
           # Use older ubuntu to maximise backward compatibility
-          - {os: ubuntu-18.04,   r: 'devel', http-user-agent: 'release'}
-          - {os: ubuntu-18.04,   r: 'release'}
-          - {os: ubuntu-18.04,   r: 'oldrel-1'}
+          - {os: ubuntu-18.04,  r: 'release'}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -130,14 +128,14 @@ jobs:
         shell: Rscript {0}
 
       - name: Install rict
-        if: runner.os == 'Linux'
+        if: matrix.os == 'ubuntu-20.04'
         run: |
           devtools::install_github("aquaMetrics/rict")
         shell: Rscript {0}
 
                 # Connect on shinyapps server
       - name: Connect to ShinyApps
-        if: runner.os == 'Linux'
+        if: matrix.os == 'ubuntu-20.04'
         env:
           # set the shinyapps keys as environment variables
           SHINY_TOKEN: ${{ secrets.SHINYAPP_TOKEN }}
@@ -149,7 +147,7 @@ jobs:
         shell: Rscript {0}
         # deploy the app on shinyapps server
       - name: Deploy to shinyapps.io
-        if: runner.os == 'Linux'
+        if: matrix.os == 'ubuntu-20.04'
         run: |
           rsconnect::deployApp(appName = "rictapp", appDir = "inst/shiny_apps/rictapp")
         shell: Rscript {0}

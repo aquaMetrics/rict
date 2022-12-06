@@ -68,24 +68,20 @@ getSuitabilityCode <- function(minMahDist, suitCodes) {
     if (minMahDist[i, ncol(minMahDist)] < suitCodes[1, "CQ1"]) { # for GB, row = 1
       # print(c("Here in loop case 1, row =",i))
       suit_frame <- rbind(suit_frame, c(1, ">5%"))
-    } # endif
-    else { # Case 2
+    } else { # Case 2
       if ((suitCodes[1, "CQ1"] <= minMahDist[i, ncol(minMahDist)]) &
         (minMahDist[i, ncol(minMahDist)] < suitCodes[1, "CQ2"])) { # for GB, row = 1
         # print(c("Here in loop case 2, row =",i))
         suit_frame <- rbind(suit_frame, c(2, "<5%"))
-      } # endif
-      else { # Case 3
+      } else { # Case 3
         if ((suitCodes[1, "CQ2"] <= minMahDist[i, ncol(minMahDist)]) &
           (minMahDist[i, ncol(minMahDist)] < suitCodes[1, "CQ3"])) { # for GB, row = 1
           suit_frame <- rbind(suit_frame, c(3, "<2%"))
-        } # endif
-        else { # Case 4
+        } else { # Case 4
           if ((suitCodes[1, "CQ3"] <= minMahDist[i, ncol(minMahDist)]) &
             (minMahDist[i, ncol(minMahDist)] < suitCodes[1, "CQ4"])) { # for GB, row = 1
             suit_frame <- rbind(suit_frame, c(4, "<1%"))
-          } # endif
-          else { # last case - no need for "if"
+          } else { # last case - no need for "if"
             if (minMahDist[i, ncol(minMahDist)] >= suitCodes[1, "CQ4"]) {
               suit_frame <- rbind(suit_frame, c(5, "<0.1%"))
             }
@@ -221,6 +217,7 @@ groupSitesFunction <- function(allSites, k, siteindex, b1) {
 
 # getSeasonIndexScores: Calculate predictions of probability scores for indices WHPT, given season ids,
 # whpt values. Use "getProbScores()"
+#' @importFrom rlang .data
 getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id,
                                  end_group_IndexDFrame, DistNames, all_indices) {
   # variables for storing Spring results
@@ -234,7 +231,10 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id,
   if (all_indices == TRUE) {
     predictions <- purrr::map_df(c(1, 2, 3), function(season) {
       end_groups <- end_groups[end_groups$SeasonCode == season, ]
-      end_groups <- as.matrix(dplyr::select(end_groups, -EndGrp, -SeasonCode, -Season))
+      end_groups <- as.matrix(dplyr::select(end_groups,
+                                            -.data$EndGrp,
+                                            -.data$SeasonCode,
+                                            -.data$Season))
       end_groups <- end_groups[seq_len(length(DistNames)), ]
       probabilities <- as.matrix(data_to_bindTo[, DistNames])
       all <- as.matrix(probabilities) %*% as.matrix(end_groups)

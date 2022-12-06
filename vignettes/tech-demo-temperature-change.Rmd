@@ -53,9 +53,9 @@ Here we add the `MEAN.AIR.TEMP` and `AIR.TEMP.RANGE` reference values from our p
 
 ```{r}
 demo_observed_values <- cbind(rict::demo_observed_values,
-              "MEAN.AIR.TEMP" = predictions$MEAN.AIR.TEMP,
-             "AIR.TEMP.RANGE" = predictions$AIR.TEMP.RANGE)
-
+  "MEAN.AIR.TEMP" = predictions$MEAN.AIR.TEMP,
+  "AIR.TEMP.RANGE" = predictions$AIR.TEMP.RANGE
+)
 ```
 
 ### Temperature Increments
@@ -74,15 +74,15 @@ Here’s the big function: Loop through temperature increases and run classifica
 ```{r, message=FALSE, warning=FALSE, include=FALSE}
 ### Because prediction function creates messages which can't be suppressed, this
 ### section not displayed in document but is evalulated.b
-modelled_temperatures <- map_df(temperature_increments, function(increment){
+modelled_temperatures <- map_df(temperature_increments, function(increment) {
   demo_observed_values$MEAN.AIR.TEMP <- demo_observed_values$MEAN.AIR.TEMP + increment
   demo_observed_values$AIR.TEMP.RANGE <- demo_observed_values$AIR.TEMP.RANGE + increment
   predict_modelled <- rict_predict(demo_observed_values)
   classify_modelled <- rict_classify(predict_modelled, year_type = "single")
   modelled <- inner_join(predict_modelled, classify_modelled, by = c("SITE", "YEAR", "WATERBODY"))
   # Add temperature increase column so we know which results match which temperature increment
-  modelled$TEMP.INCREASE <- increment 
-  modelled$SITE  <- as.character(modelled$SITE)
+  modelled$TEMP.INCREASE <- increment
+  modelled$SITE <- as.character(modelled$SITE)
   return(modelled)
 })
 
@@ -92,15 +92,15 @@ modelled_data <- modelled_temperatures %>%
 ```
 
 ```{r, eval=FALSE}
-modelled_temperatures <- map_df(temperature_increments, function(increment){
+modelled_temperatures <- map_df(temperature_increments, function(increment) {
   demo_observed_values$MEAN.AIR.TEMP <- demo_observed_values$MEAN.AIR.TEMP + increment
   demo_observed_values$AIR.TEMP.RANGE <- demo_observed_values$AIR.TEMP.RANGE + increment
   predict_modelled <- rict_predict(demo_observed_values)
-  classify_modelled <- rict_classify(predict_modelled, year_type = "single")0
+  classify_modelled <- rict_classify(predict_modelled, year_type = "single")
   modelled <- inner_join(predict_modelled, classify_modelled, by = c("SITE", "YEAR", "WATERBODY"))
   # Add temperature increase column so we know which results match which temperature increment
-  modelled$TEMP.INCREASE <- increment 
-  modelled$SITE  <- as.character(modelled$SITE)
+  modelled$TEMP.INCREASE <- increment
+  modelled$SITE <- as.character(modelled$SITE)
   return(modelled)
 })
 
@@ -123,7 +123,7 @@ For a deep-dive into iteration/loops and `map_df` type functions, see this [guid
 Now we have the classification and predictions in a single dataframe, we can review the results of our temperature simulation. We can plot the average ASPT Spring and Autumn classification EQRs (`ASPT_aver_spr_aut`) by each temperature increase. Note, the higher the EQR value the 'better' the ecological status of the site. 
 
 ```{r, message=FALSE}
-ggplot(modelled_data, aes(x = TEMP.INCREASE, y  = ASPT_aver_spr_aut, color = SITE)) +
+ggplot(modelled_data, aes(x = TEMP.INCREASE, y = ASPT_aver_spr_aut, color = SITE)) +
   geom_line()
 ```
 
@@ -136,8 +136,8 @@ Can we really expect increasing temperature to affect EQRs in this way? Are thes
 Here we select the suitability code and temperature increment to see how the confidence in the input data suitability changes as temperature increases:
 
 ```{r}
-select(modelled_data, SITE, TEMP.INCREASE, SuitCode) %>% 
-  arrange(TEMP.INCREASE) %>% 
+select(modelled_data, SITE, TEMP.INCREASE, SuitCode) %>%
+  arrange(TEMP.INCREASE) %>%
   head(32) # return the first 32 rows only
 ```
 
@@ -154,4 +154,3 @@ Although this example has no conclusive results, hopefully it shows how input da
  
  
  
-

@@ -5,7 +5,7 @@ test_that("Outputs match azure single-year outputs", {
     "validation-input-single-year.csv",
     package = "rict"
   ),
-  check.names = F, stringsAsFactors = F
+  check.names = FALSE, stringsAsFactors = FALSE
   )
   data <- data[1, ] # only one year required
   test_validation_func <- rict:::rict_validate(data)
@@ -27,13 +27,13 @@ test_that("Outputs match azure single-year outputs", {
     classification$mintawhpt_spr_aut_mostProb,
     azure_classification$mintawhpt_spr_aut_mostProb[1]
   )
-  expect_true(equal == T)
+  expect_true(equal == TRUE)
 
   equal <- all.equal(
     round(classification$NTAXA_eqr_av_spr, 2),
     round(azure_classification$NTAXA_eqr_av_spr[1], 2)
   )
-  expect_true(equal == T)
+  expect_true(equal == TRUE)
 })
 
 ### ---------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ test_that("Outputs match azure NI single-year outputs", {
     "validation-classification-ni-single-year.csv",
     package = "rict"
   ),
-  check.names = F, stringsAsFactors = F
+  check.names = FALSE, stringsAsFactors = FALSE
   )
 
   classification$mintawhpt_spr_aut_mostProb <-
@@ -61,19 +61,19 @@ test_that("Outputs match azure NI single-year outputs", {
     classification$mintawhpt_spr_aut_mostProb[4:21],
     azure_classification$mintawhpt_spr_aut_mostProb[4:21]
   )
-  expect_true(equal == T)
+  expect_true(equal == TRUE)
   # Check spr NTAXA equal (EQR different but by luck no changes in class caused but set.seed change)
   equal <- all.equal(
     as.character(classification$mostProb_NTAXA_spr[4:21]),
     as.character(azure_classification$mostProb_NTAXA_spr[4:21])
   )
-  expect_true(equal == T)
+  expect_true(equal == TRUE)
   # Check spr ASPT  ### (not all the same) - broken because some changes to set.seed/randomness: -----
   equal <- all.equal(
     as.character(classification$mostProb_ASPT_spr[c(7, 8, 9, 12, 13, 14, 15)]),
     as.character(azure_classification$mostProb_ASPT_spr[c(7, 8, 9, 12, 13, 14, 15)])
   )
-  expect_true(equal == T)
+  expect_true(equal == TRUE)
 })
 
 ### -----------------------------------------------------------------------------------------
@@ -200,7 +200,7 @@ test_that("GIS variables classification against Ralph's output", {
     results,
     results_two
   )
-  expect_true(equal == T)
+  expect_true(equal == TRUE)
   # remove non-required  predictions variables
   predictions <- select(predictions, -starts_with("p"))
   # need both predictions and classificatoin outputs to fully check classification
@@ -214,7 +214,7 @@ test_that("GIS variables classification against Ralph's output", {
     "test-sites-gb-model-44-classification-draft.csv",
     package = "rict"
   ),
-  check.names = F, stringsAsFactors = F
+  check.names = FALSE, stringsAsFactors = FALSE
   )
 
   # filter only things that match
@@ -231,8 +231,8 @@ test_that("GIS variables classification against Ralph's output", {
   test_data <- test_data %>% pivot_longer(-SITE, names_to = "SITES", values_to = "count")
   test_data <- test_data %>% pivot_wider(names_from = SITE, values_from = "count")
   # check differences!
-  test_data <- type.convert(test_data)
-  output <- type.convert(output)
+  test_data <- type.convert(test_data, as.is = TRUE)
+  output <- type.convert(output, as.is = TRUE)
   test <- data.frame(select_if(test_data, is.numeric))
   test2 <- data.frame(select_if(output, is.numeric))
 
@@ -297,7 +297,7 @@ test_that("Single year: Summer only", {
   verfied_classification <- utils::read.csv(system.file("extdat",
     "rict-summer-single-year-gb.csv",
     package = "rict"
-  ), check.names = F)
+  ), check.names = FALSE)
 
   expect_equal(
     sum(as.numeric(as.character(classification$H_NTAXA_sum))) -
@@ -320,7 +320,7 @@ test_that("Test single row of multi-year input works", {
   single_row_test <- utils::read.csv(system.file("extdat",
     "test-data-single-site-multi-year.csv",
     package = "rict"
-  ), check.names = F)
+  ), check.names = FALSE)
   # Run data through multi-year classification and check output is created for all sites
   sites <- unique(single_row_test$SITE)
   check <- rict(single_row_test)
@@ -338,13 +338,13 @@ test_that("NI classification", {
   verfied_classification <- utils::read.csv(system.file("extdat",
     "validation-classification-ni-single-year.csv",
     package = "rict"
-  ), check.names = F)
+  ), check.names = FALSE)
 
   classification <- classification[, names(classification) %in% names(verfied_classification)]
   verfied_classification <- verfied_classification[, names(verfied_classification) %in% names(classification)]
 
-  classification <- type.convert(classification)
-  verfied_classification <- type.convert(verfied_classification)
+  classification <- type.convert(classification, as.is = TRUE)
+  verfied_classification <- type.convert(verfied_classification, as.is = TRUE)
   # Not exact match because of difference in randomness due to global set.seed implementation
   # the single-year classification loops through all seasons in the package (including summer)
   # which means the set.seed is slightly different after looping through summer etc

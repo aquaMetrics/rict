@@ -12,7 +12,7 @@ test_that("rict_compare matches test data", {
       "test-data-model-1.csv",
       package = "rict"
     ),
-    check.names = F
+    check.names = FALSE
   )
 
   # Test dataset
@@ -21,21 +21,21 @@ test_that("rict_compare matches test data", {
       "test-rict-compare.csv",
       package = "rict"
     ),
-    check.names = F
+    check.names = FALSE
   )
 
-  a <- rict(test_data[1:2, ], year_type = "single", store_eqrs = T)
-  b <- rict(test_data[13:14, ], year_type = "single", store_eqrs = T)
+  a <- rict(test_data[1:2, ], year_type = "single", store_eqrs = TRUE)
+  b <- rict(test_data[13:14, ], year_type = "single", store_eqrs = TRUE)
   test <- rict_compare(a, b)
 
   test_rict_compare <-
     test_rict_compare[test_rict_compare$`Result A` %in% test$`Result A`, 2:45]
 
-  test <- type.convert(test)
+  test <- type.convert(test, as.is = TRUE)
   # remove summer values (weren't in original test dataset)
   test <- test[!seq_len(nrow(test)) %in% grep("SUM", test$`EQR metric compared`), ]
 
-  test_rict_compare <- type.convert(test_rict_compare)
+  test_rict_compare <- type.convert(test_rict_compare, as.is = TRUE)
 
   expect_equal(
     round(sum(dplyr::select_if(test, is.numeric) - dplyr::select_if(test_rict_compare, is.numeric), na.rm = TRUE), 3),

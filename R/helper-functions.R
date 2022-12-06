@@ -11,11 +11,16 @@ get_alkalinity <- function(data) {
     all(is.na(data$CONDUCTIVITY)) &
     all(is.na(data$ALKALINITY))
   ) {
-    stop("You provided empty ALKALINITY, HARDNESS, CONDUCTIVITY and CALCIUM values,
+    stop(
+    "You provided empty ALKALINITY, HARDNESS, CONDUCTIVITY and CALCIUM values,
        we expect values for at least one of these variables. ", call. = FALSE)
   } else { # loop through rows and calculate Alkalinity
-
-    alkalinity <- lapply(split(data, paste(data$SITE, data$YEAR)), function(data_row) {
+    alkalinity <- lapply(split(data, paste(data$SITE, data$YEAR)),
+                         function(data_row) {
+      if (!any(is.null(data_row$ALKALINITY)) &&
+          !any(is.na(data_row$ALKALINITY))) {
+        # Use alkalinity value provided
+      } else
       if (!any(is.null(data_row$HARDNESS)) && !any(is.na(data_row$HARDNESS))) {
         data_row$ALKALINITY <- 4.677 + 0.6393 * data_row$HARDNESS
         message(paste0(
@@ -30,7 +35,8 @@ get_alkalinity <- function(data) {
           data_row$SITE, " - ", data_row$YEAR, ". "
         ))
       } else
-      if (!any(is.null(data_row$CONDUCTIVITY)) && !any(is.na(data_row$CONDUCTIVITY))) {
+      if (!any(is.null(data_row$CONDUCTIVITY)) &&
+          !any(is.na(data_row$CONDUCTIVITY))) {
         data_row$ALKALINITY <- 0.3201 * data_row$CONDUCTIVITY - 8.0593
         message(paste0(
           "Using Conductivity value to calculate Alkalinity at ",
@@ -40,7 +46,8 @@ get_alkalinity <- function(data) {
       return(data_row)
     })
     alkalinity <- dplyr::bind_rows(alkalinity)
-    # Keep order and row.names the same as original input data for consistent output
+    # Keep order and row.names the same as original input data for consistent
+    # output
     data <- alkalinity[order(match(alkalinity[, "SITE"], data[, "SITE"])), ]
     row.names(data) <- seq_len(nrow(data))
   }

@@ -50,24 +50,20 @@ ui <- tagList(
           )
         ),
         checkboxGroupInput(
-          "include", "Include",
+          "options", "Options",
           c(
-            "Don't include taxa or predictions" = "none",
-            "Include Taxa Prediction" = "taxa",
-            "All Indices" = "all_indices"
+            "Predict All Indices" = "all_indices"
           ),
-          selected = "none"
         ),
         checkboxGroupInput(
-          "tl", "Taxa Lists",
+          "tl", "Predict Taxa Lists",
           c(
             "TL1" = "TL1",
             "TL2" = "TL2",
             "TL3" = "TL3",
             "TL4" = "TL4",
             "TL5" = "TL5"
-          ),
-          selected = "TL2"
+          )
         )
       ),
       # Show tables
@@ -133,6 +129,34 @@ server <- function(input, output) {
     validations <- rict_validate(data)
     predictions <- rict_predict(data)
     predictions_table <- predictions
+    # don't need to display all columns - some columns only used by some models
+    predictions_table <- dplyr::select(
+      predictions_table,
+      -dplyr::contains("LATITUDE"),
+      -dplyr::contains("LONGITUDE"),
+      -dplyr::contains("LOG.ALTITUDE"),
+      -dplyr::contains("LOG.DISTANCE.FROM.SOURCE"),
+      -dplyr::contains("LOG.WIDTH"),
+      -dplyr::contains("LOG.DEPTH"),
+      -dplyr::contains("MEAN.SUBSTRATUM"),
+      -dplyr::contains("DISCHARGE.CATEGORY"),
+      -dplyr::contains("ALKALINITY"),
+      -dplyr::contains("LOG.ALKALINITY"),
+      -dplyr::contains("LOG.SLOPE"),
+      -dplyr::contains("MEAN.AIR.TEMP"),
+      -dplyr::contains("AIR.TEMP.RANGE"),
+      -SuitCode,
+      -dplyr::contains("belongs_to_end_grp"),
+      -dplyr::starts_with("p")
+    )
+    predictions_table <- dplyr::mutate(
+      predictions_table,
+      dplyr::across(
+        where(is.numeric),
+        round, 2
+      )
+    )
+
     output_files <- list(predictions)
     results <- data.frame()
     if (!is.null(predictions) & input$output == "predict_classify") {
@@ -141,23 +165,54 @@ server <- function(input, output) {
       )
     }
     classification_table <- results
-
+    classification_table <- dplyr::mutate(
+      classification_table,
+      dplyr::across(
+        where(is.numeric),
+        round, 2
+      )
+    )
 
     taxa <- data.frame()
-    if (!is.null(predictions) & any(input$include %in% "taxa")) {
-      taxa <- rict_predict(data, taxa = TRUE, taxa_list = input$tl)
-    }
     taxa_table <- taxa
+    if (!is.null(predictions) & !is.null(input$tl)) {
+      taxa <- rict_predict(data, taxa = TRUE, taxa_list = input$tl)
+      taxa$Season_Code <- as.numeric(taxa$Season_Code)
+      taxa_table <- dplyr::arrange(taxa, NBN_Name, Season_Code)
+      taxa_table <- dplyr::select(
+        taxa_table,
+        siteName,
+        TL,
+        Season_Code,
+        NBN_Name,
+        NBN_Code,
+        Average_Numerical_Abundance,
+        Prob_Occurrence
+      )
+    }
 
 
     indices <- data.frame()
-    if (!is.null(predictions) & any(input$include %in% "all_indices")) {
-      indices <- rict_predict(data, all_indices = TRUE)
-    }
+    if (!is.null(predictions) & any(input$options %in% "all_indices")) {
+      indices <- rict_predict(data, all_indices = T)
+
+}
     indices_table <- indices
 
-    output_files <- list(predictions, results, taxa, indices)
-    names(output_files) <- c("predictions", "classification", "taxa", "indices")
+    output_files <- list(
+      predictions,
+      results,
+      taxa,
+      indices,
+      validations$checks
+    )
+    names(output_files) <- c(
+      "predictions",
+      "classification",
+      "taxa",
+      "indices",
+      "validations"
+    )
 
     output$download_file <- downloadHandler(
       filename = function() {
@@ -198,18 +253,30 @@ server <- function(input, output) {
     return(list(
       download_data,
       validation,
-      h3("Predictions"), renderDataTable({
-        predictions_table
-      }),
-      h3("Classification"), renderDataTable({
-        classification_table
-      }),
-      h3("Taxa"), renderDataTable({
-        taxa_table
-      }),
-      h3("All Indices"), renderDataTable({
-        indices_table
-      })
+      h3("Predictions"), DT::renderDataTable(
+        {
+          predictions_table
+        },
+        rownames = FALSE
+      ),
+      h3("Classification"), DT::renderDataTable(
+        {
+          classification_table
+        },
+        rownames = FALSE
+      ),
+      h3("Taxa"), DT::renderDataTable(
+        {
+          taxa_table
+        },
+        rownames = FALSE
+      ),
+      h3("All Indices"), DT::renderDataTable(
+        {
+          indices_table
+        },
+        rownames = FALSE
+      )
     ))
   })
 

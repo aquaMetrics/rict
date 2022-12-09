@@ -21,7 +21,7 @@ ui <- tagList(
     tabPanel(
       "Predict & Classify",
       sidebarPanel(
-        h4("This app is a work in progress -
+        h4("This app is in development -
                       use the following for official uses: "),
         a("Azure Experiments",
           href = "https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/RICT%20Application.aspx"

@@ -4,7 +4,9 @@ test_that("rict_compare matches test data", {
     version <- "3.4.4"
   }
   skip_if(version == "3.4.4",
-    message = "Due to type.convert function not working on data.frames in R version <3.6 skip this test"
+    message =
+      "Due to type.convert function not working on data.frames in
+    R version <3.6 skip this test"
   )
   # Test dataset
   test_data <- utils::read.csv(
@@ -33,17 +35,21 @@ test_that("rict_compare matches test data", {
 
   test <- type.convert(test, as.is = TRUE)
   # remove summer values (weren't in original test dataset)
-  test <- test[!seq_len(nrow(test)) %in% grep("SUM", test$`EQR metric compared`), ]
+  test <- test[!seq_len(nrow(test)) %in%
+                 grep("SUM", test$`EQR metric compared`), ]
 
   test_rict_compare <- type.convert(test_rict_compare, as.is = TRUE)
 
   expect_equal(
-    round(sum(dplyr::select_if(test, is.numeric) - dplyr::select_if(test_rict_compare, is.numeric), na.rm = TRUE), 3),
+    round(
+      sum(dplyr::select_if(test, is.numeric) - dplyr::select_if(test_rict_compare, is.numeric)
+          , na.rm = TRUE), 3),
     -24.273 # -8.461
   )
 
   expect_equal(
-    test$`Most Probable Class for Result A`, test_rict_compare$`Most Probable Class for Result A`
+    test$`Most Probable Class for Result A`,
+    test_rict_compare$`Most Probable Class for Result A`
   )
 })
 

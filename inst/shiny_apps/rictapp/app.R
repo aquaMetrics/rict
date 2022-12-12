@@ -296,6 +296,8 @@ server <- function(input, output) {
     data_one <- rict(data_one, store_eqrs = TRUE, year_type = input$year_type_compare)
     data_two <- rict(data_two, store_eqrs = TRUE, year_type = input$year_type_compare)
     compare <- rict_compare(results_a = data_one, results_b = data_two)
+    data_one <- NULL
+    data_two <- NULL
     compare <- compare
     return(list(
       h3("Compare"), renderDataTable({

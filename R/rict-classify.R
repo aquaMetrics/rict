@@ -94,6 +94,7 @@ rict_classify <- function(data = NULL,
     }
 
     # Input Multiplicative Adjustment factors adjusted_params, 1,..,5)
+    if(area != "iom") {
     adjusted_params <- as.matrix(adjusted_params)
     qij <- computeScoreProportions(gb685_assess_score[, -1]) # Remove the first Column
 
@@ -108,6 +109,7 @@ rict_classify <- function(data = NULL,
 
     # Write a function that computes aspt, ntaxa adjusted (1 = "NTAXA", 2="ASPT")
     # or select them by name as declared in the classification functions
+
     ntaxa_adjusted <- dplyr::select(data, dplyr::contains("_NTAXA_")) / rjaj[, "NTAXA"]
     # Compute AdjExpected as E=data/Sum(rj*adjusted_params)
     aspt_adjusted <- dplyr::select(data, dplyr::contains("_ASPT_")) / rjaj[, "ASPT"]
@@ -115,7 +117,11 @@ rict_classify <- function(data = NULL,
     adjusted_expected <- cbind(ntaxa_adjusted, aspt_adjusted)
     # Include site names from data
     adjusted_expected_new <- cbind(as.data.frame(all_sites), adjusted_expected)
-
+    } else {
+      browser()
+      ntaxa_adjusted <- dplyr::select(data, dplyr::contains("_NTAXA_"))
+      aspt_adjusted <- dplyr::select(data, dplyr::contains("_ASPT_"))
+    }
     # OBSERVED ASPT
     obs_aspt_spr <- biological_data[, "SPR_TL2_WHPT_ASPT (ABW,DISTFAM)"]
     obs_aspt_aut <- biological_data[, "AUT_TL2_WHPT_ASPT (ABW,DISTFAM)"]

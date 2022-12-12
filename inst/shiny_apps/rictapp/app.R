@@ -17,7 +17,7 @@ ui <- tagList(
   #  shinythemes::themeSelector(),
   navbarPage(
     # theme = "cerulean",  # <--- To use a theme, uncomment this
-    "RICT",
+    paste("RICT", packageVersion("rict")),
     tabPanel(
       "Predict & Classify",
       sidebarPanel(
@@ -46,9 +46,9 @@ ui <- tagList(
           )
         ),
         checkboxGroupInput(
-          "options", "Predictions",
+          "options", "All Indices",
           c(
-            "Include All Indices" = "all_indices"
+            "Include" = "all_indices"
           ),
         ),
         checkboxGroupInput(
@@ -397,8 +397,19 @@ server <- function(input, output) {
       downloadButton("download_file", "Download Outputs")
     })
 
+    if (nrow(validations) != 0) {
+      validation <- list(h3("Validations"), renderDataTable({
+        validations
+      }))
+    } else {
+      validation <- HTML(
+        '<h3>Validation</h3><h4 style="color:lightgray;">All input data valid</h1></style>'
+      )
+    }
+
     return(list(
       download_data,
+      validation,
       h3("Compare"), renderDataTable({
         compare
       })

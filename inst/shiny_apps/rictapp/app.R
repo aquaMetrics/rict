@@ -21,11 +21,7 @@ ui <- tagList(
     tabPanel(
       "Predict & Classify",
       sidebarPanel(
-        h4("This app is in development -
-                      use the following for official uses: "),
-        a("Azure Experiments",
-          href = "https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/RICT%20Application.aspx"
-        ),
+        h4("This app is in TESTING"),
         p(),
         fileInput("dataset", "Choose CSV input file",
           accept = c(
@@ -50,9 +46,9 @@ ui <- tagList(
           )
         ),
         checkboxGroupInput(
-          "options", "Options",
+          "options", "Predictions",
           c(
-            "Predict All Indices" = "all_indices"
+            "Include All Indices" = "all_indices"
           ),
         ),
         checkboxGroupInput(
@@ -68,6 +64,7 @@ ui <- tagList(
       ),
       # Show tables
       mainPanel(
+        htmlOutput("messsage"),
         leafletOutput("map"),
         p(),
         htmlOutput("tables")
@@ -76,11 +73,7 @@ ui <- tagList(
     tabPanel(
       "Compare",
       sidebarPanel(
-        h4("This app is a work in progress -
-                      use the following for official uses: "),
-        a("Azure Experiments",
-          href = "https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/RICT%20Application.aspx"
-        ),
+        h4("This app is in TESTING"),
         p(),
         fileInput("dataset_one", "Choose CSV input file 1",
           accept = c(
@@ -113,12 +106,22 @@ ui <- tagList(
   )
 )
 
-# Define server logic ------------------------------------------------------------------
+# Define server logic ----------------------------------------------------------
 server <- function(input, output) {
+
+  output$messsage <- renderUI({
+    inFile <- input$dataset
+  if (is.null(inFile)) {
+    return(HTML(
+      '<h1 style="color:lightgrey;">Please choose .csv file...</h1></style>'
+    ))
+  }
+  })
+  # 'Predict and Classify' tab outputs -----------------------------------------
   output$tables <- renderUI({
     inFile <- input$dataset
     if (is.null(inFile)) {
-      return(HTML('<h1 style="color:lightgrey;">Please choose .csv file...</h1></style>'))
+      return()
     }
     # Create a Progress object
     progress <- Progress$new()
@@ -146,6 +149,7 @@ server <- function(input, output) {
       -dplyr::contains("MEAN.AIR.TEMP"),
       -dplyr::contains("AIR.TEMP.RANGE"),
       -SuitCode,
+      -area,
       -dplyr::contains("belongs_to_end_grp"),
       -dplyr::starts_with("p")
     )
@@ -189,15 +193,56 @@ server <- function(input, output) {
         Average_Numerical_Abundance,
         Prob_Occurrence
       )
+      taxa_table <- dplyr::mutate(
+        taxa_table,
+        dplyr::across(
+          where(is.numeric),
+          round, 2
+        )
+      )
     }
-
 
     indices <- data.frame()
     if (!is.null(predictions) & any(input$options %in% "all_indices")) {
       indices <- rict_predict(data, all_indices = T)
-
-}
+    }
     indices_table <- indices
+    # Don't need to display all columns - some columns only used by some models
+    indices_table <- dplyr::select(
+      indices_table,
+      dplyr::contains("SITE"),
+      dplyr::contains("YEAR"),
+      dplyr::contains("WATERBODY"),
+      dplyr::contains("SEASON"),
+      dplyr::everything(),
+      -dplyr::contains("SUM"),
+      -dplyr::contains("AUT"),
+      -dplyr::contains("SPR"),
+      -dplyr::contains("LATITUDE"),
+      -dplyr::contains("LONGITUDE"),
+      -dplyr::contains("LOG.ALTITUDE"),
+      -dplyr::contains("LOG.DISTANCE.FROM.SOURCE"),
+      -dplyr::contains("LOG.WIDTH"),
+      -dplyr::contains("LOG.DEPTH"),
+      -dplyr::contains("MEAN.SUBSTRATUM"),
+      -dplyr::contains("DISCHARGE.CATEGORY"),
+      -dplyr::contains("ALKALINITY"),
+      -dplyr::contains("LOG.ALKALINITY"),
+      -dplyr::contains("LOG.SLOPE"),
+      -dplyr::contains("MEAN.AIR.TEMP"),
+      -dplyr::contains("AIR.TEMP.RANGE"),
+      -dplyr::contains("belongs_to_end_grp"),
+      -dplyr::contains("area"),
+      -dplyr::starts_with("p"),
+      -dplyr::starts_with("SuitCode")
+    )
+    indices_table <- dplyr::mutate(
+      indices_table,
+      dplyr::across(
+        where(is.numeric),
+        round, 2
+      )
+    )
 
     output_files <- list(
       predictions,
@@ -226,7 +271,7 @@ server <- function(input, output) {
           if (nrow(output_files[[i]] > 0)) {
             path <- paste0(names(output_files)[i], ".csv")
             fs <- c(fs, path)
-            write.csv(output_files[[i]], file = path)
+            write.csv(output_files[[i]], file = path, row.names = FALSE)
           }
         }
         zip(zipfile = fname, files = fs)
@@ -247,7 +292,9 @@ server <- function(input, output) {
         validations$checks
       }))
     } else {
-      validation <- HTML('<h3>Validation</h3><h4 style="color:lightgray;">All input data valid</h1></style>')
+      validation <- HTML(
+        '<h3>Validation</h3><h4 style="color:lightgray;">All input data valid</h1></style>'
+      )
     }
 
     return(list(
@@ -265,26 +312,29 @@ server <- function(input, output) {
         },
         rownames = FALSE
       ),
-      h3("Taxa"), DT::renderDataTable(
-        {
-          taxa_table
-        },
-        rownames = FALSE
-      ),
       h3("All Indices"), DT::renderDataTable(
         {
           indices_table
+        },
+        rownames = FALSE
+      ),
+      h3("Taxa"), DT::renderDataTable(
+        {
+          taxa_table
         },
         rownames = FALSE
       )
     ))
   })
 
+  # Compare tab outputs --------------------------------------------------------
   output$compare <- renderUI({
     inFile_one <- input$dataset_one
     inFile_two <- input$dataset_two
     if (is.null(inFile_one) || is.null(inFile_two)) {
-      return(HTML('<h1 style="color:lightgrey;">Please choose .csv file...</h1></style>'))
+      return(HTML(
+        '<h1 style="color:lightgrey;">Please choose .csv file...</h1></style>'
+      ))
     }
 
     progress <- Progress$new()
@@ -293,13 +343,62 @@ server <- function(input, output) {
     progress$set(message = "Calculating", value = 1)
     data_one <- read.csv(inFile_one$datapath, check.names = FALSE)
     data_two <- read.csv(inFile_two$datapath, check.names = FALSE)
-    data_one <- rict(data_one, store_eqrs = TRUE, year_type = input$year_type_compare)
-    data_two <- rict(data_two, store_eqrs = TRUE, year_type = input$year_type_compare)
+    valid_one <- rict_validate(data_one)
+    valid_two <- rict_validate(data_two)
+    validations <- dplyr::bind_rows(valid_one$checks, valid_two$checks)
+    data_one <- rict(data_one,
+      store_eqrs = TRUE,
+      year_type = input$year_type_compare
+    )
+    data_two <- rict(data_two,
+      store_eqrs = TRUE,
+      year_type = input$year_type_compare
+    )
     compare <- rict_compare(results_a = data_one, results_b = data_two)
+    compare <- dplyr::mutate(
+      compare,
+      dplyr::across(
+        where(is.numeric),
+        round, 2
+      )
+    )
     data_one <- NULL
     data_two <- NULL
-    compare <- compare
+
+    output_files <- list(
+      compare,
+      validations
+    )
+    names(output_files) <- c(
+      "compare",
+      "validations"
+    )
+
+    output$download_file <- downloadHandler(
+      filename = function() {
+        paste0("rict-", packageVersion("rict"), "-output.zip")
+      },
+      content = function(fname) {
+        fs <- c()
+        tmpdir <- tempdir()
+        setwd(tempdir())
+        for (i in seq_along(output_files)) {
+          if (nrow(output_files[[i]] > 0)) {
+            path <- paste0(names(output_files)[i], ".csv")
+            fs <- c(fs, path)
+            write.csv(output_files[[i]], file = path, row.names = FALSE)
+          }
+        }
+        zip(zipfile = fname, files = fs)
+      }
+    )
+
+    download_data <- renderUI({
+      downloadButton("download_file", "Download Outputs")
+    })
+
     return(list(
+      download_data,
       h3("Compare"), renderDataTable({
         compare
       })

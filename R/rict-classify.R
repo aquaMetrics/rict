@@ -53,6 +53,15 @@ rict_classify <- function(data = NULL,
         package = "rict"
       ))
     }
+
+    if (area == "iom") {
+      gb685_assess_score <- utils::read.csv(
+        system.file("extdat",
+          "end-group-assess-scores-iom.csv",
+          package = "rict"
+        )
+      )
+    }
     # Enter source files
     # Use the column header as site names in the final output
     all_sites <- data[, 1]
@@ -78,7 +87,8 @@ rict_classify <- function(data = NULL,
     prob_names <- paste0("P", 1:43)
     all_probabilities <- data[, names(data) %in% prob_names]
 
-    # Input Adjustment factors for reference site quality scores (Q1, Q2, Q3, Q4, Q5)
+    # Input Adjustment factors for reference site quality scores (Q1, Q2, Q3,
+    # Q4, Q5)
     # Extract Ubias8 from Biological data
     ubias_main <- biological_data[, "SPR_NTAXA_BIAS"][1]
 
@@ -94,7 +104,6 @@ rict_classify <- function(data = NULL,
     }
 
     # Input Multiplicative Adjustment factors adjusted_params, 1,..,5)
-    if(area != "iom") {
     adjusted_params <- as.matrix(adjusted_params)
     qij <- computeScoreProportions(gb685_assess_score[, -1]) # Remove the first Column
 
@@ -114,14 +123,6 @@ rict_classify <- function(data = NULL,
     # Compute AdjExpected as E=data/Sum(rj*adjusted_params)
     aspt_adjusted <- dplyr::select(data, dplyr::contains("_ASPT_")) / rjaj[, "ASPT"]
 
-    adjusted_expected <- cbind(ntaxa_adjusted, aspt_adjusted)
-    # Include site names from data
-    adjusted_expected_new <- cbind(as.data.frame(all_sites), adjusted_expected)
-    } else {
-      browser()
-      ntaxa_adjusted <- dplyr::select(data, dplyr::contains("_NTAXA_"))
-      aspt_adjusted <- dplyr::select(data, dplyr::contains("_ASPT_"))
-    }
     # OBSERVED ASPT
     obs_aspt_spr <- biological_data[, "SPR_TL2_WHPT_ASPT (ABW,DISTFAM)"]
     obs_aspt_aut <- biological_data[, "AUT_TL2_WHPT_ASPT (ABW,DISTFAM)"]
@@ -153,9 +154,8 @@ rict_classify <- function(data = NULL,
     EQRAverages_aspt_aut <- data.frame() # Store average EQRs for spr in a dataframe
 
     # **************  For NTAXA   *************
-    Exp_ref_ntaxa <- ntaxa_adjusted / 1.0049 # select(adjusted_expected_new, contains("_NTAXA_"))/1.0049
-    # head(Exp_ref_ntaxa,18)
 
+    Exp_ref_ntaxa <- ntaxa_adjusted / 1.0049
     # Find the non-bias corrected  EQR = obs/ExpRef, from the raw inputs,
     # not used but useful for output checking purposes only
     nonBiasCorrected_WHPT_ntaxa_spr <-

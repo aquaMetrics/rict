@@ -144,7 +144,6 @@ rict_validate <- function(data = NULL,
   }
   # Display which model type has been detected
   message("Variables for the '", model, "' model detected - applying relevant checks. ")
-
   if (model == "physical" && is.null(area)) {
     ### Detect NI / GB grid references --------------------------------------------------------
     areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", toupper(data$NGR)), "gb", "ni"))
@@ -164,10 +163,7 @@ rict_validate <- function(data = NULL,
     }
   }
 
-  # Display which model area has been detected
-  message("Grid reference values detected for '", toupper(area), "' - applying relevant checks.")
-
-    # Re-assigning area due to issue with filtering column and variable sharing same name
+  # Re-assigning area due to issue with filtering column and variable sharing same name
   area_selected <- area
 
   ### Filter rules based on which model and area selected -------------------------------------------
@@ -267,6 +263,26 @@ rict_validate <- function(data = NULL,
     # Convert to numeric in order to help validate them as numbers
     data$EASTING <- as.numeric(data$EASTING)
     data$NORTHING <- as.numeric(data$NORTHING)
+
+    # Find Isle of Man NGRs and to apply IOM model/area
+    sc_data <- dplyr::filter(data, toupper(.data$NGR) == "SC")
+    sc_data <- dplyr::filter(sc_data, .data$NORTHING <= 60000)
+    sc_data <- dplyr::filter(sc_data, .data$EASTING <= 55000)
+    if(nrow(sc_data) > 0) {
+      message("Site location detected in the Isle of Man -
+              applying IOM model for all input data")
+      area <- "iom"
+    }
+
+    nx_data <- dplyr::filter(data, toupper(.data$NGR) == "NX")
+    nx_data <- dplyr::filter(nx_data, .data$NORTHING <= 10000)
+    nx_data <- dplyr::filter(nx_data, .data$EASTING <= 55000)
+    if(area != "iom" && nrow(nx_data) > 0) {
+      message("Site location detected in the Isle of Man -
+              applying IOM model for all input data")
+      area <- "iom"
+    }
+
     # Check for length <5, add a leading zeros "0" to get proper Easting/Northing 5 digit codes
     if (any(is.na(data$EASTING)) || any(is.na(data$NORTHING))) {
       stop("EASTING or NORTHING value(s) have not been supplied, we expect
@@ -277,6 +293,9 @@ rict_validate <- function(data = NULL,
       data$NORTHING <- as.character(formatC(round(data$NORTHING), width = 5, format = "d", flag = "0"))
     }
   }
+
+  # Display which model area has been detected
+  message("Grid reference values detected for '", toupper(area), "' - applying relevant checks.")
 
   # Calculate Longitude & Latitude
   if (area == "gb" && model == "physical") {

@@ -376,11 +376,7 @@ test_that("missing observations in multi-year return NA", {
 
 test_that("Isle of Man classification", {
   classification <- rict(demo_iom_observed_values,
-                         year_type = "single",
-                         area = "iom")
-
-
-
+                         year_type = "single")
 
 })
 

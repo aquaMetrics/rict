@@ -6,17 +6,36 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   # set global random seed for rnorm functions etc
   # set.seed(1234)
   # Part 1: This Script reads all prediction indices for classification
-  gb685_assess_score <- utils::read.csv(system.file("extdat", "end-grp-assess-scores.csv", package = "rict"))
-  adjusted_params <- utils::read.csv(system.file("extdat", "adjust-params-ntaxa-aspt.csv", package = "rict"))
+  gb685_assess_score <- utils::read.csv(
+    system.file("extdat",
+      "end-grp-assess-scores.csv",
+      package = "rict"
+    )
+  )
+  adjusted_params <- utils::read.csv(
+    system.file("extdat",
+      "adjust-params-ntaxa-aspt.csv",
+      package = "rict"
+    )
+  )
 
-  if (area == "ni") {
-    gb685_assess_score <- utils::read.csv(system.file("extdat", "EndGrp_AssessScoresNI.csv", package = "rict"))
-  }
+if (area == "ni") {
+  gb685_assess_score <- utils::read.csv(
+    system.file("extdat",
+      "EndGrp_AssessScoresNI.csv",
+      package = "rict"
+    )
+  )
+}
 
-  if (area == "iom") {
-    gb685_assess_score <- utils::read.csv(system.file("extdat", "end-group-assess-scores-iom.csv", package = "rict"))
-
-  }
+if (area == "iom") {
+  gb685_assess_score <- utils::read.csv(
+    system.file("extdat",
+      "end-group-assess-scores-iom.csv",
+      package = "rict"
+    )
+  )
+}
   # Enter source files
   # Use the column header as site names in the final output
   all_sites <- predictions[, 1]
@@ -47,7 +66,8 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   # Remove biological_data from predictions
   predictions <- predictions[, !names(predictions) %in% names_biological]
 
-  # Store all_probabilities in one dataframe. Use p1,p2,... etc in case data column positions change in future
+  # Store all_probabilities in one dataframe. Use p1,p2,... etc in case data
+  # column positions change in future
   prob_names <- paste0("p", 1:43)
 
   if (area == "ni") {
@@ -57,9 +77,10 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   if (area == "iom") {
     prob_names <- paste0("p", 1:5)
   }
-
-  all_probabilities <- predictions[, toupper(prob_names)] # Needs to change when not uppercase
-  # Input Adjustment factors for reference site quality scores (Q1, Q2, Q3, Q4, Q5)
+  # Needs to change when not uppercase
+  all_probabilities <- predictions[, toupper(prob_names)]
+  # Input Adjustment factors for reference site quality scores (Q1, Q2, Q3, Q4,
+  # Q5)
 
   # Extract Ubias8 from Biological data #
   ubias_main <- biological_data[, "SPR_NTAXA_BIAS"][1] # Put new AZURE
@@ -72,7 +93,8 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   # If user does not provide any bias value select default from values
   if (is.na(ubias_main) || ubias_main == -9) {
     ubias_main <- default_bias[, grep(area, names(default_bias))]
-    message("Bias not provided in input file - using default bias of ", ubias_main)
+    message("Bias not provided in input file - using default bias of ",
+            ubias_main)
   }
   # OBSERVED ASPT
   # observed_aspt <- read.csv("src/observed_aspt.csv")
@@ -90,13 +112,15 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   Obs_ntaxa_sum <- biological_data[, "SUM_TL2_WHPT_NTAXA (ABW,DISTFAM)"]
   # Input Multiplicative Adjustment factors adjusted_params, 1,..,5)
   adjusted_params <- as.matrix(adjusted_params)
-  qij <- computeScoreProportions(gb685_assess_score[, -1]) # Remove the first Column
+  # Remove the first Column
+  qij <- computeScoreProportions(gb685_assess_score[, -1])
 
   # Part 2:  Calculate AdjustedExpected from all probabilities, WE4.5 of WFD72C
   # Compute rj = sum(Pi*qij)
   rj <- as.matrix(getWeighted_proportion_Rj(all_probabilities, qij)) # We should have five of these
 
-  # Multiply rj by adjusted_params, note each row of adjusted_params is for NTAXA, ASPT, so transpose to multiply by rj
+  # Multiply rj by adjusted_params, note each row of adjusted_params is for
+  # NTAXA, ASPT, so transpose to multiply by rj
   rjaj <- compute_RjAj(rj, adjusted_params)
   # one_over_rjaj <- 1 / rjaj
 
@@ -105,9 +129,6 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   ntaxa_adjusted <- dplyr::select(predictions, dplyr::contains("_NTAXA_")) / rjaj[, "NTAXA"]
   # Compute AdjExpected as E=predictions/Sum(rj*adjusted_params)
   aspt_adjusted <- dplyr::select(predictions, dplyr::contains("_ASPT_")) / rjaj[, "ASPT"]
-
-  adjusted_expected <- cbind(ntaxa_adjusted, aspt_adjusted)
-  adjusted_expected_new <- cbind(as.data.frame(all_sites), adjusted_expected) # Include site names from predictions
 
   # Part 3:  Calculation of Exp_ref from "AdjustedExpected_new" values, divide
   # by K ( = 1.0049 for NTAXA,  = 0.9921 for ASPT)
@@ -131,7 +152,7 @@ singleYearClassification <- function(predictions, store_eqrs = FALSE, area = NUL
   EQRAverages_aspt_aut <- data.frame() # Store average EQRs for spr in a dataframe
   EQRAverages_aspt_sum <- data.frame()
   ### For NTAXA --------------------------------------------------------------------------------------------
-  Exp_ref_ntaxa <- ntaxa_adjusted / 1.0049 # select(adjusted_expected_new, contains("_NTAXA_"))/1.0049
+  Exp_ref_ntaxa <- ntaxa_adjusted / 1.0049
 
   # Find the non-bias corrected  EQR = obs/ExpRef, from the raw inputs,
   # not used but useful for output checing purposes only

@@ -316,4 +316,5 @@ test_that("changes/formatting that shouldn't impact calculations", {
   expect_equal(length(test), 4)
   # iom area
   test <- rict_validate(demo_iom_observed_values, area = "iom")
+
 })

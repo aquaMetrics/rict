@@ -207,24 +207,53 @@ test_that("replacement values work if value is less than the ‘overall’ minim
   expect_equal(test[[1]][1, c("D_F_SOURCE")], 0.1) # Now converted to Km from metres
   expect_equal(test[[1]][1, c("ALKALINITY")], 0.1)
   expect_equal(test[[1]][1, c("SLOPE")], 0.1)
-
 })
 
 # ---------------------------------------------------------------------
 test_that("alkalinity, hardness, conductivity and calcium calculations work", {
-  test_data <- demo_observed_values
-  test_data$Alkalinity[1:2] <- NA
+  test_data <- demo_observed_values[1:3, ]
+  test_data$Alkalinity[1:3] <- NA
   test_data$Hardness[1] <- 50
   test_data$Calcium[2] <- 50
+  test_data$Conductivity[3] <- 50
   test <- rict_validate(test_data)
   expect_equal(length(test[[2]][, 1]), 0)
   # Also works for GIS input:
-  test_data <- demo_gis_values_log
-  test_data$Alkalinity[1:2] <- NA
-  test_data$hardness[1] <- 50
-  test_data$calcium[2] <- 50
+  test_data <- demo_gis_values_log[1:4, ]
+  test_data$Alkalinity[1:3] <- NA
+  test_data$hardness[4] <- 50
+  # Hardness, calcium, conductivity is order of preference
+  test_data$hardness[1] <- 50 # hardness preferred
+  test_data$calcium[1] <- 50
+  test_data$Conductivity[1] <- 50
+  test_data$calcium[2] <- 50 # calcium preferred
+  test_data$Conductivity[2] <- 50
+  test_data$Conductivity[3] <- 50 # conductivity preferred (only option)
   test <- rict_validate(test_data)
+  messages <- capture_messages(rict_validate(test_data))
+  expect_equal(
+    messages[3],
+    "Using Hardness value to calculate Alkalinity at TST-GB-01-R - 2019. \n"
+  )
+  expect_equal(
+    messages[4],
+    "Using Calcium value to calculate Alkalinity at TST-GB-02-R - 2019. \n"
+  )
+  expect_equal(
+    messages[5],
+    "Using Conductivity value to calculate Alkalinity at TST-GB-03-R - 2019. \n"
+  )
   expect_equal(length(test[[2]][, 1]), 0)
+  expect_equal(test$data$ALKALINITY, c(36.6420, 102.5820, 7.9457, 164.0000))
+  # Alkalinity value used by default over hardness etc
+  test_data <- demo_observed_values[1:3, ]
+  test_data$Hardness[1] <- 50
+  test_data$Calcium[2] <- 50
+  test_data$Conductivity[3] <- 50
+  test <- rict_validate(test_data)
+  test_data <- demo_observed_values[1:3, ]
+  expect <- rict_validate(test_data)
+  expect_equal(expect$data$ALKALINITY, test$data$ALKALINITY)
 })
 
 # ---------------------------------------------------------------------

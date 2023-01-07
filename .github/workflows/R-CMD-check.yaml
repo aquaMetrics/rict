@@ -128,14 +128,14 @@ jobs:
         shell: Rscript {0}
 
       - name: Install rict
-        if: matrix.os == 'ubuntu-20.04'
+        if: runner.os == 'Linux'
         run: |
           devtools::install_github("aquaMetrics/rict")
         shell: Rscript {0}
 
                 # Connect on shinyapps server
       - name: Connect to ShinyApps
-        if: matrix.os == 'ubuntu-20.04'
+        if: runner.os == 'Linux'
         env:
           # set the shinyapps keys as environment variables
           SHINY_TOKEN: ${{ secrets.SHINYAPP_TOKEN }}
@@ -143,11 +143,11 @@ jobs:
         run: |
           shiny_token = Sys.getenv("SHINY_TOKEN")
           shiny_secret = Sys.getenv("SHINY_SECRET")
-          rsconnect::setAccountInfo(name = 'eawaterquality', token = shiny_token, secret = shiny_secret)
+          rsconnect::setAccountInfo(name = 'rictapplications', token = shiny_token, secret = shiny_secret)
         shell: Rscript {0}
         # deploy the app on shinyapps server
       - name: Deploy to shinyapps.io
-        if: matrix.os == 'ubuntu-20.04'
+        if: runner.os == 'Linux'
         run: |
           rsconnect::deployApp(appName = "rictapp", appDir = "inst/shiny_apps/rictapp")
         shell: Rscript {0}

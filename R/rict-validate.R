@@ -82,7 +82,6 @@ rict_validate <- function(data = NULL,
   # create a list not a data.frame)
   data <- data.frame(data, check.names = FALSE)
 
-
   # Load validation rules
   validation_rules <-
     utils::read.csv(system.file("extdat", "validation-rules.csv", package = "rict"),
@@ -163,14 +162,61 @@ rict_validate <- function(data = NULL,
     }
   }
 
+  if(model == "physical") {
+  # Convert to numeric in order to help validate them as numbers
+  data$EASTING <- as.numeric(data$EASTING)
+  data$NORTHING <- as.numeric(data$NORTHING)
+
+  # Find Isle of Man NGRs and to apply IOM model/area
+  sc_data <- dplyr::filter(data, toupper(.data$NGR) == "SC")
+  sc_data <- dplyr::filter(sc_data, .data$NORTHING <= 99999)
+  sc_data <- dplyr::filter(sc_data, .data$EASTING <= 55000)
+  if(nrow(sc_data) > 0) {
+    message("Site location detected in the Isle of Man -
+              applying IOM model for all input data")
+    area <- "iom"
+  }
+
+  nx_data <- dplyr::filter(data, toupper(.data$NGR) == "NX")
+  nx_data <- dplyr::filter(nx_data, .data$NORTHING <= 10000)
+  nx_data <- dplyr::filter(nx_data, .data$EASTING <= 55000)
+  if(area != "iom" && nrow(nx_data) > 0) {
+    message("Site location detected in the Isle of Man -
+              applying IOM model for all input data")
+    area <- "iom"
+  }
+  }
   # Re-assigning area due to issue with filtering column and variable sharing same name
   area_selected <- area
 
   ### Filter rules based on which model and area selected -------------------------------------------
-  validation_rules <-
+  if(area != "iom") {
+    validation_rules <-
     dplyr::filter(validation_rules, area %in% c(area_selected, "all")) %>%
     dplyr::filter(models %in% c(model, "all"))
+  }
 
+  if(area == "iom") {
+    validation_rules <-
+      dplyr::filter(validation_rules, variable %in% c("SITE",
+                                                      "YEAR",
+                                                      "WATERBODY",
+                                                      "NGR",
+                                                      "EASTING",
+                                                      "NORTHING",
+                                                      "DIST_FROM_SOURCE",
+                                                      "ALTITUDE",
+                                                      "SLOPE",
+                                                      "ALKALINITY"))
+
+        validation_rules <-
+                      dplyr::filter(validation_rules, area %in% c("all","iom"))
+
+
+        validation_rules <-
+          dplyr::filter(validation_rules, models != "gis")
+
+  }
   ### Check column names correct ------------------------------------------------------------------
   # Note: additional columns provided by user are allowed
   if (all(validation_rules$variable[validation_rules$source == "input"] %in%
@@ -223,7 +269,7 @@ rict_validate <- function(data = NULL,
     stop(fails, call. = FALSE)
   }
   ### Check columns that may or may not be provided -----------------------------------------
-  if (model == "physical") {
+  if (model == "physical" && area != "iom") {
     if (all(!is.na(data$DISCHARGE)) &&
       all(!is.na(data$VELOCITY))) {
       warning("You provided both VELOCITY and DISCHARGE values,
@@ -260,28 +306,7 @@ rict_validate <- function(data = NULL,
        Hint: Check your NGR variables have less than 3 three letters. ", call. = FALSE)
     }
     data$NGR_LENGTH <- NULL
-    # Convert to numeric in order to help validate them as numbers
-    data$EASTING <- as.numeric(data$EASTING)
-    data$NORTHING <- as.numeric(data$NORTHING)
 
-    # Find Isle of Man NGRs and to apply IOM model/area
-    sc_data <- dplyr::filter(data, toupper(.data$NGR) == "SC")
-    sc_data <- dplyr::filter(sc_data, .data$NORTHING <= 60000)
-    sc_data <- dplyr::filter(sc_data, .data$EASTING <= 55000)
-    if(nrow(sc_data) > 0) {
-      message("Site location detected in the Isle of Man -
-              applying IOM model for all input data")
-      area <- "iom"
-    }
-
-    nx_data <- dplyr::filter(data, toupper(.data$NGR) == "NX")
-    nx_data <- dplyr::filter(nx_data, .data$NORTHING <= 10000)
-    nx_data <- dplyr::filter(nx_data, .data$EASTING <= 55000)
-    if(area != "iom" && nrow(nx_data) > 0) {
-      message("Site location detected in the Isle of Man -
-              applying IOM model for all input data")
-      area <- "iom"
-    }
 
     # Check for length <5, add a leading zeros "0" to get proper Easting/Northing 5 digit codes
     if (any(is.na(data$EASTING)) || any(is.na(data$NORTHING))) {
@@ -289,8 +314,8 @@ rict_validate <- function(data = NULL,
        all rows to have Easting and Northing values.
        Hint: Check all rows of input data have Easting and Northing values. ", call. = FALSE)
     } else {
-      data$EASTING <- as.character(formatC(round(data$EASTING), width = 5, format = "d", flag = "0"))
-      data$NORTHING <- as.character(formatC(round(data$NORTHING), width = 5, format = "d", flag = "0"))
+      data$EASTING <- as.character(formatC(round(as.numeric(data$EASTING)), width = 5, format = "d", flag = "0"))
+      data$NORTHING <- as.character(formatC(round(as.numeric(data$NORTHING)), width = 5, format = "d", flag = "0"))
     }
   }
 
@@ -298,7 +323,7 @@ rict_validate <- function(data = NULL,
   message("Grid reference values detected for '", toupper(area), "' - applying relevant checks.")
 
   # Calculate Longitude & Latitude
-  if (area == "gb" && model == "physical") {
+  if (area %in% c("gb","iom") && model == "physical") {
     # suppress warning: In showSRID(uprojargs, format = "PROJ", multiline = "NO"):
     # Discarded datum OSGB_1936 in CRS definition
     lat_long <- with(data, suppressWarnings(getLatLong(NGR, EASTING, NORTHING, "WGS84", area)))
@@ -312,7 +337,6 @@ rict_validate <- function(data = NULL,
     data$LONGITUDE <- lat_long$Longitude
     data$LATITUDE <- lat_long$Latitude
   }
-
   if (model == "gis") {
     coords <- st_as_sf(data[, c("SX", "SY")], coords = c("SX", "SY"), crs = 27700)
     coords <- st_transform(coords, crs = 4326)
@@ -358,7 +382,7 @@ These values will be used instead of calculating them from Grid Reference values
   data$TRANGE <- NULL
 
   # Calculate total substrate and phi grain size scale
-  if (model == "physical") {
+  if (model == "physical" && area != "iom") {
     data <- get_substrate(data)
   }
 

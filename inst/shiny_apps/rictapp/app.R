@@ -108,14 +108,13 @@ ui <- tagList(
 
 # Define server logic ----------------------------------------------------------
 server <- function(input, output) {
-
   output$messsage <- renderUI({
     inFile <- input$dataset
-  if (is.null(inFile)) {
-    return(HTML(
-      '<h1 style="color:lightgrey;">Please choose .csv file...</h1></style>'
-    ))
-  }
+    if (is.null(inFile)) {
+      return(HTML(
+        '<h1 style="color:lightgrey;">Please choose .csv file...</h1></style>'
+      ))
+    }
   })
   # 'Predict and Classify' tab outputs -----------------------------------------
   output$tables <- renderUI({
@@ -181,25 +180,29 @@ server <- function(input, output) {
     taxa_table <- taxa
     if (!is.null(predictions) & !is.null(input$tl)) {
       taxa <- rict_predict(data, taxa = TRUE, taxa_list = input$tl)
-      taxa$Season_Code <- as.numeric(taxa$Season_Code)
-      taxa_table <- dplyr::arrange(taxa, NBN_Name, Season_Code)
-      taxa_table <- dplyr::select(
-        taxa_table,
-        siteName,
-        TL,
-        Season_Code,
-        NBN_Name,
-        NBN_Code,
-        Average_Numerical_Abundance,
-        Prob_Occurrence
-      )
-      taxa_table <- dplyr::mutate(
-        taxa_table,
-        dplyr::across(
-          where(is.numeric),
-          round, 2
+      if (is.null(taxa) && validations$area == "iom") {
+        taxa_table <- taxa
+      } else {
+        taxa$Season_Code <- as.numeric(taxa$Season_Code)
+        taxa_table <- dplyr::arrange(taxa, NBN_Name, Season_Code)
+        taxa_table <- dplyr::select(
+          taxa_table,
+          siteName,
+          TL,
+          Season_Code,
+          NBN_Name,
+          NBN_Code,
+          Average_Numerical_Abundance,
+          Prob_Occurrence
         )
-      )
+        taxa_table <- dplyr::mutate(
+          taxa_table,
+          dplyr::across(
+            where(is.numeric),
+            round, 2
+          )
+        )
+      }
     }
 
     indices <- data.frame()
@@ -282,19 +285,60 @@ server <- function(input, output) {
       downloadButton("download_file", "Download Outputs")
     })
 
-    map <- leaflet(predictions)
+    # Use validations$data for map as IOM predictions don't have lat/lon
+    map <- leaflet(validations$data)
     map <- addTiles(map)
     map <- addMarkers(map, ~LONGITUDE, ~LATITUDE, popup = ~ htmlEscape(SITE))
     output$map <- renderLeaflet(map)
 
+    # Format validations depending if detected ---------------------------------
     if (nrow(validations$checks) != 0) {
       validation <- list(h3("Validations"), renderDataTable({
         validations$checks
       }))
     } else {
       validation <- HTML(
-        '<h3>Validation</h3><h4 style="color:lightgray;">All input data valid</h1></style>'
+        '<h3>Validation</h3><h4 style="color:gray;">All input data valid <span style="color:green;">✓</span></h1></style>'
       )
+    }
+    # Format outputs depending on options selected ----------------------------
+    if (!is.null(input$tl)) {
+      if (validations$area == "iom") {
+        taxa_output <- list(h3("Taxa"), p("Isle of Man model cannot predict taxa"))
+      } else {
+        taxa_output <- list(h3("Taxa"), DT::renderDataTable(
+          {
+            taxa_table
+          },
+          rownames = FALSE
+        ))
+      }
+    } else {
+      taxa_output <- NULL
+    }
+
+    # Only display Classification header if option selected
+    if (input$output == "predict_classify") {
+      classification_ouput <- list(h3("Classification"), DT::renderDataTable(
+        {
+          classification_table
+        },
+        rownames = FALSE
+      ))
+    } else {
+      classification_ouput <- NULL
+    }
+
+    # Only display Indices header if option selected
+    if (any(input$options %in% "all_indices")) {
+      indices_output <- list(h3("All Indices"), DT::renderDataTable(
+        {
+          indices_table
+        },
+        rownames = FALSE
+      ))
+    } else {
+      indices_output <- NULL
     }
 
     return(list(
@@ -306,24 +350,9 @@ server <- function(input, output) {
         },
         rownames = FALSE
       ),
-      h3("Classification"), DT::renderDataTable(
-        {
-          classification_table
-        },
-        rownames = FALSE
-      ),
-      h3("All Indices"), DT::renderDataTable(
-        {
-          indices_table
-        },
-        rownames = FALSE
-      ),
-      h3("Taxa"), DT::renderDataTable(
-        {
-          taxa_table
-        },
-        rownames = FALSE
-      )
+      classification_ouput,
+      indices_output,
+      taxa_output
     ))
   })
 

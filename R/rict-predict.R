@@ -379,7 +379,7 @@ rict_predict <- function(data = NULL,
   # Run the index Scores
   seasons_to_run <- seasons_to_run[!is.na(seasons_to_run)]
 
-  if (taxa == TRUE) { # This block predicts and returns taxa predictions
+  if (taxa == TRUE && area != "iom") { # This block predicts and returns taxa predictions
     # Declare a variable where we append all sites
     taxa_predictions <- list()
     # Use complete cases removing null values
@@ -432,6 +432,11 @@ rict_predict <- function(data = NULL,
       .data$Season_Code,
       .data$Furse_Code
     )
+    return(taxa_predictions)
+  }
+  if(taxa == TRUE && area == "iom") {
+    message("Isle of Man model cannot predict taxa")
+    taxa_predictions <- NULL
     return(taxa_predictions)
   }
 

@@ -232,15 +232,15 @@ test_that("alkalinity, hardness, conductivity and calcium calculations work", {
   test <- rict_validate(test_data)
   messages <- capture_messages(rict_validate(test_data))
   expect_equal(
-    messages[3],
+    messages[2],
     "Using Hardness value to calculate Alkalinity at TST-GB-01-R - 2019. \n"
   )
   expect_equal(
-    messages[4],
+    messages[3],
     "Using Calcium value to calculate Alkalinity at TST-GB-02-R - 2019. \n"
   )
   expect_equal(
-    messages[5],
+    messages[4],
     "Using Conductivity value to calculate Alkalinity at TST-GB-03-R - 2019. \n"
   )
   expect_equal(length(test[[2]][, 1]), 0)
@@ -343,7 +343,21 @@ test_that("changes/formatting that shouldn't impact calculations", {
   data <- data[1, ]
   test <- rict_validate(data)
   expect_equal(length(test), 4)
-  # iom area
-  test <- rict_validate(demo_iom_observed_values, area = "iom")
-
+  # iom area & model detection
+  test <- rict_validate(demo_iom_observed_values)
+  expect_equal(test$area, "iom")
+  expect_equal(test$model[[1]], "physical")
+  # iom NGR change to GB instead
+  data <- demo_iom_observed_values[1,]
+  data$Easting <- 55001
+  data$Northing <- 10001
+  expect_error(rict_validate(data))
+  # iom NGR change to GB instead
+  data <- demo_iom_observed_values[4,]
+  data$Easting <- 55001
+  data$Northing <- 99999
+  expect_error(rict_validate(data))
+  data <- demo_iom_observed_values[,c(1:8,11,14,22:33)]
+  test <- rict_validate(data)
+  expect_equal(test$area, "iom")
 })

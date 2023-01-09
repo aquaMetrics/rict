@@ -83,11 +83,16 @@ programming language and did not have flexibility to allow changes without
 significant cost. Therefore, a new tool was developed that allowed future
 changes to be made with minimal cost in many cases (e.g. the addition of a new
 index). This was the River Invertebrate Classification Tool (RICT) which went
-live in 2007. This version of RICT was a web-served application which was
+live in 2008. This version of RICT was a web-served application which was
 accessed via a website hosted by SEPA. The SEPA website also hosted copies of
 the manual, guidance and background documents.
   
-RICT has had some updates since 2007, including the addition of ‘split season’
+The RICT software was based on the SNIFFER-funded WFD72C project report of Davy-Bowker, 
+Clarke et al.(2008)which provided detailed algorithms and equations for all steps in
+the development of the RICT software. Most of this 2008 report is still highly 
+relevant to the development of the revised RICT software (RICT2) being specified here. 
+  
+RICT has had some updates since 2007, including the addition of ‘multiple season’
 classification to enable WHPT (Walley, Hawkes, Paisley and Trigg) calculations
 using seasonal average EQRs (Ecological Quality Ratio). RICT was managed and
 hosted by Scottish Environment Protection Agency (SEPA) but is also used by

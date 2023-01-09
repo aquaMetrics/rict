@@ -372,3 +372,11 @@ test_that("missing observations in multi-year return NA", {
   test <- rict(test)
   expect_equal(length(test[is.na(test)]), 200)
 })
+
+
+test_that("Isle of Man classification", {
+  classification <- rict(demo_iom_observed_values,
+                         year_type = "single")
+
+})
+

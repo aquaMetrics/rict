@@ -39,6 +39,8 @@
 #' @param stop_if_all_fail Boolean - if set to `FALSE` the validation function
 #'   will return empty dataframe for valid `data`. This is useful if you want to
 #'   run validation checks without stopping process.
+#' @param area Area is by detected by default from the NGR, but you can provide
+#'   the area parameter either 'iom', 'gb, 'ni' for testing purposes.
 #'
 #' @return List of dataframes and other parameters:
 #' \describe{
@@ -58,7 +60,10 @@
 #' \dontrun{
 #' validations <- rict_validate(demo_observed_values, row = TRUE)
 #' }
-rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
+rict_validate <- function(data = NULL,
+                          row = FALSE,
+                          stop_if_all_fail = TRUE,
+                          area = NULL) {
   ### Sense checks --------------------------------------------------------------------
   # Check data object provided
   if (is.null(data)) {
@@ -66,12 +71,17 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
        We expected 'data' with environmental values.", call. = FALSE)
   }
   # Check data object is a dataframe
-  if (class(data) != "data.frame") {
+  if (!any(class(data) %in% "data.frame")) {
     stop("You provided 'data' object with class '", class(data), "'.
        We expect 'data' to have class 'data.frame'
        Hint: Does your 'data' object contain your observed environmental
        values? ", call. = FALSE)
   }
+  # Ensure only data.frame class (could also be tibble, tbl etc at this point).
+  # Unique behaviour of data.frame required later (selecting single column will
+  # create a list not a data.frame)
+  data <- data.frame(data, check.names = FALSE)
+
   # Load validation rules
   validation_rules <-
     utils::read.csv(system.file("extdat", "validation-rules.csv", package = "rict"),
@@ -133,8 +143,7 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
   }
   # Display which model type has been detected
   message("Variables for the '", model, "' model detected - applying relevant checks. ")
-
-  if (model == "physical") {
+  if (model == "physical" && is.null(area)) {
     ### Detect NI / GB grid references --------------------------------------------------------
     areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", toupper(data$NGR)), "gb", "ni"))
 
@@ -148,20 +157,66 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
       area <- areas
     }
   } else {
+    if(is.null(area)) {
     area <- "gb" # model 44 currently always "gb" but could change in future
+    }
   }
 
-  # Display which model area has been detected
-  message("Grid reference values detected for '", toupper(area), "' - applying relevant checks.")
+  if(model == "physical") {
+  # Convert to numeric in order to help validate them as numbers
+  data$EASTING <- as.numeric(data$EASTING)
+  data$NORTHING <- as.numeric(data$NORTHING)
 
+  # Find Isle of Man NGRs and to apply IOM model/area
+  sc_data <- dplyr::filter(data, toupper(.data$NGR) == "SC")
+  sc_data <- dplyr::filter(sc_data, .data$NORTHING <= 99999)
+  sc_data <- dplyr::filter(sc_data, .data$EASTING <= 55000)
+  if(nrow(sc_data) > 0) {
+    message("Site location detected in the Isle of Man -
+              applying IOM model for all input data")
+    area <- "iom"
+  }
+
+  nx_data <- dplyr::filter(data, toupper(.data$NGR) == "NX")
+  nx_data <- dplyr::filter(nx_data, .data$NORTHING <= 10000)
+  nx_data <- dplyr::filter(nx_data, .data$EASTING <= 55000)
+  if(area != "iom" && nrow(nx_data) > 0) {
+    message("Site location detected in the Isle of Man -
+              applying IOM model for all input data")
+    area <- "iom"
+  }
+  }
   # Re-assigning area due to issue with filtering column and variable sharing same name
   area_selected <- area
 
   ### Filter rules based on which model and area selected -------------------------------------------
-  validation_rules <-
+  if(area != "iom") {
+    validation_rules <-
     dplyr::filter(validation_rules, area %in% c(area_selected, "all")) %>%
     dplyr::filter(models %in% c(model, "all"))
+  }
 
+  if(area == "iom") {
+    validation_rules <-
+      dplyr::filter(validation_rules, variable %in% c("SITE",
+                                                      "YEAR",
+                                                      "WATERBODY",
+                                                      "NGR",
+                                                      "EASTING",
+                                                      "NORTHING",
+                                                      "DIST_FROM_SOURCE",
+                                                      "ALTITUDE",
+                                                      "SLOPE",
+                                                      "ALKALINITY"))
+
+        validation_rules <-
+                      dplyr::filter(validation_rules, area %in% c("all","iom"))
+
+
+        validation_rules <-
+          dplyr::filter(validation_rules, models != "gis")
+
+  }
   ### Check column names correct ------------------------------------------------------------------
   # Note: additional columns provided by user are allowed
   if (all(validation_rules$variable[validation_rules$source == "input"] %in%
@@ -177,7 +232,14 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
   data$SITE <- as.character(data$SITE)
   data$WATERBODY <- as.character(data$WATERBODY)
 
-  ### Check class of each column is correct --------------------------------------------
+  # If model GIS - then NGR easting and northing maybe not be provided. So only
+  # convert to character if present in data.
+  if (sum(names(data) %in% c("EASTING", "NORTHING")) == 2) {
+    # Convert to character as required by specification
+    data$EASTING <- as.character(data$EASTING)
+    data$NORTHING <- as.character(data$NORTHING)
+  }
+  ### Check class of each column is correct ------------------------------------
   # Loop through each 'variable' in rules dataframe
   fails <- lapply(
     split(
@@ -207,7 +269,7 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
     stop(fails, call. = FALSE)
   }
   ### Check columns that may or may not be provided -----------------------------------------
-  if (model == "physical") {
+  if (model == "physical" && area != "iom") {
     if (all(!is.na(data$DISCHARGE)) &&
       all(!is.na(data$VELOCITY))) {
       warning("You provided both VELOCITY and DISCHARGE values,
@@ -231,9 +293,6 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
   # If model GIS - then NGR easting and northing maybe not be provided. So only calculate
   # Easting and Northings for physical data.
   if (model == "physical") {
-    # Convert to character as required by specification
-    data$EASTING <- as.character(data$EASTING)
-    data$NORTHING <- as.character(data$NORTHING)
 
     # Check NGR length
     data$NGR <- as.character(data$NGR)
@@ -247,22 +306,24 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
        Hint: Check your NGR variables have less than 3 three letters. ", call. = FALSE)
     }
     data$NGR_LENGTH <- NULL
-    # Convert to numeric in order to help validate them as numbers
-    data$EASTING <- as.numeric(data$EASTING)
-    data$NORTHING <- as.numeric(data$NORTHING)
+
+
     # Check for length <5, add a leading zeros "0" to get proper Easting/Northing 5 digit codes
     if (any(is.na(data$EASTING)) || any(is.na(data$NORTHING))) {
       stop("EASTING or NORTHING value(s) have not been supplied, we expect
        all rows to have Easting and Northing values.
        Hint: Check all rows of input data have Easting and Northing values. ", call. = FALSE)
     } else {
-      data$EASTING <- as.character(formatC(round(data$EASTING), width = 5, format = "d", flag = "0"))
-      data$NORTHING <- as.character(formatC(round(data$NORTHING), width = 5, format = "d", flag = "0"))
+      data$EASTING <- as.character(formatC(round(as.numeric(data$EASTING)), width = 5, format = "d", flag = "0"))
+      data$NORTHING <- as.character(formatC(round(as.numeric(data$NORTHING)), width = 5, format = "d", flag = "0"))
     }
   }
 
+  # Display which model area has been detected
+  message("Grid reference values detected for '", toupper(area), "' - applying relevant checks.")
+
   # Calculate Longitude & Latitude
-  if (area == "gb" && model == "physical") {
+  if (area %in% c("gb","iom") && model == "physical") {
     # suppress warning: In showSRID(uprojargs, format = "PROJ", multiline = "NO"):
     # Discarded datum OSGB_1936 in CRS definition
     lat_long <- with(data, suppressWarnings(getLatLong(NGR, EASTING, NORTHING, "WGS84", area)))
@@ -276,7 +337,6 @@ rict_validate <- function(data = NULL, row = FALSE, stop_if_all_fail = TRUE) {
     data$LONGITUDE <- lat_long$Longitude
     data$LATITUDE <- lat_long$Latitude
   }
-
   if (model == "gis") {
     coords <- st_as_sf(data[, c("SX", "SY")], coords = c("SX", "SY"), crs = 27700)
     coords <- st_transform(coords, crs = 4326)
@@ -322,7 +382,7 @@ These values will be used instead of calculating them from Grid Reference values
   data$TRANGE <- NULL
 
   # Calculate total substrate and phi grain size scale
-  if (model == "physical") {
+  if (model == "physical" && area != "iom") {
     data <- get_substrate(data)
   }
 

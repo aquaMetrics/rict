@@ -18,9 +18,13 @@
 #' classifications <- rict_classify(predictions)
 #' }
 #'
-rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, n_runs = 10000) {
+rict_classify <- function(data = NULL,
+                          year_type = "multi",
+                          store_eqrs = FALSE,
+                          n_runs = 10000) {
   message("Classifying...")
-  # Create area variable to pass as parameter to classification functions (based on grid reference)
+  # Create area variable to pass as parameter to classification functions (based
+  # on grid reference)
   area <- unique(data$area)
   # arrange in fixed order so random set.seed is ap
   # data <- dplyr::arrange(data, SITE, YEAR)
@@ -49,6 +53,15 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
         package = "rict"
       ))
     }
+
+    if (area == "iom") {
+      gb685_assess_score <- utils::read.csv(
+        system.file("extdat",
+          "end-group-assess-scores-iom.csv",
+          package = "rict"
+        )
+      )
+    }
     # Enter source files
     # Use the column header as site names in the final output
     all_sites <- data[, 1]
@@ -74,7 +87,8 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
     prob_names <- paste0("P", 1:43)
     all_probabilities <- data[, names(data) %in% prob_names]
 
-    # Input Adjustment factors for reference site quality scores (Q1, Q2, Q3, Q4, Q5)
+    # Input Adjustment factors for reference site quality scores (Q1, Q2, Q3,
+    # Q4, Q5)
     # Extract Ubias8 from Biological data
     ubias_main <- biological_data[, "SPR_NTAXA_BIAS"][1]
 
@@ -104,13 +118,10 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
 
     # Write a function that computes aspt, ntaxa adjusted (1 = "NTAXA", 2="ASPT")
     # or select them by name as declared in the classification functions
+
     ntaxa_adjusted <- dplyr::select(data, dplyr::contains("_NTAXA_")) / rjaj[, "NTAXA"]
     # Compute AdjExpected as E=data/Sum(rj*adjusted_params)
     aspt_adjusted <- dplyr::select(data, dplyr::contains("_ASPT_")) / rjaj[, "ASPT"]
-
-    adjusted_expected <- cbind(ntaxa_adjusted, aspt_adjusted)
-    # Include site names from data
-    adjusted_expected_new <- cbind(as.data.frame(all_sites), adjusted_expected)
 
     # OBSERVED ASPT
     obs_aspt_spr <- biological_data[, "SPR_TL2_WHPT_ASPT (ABW,DISTFAM)"]
@@ -143,9 +154,8 @@ rict_classify <- function(data = NULL, year_type = "multi", store_eqrs = FALSE, 
     EQRAverages_aspt_aut <- data.frame() # Store average EQRs for spr in a dataframe
 
     # **************  For NTAXA   *************
-    Exp_ref_ntaxa <- ntaxa_adjusted / 1.0049 # select(adjusted_expected_new, contains("_NTAXA_"))/1.0049
-    # head(Exp_ref_ntaxa,18)
 
+    Exp_ref_ntaxa <- ntaxa_adjusted / 1.0049
     # Find the non-bias corrected  EQR = obs/ExpRef, from the raw inputs,
     # not used but useful for output checking purposes only
     nonBiasCorrected_WHPT_ntaxa_spr <-

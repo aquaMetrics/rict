@@ -9,7 +9,8 @@ rict_predict(
   all_indices = FALSE,
   taxa = FALSE,
   taxa_list = c("TL1", "TL2", "TL3", "TL4", "TL5"),
-  rows = NULL
+  rows = NULL,
+  area = NULL
 )
 }
 \arguments{
@@ -61,17 +62,23 @@ rict_predict(
   \item{area}{ni or gb}
 }}
 
-\item{all_indices}{Boolean - Return all indices in output (default only returns WHPT indices).}
+\item{all_indices}{Boolean - Return all indices in output (default only
+returns WHPT indices).}
 
 \item{taxa}{Boolean - Return taxa predictions (default  returns indices).}
 
-\item{taxa_list}{Vector of taxa lists to predict default all lists i.e. c("TL1", "TL2", "TL3", "TL4", "TL5").}
+\item{taxa_list}{Vector of taxa lists to predict default all lists i.e.
+c("TL1", "TL2", "TL3", "TL4", "TL5").}
 
-\item{rows}{Number (integer) of rows (one site per row) to predict taxa. Default is all rows.}
+\item{rows}{Number (integer) of rows (one site per row) to predict taxa.
+Default is all rows.}
+
+\item{area}{Area is by detected by default from the NGR, but you can provide
+the area parameter either 'iom', 'gb, 'ni' for testing purposes.}
 }
 \value{
-Dataframe of predicted biotic scores and probability of observed values
-falling into each statistical grouping of rivers.
+Dataframe of predicted biotic scores and probability of observed
+  values falling into each statistical grouping of rivers.
 }
 \description{
 Calculate River Invertebrate Classification Tool (RICT) predictions

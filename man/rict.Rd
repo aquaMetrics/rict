@@ -4,7 +4,7 @@
 \alias{rict}
 \title{Run the River Invertebrate Classification Tool (RICT)}
 \usage{
-rict(data = NULL, year_type = "multi", store_eqrs = FALSE)
+rict(data = NULL, year_type = "multi", store_eqrs = FALSE, area = NULL)
 }
 \arguments{
 \item{data}{Dataframe of observed environmental values for example of input
@@ -21,6 +21,9 @@ required - default is "multi".}
 
 \item{store_eqrs}{TRUE/FALSE if set to TRUE function will return simulate
 EQRs.}
+
+\item{area}{Area is by detected by default from the NGR, but you can provide
+the area parameter either 'iom', 'gb, 'ni' for testing purposes.}
 }
 \value{
 Dataframe of classification results (and simulated EQRs if store_eqrs

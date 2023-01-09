@@ -158,3 +158,8 @@ test_that("predictions work NI", {
   expect_equal(prediction$TL2_WHPT_NTAXA_AbW_DistFam_sum, verified_predictions$TL2_WHPT_NTAXA_AbW_DistFam_sum)
   expect_equal(prediction$TL2_WHPT_ASPT_AbW_DistFam_sum, verified_predictions$TL2_WHPT_ASPT_AbW_DistFam_sum)
 })
+
+test_that("predictions work IOM", {
+  prediction <- rict_predict(demo_iom_observed_values, area = "iom")
+
+})

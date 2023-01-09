@@ -4,7 +4,7 @@
 \alias{rict_validate}
 \title{Validate observed values}
 \usage{
-rict_validate(data = NULL, row = FALSE, stop_if_all_fail = TRUE)
+rict_validate(data = NULL, row = FALSE, stop_if_all_fail = TRUE, area = NULL)
 }
 \arguments{
 \item{data}{dataframe of observed environmental variables
@@ -24,6 +24,9 @@ validation checks to specific rows in the input data.}
 \item{stop_if_all_fail}{Boolean - if set to `FALSE` the validation function
 will return empty dataframe for valid `data`. This is useful if you want to
 run validation checks without stopping process.}
+
+\item{area}{Area is by detected by default from the NGR, but you can provide
+the area parameter either 'iom', 'gb, 'ni' for testing purposes.}
 }
 \value{
 List of dataframes and other parameters:

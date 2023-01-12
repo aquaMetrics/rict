@@ -606,9 +606,12 @@ These values will be used instead of calculating them from Grid Reference values
   # Subset the 'passing' instances to run in prediction by removing "this_failing"
   data <- data[!data$SITE %in% this_failing$SITE, ] # Note, can't use dplyr::anti_join() in ML AZURE
   if (nrow(data) == 0 && stop_if_all_fail == TRUE) {
-    stop("You provided data that has failure(s) on every row.
+    stop(paste(list("You provided data that has failure(s) on every row.
        We expect at least one row without any fails to proceed.
-       HINT: Check fail messages, fix errors and re-try.", call. = FALSE)
+       HINT: Check fail messages, fix errors and re-try: ",
+                    paste(capture.output(print(checks)),
+              collapse = "\n")), collapse = "\n"),
+         call. = FALSE)
   }
 
   if (row == FALSE) {

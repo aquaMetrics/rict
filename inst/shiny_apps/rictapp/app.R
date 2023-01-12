@@ -128,7 +128,8 @@ server <- function(input, output) {
     on.exit(progress$close())
     progress$set(message = "Calculating", value = 1)
     data <- read.csv(inFile$datapath, check.names = FALSE)
-    validations <- rict_validate(data)
+    options(shiny.sanitize.errors = FALSE)
+    validations <- rict_validate(data, stop_if_all_fail = FALSE)
     predictions <- rict_predict(data)
     predictions_table <- predictions
     # don't need to display all columns - some columns only used by some models

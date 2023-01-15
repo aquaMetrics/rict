@@ -357,7 +357,9 @@ test_that("changes/formatting that shouldn't impact calculations", {
   data$Easting <- 55001
   data$Northing <- 99999
   expect_error(rict_validate(data))
-  data <- demo_iom_observed_values[,c(1:8,11,14,22:33)]
+  # Additional columns added to IOM data will be ignored
+  data <- demo_iom_observed_values
+  data$silt <- 1
   test <- rict_validate(data)
   expect_equal(test$area, "iom")
 })

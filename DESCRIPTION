@@ -1,7 +1,7 @@
 Package: rict
 Type: Package
 Title: Calculates River Invertebrate Classification Tool 2 (RICT2) predictions
-Version: 3.0.0
+Version: 3.1.1
 Authors@R: c(person("Maybin", "Muyeba", email = "Maybin.Muyeba@environment-agency.gov.uk", role = "aut"),
              person("Tim", "Foster", email = "tim.foster@sepa.org.uk", role = "aut"),
              person("Tim", "Loveday", email = "tim.loveday@environment-agency.gov.uk", role = c("cre","aut"))) 

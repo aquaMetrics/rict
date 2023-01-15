@@ -102,7 +102,11 @@ ui <- tagList(
       mainPanel(
         htmlOutput("compare")
       )
-    )
+    ),
+    tabPanel(
+      "Help",
+      HTML('<h4 style="color:grey;">Work in progress - updated user guide will be provided here </h3></style>')
+    ),
   )
 )
 
@@ -112,8 +116,16 @@ server <- function(input, output) {
     inFile <- input$dataset
     if (is.null(inFile)) {
       return(HTML(
-        '<h1 style="color:lightgrey;">Please choose .csv file...</h1></style>'
-      ))
+        '<h3 style="color:grey;">Choose your prepared .CSV input file...or use the following:</h1></style>
+        <p></p>
+          <h3 style="color:grey;">Template File</h1></style>
+          <p><a href="https://www.fba.org.uk/s/New-Input-file-wValidation-wTestData-v12.xls" target="_blank">Validation Spreadsheet for Standard (Model 1) GB and NI</a></p>
+          <h3 style="color:grey;">Example Input Files</h1></style>
+          <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/new-input-file-data-to-use-multi-year-1.csv" target="_blank">Great Britain</a></p>
+          <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/ni-model-1-test-data.csv" target="_blank">Northern Ireland</a></p>
+          <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/input-file-data-to-use-multi-year-iom.csv" target="_blank">Isle of Man</a></p>
+        <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/environmental-test-data-model-44-log.csv" target="_blank">GIS variables for GB only (Model 44)</a></p>'
+        ))
     }
   })
   # 'Predict and Classify' tab outputs -----------------------------------------
@@ -364,7 +376,7 @@ server <- function(input, output) {
     if (is.null(inFile_one) || is.null(inFile_two)) {
       return(HTML(
         '<h1 style="color:lightgrey;">Please choose .csv file...</h1></style>'
-      ))
+        ))
     }
 
     progress <- Progress$new()

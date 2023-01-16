@@ -100,7 +100,8 @@ ui <- tagList(
       ),
       # Show tables
       mainPanel(
-        htmlOutput("message_compare")
+        htmlOutput("message_compare"),
+        htmlOutput("compare")
       )
     ),
     tabPanel(
@@ -388,9 +389,7 @@ server <- function(input, output) {
     inFile_one <- input$dataset_one
     inFile_two <- input$dataset_two
     if (is.null(inFile_one) || is.null(inFile_two)) {
-      return(HTML(
-        '<h1 style="color:lightgrey;">Please choose .csv file...</h1></style>'
-        ))
+      return()
     }
 
     progress <- Progress$new()

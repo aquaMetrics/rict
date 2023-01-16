@@ -64,7 +64,7 @@ ui <- tagList(
       ),
       # Show tables
       mainPanel(
-        htmlOutput("messsage"),
+        htmlOutput("message"),
         leafletOutput("map"),
         p(),
         htmlOutput("tables")
@@ -100,7 +100,7 @@ ui <- tagList(
       ),
       # Show tables
       mainPanel(
-        htmlOutput("compare")
+        htmlOutput("message_compare")
       )
     ),
     tabPanel(
@@ -112,14 +112,14 @@ ui <- tagList(
 
 # Define server logic ----------------------------------------------------------
 server <- function(input, output) {
-  output$messsage <- renderUI({
+  output$message <- renderUI({
     inFile <- input$dataset
     if (is.null(inFile)) {
       return(HTML(
         '<h3 style="color:grey;">Upload a prepared .CSV input file or use the following:</h3></style>
-        <h3 style="color:grey;">Template File</h3></style>
+        <h4 style="color:grey;">Template File</h4></style>
           <p><a href="https://www.fba.org.uk/s/New-Input-file-wValidation-wTestData-v12.xls" target="_blank">Validation Spreadsheet for Standard (Model 1) GB and NI</a></p>
-          <h3 style="color:grey;">Example Input Files</h3></style>
+          <h4 style="color:grey;">Example Input Files</h4></style>
           <p style="color:grey;">Open link, right-click and save as CSV: </p></style>
           <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/new-input-file-data-to-use-multi-year-1.csv" target="_blank">Great Britain</a></p>
           <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/ni-model-1-test-data.csv" target="_blank">Northern Ireland</a></p>
@@ -128,6 +128,20 @@ server <- function(input, output) {
         ))
     }
   })
+
+  output$message_compare <- renderUI({
+    inFile <- input$dataset
+    if (is.null(inFile)) {
+      return(HTML('
+          <h3 style="color:grey;">Upload prepared .CSV input files or use the following:</h3></style>
+          <h4 style="color:grey;">Example Upstream/Downstream Input Files</h4></style>
+          <p style="color:grey;">Open link, right-click and save as CSV: </p></style>
+          <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/compare-data/rict-input-1-upstream-comapre.csv" target="_blank">Upstream</a></p>
+          <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/compare-data/rict-input-2-downstream-compare.csv" target="_blank">Downstream</a></p>'
+      ))
+    }
+  })
+
   # 'Predict and Classify' tab outputs -----------------------------------------
   output$tables <- renderUI({
     inFile <- input$dataset

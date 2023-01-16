@@ -136,7 +136,7 @@ server <- function(input, output) {
           <h3 style="color:grey;">Upload prepared .CSV input files or use the following:</h3></style>
           <h4 style="color:grey;">Example Upstream/Downstream Input Files</h4></style>
           <p style="color:grey;">Open link, right-click and save as CSV: </p></style>
-          <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/compare-data/rict-input-1-upstream-comapre.csv" target="_blank">Upstream</a></p>
+          <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/compare-data/rict-input-1-upstream-compare.csv" target="_blank">Upstream</a></p>
           <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/compare-data/rict-input-2-downstream-compare.csv" target="_blank">Downstream</a></p>'
       ))
     }

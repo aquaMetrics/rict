@@ -162,6 +162,11 @@ server <- function(input, output) {
     # don't need to display all columns - some columns only used by some models
     predictions_table <- dplyr::select(
       predictions_table,
+      SITE,
+      WATERBODY,
+      YEAR,
+      SuitText,
+      dplyr::everything(),
       -dplyr::contains("LATITUDE"),
       -dplyr::contains("LONGITUDE"),
       -dplyr::contains("LOG.ALTITUDE"),
@@ -178,8 +183,11 @@ server <- function(input, output) {
       -SuitCode,
       -area,
       -dplyr::contains("belongs_to_end_grp"),
+      -dplyr::contains("SEASON_ID"),
       -dplyr::starts_with("p")
     )
+    predictions_table[colSums(!is.na(predictions_table)) > 0]
+    predictions_table <- Filter(function(x) !(all(x=="")), predictions_table)
     predictions_table <- dplyr::mutate(
       predictions_table,
       dplyr::across(
@@ -196,6 +204,8 @@ server <- function(input, output) {
       )
     }
     classification_table <- results
+    classification_table <-  classification_table[colSums(!is.na(classification_table)) > 0]
+    classification_table <- Filter(function(x) !(all(x=="")), classification_table)
     classification_table <- dplyr::mutate(
       classification_table,
       dplyr::across(
@@ -223,6 +233,7 @@ server <- function(input, output) {
           Average_Numerical_Abundance,
           Prob_Occurrence
         )
+
         taxa_table <- dplyr::mutate(
           taxa_table,
           dplyr::across(
@@ -238,6 +249,8 @@ server <- function(input, output) {
       indices <- rict_predict(data, all_indices = T)
     }
     indices_table <- indices
+    indices_table <-  indices_table[colSums(!is.na(indices_table)) > 0]
+    indices_table <- Filter(function(x) !(all(x=="")), indices_table)
     # Don't need to display all columns - some columns only used by some models
     indices_table <- dplyr::select(
       indices_table,

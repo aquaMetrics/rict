@@ -260,6 +260,21 @@ rict_predict <- function(data = NULL,
       "LOG.ALKALINITY" = data$vld_alkal_log,
       "LOG.SLOPE" = data$vld_slope_log
     )
+
+      final_predictors <- data.frame(
+        "SITE" = "f11506",
+        "LATITUDE" = 55.01006261,
+        "LONGITUDE" = -7.256766921,
+        "LOG.ALTITUDE" = 0.954242509,
+        "LOG.DISTANCE.FROM.SOURCE" = 1.612783857,
+        "LOG.WIDTH" = 1.176091259,
+        "LOG.DEPTH" = 1.698970004,
+        "MEAN.SUBSTRATUM" = -3.1525,
+        "DISCHARGE.CATEGORY" = 7, # data$disch_log,
+        "ALKALINITY" = 58,
+        "LOG.ALKALINITY" = 1.763427994,
+        "LOG.SLOPE" = -1
+      )
   }
 
   if (model == "gis") {
@@ -335,7 +350,8 @@ rict_predict <- function(data = NULL,
     CQ3 = c(26.21696, 23.20930),
     CQ4 = c(32.90923, 29.58830)
   )
-  suit_codes <- getSuitabilityCode(MahDist_min, chiSquare_vals)
+
+  suit_codes <- getSuitabilityCode(MahDist_min, chiSquare_vals, area)
   # Add suitability codes to the final data, using cbind
   final_predictors_try2 <- cbind(final_predictors_try1, suit_codes)
   # Find max class group belongs to by getting the column name: use

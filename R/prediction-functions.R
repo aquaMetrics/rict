@@ -62,29 +62,34 @@ PDistTotal <- function(distr_g) {
 }
 
 # getSuitabilityCode: Suitability code - input from getMahDist_min, and suitability codes
-getSuitabilityCode <- function(minMahDist, suitCodes) {
+getSuitabilityCode <- function(minMahDist, suitCodes, area) {
+  if(area == "ni") {
+    column <- 2
+  } else {
+    column <- 1
+  }
   suit_frame <- as.character(data.frame(c(), c())) # Note rbind works with character data.frames
   for (i in seq_len(nrow(minMahDist))) { # Case 1
-    if (minMahDist[i, ncol(minMahDist)] < suitCodes[1, "CQ1"]) { # for GB, row = 1
+    if (minMahDist[i, ncol(minMahDist)] < suitCodes[column, "CQ1"]) { # row = 1
       # print(c("Here in loop case 1, row =",i))
       suit_frame <- rbind(suit_frame, c(1, ">5%"))
     } else { # Case 2
       if ((suitCodes[1, "CQ1"] <= minMahDist[i, ncol(minMahDist)]) &
-        (minMahDist[i, ncol(minMahDist)] < suitCodes[1, "CQ2"])) { # for GB, row = 1
+        (minMahDist[i, ncol(minMahDist)] < suitCodes[column, "CQ2"])) { # row = 1
         # print(c("Here in loop case 2, row =",i))
         suit_frame <- rbind(suit_frame, c(2, "<5%"))
       } else { # Case 3
         if ((suitCodes[1, "CQ2"] <= minMahDist[i, ncol(minMahDist)]) &
-          (minMahDist[i, ncol(minMahDist)] < suitCodes[1, "CQ3"])) { # for GB, row = 1
+          (minMahDist[i, ncol(minMahDist)] < suitCodes[column, "CQ3"])) { # row = 1
           suit_frame <- rbind(suit_frame, c(3, "<2%"))
         } else { # Case 4
           if ((suitCodes[1, "CQ3"] <= minMahDist[i, ncol(minMahDist)]) &
-            (minMahDist[i, ncol(minMahDist)] < suitCodes[1, "CQ4"])) { # for GB, row = 1
+            (minMahDist[i, ncol(minMahDist)] < suitCodes[column, "CQ4"])) { # row = 1
             suit_frame <- rbind(suit_frame, c(4, "<1%"))
           } else { # last case - no need for "if"
-            if (minMahDist[i, ncol(minMahDist)] >= suitCodes[1, "CQ4"]) {
+            # if (minMahDist[i, ncol(minMahDist)] >= suitCodes[column, "CQ4"]) {
               suit_frame <- rbind(suit_frame, c(5, "<0.1%"))
-            }
+            # }
           } # else last case
         } # else case 4
       } # else case 3

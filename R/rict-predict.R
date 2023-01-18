@@ -335,7 +335,8 @@ rict_predict <- function(data = NULL,
     CQ3 = c(26.21696, 23.20930),
     CQ4 = c(32.90923, 29.58830)
   )
-  suit_codes <- getSuitabilityCode(MahDist_min, chiSquare_vals)
+
+  suit_codes <- getSuitabilityCode(MahDist_min, chiSquare_vals, area)
   # Add suitability codes to the final data, using cbind
   final_predictors_try2 <- cbind(final_predictors_try1, suit_codes)
   # Find max class group belongs to by getting the column name: use

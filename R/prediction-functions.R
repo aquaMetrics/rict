@@ -87,9 +87,9 @@ getSuitabilityCode <- function(minMahDist, suitCodes, area) {
             (minMahDist[i, ncol(minMahDist)] < suitCodes[column, "CQ4"])) { # row = 1
             suit_frame <- rbind(suit_frame, c(4, "<1%"))
           } else { # last case - no need for "if"
-            if (minMahDist[i, ncol(minMahDist)] >= suitCodes[column, "CQ4"]) {
+            # if (minMahDist[i, ncol(minMahDist)] >= suitCodes[column, "CQ4"]) {
               suit_frame <- rbind(suit_frame, c(5, "<0.1%"))
-            }
+            # }
           } # else last case
         } # else case 4
       } # else case 3

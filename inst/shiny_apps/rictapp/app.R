@@ -204,6 +204,12 @@ server <- function(input, output) {
       )
     }
     classification_table <- results
+    classification_table <- dplyr::select(classification_table,
+                           SITE,
+                           WATERBODY,
+                           YEAR,
+                           BIAS_USED,
+                           everything())
     classification_table <-  classification_table[colSums(!is.na(classification_table)) > 0]
     classification_table <- Filter(function(x) !(all(x=="")), classification_table)
     classification_table <- dplyr::mutate(

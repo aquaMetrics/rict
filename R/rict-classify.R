@@ -90,7 +90,11 @@ rict_classify <- function(data = NULL,
     # Input Adjustment factors for reference site quality scores (Q1, Q2, Q3,
     # Q4, Q5)
     # Extract Ubias8 from Biological data
-    ubias_main <- biological_data[, "SPR_NTAXA_BIAS"][1]
+    ubias_main <- mean(
+      c(biological_data[, "SPR_NTAXA_BIAS"][1],
+      biological_data[, "SUM_NTAXA_BIAS"][1],
+      biological_data[, "AUT_NTAXA_BIAS"][1]),
+      na.rm = TRUE)
 
     # Create default bias value of 1.68 or 0 depending on area
     default_bias <- data.frame(
@@ -573,6 +577,7 @@ rict_classify <- function(data = NULL,
         dplyr::select(classification_results, SITE, ID, YEAR)
       classification_results <- merge(classification_results, eqr_metrics)
     }
+    classification_results$BIAS_USED <- ubias_main
     return(classification_results)
   }
 }

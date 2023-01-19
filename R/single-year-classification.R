@@ -83,7 +83,12 @@ if (area == "iom") {
   # Q5)
 
   # Extract Ubias8 from Biological data #
-  ubias_main <- biological_data[, "SPR_NTAXA_BIAS"][1] # Put new AZURE
+  ubias_main <- mean(
+    c(biological_data[, "SPR_NTAXA_BIAS"][1],
+    biological_data[, "SUM_NTAXA_BIAS"][1],
+    biological_data[, "AUT_NTAXA_BIAS"][1]),
+    na.rm = TRUE)
+
   # Create default bias value of 1.68 or 0 depending on area
   default_bias <- data.frame(
     "ni" = 0,
@@ -684,6 +689,6 @@ if (area == "iom") {
 
   # Place SITE column at start
   final <- select(final, .data$SITE, everything())
-
+  final$BIAS_USED <- ubias_main
   return(final)
 }

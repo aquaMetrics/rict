@@ -114,7 +114,7 @@ test_that("taxa predictions work GB", {
 test_that("All indices predictions work NI", {
   data <- demo_ni_observed_values
 
-  indices_prediction <- rict_predict(data, all_indices = TRUE)
+  indices_prediction <- rict_predict(data, all_indices = TRUE, crs = 29903)
   verified_predictions <-
     utils::read.csv(system.file("extdat",
       "rict-ni-all-indices-predictions.csv",
@@ -128,7 +128,9 @@ test_that("All indices predictions work NI", {
 
 
 test_that("taxa predictions work NI", {
-  taxa_prediction <- rict_predict(demo_ni_observed_values[1, ], taxa = TRUE)
+  taxa_prediction <- rict_predict(demo_ni_observed_values[1, ],
+                                  taxa = TRUE,
+                                  crs = 29903)
   verified_predictions <-
     utils::read.csv(system.file("extdat",
       "rict-ni-taxa-prediction.csv",
@@ -144,7 +146,7 @@ test_that("taxa predictions work NI", {
 })
 
 test_that("predictions work NI", {
-  prediction <- rict_predict(demo_ni_observed_values)
+  prediction <- rict_predict(demo_ni_observed_values, crs = 29903)
   verified_predictions <-
     utils::read.csv(system.file("extdat",
       "rict-ni-predictions.csv",

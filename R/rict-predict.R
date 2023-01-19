@@ -58,6 +58,7 @@
 #'   Default is all rows.
 #' @param area Area is by detected by default from the NGR, but you can provide
 #'   the area parameter either 'iom', 'gb, 'ni' for testing purposes.
+#' @param crs optionally set crs to `29903` for Irish projection system.
 #' @return Dataframe of predicted biotic scores and probability of observed
 #'   values falling into each statistical grouping of rivers.
 #' @export
@@ -74,10 +75,11 @@ rict_predict <- function(data = NULL,
                          taxa = FALSE,
                          taxa_list = c("TL1", "TL2", "TL3", "TL4", "TL5"),
                          rows = NULL,
-                         area = NULL) {
+                         area = NULL,
+                         crs = NULL) {
 
   # Validate predictive input data
-  all_validation <- rict_validate(data, area = area)
+  all_validation <- rict_validate(data, area = area, crs = crs)
   model <- all_validation[["model"]] # returns model based on input headers
   area <- all_validation[["area"]] # returns area based on NGR
   # Change all column names to uppercase

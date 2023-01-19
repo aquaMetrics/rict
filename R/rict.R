@@ -16,6 +16,7 @@
 #'   EQRs.
 #' @param area Area is by detected by default from the NGR, but you can provide
 #'   the area parameter either 'iom', 'gb, 'ni' for testing purposes.
+#' @param crs optionally set crs to `29903` for Irish projection system.
 #' @return Dataframe of classification results (and simulated EQRs if store_eqrs
 #'   = TRUE).
 #' @export
@@ -27,7 +28,8 @@
 #' }
 rict <- function(data = NULL, year_type = "multi",
                  store_eqrs = FALSE,
-                 area = NULL) {
+                 area = NULL,
+                 crs = NULL) {
   predictions <- rict_predict(data, area = area)
   results <- rict_classify(predictions, year_type, store_eqrs = store_eqrs)
   return(results)

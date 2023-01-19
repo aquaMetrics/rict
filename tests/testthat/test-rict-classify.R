@@ -39,9 +39,11 @@ test_that("Outputs match azure single-year outputs", {
 ### ---------------------------------------------------------------------------------------
 test_that("Outputs match azure NI single-year outputs", {
   data <- demo_ni_observed_values # only one year required
-  test_validation_func <- rict:::rict_validate(data)
-  predictions <- rict_predict(data)
-  classification <- rict_classify(predictions, year_type = "single")
+  test_validation_func <- rict:::rict_validate(data, crs = 29903)
+  predictions <- rict_predict(data, crs = 29903)
+  classification <- rict_classify(predictions,
+                                  year_type = "single",
+                                  crs = 29903)
   expect_equal(class(classification), "data.frame")
 
   azure_classification <- utils::read.csv(system.file("extdat",
@@ -333,7 +335,9 @@ test_that("Test single row of multi-year input works", {
 })
 
 test_that("NI classification", {
-  classification <- rict(demo_ni_observed_values, year_type = "single")
+  classification <- rict(demo_ni_observed_values,
+                         year_type = "single",
+                         crs = 29903)
 
   verfied_classification <- utils::read.csv(system.file("extdat",
     "validation-classification-ni-single-year.csv",

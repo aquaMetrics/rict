@@ -41,7 +41,7 @@
 #'   run validation checks without stopping process.
 #' @param area Area is by detected by default from the NGR, but you can provide
 #'   the area parameter either 'iom', 'gb, 'ni' for testing purposes.
-#'
+#' @param crs optionally set crs to `29903` for Irish projection system.
 #' @return List of dataframes and other parameters:
 #' \describe{
 #'   \item{data}{Dataframe of input data that passes validation rules}
@@ -63,7 +63,8 @@
 rict_validate <- function(data = NULL,
                           row = FALSE,
                           stop_if_all_fail = TRUE,
-                          area = NULL) {
+                          area = NULL,
+                          crs = NULL) {
   ### Sense checks --------------------------------------------------------------------
   # Check data object provided
   if (is.null(data)) {
@@ -323,14 +324,14 @@ rict_validate <- function(data = NULL,
   message("Grid reference values detected for '", toupper(area), "' - applying relevant checks.")
 
   # Calculate Longitude & Latitude
-  if (area %in% c("gb","iom") && model == "physical") {
+  if (area %in% c("gb","iom","ni") && model == "physical") {
     # suppress warning: In showSRID(uprojargs, format = "PROJ", multiline = "NO"):
     # Discarded datum OSGB_1936 in CRS definition
     lat_long <- with(data, suppressWarnings(getLatLong(NGR, EASTING, NORTHING, "WGS84", area)))
     data$LONGITUDE <- lat_long$lon
     data$LATITUDE <- lat_long$lat
   }
-  if (area == "ni" && model == "physical") {
+  if (as.numeric(crs) == 29903 && model == "physical") {
     # suppress warning: In showSRID(uprojargs, format = "PROJ", multiline = "NO"):
     # Discarded datum OSGB_1936 in CRS definition
     lat_long <- with(data, suppressWarnings(getLatLong_NI(EASTING, NORTHING)))

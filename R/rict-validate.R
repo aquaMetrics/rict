@@ -331,7 +331,8 @@ rict_validate <- function(data = NULL,
     data$LONGITUDE <- lat_long$lon
     data$LATITUDE <- lat_long$lat
   }
-  if (as.numeric(crs) == 29903 && model == "physical") {
+
+  if (!is.null(crs) && as.numeric(crs) == 29903 && model == "physical") {
     # suppress warning: In showSRID(uprojargs, format = "PROJ", multiline = "NO"):
     # Discarded datum OSGB_1936 in CRS definition
     lat_long <- with(data, suppressWarnings(getLatLong_NI(EASTING, NORTHING)))

@@ -312,11 +312,9 @@ server <- function(input, output) {
         tmpdir <- tempdir()
         setwd(tempdir())
         for (i in seq_along(output_files)) {
-          if (nrow(output_files[[i]] > 0)) {
             path <- paste0(names(output_files)[i], ".csv")
             fs <- c(fs, path)
             write.csv(output_files[[i]], file = path, row.names = FALSE)
-          }
         }
         zip(zipfile = fname, files = fs)
       }
@@ -451,11 +449,9 @@ server <- function(input, output) {
         tmpdir <- tempdir()
         setwd(tempdir())
         for (i in seq_along(output_files)) {
-          if (nrow(output_files[[i]] > 0)) {
             path <- paste0(names(output_files)[i], ".csv")
             fs <- c(fs, path)
             write.csv(output_files[[i]], file = path, row.names = FALSE)
-          }
         }
         zip(zipfile = fname, files = fs)
       }

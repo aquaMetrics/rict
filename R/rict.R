@@ -30,7 +30,7 @@ rict <- function(data = NULL, year_type = "multi",
                  store_eqrs = FALSE,
                  area = NULL,
                  crs = NULL) {
-  predictions <- rict_predict(data, area = area)
+  predictions <- rict_predict(data, area = area, crs = crs)
   results <- rict_classify(predictions, year_type, store_eqrs = store_eqrs)
   return(results)
 }

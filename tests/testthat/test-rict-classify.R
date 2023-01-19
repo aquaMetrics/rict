@@ -42,8 +42,7 @@ test_that("Outputs match azure NI single-year outputs", {
   test_validation_func <- rict:::rict_validate(data, crs = 29903)
   predictions <- rict_predict(data, crs = 29903)
   classification <- rict_classify(predictions,
-                                  year_type = "single",
-                                  crs = 29903)
+                                  year_type = "single")
   expect_equal(class(classification), "data.frame")
 
   azure_classification <- utils::read.csv(system.file("extdat",

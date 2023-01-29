@@ -16,6 +16,7 @@
 #'   EQRs.
 #' @param area Area is by detected by default from the NGR, but you can provide
 #'   the area parameter either 'iom', 'gb, 'ni' for testing purposes.
+#' @param seed Use seed as setup in RICT2 Azure, useful for testing only.
 #' @return Dataframe of classification results (and simulated EQRs if store_eqrs
 #'   = TRUE).
 #' @export
@@ -27,8 +28,9 @@
 #' }
 rict <- function(data = NULL, year_type = "multi",
                  store_eqrs = FALSE,
-                 area = NULL) {
+                 area = NULL,
+                 seed = FALSE) {
   predictions <- rict_predict(data, area = area)
-  results <- rict_classify(predictions, year_type, store_eqrs = store_eqrs)
+  results <- rict_classify(predictions, year_type, store_eqrs = store_eqrs, seed = seed)
   return(results)
 }

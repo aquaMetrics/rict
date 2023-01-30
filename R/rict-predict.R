@@ -326,17 +326,14 @@ rict_predict <- function(data = NULL,
 
   final_predictors_try1 <- cbind(final_predictors, PDistTot[, -ncol(PDistTot)])
 
-  # 3. Use chisquare to find suitability codes. Start for Britain GB, # Could
-  # use a file for these chisquare values 1 = GB 21.02606 24.05393 26.21696
-  # 32.90923, 2 = NI 18.30700 21.16080 23.20930 29.58830
-  chiSquare_vals <- data.frame(
-    CQ1 = c(21.02606, 18.30700),
-    CQ2 = c(24.05393, 21.16080),
-    CQ3 = c(26.21696, 23.20930),
-    CQ4 = c(32.90923, 29.58830)
-  )
-
-  suit_codes <- getSuitabilityCode(MahDist_min, chiSquare_vals, area)
+  # 3. Use chisquare to find suitability codes.
+  chi_square <-
+    utils::read.csv(
+      system.file("extdat", "chi_square.csv",
+                  package = "rict"
+      )
+    )
+  suit_codes <- getSuitabilityCode(MahDist_min, chi_square, area, model)
   # Add suitability codes to the final data, using cbind
   final_predictors_try2 <- cbind(final_predictors_try1, suit_codes)
   # Find max class group belongs to by getting the column name: use

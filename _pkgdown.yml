@@ -24,7 +24,16 @@ reference:
       - demo_ni_observed_values
       - demo_observed_values
       - demo_gis_values_log
+      - demo_iom_observed_values
   - title: "Launch RICT web app"
     desc: "Demo RICT web app interactive web app for rict package"
     contents:
       - rict_app
+  - title: "Helper functions"
+    desc: "Used for testing and examples"
+    contents:
+      - rict_validate
+      - compare_probability
+      - compare_test
+      - demo_eqr_values
+      - osg_parse

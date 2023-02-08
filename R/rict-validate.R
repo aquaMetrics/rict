@@ -146,7 +146,19 @@ rict_validate <- function(data = NULL,
   message("Variables for the '", model, "' model detected - applying relevant checks. ")
   if (model == "physical" && is.null(area)) {
     ### Detect NI / GB grid references --------------------------------------------------------
-    areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", toupper(data$NGR)), "gb", "ni"))
+     # Check is NGR has two letters.
+     areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", toupper(data$NGR)),
+                            "gb", "ni"))
+     # If NGR has two letters check if any letters 'I' - indicates Irish NGR.
+     if(any(areas == "gb")) {
+     areas <- unique(ifelse(grepl(pattern = "^[I]", toupper(data$NGR)),
+                            "ni", "gb"))
+     }
+     # Remove optional 'I' - in Irish NGR - this is legacy of old RICT1 but some
+     # users may still add this out of habit
+     if(any(areas == "ni")) {
+       data$NGR <- gsub("I", "", toupper(data$NGR))
+     }
 
     if (length(areas) > 1) {
       stop("The data provided contains more than one area of the UK.
@@ -300,6 +312,10 @@ rict_validate <- function(data = NULL,
     data$NGR_LENGTH <- nchar(data$NGR)
     if (all(is.na(data$NGR))) {
       stop("You provided data with all NGR values missing,
+       Hint: Check your NGR variable has letters. ", call. = FALSE)
+    }
+    if (any(is.na(data$NGR))) {
+      stop("You provided data with one or more NGR values missing,
        Hint: Check your NGR variable has letters. ", call. = FALSE)
     }
     if (any(data$NGR_LENGTH > 2)) {

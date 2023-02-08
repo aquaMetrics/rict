@@ -69,7 +69,7 @@ getLatLong <- function(nat_grid_ref, easting, northing, coordsys_latlon, area) {
   lat_long <- NA
   concat_bng <- paste(nat_grid_ref, substr(easting, 1, 3), substr(northing, 1, 3), sep = "")
   if (area == "ni") {
-    # Add "I" for NOrthern Ireland
+    # Add "I" for Northern Ireland
     lat_long <- osg_parse(paste0("I", concat_bng), coord_system = coordsys_latlon)
   } else {
     lat_long <- osg_parse(concat_bng, coord_system = coordsys_latlon)

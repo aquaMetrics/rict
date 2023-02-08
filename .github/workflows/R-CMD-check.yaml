@@ -30,6 +30,7 @@ jobs:
           - {os: macOS-latest, r: '4.0.5'}
           - {os: windows-latest, r: 'release'}
           - {os: windows-latest, r: '4.0.5'}
+          - {os: windows-latest, r: '3.6.2'}
           # Use older ubuntu to maximise backward compatibility
           - {os: ubuntu-18.04, r: 'release'}
 

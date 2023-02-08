@@ -294,7 +294,12 @@ test_that("Single year: Only return results for seasons provided", {
 })
 
 test_that("Single year: Summer only", {
-  classification <- rict(demo_observed_values, year_type = "single")
+  data <- utils::read.csv(system.file("extdat",
+                                     "input-file-single-year-gb.csv",
+                                     package = "rict"
+  ), check.names = FALSE)
+
+  classification <- rict(data, year_type = "single", seed= TRUE)
   verfied_classification <- utils::read.csv(system.file("extdat",
     "rict-summer-single-year-gb.csv",
     package = "rict"
@@ -303,12 +308,14 @@ test_that("Single year: Summer only", {
   expect_equal(
     sum(as.numeric(as.character(classification$H_NTAXA_sum))) -
       sum(verfied_classification$H_NTAXA_sum),
-    -133.48
-  ) # changed from -138.52 due to set.seed changes
+    1.26
+  )
+  # changed from -133.48(beta RICT3) or -138.52 (azure) due to set.seed changes
+  # and error in using spring instead of summer predictions
 
   expect_equal(
-    as.character(classification$mintawhpt_sum_mostProb[c(21:24, 13:19)]),
-    as.character(verfied_classification$mostProb_MINTA[c(21:24, 13:19)])
+    as.character(classification$mintawhpt_sum_mostProb),
+    as.character(verfied_classification$mostProb_MINTA)
   )
 })
 
@@ -378,8 +385,40 @@ test_that("missing observations in multi-year return NA", {
 
 
 test_that("Isle of Man classification", {
-  classification <- rict(demo_iom_observed_values,
-                         year_type = "single")
 
+  input_predictions <- utils::read.csv(system.file("extdat",
+                                                      "validation-classification-iom-predictions.csv",
+                                                      package = "rict"
+  ),
+  check.names = FALSE, stringsAsFactors = FALSE
+  )
+
+  predictions <- rict_predict(input_predictions)
+  expect_equal(round(input_predictions$`TL2 WHPT ASPT (AbW,DistFam)_E_1`, 1),
+               round(predictions$TL2_WHPT_ASPT_AbW_DistFam_spr, 1))
+
+  expect_equal(round(input_predictions$`TL2 WHPT ASPT (AbW,DistFam)_E_2`, 2),
+               round(predictions$TL2_WHPT_ASPT_AbW_DistFam_sum, 2))
+
+  expect_equal(round(input_predictions$`TL2 WHPT ASPT (AbW,DistFam)_E_3`, 2),
+               round(predictions$TL2_WHPT_ASPT_AbW_DistFam_aut, 2))
 })
 
+
+test_that("NI summer", {
+  classification <- rict(demo_ni_observed_values,
+                         year_type = "single")
+
+  azure_classification <- utils::read.csv(system.file("extdat",
+                                                      "validation-classification-ni-single-year-summer.csv",
+                                                      package = "rict"
+  ),
+  check.names = FALSE, stringsAsFactors = FALSE
+  )
+
+  expect_equal(classification$mostProb_NTAXA_sum[c(1:15,17:20,22:24)],
+               azure_classification$mostProb_NTAXA_sum[c(1:15,17:20,22:24)])
+  expect_equal(sum(classification$eqr_av_sum_aspt -
+                     azure_classification$eqr_av_sum_aspt), -0.09886847)
+
+})

@@ -56,50 +56,42 @@ PDist <- function(nmref_sites, mahdist) {
   return(endGrp_Score)
 }
 
-# PDistTotal: Calculate Total probabilities of all sites, bind the row sums to the last column
+# PDistTotal: Calculate Total probabilities of all sites, bind the row sums to
+# the last column
 PDistTotal <- function(distr_g) {
   return(cbind(distr_g / rowSums(distr_g), rowSums(distr_g)))
 }
 
-# getSuitabilityCode: Suitability code - input from getMahDist_min, and suitability codes
-getSuitabilityCode <- function(minMahDist, suitCodes, area) {
-  if(area == "ni") {
-    column <- 2
-  } else {
-    column <- 1
-  }
-  suit_frame <- as.character(data.frame(c(), c())) # Note rbind works with character data.frames
-  for (i in seq_len(nrow(minMahDist))) { # Case 1
-    if (minMahDist[i, ncol(minMahDist)] < suitCodes[column, "CQ1"]) { # row = 1
-      # print(c("Here in loop case 1, row =",i))
+# getSuitabilityCode: Suitability code - input from getMahDist_min, and
+# suitability codes
+getSuitabilityCode <- function(minMahDist, suitCodes, area, model) {
+  suitCodes <- suitCodes[suitCodes$area == area, ]
+  suitCodes <- suitCodes[suitCodes$model == model, ]
+  # Note rbind works with character data.frames
+  suit_frame <- as.character(data.frame(c(), c()))
+  for (i in seq_len(nrow(minMahDist))) {
+    if (minMahDist[i, ncol(minMahDist)] < suitCodes[, "CQ1"]) {
       suit_frame <- rbind(suit_frame, c(1, ">5%"))
-    } else { # Case 2
-      if ((suitCodes[1, "CQ1"] <= minMahDist[i, ncol(minMahDist)]) &
-        (minMahDist[i, ncol(minMahDist)] < suitCodes[column, "CQ2"])) { # row = 1
-        # print(c("Here in loop case 2, row =",i))
+    } else if((suitCodes[, "CQ1"] <= minMahDist[i, ncol(minMahDist)]) &
+        (minMahDist[i, ncol(minMahDist)] < suitCodes[, "CQ2"])) {
         suit_frame <- rbind(suit_frame, c(2, "<5%"))
-      } else { # Case 3
-        if ((suitCodes[1, "CQ2"] <= minMahDist[i, ncol(minMahDist)]) &
-          (minMahDist[i, ncol(minMahDist)] < suitCodes[column, "CQ3"])) { # row = 1
+      } else if((suitCodes[, "CQ2"] <= minMahDist[i, ncol(minMahDist)]) &
+          (minMahDist[i, ncol(minMahDist)] < suitCodes[, "CQ3"])) {
           suit_frame <- rbind(suit_frame, c(3, "<2%"))
-        } else { # Case 4
-          if ((suitCodes[1, "CQ3"] <= minMahDist[i, ncol(minMahDist)]) &
-            (minMahDist[i, ncol(minMahDist)] < suitCodes[column, "CQ4"])) { # row = 1
+        } else if((suitCodes[, "CQ3"] <= minMahDist[i, ncol(minMahDist)]) &
+            (minMahDist[i, ncol(minMahDist)] < suitCodes[, "CQ4"])) {
             suit_frame <- rbind(suit_frame, c(4, "<1%"))
           } else { # last case - no need for "if"
-            # if (minMahDist[i, ncol(minMahDist)] >= suitCodes[column, "CQ4"]) {
               suit_frame <- rbind(suit_frame, c(5, "<0.1%"))
-            # }
-          } # else last case
-        } # else case 4
-      } # else case 3
-    } # else case 2
-  } # for
-  colnames(suit_frame) <- c("SuitCode", "SuitText") # past0 to "log" for name of attribute/parameter
+          }
+  }
+  # past0 to "log" for name of attribute/parameter
+  colnames(suit_frame) <- c("SuitCode", "SuitText")
   return(suit_frame) # Return both message and log value
 }
 
-# This particular function is for all 80 indices, and removes unwanted characters in column names
+# This particular function is for all 80 indices, and removes unwanted
+# characters in column names
 rename_end_group_means <- function(data) {
   names(data) <- gsub("%", "perc", names(data))
   names(data) <- gsub("/", "", names(data))
@@ -220,8 +212,8 @@ groupSitesFunction <- function(allSites, k, siteindex, b1) {
   return(siteX)
 }
 
-# getSeasonIndexScores: Calculate predictions of probability scores for indices WHPT, given season ids,
-# whpt values. Use "getProbScores()"
+# getSeasonIndexScores: Calculate predictions of probability scores for indices
+# WHPT, given season ids, whpt values. Use "getProbScores()"
 #' @importFrom rlang .data
 getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id,
                                  end_group_IndexDFrame, DistNames, all_indices) {

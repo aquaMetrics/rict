@@ -1,8 +1,8 @@
-pandoc: 2.11.2
-pkgdown: 1.6.1
+pandoc: '2.18'
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   functional-specification: functional-specification.html
   tech-demo-temperature-change: tech-demo-temperature-change.html
-last_built: 2021-05-17T11:41Z
+last_built: 2023-02-07T09:50Z
 

@@ -68,7 +68,8 @@ getSuitabilityCode <- function(minMahDist, suitCodes, area, model) {
   suitCodes <- suitCodes[suitCodes$area == area, ]
   suitCodes <- suitCodes[suitCodes$model == model, ]
   # Note rbind works with character data.frames
-  suit_frame <- as.character(data.frame(c(), c()))
+  # suit_frame <- as.character(data.frame(c(), c()))
+  suit_frame <- data.frame()
   for (i in seq_len(nrow(minMahDist))) {
     if (minMahDist[i, ncol(minMahDist)] < suitCodes[, "CQ1"]) {
       suit_frame <- rbind(suit_frame, c(1, ">5%"))

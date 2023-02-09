@@ -65,7 +65,7 @@ PDistTotal <- function(distr_g) {
 # getSuitabilityCode: Suitability code - input from getMahDist_min, and
 # suitability codes
 getSuitabilityCode <- function(minMahDist, suitCodes, area, model) {
-  names(suitCodes) <- c("area", "model", "CQ1", "CQ2", "C3", "C4")
+  names(suitCodes) <- c("area", "model", "CQ1", "CQ2", "CQ3", "CQ4")
   suitCodes <- suitCodes[suitCodes$area == area, ]
   suitCodes <- suitCodes[suitCodes$model == model, ]
   # Note rbind works with character data.frames

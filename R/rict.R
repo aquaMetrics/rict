@@ -31,7 +31,7 @@ rict <- function(data = NULL, year_type = "multi",
                  store_eqrs = FALSE,
                  area = NULL,
                  crs = NULL,
-                 seed = seed) {
+                 seed = FALSE) {
   predictions <- rict_predict(data, area = area, crs = crs)
   results <- rict_classify(predictions, year_type, store_eqrs = store_eqrs, seed = seed)
   return(results)

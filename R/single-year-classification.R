@@ -1,12 +1,16 @@
 #' @importFrom dplyr select everything
 #' @importFrom rlang .data
 
-singleYearClassification <- function(predictions, store_eqrs = FALSE,
-                                     area = NULL, seed = FALSE) {
+singleYearClassification <- function(predictions,
+                                     store_eqrs = FALSE,
+                                     area = NULL,
+                                     seed = TRUE,
+                                     n_runs = 10000,
+                                     set_seed = c(1234,1234,1234)) {
 
   # set global random seed for rnorm functions etc
   if(seed) {
-   set.seed(1234)
+   set.seed(set_seed[1])
   }
   # Part 1: This Script reads all prediction indices for classification
   gb685_assess_score <- utils::read.csv(
@@ -144,7 +148,7 @@ if (area == "iom") {
 
   # Part 3:  Calculation of Exp_ref from "AdjustedExpected_new" values, divide
   # by K ( = 1.0049 for NTAXA,  = 0.9921 for ASPT)
-  n_runs <- 10000
+  n_runs <- n_runs
   ### FOR ASPT ----------------------------------------------------------------------------------------------------
   Exp_ref_aspt <- aspt_adjusted / 0.9921
   Ubias8 <- ubias_main
@@ -200,9 +204,9 @@ if (area == "iom") {
   classArray_siteOne_spr_aut_aspt <- data.frame()
 
   # Setup biases
-  Ubias8r_spr <- getUbias8r_new(n_runs, Ubias8, seed)
-  Ubias8r_aut <- getUbias8r_new(n_runs, Ubias8, seed)
-  Ubias8r_sum <- getUbias8r_new(n_runs, Ubias8, seed)
+  Ubias8r_spr <- getUbias8r_new(n_runs, Ubias8, seed, set_seed)
+  Ubias8r_aut <- getUbias8r_new(n_runs, Ubias8, seed, set_seed)
+  Ubias8r_sum <- getUbias8r_new(n_runs, Ubias8, seed, set_seed)
   # Create variable to store EQRs to retain for compare function
   if (store_eqrs == TRUE) {
     eqr_metrics <- list()
@@ -213,9 +217,15 @@ if (area == "iom") {
 
     # Part 1. Adjust the Observed values
     # Loop starts from here with site = k, i.e. sqr (sqrt(Obs) + ZObs) + Ubias8r
-    ObsIDX8r_spr <- getObsIDX8rB(obs_ntaxa_spr[k], getZObs_r_new(sdobs_ntaxa, n_runs, seed))
-    ObsIDX8r_aut <- getObsIDX8rB(Obs_ntaxa_aut[k], getZObs_r_new(sdobs_ntaxa, n_runs, seed))
-    ObsIDX8r_sum <- getObsIDX8r(Obs_ntaxa_sum[k], getZObs_r_new(sdobs_ntaxa, n_runs, seed))
+    ObsIDX8r_spr <- getObsIDX8rB(obs_ntaxa_spr[k], getZObs_r_new(sdobs_ntaxa,
+                                                                 n_runs, seed,
+                                                                 set_seed))
+    ObsIDX8r_aut <- getObsIDX8rB(Obs_ntaxa_aut[k], getZObs_r_new(sdobs_ntaxa,
+                                                                 n_runs, seed,
+                                                                 set_seed))
+    ObsIDX8r_sum <- getObsIDX8r(Obs_ntaxa_sum[k], getZObs_r_new(sdobs_ntaxa,
+                                                                n_runs, seed,
+                                                                set_seed))
 
     Obs_site1_ntaxa_spr <- ObsIDX8r_spr + Ubias8r_spr # rename "Obs_site1_ntaxa_spr" to ObsIDX8rb_spr
     Obs_site1_ntaxa_aut <- ObsIDX8r_aut + Ubias8r_aut # rename "Obs_site1_ntaxa_aut" to ObsIDX8rb_aut
@@ -223,9 +233,9 @@ if (area == "iom") {
 
     # Part 2 . Do the RefAdjExpected bias
     sdexp8_ntaxa <- 0.53 # For aspt we use a different values
-    ExpIDX8r_ntaxa_spr <- data.frame(val = (Exp_ref_ntaxa[k, "TL2_WHPT_NTAXA_ABW_DISTFAM_SPR"] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed)))
-    ExpIDX8r_ntaxa_aut <- data.frame(val = (Exp_ref_ntaxa[k, "TL2_WHPT_NTAXA_ABW_DISTFAM_AUT"] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed)))
-    ExpIDX8r_ntaxa_sum <- data.frame(val = (Exp_ref_ntaxa[k, "TL2_WHPT_NTAXA_ABW_DISTFAM_SUM"] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed)))
+    ExpIDX8r_ntaxa_spr <- data.frame(val = (Exp_ref_ntaxa[k, "TL2_WHPT_NTAXA_ABW_DISTFAM_SPR"] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed, set_seed)))
+    ExpIDX8r_ntaxa_aut <- data.frame(val = (Exp_ref_ntaxa[k, "TL2_WHPT_NTAXA_ABW_DISTFAM_AUT"] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed, set_seed)))
+    ExpIDX8r_ntaxa_sum <- data.frame(val = (Exp_ref_ntaxa[k, "TL2_WHPT_NTAXA_ABW_DISTFAM_SUM"] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed, set_seed)))
 
     EQR_ntaxa_spr <- as.data.frame(Obs_site1_ntaxa_spr / ExpIDX8r_ntaxa_spr[, 1])
     EQR_ntaxa_aut <- as.data.frame(Obs_site1_ntaxa_aut / ExpIDX8r_ntaxa_aut[, 1])
@@ -320,18 +330,18 @@ if (area == "iom") {
     u_9c <- 2.5
 
     #### RALPH
-    Ubias9r_spr <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_spr[k], n_runs, Ubias8r_spr, seed)
-    Ubias9r_aut <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_aut[k], n_runs, Ubias8r_aut, seed)
-    Ubias9r_sum <- getUbias9r_new(u_9a, u_9b, u_9c, Obs_aspt_sum[k], n_runs, Ubias8r_sum, seed)
+    Ubias9r_spr <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_spr[k], n_runs, Ubias8r_spr, seed, set_seed)
+    Ubias9r_aut <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_aut[k], n_runs, Ubias8r_aut, seed, set_seed)
+    Ubias9r_sum <- getUbias9r_new(u_9a, u_9b, u_9c, Obs_aspt_sum[k], n_runs, Ubias8r_sum, seed, set_seed)
 
     Ubias7r_spr <- Ubias8r_spr * Ubias9r_spr
     Ubias7r_aut <- Ubias8r_aut * Ubias9r_aut
     # Summer
     Ubias7r_sum <- Ubias8r_sum * Ubias9r_sum
 
-    ObsIDX9r_spr <- getObsIDX9r(obs_aspt_spr[k], getZObs_r_new(sdobs_aspt, n_runs, seed))
-    ObsIDX9r_aut <- getObsIDX9r(obs_aspt_aut[k], getZObs_r_new(sdobs_aspt, n_runs, seed))
-    ObsIDX9r_sum <- getObsIDX9r(Obs_aspt_sum[k], getZObs_r_new(sdobs_aspt, n_runs, seed))
+    ObsIDX9r_spr <- getObsIDX9r(obs_aspt_spr[k], getZObs_r_new(sdobs_aspt, n_runs, seed, set_seed))
+    ObsIDX9r_aut <- getObsIDX9r(obs_aspt_aut[k], getZObs_r_new(sdobs_aspt, n_runs, seed, set_seed))
+    ObsIDX9r_sum <- getObsIDX9r(Obs_aspt_sum[k], getZObs_r_new(sdobs_aspt, n_runs, seed, set_seed))
 
     ObsIDX7r_spr <- ObsIDX8r_spr * ObsIDX9r_spr
     ObsIDX7r_aut <- ObsIDX8r_aut * ObsIDX9r_aut
@@ -352,9 +362,9 @@ if (area == "iom") {
     # Expected reference adjusted , as an array , ONE SITE, site 14
 
     sdexp9_aspt <- 0.081 # For aspt we use a different value, 0.081
-    ExpIDX9r_aspt_spr <- data.frame(val = (Exp_ref_aspt[k, "TL2_WHPT_ASPT_ABW_DISTFAM_SPR"] + getZObs_r_new(sdexp9_aspt, n_runs, seed)))
-    ExpIDX9r_aspt_aut <- data.frame(val = (Exp_ref_aspt[k, "TL2_WHPT_ASPT_ABW_DISTFAM_AUT"] + getZObs_r_new(sdexp9_aspt, n_runs, seed)))
-    ExpIDX9r_aspt_sum <- data.frame(val = (Exp_ref_aspt[k, "TL2_WHPT_ASPT_ABW_DISTFAM_SUM"] + getZObs_r_new(sdexp9_aspt, n_runs, seed)))
+    ExpIDX9r_aspt_spr <- data.frame(val = (Exp_ref_aspt[k, "TL2_WHPT_ASPT_ABW_DISTFAM_SPR"] + getZObs_r_new(sdexp9_aspt, n_runs, seed, set_seed)))
+    ExpIDX9r_aspt_aut <- data.frame(val = (Exp_ref_aspt[k, "TL2_WHPT_ASPT_ABW_DISTFAM_AUT"] + getZObs_r_new(sdexp9_aspt, n_runs, seed, set_seed)))
+    ExpIDX9r_aspt_sum <- data.frame(val = (Exp_ref_aspt[k, "TL2_WHPT_ASPT_ABW_DISTFAM_SUM"] + getZObs_r_new(sdexp9_aspt, n_runs, seed, set_seed)))
 
     # Calculating simulated EQR
     EQR_aspt_spr <- as.data.frame(ObsIDX9rb_spr / ExpIDX9r_aspt_spr[, 1])

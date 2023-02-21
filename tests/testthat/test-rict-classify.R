@@ -193,7 +193,7 @@ test_that("GIS variables classification against Ralph's output", {
   data("demo_gis_values_log")
   demo_gis_values_log$WATERBODY <- demo_gis_values_log$SITE
   predictions <- rict_predict(demo_gis_values_log)
-  results <- rict_classify(predictions, year_type = "single")
+  results <- rict_classify(predictions, year_type = "single", seed = FALSE)
   results_two <- rict(demo_gis_values_log, year_type = "single")
   # test that creating predictions then classifying works the same as  going straight to
   # classifying
@@ -407,7 +407,8 @@ test_that("Isle of Man classification", {
 
 test_that("NI summer", {
   classification <- rict(demo_ni_observed_values,
-                         year_type = "single")
+                         year_type = "single",
+                         crs = 29903)
 
   azure_classification <- utils::read.csv(system.file("extdat",
                                                       "validation-classification-ni-single-year-summer.csv",

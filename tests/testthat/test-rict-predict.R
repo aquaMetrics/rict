@@ -161,7 +161,36 @@ test_that("predictions work NI", {
   expect_equal(prediction$TL2_WHPT_ASPT_AbW_DistFam_sum, verified_predictions$TL2_WHPT_ASPT_AbW_DistFam_sum)
 })
 
-test_that("predictions work IOM", {
-  prediction <- rict_predict(demo_iom_observed_values, area = "iom")
+test_that("Isle of Man prediction", {
 
+  input_predictions <- utils::read.csv(system.file("extdat",
+                                                   "validation-classification-iom-predictions.csv",
+                                                   package = "rict"
+  ),
+  check.names = FALSE, stringsAsFactors = FALSE
+  )
+
+  predictions <- rict_predict(input_predictions)
+  expect_equal(round(input_predictions$`TL2 WHPT ASPT (AbW,DistFam)_E_1`, 1),
+               round(predictions$TL2_WHPT_ASPT_AbW_DistFam_spr, 1))
+
+  expect_equal(round(input_predictions$`TL2 WHPT ASPT (AbW,DistFam)_E_2`, 2),
+               round(predictions$TL2_WHPT_ASPT_AbW_DistFam_sum, 2))
+
+  expect_equal(round(input_predictions$`TL2 WHPT ASPT (AbW,DistFam)_E_3`, 2),
+               round(predictions$TL2_WHPT_ASPT_AbW_DistFam_aut, 2))
+
+})
+
+test_that("Isle of Man suitcodes correct", {
+  predictions <- rict_predict(demo_iom_observed_values)
+
+  expect_equal(predictions$SuitCode, c("1", "1", "1", "1", "1", "1", "5", "2",
+                                       "2", "2", "1", "1", "1", "1", "1", "1",
+                                       "1", "1", "5", "2", "2", "2", "1", "1"))
+  expect_equal(predictions$SuitText, c(">5%", ">5%", ">5%", ">5%", ">5%", ">5%",
+                                       "<0.1%", "<5%", "<5%", "<5%", ">5%",
+                                       ">5%", ">5%", ">5%", ">5%", ">5%", ">5%",
+                                       ">5%", "<0.1%", "<5%", "<5%", "<5%",
+                                       ">5%", ">5%"))
 })

@@ -384,27 +384,6 @@ test_that("missing observations in multi-year return NA", {
 })
 
 
-test_that("Isle of Man classification", {
-
-  input_predictions <- utils::read.csv(system.file("extdat",
-                                                      "validation-classification-iom-predictions.csv",
-                                                      package = "rict"
-  ),
-  check.names = FALSE, stringsAsFactors = FALSE
-  )
-
-  predictions <- rict_predict(input_predictions)
-  expect_equal(round(input_predictions$`TL2 WHPT ASPT (AbW,DistFam)_E_1`, 1),
-               round(predictions$TL2_WHPT_ASPT_AbW_DistFam_spr, 1))
-
-  expect_equal(round(input_predictions$`TL2 WHPT ASPT (AbW,DistFam)_E_2`, 2),
-               round(predictions$TL2_WHPT_ASPT_AbW_DistFam_sum, 2))
-
-  expect_equal(round(input_predictions$`TL2 WHPT ASPT (AbW,DistFam)_E_3`, 2),
-               round(predictions$TL2_WHPT_ASPT_AbW_DistFam_aut, 2))
-})
-
-
 test_that("NI summer", {
   classification <- rict(demo_ni_observed_values,
                          year_type = "single",

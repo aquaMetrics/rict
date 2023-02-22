@@ -9,6 +9,8 @@
 #'   TRUE, EQRs are stored allowing `rict_compare` to compare EQR results
 #' @param n_runs Number of simulations, default 10000.
 #' @param seed Use seed as setup in RICT2 Azure, useful for testing only.
+#' @param set_seed Change the set-seed number for default of '1234'. For testing
+#'   purposes only.
 #' @return Dataframe of classification results
 #' @export
 #' @importFrom rlang .data
@@ -23,7 +25,8 @@ rict_classify <- function(data = NULL,
                           year_type = "multi",
                           store_eqrs = FALSE,
                           n_runs = 10000,
-                          seed = FALSE) {
+                          seed = TRUE,
+                          set_seed = c(1234,1234,1234)) {
   message("Classifying...")
   # Create area variable to pass as parameter to classification functions (based
   # on grid reference)
@@ -34,12 +37,17 @@ rict_classify <- function(data = NULL,
   # function? For now, I've just stuck the single year into a different
   # function until these can be merged
   if (year_type == "single") {
-    classification_results <- singleYearClassification(data, store_eqrs, area = area, seed = seed)
+    classification_results <- singleYearClassification(data,
+                                                       store_eqrs,
+                                                       area = area,
+                                                       n_runs = n_runs,
+                                                       seed = seed,
+                                                       set_seed = set_seed)
     return(classification_results)
   } else {
     # set global random seed for rnorm functions etc
     if(seed) {
-    set.seed(1234)
+    set.seed(set_seed[1])
     }
     # Part 1: This Script reads all prediction indices for classification
     gb685_assess_score <- utils::read.csv(system.file("extdat",
@@ -205,8 +213,8 @@ rict_classify <- function(data = NULL,
     classArray_siteOne_spr_aut_aspt <- data.frame()
 
     # Setup biases
-    Ubias8r_spr <- getUbias8r_new(n_runs, ubias_main, seed)
-    Ubias8r_aut <- getUbias8r_new(n_runs, ubias_main, seed)
+    Ubias8r_spr <- getUbias8r_new(n_runs, ubias_main, seed, set_seed)
+    Ubias8r_aut <- getUbias8r_new(n_runs, ubias_main, seed, set_seed)
 
     # Store all multiYear
     EQRAverages_ntaxa_spr_aut <- data.frame() # Store average EQRs for spr in a dataframe
@@ -267,13 +275,19 @@ rict_classify <- function(data = NULL,
       while ((data[j, "SITE"] == siteToProcess && j <= nrow(data))) {
         # set.seed(1234)
         # Part 1: Deal with NTAXA: observed and Expected Calculations
-        obsIDX8r_spr <- getObsIDX8rB(obs_ntaxa_spr[j], getZObs_r_new(sdobs_ntaxa, n_runs, seed))
-        obsIDX8r_aut <- getObsIDX8rB(obs_ntaxa_aut[j], getZObs_r_new(sdobs_ntaxa, n_runs, seed))
+        obsIDX8r_spr <- getObsIDX8rB(obs_ntaxa_spr[j], getZObs_r_new(sdobs_ntaxa,
+                                                                     n_runs,
+                                                                     seed,
+                                                                     set_seed))
+        obsIDX8r_aut <- getObsIDX8rB(obs_ntaxa_aut[j], getZObs_r_new(sdobs_ntaxa,
+                                                                     n_runs,
+                                                                     seed,
+                                                                     set_seed))
         obs_site1_ntaxa_spr <- obsIDX8r_spr + Ubias8r_spr # rename "obs_site1_ntaxa_spr" to obsIDX8rb_spr
         obs_site1_ntaxa_aut <- obsIDX8r_aut + Ubias8r_aut # rename "obs_site1_ntaxa_aut" to obsIDX8rb_aut
         # Part 2 . Do the RefAdjExpected bias
-        ExpIDX8r_ntaxa_spr <- data.frame(val = (Exp_ref_ntaxa[j, 1] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed)))
-        ExpIDX8r_ntaxa_aut <- data.frame(val = (Exp_ref_ntaxa[j, 2] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed)))
+        ExpIDX8r_ntaxa_spr <- data.frame(val = (Exp_ref_ntaxa[j, 1] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed, set_seed)))
+        ExpIDX8r_ntaxa_aut <- data.frame(val = (Exp_ref_ntaxa[j, 2] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed, set_seed)))
 
         EQR_ntaxa_spr <- as.data.frame(obs_site1_ntaxa_spr / ExpIDX8r_ntaxa_spr[, 1])
         EQR_ntaxa_aut <- as.data.frame(obs_site1_ntaxa_aut / ExpIDX8r_ntaxa_aut[, 1])
@@ -289,12 +303,12 @@ rict_classify <- function(data = NULL,
         # **** Workout FOR ASPT STARTS HERE
         # Part 1: Deal with ASPT : observed and Expected Calculations
 
-        Ubias9r_spr <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_spr[j], n_runs, Ubias8r_spr, seed)
-        Ubias9r_aut <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_aut[j], n_runs, Ubias8r_aut, seed)
+        Ubias9r_spr <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_spr[j], n_runs, Ubias8r_spr, seed, set_seed)
+        Ubias9r_aut <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_aut[j], n_runs, Ubias8r_aut, seed, set_seed)
         Ubias7r_spr <- Ubias8r_spr * Ubias9r_spr
         Ubias7r_aut <- Ubias8r_aut * Ubias9r_aut
-        obsIDX9r_spr <- getObsIDXniner(obs_aspt_spr[j], getZObs_r_new(sdobs_aspt, n_runs, seed))
-        obsIDX9r_aut <- getObsIDXniner(obs_aspt_aut[j], getZObs_r_new(sdobs_aspt, n_runs, seed))
+        obsIDX9r_spr <- getObsIDXniner(obs_aspt_spr[j], getZObs_r_new(sdobs_aspt, n_runs, seed, set_seed))
+        obsIDX9r_aut <- getObsIDXniner(obs_aspt_aut[j], getZObs_r_new(sdobs_aspt, n_runs, seed, set_seed))
         obsIDX7r_spr <- obsIDX8r_spr * obsIDX9r_spr
         obsIDX7r_aut <- obsIDX8r_aut * obsIDX9r_aut
         obsIDX7rb_spr <- obsIDX7r_spr + Ubias7r_spr
@@ -304,8 +318,8 @@ rict_classify <- function(data = NULL,
         obsIDX9rb_spr <- obsIDX7rb_spr / obsIDX8rb_spr
         obsIDX9rb_aut <- obsIDX7rb_aut / obsIDX8rb_aut
         # Part 2 . Do the RefAdjExpected bias
-        ExpIDX9r_aspt_spr <- data.frame(val = (Exp_ref_aspt[j, 1] + getZObs_r_new(sdexp9_aspt, n_runs, seed)))
-        ExpIDX9r_aspt_aut <- data.frame(val = (Exp_ref_aspt[j, 2] + getZObs_r_new(sdexp9_aspt, n_runs, seed)))
+        ExpIDX9r_aspt_spr <- data.frame(val = (Exp_ref_aspt[j, 1] + getZObs_r_new(sdexp9_aspt, n_runs, seed, set_seed)))
+        ExpIDX9r_aspt_aut <- data.frame(val = (Exp_ref_aspt[j, 2] + getZObs_r_new(sdexp9_aspt, n_runs, seed, set_seed)))
         # Calculating simulated EQR
         EQR_aspt_spr <- data.frame(obsIDX9rb_spr / ExpIDX9r_aspt_spr[, 1])
         EQR_aspt_aut <- data.frame(obsIDX9rb_aut / ExpIDX9r_aspt_aut[, 1])
@@ -324,13 +338,13 @@ rict_classify <- function(data = NULL,
         }
 
         # Part 1: Deal with NTAXA: observed and Expected Calculations
-        obsIDX8r_spr <- getObsIDX8rB(obs_ntaxa_spr[k], getZObs_r_new(sdobs_ntaxa, n_runs, seed))
-        obsIDX8r_aut <- getObsIDX8rB(obs_ntaxa_aut[k], getZObs_r_new(sdobs_ntaxa, n_runs, seed))
+        obsIDX8r_spr <- getObsIDX8rB(obs_ntaxa_spr[k], getZObs_r_new(sdobs_ntaxa, n_runs, seed, set_seed))
+        obsIDX8r_aut <- getObsIDX8rB(obs_ntaxa_aut[k], getZObs_r_new(sdobs_ntaxa, n_runs, seed, set_seed))
         obs_site1_ntaxa_spr <- obsIDX8r_spr + Ubias8r_spr # rename "obs_site1_ntaxa_spr" to obsIDX8rb_spr
         obs_site1_ntaxa_aut <- obsIDX8r_aut + Ubias8r_aut # rename "obs_site1_ntaxa_aut" to obsIDX8rb_aut
         # Part 2 . Do the RefAdjExpected bias
-        ExpIDX8r_ntaxa_spr <- data.frame(val = (Exp_ref_ntaxa[k, 1] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed)))
-        ExpIDX8r_ntaxa_aut <- data.frame(val = (Exp_ref_ntaxa[k, 2] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed)))
+        ExpIDX8r_ntaxa_spr <- data.frame(val = (Exp_ref_ntaxa[k, 1] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed, set_seed)))
+        ExpIDX8r_ntaxa_aut <- data.frame(val = (Exp_ref_ntaxa[k, 2] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed, set_seed)))
 
         EQR_ntaxa_spr <- as.data.frame(obs_site1_ntaxa_spr / ExpIDX8r_ntaxa_spr[, 1])
         EQR_ntaxa_aut <- as.data.frame(obs_site1_ntaxa_aut / ExpIDX8r_ntaxa_aut[, 1])
@@ -340,12 +354,12 @@ rict_classify <- function(data = NULL,
         # **** Workout FOR ASPT STARTS HERE
         # Part 1: Deal with ASPT : observed and Expected Calculations
 
-        Ubias9r_spr <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_spr[k], n_runs, Ubias8r_spr, seed)
-        Ubias9r_aut <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_aut[k], n_runs, Ubias8r_aut, seed)
+        Ubias9r_spr <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_spr[k], n_runs, Ubias8r_spr, seed, set_seed)
+        Ubias9r_aut <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_aut[k], n_runs, Ubias8r_aut, seed, set_seed)
         Ubias7r_spr <- Ubias8r_spr * Ubias9r_spr
         Ubias7r_aut <- Ubias8r_aut * Ubias9r_aut
-        obsIDX9r_spr <- getObsIDXniner(obs_aspt_spr[k], getZObs_r_new(sdobs_aspt, n_runs, seed))
-        obsIDX9r_aut <- getObsIDXniner(obs_aspt_aut[k], getZObs_r_new(sdobs_aspt, n_runs, seed))
+        obsIDX9r_spr <- getObsIDXniner(obs_aspt_spr[k], getZObs_r_new(sdobs_aspt, n_runs, seed, set_seed))
+        obsIDX9r_aut <- getObsIDXniner(obs_aspt_aut[k], getZObs_r_new(sdobs_aspt, n_runs, seed, set_seed))
         obsIDX7r_spr <- obsIDX8r_spr * obsIDX9r_spr
         obsIDX7r_aut <- obsIDX8r_aut * obsIDX9r_aut
         obsIDX7rb_spr <- obsIDX7r_spr + Ubias7r_spr
@@ -355,8 +369,8 @@ rict_classify <- function(data = NULL,
         obsIDX9rb_spr <- obsIDX7rb_spr / obsIDX8rb_spr
         obsIDX9rb_aut <- obsIDX7rb_aut / obsIDX8rb_aut
         # Part 2 . Do the RefAdjExpected bias
-        ExpIDX9r_aspt_spr <- data.frame(val = (Exp_ref_aspt[k, 1] + getZObs_r_new(sdexp9_aspt, n_runs, seed)))
-        ExpIDX9r_aspt_aut <- data.frame(val = (Exp_ref_aspt[k, 2] + getZObs_r_new(sdexp9_aspt, n_runs, seed)))
+        ExpIDX9r_aspt_spr <- data.frame(val = (Exp_ref_aspt[k, 1] + getZObs_r_new(sdexp9_aspt, n_runs, seed, set_seed)))
+        ExpIDX9r_aspt_aut <- data.frame(val = (Exp_ref_aspt[k, 2] + getZObs_r_new(sdexp9_aspt, n_runs, seed, set_seed)))
         # Calculating simulated EQR
         EQR_aspt_spr <- as.data.frame(obsIDX9rb_spr / ExpIDX9r_aspt_spr[, 1])
         EQR_aspt_aut <- as.data.frame(obsIDX9rb_aut / ExpIDX9r_aspt_aut[, 1])

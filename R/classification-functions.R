@@ -31,9 +31,9 @@ compute_RjAj <- function(Rj, Aj) {
 # New by Ralph
 # ZObsir = = ZNormir * SDObsi # Random deviate for potential average observed value of index i in simulation r
 
-getZObs_r_new <- function(sdobs, N_sim, seed) { # N_sim = no. of simulations
+getZObs_r_new <- function(sdobs, N_sim, seed, set_seed) { # N_sim = no. of simulations
   if(!seed) {
-    set.seed(1234)
+    set.seed(set_seed[2])
   }
   dframe <- as.data.frame(sdobs * stats::rnorm(N_sim, 0, 1)) ## With a mean of 0.0 and SD of 1.0 for index i in simulation r
   return(dframe)
@@ -68,9 +68,9 @@ getObsIDXniner <- function(ObsIDX9, znorm_ir) {
 }
 
 # Next Bias correction foir Ubias8
-getUbias8r_new <- function(N_sim, Ubias8, seed) { # N_sim = no. of simulations, and  Ubias8 = 1.62
+getUbias8r_new <- function(N_sim, Ubias8, seed, set_seed) { # N_sim = no. of simulations, and  Ubias8 = 1.62
   if(!seed) {
-    set.seed(1234)
+    set.seed(set_seed[3])
   }
   dframe <- as.data.frame(stats::rpois(N_sim, Ubias8)) ## With a mean of 0.0 and SD of 1.0 for index i in simulation r
   return(dframe)
@@ -127,19 +127,19 @@ getAvgEQR_SprAut <- function(EQR_spr, EQR_aut, k, row_name = FALSE) {
 
 # 5.4 Calculate Zbias9r - Random number deviate from a standard Normal distribution of mean 0.0 and SD of 1.0
 # zbias mean and standard deviation
-getZbias_9r <- function(N_sims, zbias_mean, zbias_sd, seed) {
+getZbias_9r <- function(N_sims, zbias_mean, zbias_sd, seed, set_seed) {
   if(!seed) {
-    set.seed(1234)
+    set.seed(set_seed[1])
   }
   ZNorm_ir_whpt <- stats::rnorm(N_sims, 0, 1)
   return(ZNorm_ir_whpt)
 }
 
 # 5.5 Calculating Ubias9r -abundance weighted wHPT taxa of the ubias8r, ubias_8r is a list/dframe of n simulations, so loop around
-getUbias9r_new <- function(u_9a, u_9b, u_9c, obsIDX_9, N_runs, ubias_8r, seed) {
+getUbias9r_new <- function(u_9a, u_9b, u_9c, obsIDX_9, N_runs, ubias_8r, seed, set_seed) {
   ubias_8r[ubias_8r == 0] <- 1
   # if(ubias_8r>0) {
-  rnorm_runs <- getZbias_9r(N_runs, seed = seed)
+  rnorm_runs <- getZbias_9r(N_runs, seed = seed, set_seed = set_seed)
   rep_u9a <- rep(u_9a, N_runs)
   rep_u9b <- rep(u_9b, N_runs)
   rep_obsIDX_9 <- rep(obsIDX_9, N_runs)

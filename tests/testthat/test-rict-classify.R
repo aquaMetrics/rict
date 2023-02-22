@@ -39,9 +39,10 @@ test_that("Outputs match azure single-year outputs", {
 ### ---------------------------------------------------------------------------------------
 test_that("Outputs match azure NI single-year outputs", {
   data <- demo_ni_observed_values # only one year required
-  test_validation_func <- rict:::rict_validate(data)
-  predictions <- rict_predict(data)
-  classification <- rict_classify(predictions, year_type = "single")
+  test_validation_func <- rict:::rict_validate(data, crs = 29903)
+  predictions <- rict_predict(data, crs = 29903)
+  classification <- rict_classify(predictions,
+                                  year_type = "single")
   expect_equal(class(classification), "data.frame")
 
   azure_classification <- utils::read.csv(system.file("extdat",
@@ -192,7 +193,7 @@ test_that("GIS variables classification against Ralph's output", {
   data("demo_gis_values_log")
   demo_gis_values_log$WATERBODY <- demo_gis_values_log$SITE
   predictions <- rict_predict(demo_gis_values_log)
-  results <- rict_classify(predictions, year_type = "single")
+  results <- rict_classify(predictions, year_type = "single", seed = FALSE)
   results_two <- rict(demo_gis_values_log, year_type = "single")
   # test that creating predictions then classifying works the same as  going straight to
   # classifying
@@ -340,7 +341,9 @@ test_that("Test single row of multi-year input works", {
 })
 
 test_that("NI classification", {
-  classification <- rict(demo_ni_observed_values, year_type = "single")
+  classification <- rict(demo_ni_observed_values,
+                         year_type = "single",
+                         crs = 29903)
 
   verfied_classification <- utils::read.csv(system.file("extdat",
     "validation-classification-ni-single-year.csv",
@@ -383,7 +386,8 @@ test_that("missing observations in multi-year return NA", {
 
 test_that("NI summer", {
   classification <- rict(demo_ni_observed_values,
-                         year_type = "single")
+                         year_type = "single",
+                         crs = 29903)
 
   azure_classification <- utils::read.csv(system.file("extdat",
                                                       "validation-classification-ni-single-year-summer.csv",

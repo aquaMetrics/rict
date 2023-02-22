@@ -41,7 +41,7 @@
 #'   run validation checks without stopping process.
 #' @param area Area is by detected by default from the NGR, but you can provide
 #'   the area parameter either 'iom', 'gb, 'ni' for testing purposes.
-#'
+#' @param crs optionally set crs to `29903` for Irish projection system.
 #' @return List of dataframes and other parameters:
 #' \describe{
 #'   \item{data}{Dataframe of input data that passes validation rules}
@@ -63,7 +63,8 @@
 rict_validate <- function(data = NULL,
                           row = FALSE,
                           stop_if_all_fail = TRUE,
-                          area = NULL) {
+                          area = NULL,
+                          crs = NULL) {
   ### Sense checks --------------------------------------------------------------------
   # Check data object provided
   if (is.null(data)) {
@@ -145,7 +146,19 @@ rict_validate <- function(data = NULL,
   message("Variables for the '", model, "' model detected - applying relevant checks. ")
   if (model == "physical" && is.null(area)) {
     ### Detect NI / GB grid references --------------------------------------------------------
-    areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", toupper(data$NGR)), "gb", "ni"))
+     # Check is NGR has two letters.
+     areas <- unique(ifelse(grepl(pattern = "^.[A-Z]", toupper(data$NGR)),
+                            "gb", "ni"))
+     # If NGR has two letters check if any letters 'I' - indicates Irish NGR.
+     if(any(areas == "gb")) {
+     areas <- unique(ifelse(grepl(pattern = "^[I]", toupper(data$NGR)),
+                            "ni", "gb"))
+     }
+     # Remove optional 'I' - in Irish NGR - this is legacy of old RICT1 but some
+     # users may still add this out of habit
+     if(any(areas == "ni")) {
+       data$NGR <- gsub("I", "", toupper(data$NGR))
+     }
 
     if (length(areas) > 1) {
       stop("The data provided contains more than one area of the UK.
@@ -301,6 +314,10 @@ rict_validate <- function(data = NULL,
       stop("You provided data with all NGR values missing,
        Hint: Check your NGR variable has letters. ", call. = FALSE)
     }
+    if (any(is.na(data$NGR))) {
+      stop("You provided data with one or more NGR values missing,
+       Hint: Check your NGR variable has letters. ", call. = FALSE)
+    }
     if (any(data$NGR_LENGTH > 2)) {
       stop("You provided an NGR with more than two letters,
        Hint: Check your NGR variables have less than 3 three letters. ", call. = FALSE)
@@ -323,14 +340,15 @@ rict_validate <- function(data = NULL,
   message("Grid reference values detected for '", toupper(area), "' - applying relevant checks.")
 
   # Calculate Longitude & Latitude
-  if (area %in% c("gb","iom") && model == "physical") {
+  if (area %in% c("gb","iom","ni") && model == "physical") {
     # suppress warning: In showSRID(uprojargs, format = "PROJ", multiline = "NO"):
     # Discarded datum OSGB_1936 in CRS definition
     lat_long <- with(data, suppressWarnings(getLatLong(NGR, EASTING, NORTHING, "WGS84", area)))
     data$LONGITUDE <- lat_long$lon
     data$LATITUDE <- lat_long$lat
   }
-  if (area == "ni" && model == "physical") {
+
+  if (!is.null(crs) && as.numeric(crs) == 29903 && model == "physical") {
     # suppress warning: In showSRID(uprojargs, format = "PROJ", multiline = "NO"):
     # Discarded datum OSGB_1936 in CRS definition
     lat_long <- with(data, suppressWarnings(getLatLong_NI(EASTING, NORTHING)))

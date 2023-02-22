@@ -43,8 +43,8 @@ test_that("outright fails stop process and create error message", {
   # Test NAs in NGR will fail
   test_data <- demo_observed_values
   test_data$NGR[1] <- NA
-  expect_error(rict_validate(test_data), "The data provided contains more than one area of the UK.
-        Hint: Check your data contains NGR grid letters for either: NI or GB. ")
+  expect_error(rict_validate(test_data), "You provided data with one or more NGR values missing,
+       Hint: Check your NGR variable has letters. ")
   # Test if all NGR values NA will fail
   test_data <- demo_observed_values
   test_data$NGR <- NA
@@ -308,9 +308,13 @@ test_that("changes/formatting that shouldn't impact calculations", {
   # Test adding NGR column  in demo_gis_values_log doesn't interfere
   # (SX/SY columns provide location for GIS/model 44 data)
   test_data <- demo_gis_values_log
-  # Doesn't matter is GIS has NGR or not - not used in calculations:
+  # Doesn't matter if GIS has NGR or not - not used in calculations:
   test_data$NGR <- "S"
   expect_equal(nrow(rict_validate(test_data)[["checks"]]), 0)
+  # Doesn't matter if NI has optional leading 'I' or not
+  test_data <- demo_ni_observed_values
+  test_data$NGR <- paste0("I", test_data$NGR)
+  expect_equal(rict_validate(test_data)[["area"]], "ni")
   # Test lower case NGR work - regex was not detecting lower case - fixed now.
   test_data <- demo_observed_values
   test_data$NGR <- as.character(test_data$NGR)

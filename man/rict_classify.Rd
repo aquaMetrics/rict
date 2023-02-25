@@ -8,7 +8,9 @@ rict_classify(
   data = NULL,
   year_type = "multi",
   store_eqrs = FALSE,
-  n_runs = 10000
+  n_runs = 10000,
+  seed = TRUE,
+  set_seed = c(1234, 1234, 1234)
 )
 }
 \arguments{
@@ -22,6 +24,11 @@ required - default is "multi"}
 TRUE, EQRs are stored allowing `rict_compare` to compare EQR results}
 
 \item{n_runs}{Number of simulations, default 10000.}
+
+\item{seed}{Use seed as setup in RICT2 Azure, useful for testing only.}
+
+\item{set_seed}{Change the set-seed number for default of '1234'. For testing
+purposes only.}
 }
 \value{
 Dataframe of classification results

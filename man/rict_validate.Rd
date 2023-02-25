@@ -4,7 +4,13 @@
 \alias{rict_validate}
 \title{Validate observed values}
 \usage{
-rict_validate(data = NULL, row = FALSE, stop_if_all_fail = TRUE, area = NULL)
+rict_validate(
+  data = NULL,
+  row = FALSE,
+  stop_if_all_fail = TRUE,
+  area = NULL,
+  crs = NULL
+)
 }
 \arguments{
 \item{data}{dataframe of observed environmental variables
@@ -27,6 +33,8 @@ run validation checks without stopping process.}
 
 \item{area}{Area is by detected by default from the NGR, but you can provide
 the area parameter either 'iom', 'gb, 'ni' for testing purposes.}
+
+\item{crs}{optionally set crs to `29903` for Irish projection system.}
 }
 \value{
 List of dataframes and other parameters:

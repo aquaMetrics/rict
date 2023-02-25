@@ -686,7 +686,10 @@ if (area == "iom") {
     # Merge simluated eqrs with classification results based on 'ID' (row number)
     allResults_ntaxa_aspt_minta_combined$ID <- seq_len(nrow(allResults_ntaxa_aspt_minta_combined))
     allResults_ntaxa_aspt_minta_combined <-
-      dplyr::select(allResults_ntaxa_aspt_minta_combined, SITE, ID, YEAR)
+      dplyr::select(allResults_ntaxa_aspt_minta_combined,
+                    .data$SITE,
+                    .data$ID,
+                    .data$YEAR)
     allResults_ntaxa_aspt_minta_combined <- merge(
       allResults_ntaxa_aspt_minta_combined,
       eqr_metrics

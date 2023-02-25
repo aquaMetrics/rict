@@ -15,7 +15,9 @@
 #'  \item Click the Browse for .csv file button to select and upload a data file.
 #'  \item View and download results.
 #'  }
-#'
+#' @importFrom DT
+#' @importFrom htmltools
+#' @importFrom leaflet
 #' @examples
 #' \dontrun{
 #' rict_app()
@@ -24,8 +26,10 @@
 #' @export rict_app
 
 rict_app <- function() {
-  message("This app is a work in progress - use the rict experiments on Azure for officialclassification:
-          https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/RICT%20Application.aspx")
+  message("Starting app...")
+  DT::datatable
+  htmltools::a
+  leaflet::leafletMap
   appDir <- system.file("shiny_apps", "rictapp", package = "rict")
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `rict`.", call. = FALSE)

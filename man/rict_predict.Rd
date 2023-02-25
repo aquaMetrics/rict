@@ -10,7 +10,8 @@ rict_predict(
   taxa = FALSE,
   taxa_list = c("TL1", "TL2", "TL3", "TL4", "TL5"),
   rows = NULL,
-  area = NULL
+  area = NULL,
+  crs = NULL
 )
 }
 \arguments{
@@ -75,6 +76,8 @@ Default is all rows.}
 
 \item{area}{Area is by detected by default from the NGR, but you can provide
 the area parameter either 'iom', 'gb, 'ni' for testing purposes.}
+
+\item{crs}{optionally set crs to `29903` for Irish projection system.}
 }
 \value{
 Dataframe of predicted biotic scores and probability of observed

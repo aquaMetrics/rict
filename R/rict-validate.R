@@ -211,7 +211,7 @@ rict_validate <- function(data = NULL,
 
   if(area == "iom") {
     validation_rules <-
-      dplyr::filter(validation_rules, variable %in% c("SITE",
+      dplyr::filter(validation_rules, .data$variable %in% c("SITE",
                                                       "YEAR",
                                                       "WATERBODY",
                                                       "NGR",
@@ -627,7 +627,7 @@ These values will be used instead of calculating them from Grid Reference values
     stop(paste(list("You provided data that has failure(s) on every row.
        We expect at least one row without any fails to proceed.
        HINT: Check fail messages, fix errors and re-try: ",
-                    paste(capture.output(print(checks)),
+                    paste(utils::capture.output(print(checks)),
               collapse = "\n")), collapse = "\n"),
          call. = FALSE)
   }

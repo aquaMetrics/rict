@@ -60,7 +60,7 @@ ui <- tagList(
             "TL4" = "TL4",
             "TL5" = "TL5"
           )
-        )
+        ), p("Taxa predictions may take a few minutes to calculate")
       ),
       # Show tables
       mainPanel(
@@ -131,8 +131,8 @@ server <- function(input, output) {
   })
 
   output$message_compare <- renderUI({
-    inFile <- input$dataset
-    if (is.null(inFile)) {
+    compare_two <- input$dataset_two
+    if (is.null(compare_two)) {
       return(HTML('
           <h3 style="color:grey;">Upload prepared .CSV input files or use the following:</h3></style>
           <h4 style="color:grey;">Example Upstream/Downstream Input Files</h4></style>
@@ -217,6 +217,10 @@ server <- function(input, output) {
     taxa <- data.frame()
     taxa_table <- taxa
     if (!is.null(predictions) & !is.null(input$tl)) {
+      if(nrow(data) > 24) {
+        stop("To help performance, please limit to less than 25 sites
+              when predicting taxa.")
+      }
       taxa <- rict_predict(data, taxa = TRUE, taxa_list = input$tl)
       if (is.null(taxa) && validations$area == "iom") {
         taxa_table <- taxa
@@ -467,7 +471,7 @@ server <- function(input, output) {
       }))
     } else {
       validation <- HTML(
-        '<h3>Validation</h3><h4 style="color:lightgray;">All input data valid</h1></style>'
+        '<h3>Validation</h3><h4 style="color:gray;">All input data valid <span style="color:green;">✓</span></h1></style>'
       )
     }
 

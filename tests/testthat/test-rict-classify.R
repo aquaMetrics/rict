@@ -1,11 +1,12 @@
 context("test rict_classify")
 
 test_that("Outputs match azure single-year outputs", {
-  data <- utils::read.csv(system.file("extdat",
-    "validation-input-single-year.csv",
-    package = "rict"
-  ),
-  check.names = FALSE, stringsAsFactors = FALSE
+  data <- utils::read.csv(
+    system.file("extdat",
+      "validation-input-single-year.csv",
+      package = "rict"
+    ),
+    check.names = FALSE, stringsAsFactors = FALSE
   )
   data <- data[1, ] # only one year required
   test_validation_func <- rict:::rict_validate(data)
@@ -42,14 +43,16 @@ test_that("Outputs match azure NI single-year outputs", {
   test_validation_func <- rict:::rict_validate(data, crs = 29903)
   predictions <- rict_predict(data, crs = 29903)
   classification <- rict_classify(predictions,
-                                  year_type = "single")
+    year_type = "single"
+  )
   expect_equal(class(classification), "data.frame")
 
-  azure_classification <- utils::read.csv(system.file("extdat",
-    "validation-classification-ni-single-year.csv",
-    package = "rict"
-  ),
-  check.names = FALSE, stringsAsFactors = FALSE
+  azure_classification <- utils::read.csv(
+    system.file("extdat",
+      "validation-classification-ni-single-year.csv",
+      package = "rict"
+    ),
+    check.names = FALSE, stringsAsFactors = FALSE
   )
 
   classification$mintawhpt_spr_aut_mostProb <-
@@ -211,11 +214,12 @@ test_that("GIS variables classification against Ralph's output", {
   output$SITE <- row.names(output)
   names(output)[1:24] <- c(as.matrix(filter(output, SITE == "SITE")))[1:24]
   # read in test data to check against
-  test_data <- utils::read.csv(system.file("extdat",
-    "test-sites-gb-model-44-classification-draft.csv",
-    package = "rict"
-  ),
-  check.names = FALSE, stringsAsFactors = FALSE
+  test_data <- utils::read.csv(
+    system.file("extdat",
+      "test-sites-gb-model-44-classification-draft.csv",
+      package = "rict"
+    ),
+    check.names = FALSE, stringsAsFactors = FALSE
   )
 
   # filter only things that match
@@ -295,11 +299,11 @@ test_that("Single year: Only return results for seasons provided", {
 
 test_that("Single year: Summer only", {
   data <- utils::read.csv(system.file("extdat",
-                                     "input-file-single-year-gb.csv",
-                                     package = "rict"
+    "input-file-single-year-gb.csv",
+    package = "rict"
   ), check.names = FALSE)
 
-  classification <- rict(data, year_type = "single", seed= TRUE)
+  classification <- rict(data, year_type = "single", seed = TRUE)
   verfied_classification <- utils::read.csv(system.file("extdat",
     "rict-summer-single-year-gb.csv",
     package = "rict"
@@ -323,7 +327,6 @@ test_that("Single year: Summer only", {
 
 
 test_that("Test single row of multi-year input works", {
-
   # Data contains single year / single row sites at start and end of input file
   single_row_test <- utils::read.csv(system.file("extdat",
     "test-data-single-site-multi-year.csv",
@@ -342,8 +345,9 @@ test_that("Test single row of multi-year input works", {
 
 test_that("NI classification", {
   classification <- rict(demo_ni_observed_values,
-                         year_type = "single",
-                         crs = 29903)
+    year_type = "single",
+    crs = 29903
+  )
 
   verfied_classification <- utils::read.csv(system.file("extdat",
     "validation-classification-ni-single-year.csv",
@@ -386,19 +390,56 @@ test_that("missing observations in multi-year return NA", {
 
 test_that("NI summer", {
   classification <- rict(demo_ni_observed_values,
-                         year_type = "single",
-                         crs = 29903)
-
-  azure_classification <- utils::read.csv(system.file("extdat",
-                                                      "validation-classification-ni-single-year-summer.csv",
-                                                      package = "rict"
-  ),
-  check.names = FALSE, stringsAsFactors = FALSE
+    year_type = "single",
+    crs = 29903
   )
 
-  expect_equal(classification$mostProb_NTAXA_sum[c(1:15,17:20,22:24)],
-               azure_classification$mostProb_NTAXA_sum[c(1:15,17:20,22:24)])
-  expect_equal(sum(classification$eqr_av_sum_aspt -
-                     azure_classification$eqr_av_sum_aspt), -0.09886847)
+  azure_classification <- utils::read.csv(
+    system.file("extdat",
+      "validation-classification-ni-single-year-summer.csv",
+      package = "rict"
+    ),
+    check.names = FALSE, stringsAsFactors = FALSE
+  )
 
+  expect_equal(
+    classification$mostProb_NTAXA_sum[c(1:15, 17:20, 22:24)],
+    azure_classification$mostProb_NTAXA_sum[c(1:15, 17:20, 22:24)]
+  )
+  expect_equal(sum(classification$eqr_av_sum_aspt -
+    azure_classification$eqr_av_sum_aspt), -0.09886847)
+})
+
+test_that("IoM classify", {
+  # test one site for speed
+  test <- rict(demo_iom_observed_values[1, ])
+  # compare to output 2023-02-26
+  valid <- data.frame(
+    "SITE" = "TEST-01-R",
+    "YEAR" = 2016,
+    "WATERBODY" = "Waterbody name",
+    "H_NTAXA_spr_aut" = "100",
+    "G_NTAXA_spr_aut" = "0",
+    "M_NTAXA_spr_aut" = "0",
+    "P_NTAXA_spr_aut" = "0",
+    "B_NTAXA_spr_aut" = "0",
+    "mostProb_NTAXA_spr_aut" = "H",
+    "NTAXA_aver_spr_aut" = 1.338453,
+    "H_ASPT_spr_aut" = "86.02",
+    "G_ASPT_spr_aut" = "13.41",
+    "M_ASPT_spr_aut" = "0.57",
+    "P_ASPT_spr_aut" = "0",
+    "B_ASPT_spr_aut" = "0",
+    "mostProb_ASPT_spr_aut" = "H",
+    "ASPT_aver_spr_aut" = 1.037458,
+    "mintawhpt_spr_aut_H_MINTA_" = "86.02",
+    "mintawhpt_spr_aut_G_MINTA_" = "13.41",
+    "mintawhpt_spr_aut_M_MINTA_" = "0.57",
+    "mintawhpt_spr_aut_P_MINTA_" = "0",
+    "mintawhpt_spr_aut_B_MINTA_" = "0",
+    "mintawhpt_spr_aut_mostProb_MINTA_" = "H"
+  )
+  test$NTAXA_aver_spr_aut <- round(test$NTAXA_aver_spr_aut, 6)
+  test$ASPT_aver_spr_aut <- round(test$ASPT_aver_spr_aut, 6)
+  expect_equal(test[1, ], valid)
 })

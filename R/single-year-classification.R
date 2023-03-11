@@ -270,12 +270,12 @@ if (area == "iom") {
       probClass_sum[i] <- 100 * sum(classArray_siteOne_sum_ntaxa[classArray_siteOne_sum_ntaxa == i, ] / i) / n_runs
     }
 
-    probabilityClass <- getProbClassLabelFromEQR()
+    probabilityClass <- getProbClassLabelFromEQR(area)
     a_ntaxa_spr <- t(probClass_spr) # spr
     a_ntaxa_sum <- t(probClass_sum) # spr, need a_ntaxa_spr
-    colnames(a_ntaxa_sum) <- getProbClassLabelFromEQR()[, 1] # summer
+    colnames(a_ntaxa_sum) <- getProbClassLabelFromEQR(area)[, 1] # summer
     rownames(a_ntaxa_sum) <- c(paste0("TST-", k)) # summer
-    colnames(a_ntaxa_spr) <- getProbClassLabelFromEQR()[, 1]
+    colnames(a_ntaxa_spr) <- getProbClassLabelFromEQR(area)[, 1]
     rownames(a_ntaxa_spr) <- as.character(predictions[k, "SITE"])
 
     # Find most probable class, i.e the maximum, and add it to the site
@@ -294,7 +294,7 @@ if (area == "iom") {
 
     # Part 2: for Autumn
     a_ntaxa_aut <- t(probClass_aut) # aut
-    colnames(a_ntaxa_aut) <- getProbClassLabelFromEQR()[, 1]
+    colnames(a_ntaxa_aut) <- getProbClassLabelFromEQR(area)[, 1]
     rownames(a_ntaxa_aut) <- as.character(predictions[k, "SITE"])
 
     mostProb <- getMostProbableClass(a_ntaxa_aut)
@@ -316,7 +316,7 @@ if (area == "iom") {
     }
 
     a_ntaxa_spr_aut <- t(probClass_spr_aut_comb) # spr
-    colnames(a_ntaxa_spr_aut) <- getProbClassLabelFromEQR()[, 1] # Rename the columns to H G M P B
+    colnames(a_ntaxa_spr_aut) <- getProbClassLabelFromEQR(area)[, 1] # Rename the columns to H G M P B
     rownames(a_ntaxa_spr_aut) <- as.character(predictions[k, "SITE"])
     # Find most probable class, i.e the maximum, and add it to the site
     mostProb <- getMostProbableClass(a_ntaxa_spr_aut)
@@ -398,11 +398,11 @@ if (area == "iom") {
     # Work out ASPT probability of classes
     # probabilityClass <- getProbClassLabelFromEQR()
     a_aspt_spr <- t(probClass_spr) # spr
-    colnames(a_aspt_spr) <- getProbClassLabelFromEQR()[, 1]
+    colnames(a_aspt_spr) <- getProbClassLabelFromEQR(area)[, 1]
     rownames(a_aspt_spr) <- as.character(predictions[k, "SITE"])
 
     a_aspt_sum <- t(probClass_sum) # sum
-    colnames(a_aspt_sum) <- getProbClassLabelFromEQR()[, 1]
+    colnames(a_aspt_sum) <- getProbClassLabelFromEQR(area)[, 1]
     rownames(a_aspt_sum) <- c(paste0("TST-", k))
     # Find most probable class, i.e the maximum, and add it to the site
     mostProb_spr <- getMostProbableClass(a_aspt_spr)
@@ -417,7 +417,7 @@ if (area == "iom") {
 
     # Part 2: for Autumn
     a_aspt_aut <- t(probClass_aut) # aut
-    colnames(a_aspt_aut) <- getProbClassLabelFromEQR()[, 1]
+    colnames(a_aspt_aut) <- getProbClassLabelFromEQR(area)[, 1]
     rownames(a_aspt_aut) <- as.character(predictions[k, "SITE"])
     mostProb <- getMostProbableClass(a_aspt_aut)
     a_aspt_aut <- cbind(a_aspt_aut, mostProb)
@@ -443,7 +443,7 @@ if (area == "iom") {
     # probabilityClass <- getProbClassLabelFromEQR()
 
     aa <- t(minta_probClass_sum) # sum
-    colnames(aa) <- getProbClassLabelFromEQR()[, 1]
+    colnames(aa) <- getProbClassLabelFromEQR(area)[, 1]
 
     rownames(aa) <- as.character(predictions[k, "SITE"]) # c(paste0("TST-",k))
     # Find most probable MINTA class, i.e the maximum, and add it to the site
@@ -463,7 +463,7 @@ if (area == "iom") {
     }
 
     a_aspt_spr_aut <- t(probClass_spr_aut_comb) # spr_aut
-    colnames(a_aspt_spr_aut) <- getProbClassLabelFromEQR()[, 1] # Rename the columns to H G M P B
+    colnames(a_aspt_spr_aut) <- getProbClassLabelFromEQR(area)[, 1] # Rename the columns to H G M P B
     rownames(a_aspt_spr_aut) <- as.character(predictions[k, "SITE"])
     # Find most probable class, i.e the maximum, and add it to the site
     mostProb <- getMostProbableClass(a_aspt_spr_aut)
@@ -489,7 +489,7 @@ if (area == "iom") {
     }
 
     aa <- t(minta_probClass_spr) # spr
-    colnames(aa) <- getProbClassLabelFromEQR()[, 1]
+    colnames(aa) <- getProbClassLabelFromEQR(area)[, 1]
     rownames(aa) <- as.character(predictions[k, "SITE"])
     # Find most probable MINTA class, i.e the maximum, and add it to the site
     mostProb <- getMostProbableClass(aa)
@@ -510,7 +510,7 @@ if (area == "iom") {
     }
 
     aa <- t(minta_probClass_aut) # aut
-    colnames(aa) <- getProbClassLabelFromEQR()[, 1]
+    colnames(aa) <- getProbClassLabelFromEQR(area)[, 1]
     rownames(aa) <- as.character(predictions[k, "SITE"])
     # Find most probable MINTA class, i.e the maximum, and add it to the site
     mostProb <- getMostProbableClass(aa)
@@ -532,7 +532,7 @@ if (area == "iom") {
     }
 
     aa <- t(minta_probClass_spr_aut) # spr_aut
-    colnames(aa) <- getProbClassLabelFromEQR()[, 1]
+    colnames(aa) <- getProbClassLabelFromEQR(area)[, 1]
     rownames(aa) <- as.character(predictions[k, "SITE"])
     # Find most probable MINTA class, i.e the maximum, and add it to the site
     mostProb <- getMostProbableClass(aa)

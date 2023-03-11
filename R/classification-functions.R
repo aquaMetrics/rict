@@ -81,8 +81,12 @@ getUbias8r_new <- function(N_sim, Ubias8, seed, set_seed) { # N_sim = no. of sim
 
 # Function to get the classification value for the class for WHPT Abundance
 # Return the class labels of probability of class i.e. use 1 = H, 2 = G, 3 = M, 4 = P, 5 = B
-getProbClassLabelFromEQR <- function() {
-  probClassFrame <- data.frame(class = c("H", "G", "M", "P", "B"))
+getProbClassLabelFromEQR <- function(area) {
+  if(area == "iom") {
+    probClassFrame <- data.frame(class = c("E", "G", "M", "P", "B"))
+  } else {
+    probClassFrame <- data.frame(class = c("H", "G", "M", "P", "B"))
+    }
   return(probClassFrame)
 }
 

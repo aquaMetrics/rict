@@ -165,6 +165,7 @@ server <- function(input, output) {
       SITE,
       WATERBODY,
       YEAR,
+      SuitCode,
       SuitText,
       dplyr::everything(),
       -dplyr::contains("LATITUDE"),
@@ -180,7 +181,6 @@ server <- function(input, output) {
       -dplyr::contains("LOG.SLOPE"),
       -dplyr::contains("MEAN.AIR.TEMP"),
       -dplyr::contains("AIR.TEMP.RANGE"),
-      -SuitCode,
       -area,
       -dplyr::contains("belongs_to_end_grp"),
       -dplyr::contains("SEASON_ID"),
@@ -218,13 +218,15 @@ server <- function(input, output) {
     taxa_table <- taxa
     if (!is.null(predictions) & !is.null(input$tl)) {
       if(nrow(data) > 24) {
-        stop("To help performance, please limit to less than 25 sites
-              when predicting taxa.")
+        stop("To allow good website performance, please limit to fewer than
+        25 sites when predicting taxa.")
       }
       taxa <- rict_predict(data, taxa = TRUE, taxa_list = input$tl)
       if (is.null(taxa) && validations$area == "iom") {
+        taxa <- data.frame("Note" =
+                                   "Taxa predictions not available for Isle of Man model")
         taxa_table <- taxa
-      } else {
+        } else {
         taxa$Season_Code <- as.numeric(taxa$Season_Code)
         taxa_table <- dplyr::arrange(taxa, NBN_Name, Season_Code)
         taxa_table <- dplyr::select(
@@ -347,7 +349,7 @@ server <- function(input, output) {
     # Format outputs depending on options selected ----------------------------
     if (!is.null(input$tl)) {
       if (validations$area == "iom") {
-        taxa_output <- list(h3("Taxa"), p("Isle of Man model cannot predict taxa"))
+        taxa_output <- list(h3("Taxa"), h4("❌ Taxa predictions not available for Isle of Man"))
       } else {
         taxa_output <- list(h3("Taxa"), DT::renderDataTable(
           {

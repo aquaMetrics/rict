@@ -14,6 +14,7 @@
 #' @return Dataframe of classification results
 #' @export
 #' @importFrom rlang .data
+#' @importFrom dplyr bind_cols select
 #'
 #' @examples
 #' \dontrun{
@@ -430,9 +431,9 @@ rict_classify <- function(data = NULL,
       }
 
       # Part 2.1: for Spring_aut
-      probabilityClass <- getProbClassLabelFromEQR()
+      probabilityClass <- getProbClassLabelFromEQR(area)
       a_ntaxa_spr_aut <- t(probClass_spr) # spr, need a_ntaxa_spr
-      colnames(a_ntaxa_spr_aut) <- getProbClassLabelFromEQR()[, 1]
+      colnames(a_ntaxa_spr_aut) <- getProbClassLabelFromEQR(area)[, 1]
       rownames(a_ntaxa_spr_aut) <- as.character(data[k, "SITE"]) # c(paste0("TST-",j))
 
       # Find most probable class, i.e the maximum, and add it to the site
@@ -461,7 +462,7 @@ rict_classify <- function(data = NULL,
       # Work out ASPT probability of classes
       # probabilityClass <- getProbClassLabelFromEQR()
       a_aspt_spr_aut <- t(probClass_spr) # spr
-      colnames(a_aspt_spr_aut) <- getProbClassLabelFromEQR()[, 1]
+      colnames(a_aspt_spr_aut) <- getProbClassLabelFromEQR(area)[, 1]
       # print(c(" j =",j," site = ",as.character(data[j,"SITE"]), "pated TST = ",paste0("TST-",j)))
       rownames(a_aspt_spr_aut) <- as.character(data[k, "SITE"]) # c(paste0("TST-",j))
 
@@ -491,7 +492,7 @@ rict_classify <- function(data = NULL,
 
       # probabilityClass <- getProbClassLabelFromEQR()
       aa <- t(minta_probClass_spr_aut) # spr
-      colnames(aa) <- getProbClassLabelFromEQR()[, 1]
+      colnames(aa) <- getProbClassLabelFromEQR(area)[, 1]
       rownames(aa) <- as.character(data[k, "SITE"]) # c(paste0("TST-",j))
       # Find most probable MINTA class, i.e the maximum, and add it to the site
       mostProb <- getMostProbableClass(aa)
@@ -600,6 +601,21 @@ rict_classify <- function(data = NULL,
         dplyr::select(classification_results, .data$SITE, .data$ID, .data$YEAR)
       classification_results <- merge(classification_results, eqr_metrics)
     }
-    return(classification_results)
-  }
+
+    if(area == "iom") {
+      # Change results output for iom
+      iom_results <- dplyr::select(classification_results,
+                                   -.data$SITE,
+                                   -.data$YEAR,
+                                   -.data$WATERBODY)
+      iom_results[iom_results == "E"] <- "Excellent"
+      iom_results[iom_results == "G"] <- "Good"
+      iom_results[iom_results == "M"] <- "Moderate"
+      iom_results[iom_results == "P"] <- "Poor"
+      iom_results[iom_results == "B"] <- "Bad"
+      classification_results <-
+        bind_cols(classification_results[, c("SITE","YEAR", "WATERBODY")],
+                  iom_results)
+    }
+    return(classification_results)  }
 }

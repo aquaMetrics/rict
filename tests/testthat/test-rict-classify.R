@@ -418,26 +418,26 @@ test_that("IoM classify", {
     "SITE" = "TEST-01-R",
     "YEAR" = 2016,
     "WATERBODY" = "Waterbody name",
-    "H_NTAXA_spr_aut" = "100",
+    "E_NTAXA_spr_aut" = "100",
     "G_NTAXA_spr_aut" = "0",
     "M_NTAXA_spr_aut" = "0",
     "P_NTAXA_spr_aut" = "0",
     "B_NTAXA_spr_aut" = "0",
-    "mostProb_NTAXA_spr_aut" = "H",
+    "mostProb_NTAXA_spr_aut" = "Excellent",
     "NTAXA_aver_spr_aut" = 1.338453,
-    "H_ASPT_spr_aut" = "86.02",
+    "E_ASPT_spr_aut" = "86.02",
     "G_ASPT_spr_aut" = "13.41",
     "M_ASPT_spr_aut" = "0.57",
     "P_ASPT_spr_aut" = "0",
     "B_ASPT_spr_aut" = "0",
-    "mostProb_ASPT_spr_aut" = "H",
+    "mostProb_ASPT_spr_aut" = "Excellent",
     "ASPT_aver_spr_aut" = 1.037458,
-    "mintawhpt_spr_aut_H_MINTA_" = "86.02",
+    "mintawhpt_spr_aut_E_MINTA_" = "86.02",
     "mintawhpt_spr_aut_G_MINTA_" = "13.41",
     "mintawhpt_spr_aut_M_MINTA_" = "0.57",
     "mintawhpt_spr_aut_P_MINTA_" = "0",
     "mintawhpt_spr_aut_B_MINTA_" = "0",
-    "mintawhpt_spr_aut_mostProb_MINTA_" = "H"
+    "mintawhpt_spr_aut_mostProb_MINTA_" = "Excellent"
   )
   test$NTAXA_aver_spr_aut <- round(test$NTAXA_aver_spr_aut, 6)
   test$ASPT_aver_spr_aut <- round(test$ASPT_aver_spr_aut, 6)

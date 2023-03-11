@@ -4,7 +4,14 @@
 \alias{rict}
 \title{Run the River Invertebrate Classification Tool (RICT)}
 \usage{
-rict(data = NULL, year_type = "multi", store_eqrs = FALSE, area = NULL)
+rict(
+  data = NULL,
+  year_type = "multi",
+  store_eqrs = FALSE,
+  area = NULL,
+  crs = NULL,
+  seed = FALSE
+)
 }
 \arguments{
 \item{data}{Dataframe of observed environmental values for example of input
@@ -24,6 +31,10 @@ EQRs.}
 
 \item{area}{Area is by detected by default from the NGR, but you can provide
 the area parameter either 'iom', 'gb, 'ni' for testing purposes.}
+
+\item{crs}{optionally set crs to `29903` for Irish projection system.}
+
+\item{seed}{Use seed as setup in RICT2 Azure, useful for testing only.}
 }
 \value{
 Dataframe of classification results (and simulated EQRs if store_eqrs

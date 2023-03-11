@@ -597,7 +597,7 @@ rict_classify <- function(data = NULL,
       classification_results$ID <- seq_len(nrow(classification_results))
       # Merge simluated eqrs with classification results based on 'ID' (row number)
       classification_results <-
-        dplyr::select(classification_results, SITE, ID, YEAR)
+        dplyr::select(classification_results, .data$SITE, .data$ID, .data$YEAR)
       classification_results <- merge(classification_results, eqr_metrics)
     }
     return(classification_results)

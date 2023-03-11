@@ -225,7 +225,8 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id,
   spring_whpt_ntaxa_Abw_CompFam <- NULL
   spring_whpt_aspt_Abw_CompFam <- NULL
 
-  end_groups <- end_group_IndexDFrame %>% dplyr::filter(SeasonCode %in% season_to_run)
+  end_groups <- end_group_IndexDFrame %>%
+    dplyr::filter(.data$SeasonCode %in% season_to_run)
 
   if (all_indices == TRUE) {
     predictions <- purrr::map_df(c(1, 2, 3), function(season) {

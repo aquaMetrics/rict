@@ -1,7 +1,7 @@
 ---
 title: "River Invertebrate Classification Tool (RICT) Functional Specification"
 author: "RICT Steering Group"
-date: "`r Sys.Date()`"
+date: "2023-02-25"
 pkgdown:
   as_is: yes
 output:
@@ -20,33 +20,17 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r setup, message=F, echo=FALSE, warning=F}
-library(rict)
-library(knitr)
-library(dplyr)
-```
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  echo = FALSE
-)
 
-options(scipen = 2, digits = 9)
-```
 
-```{r results="asis", echo=FALSE}
-# directly adding css to output html without ruining css style https://stackoverflow.com/questions/29291633/adding-custom-css-tags-to-an-rmarkdown-html-document
-cat("
+
+
 <style>
 img {
 border: 0px;
 outline: 0 ;
 }
 </style>
-")
-``` 
 
 
 ![](images/rict_logo.png){ width=20% }
@@ -559,32 +543,55 @@ from this file.
 
 Required values:
 
-```{r}
- validation_rules <-
-    utils::read.csv(system.file("extdat", "validation-rules.csv", package = "rict"),
-      stringsAsFactors = F
-    )
 
-kable(filter(validation_rules, models %in% c("all", "physical") & source == "input") %>%
-                       select(Variable = "variable",
-                              Units = "units",
-                              Description = "pretty_name",
-                              Type = "type",
-                              Optional = "optional")  %>%  unique())
-```
+|   |Variable         |Units |Description               |Type      |Optional |
+|:--|:----------------|:-----|:-------------------------|:---------|:--------|
+|1  |SITE             |      |Site                      |character |FALSE    |
+|2  |WATERBODY        |      |Waterbody                 |character |TRUE     |
+|3  |YEAR             |      |Year                      |integer   |FALSE    |
+|4  |NGR              |      |National Grid Reference   |character |FALSE    |
+|5  |EASTING          |m     |Easting                   |character |FALSE    |
+|6  |NORTHING         |m     |Northing                  |character |FALSE    |
+|7  |ALTITUDE         |m     |Altitude                  |numeric   |FALSE    |
+|9  |SLOPE            |m/km  |Slope at site             |numeric   |FALSE    |
+|11 |DISCHARGE        |      |Discharge Category        |numeric   |TRUE     |
+|13 |VELOCITY         |m/s   |Velocity                  |numeric   |TRUE     |
+|15 |DIST_FROM_SOURCE |km    |Distance from Source      |numeric   |FALSE    |
+|17 |MEAN_WIDTH       |m     |Stream Width              |numeric   |FALSE    |
+|19 |MEAN_DEPTH       |cm    |Stream Depth              |numeric   |FALSE    |
+|21 |BOULDER_COBBLES  |%     |Boulder Cobble Percentage |numeric   |FALSE    |
+|22 |PEBBLES_GRAVEL   |%     |Pebbles Gravel Percentage |numeric   |FALSE    |
+|23 |SAND             |%     |Sand Percentage           |numeric   |FALSE    |
+|24 |SILT_CLAY        |%     |Silt Clay Percentage      |numeric   |FALSE    |
+|25 |HARDNESS         |%     |Hardness                  |numeric   |TRUE     |
+|26 |CALCIUM          |      |Calcium Concentration     |numeric   |TRUE     |
+|27 |CONDUCTIVITY     |      |Electrical Conductivity   |numeric   |TRUE     |
+|28 |ALKALINITY       |mg/L  |Alkalinity as CaCO3       |numeric   |FALSE    |
 
 #### Model 44 Input files (using GIS predictors) 
 
 Required values:
   
-```{r}
-kable(filter(validation_rules, models %in% c("all", "gis") & source == "input") %>%
-                       select(Variable = "variable",
-                              Units = "units", 
-                              Description = "pretty_name",
-                              Type = "type",
-                              Optional = "optional") %>%  unique())
-```
+
+|   |Variable   |Units      |Description                      |Type      |Optional |
+|:--|:----------|:----------|:--------------------------------|:---------|:--------|
+|1  |SITE       |           |Site                             |character |FALSE    |
+|2  |WATERBODY  |           |Waterbody                        |character |TRUE     |
+|3  |YEAR       |           |Year                             |integer   |FALSE    |
+|4  |ALKALINITY |mg/L       |Alkalinity as CaCO3              |numeric   |FALSE    |
+|6  |DISCH_CAT  |           |Discharge Category               |numeric   |FALSE    |
+|7  |PEAT       |Proportion |Peat                             |numeric   |FALSE    |
+|8  |CHALK      |Proportion |Chalk                            |numeric   |FALSE    |
+|9  |CLAY       |Proportion |Clay                             |numeric   |FALSE    |
+|10 |HARDROCK   |Proportion |Hardrock                         |numeric   |FALSE    |
+|11 |LIMESTONE  |Proportion |Limestone                        |numeric   |FALSE    |
+|12 |LOG_AREA   |Log (km2)  |Log Area                         |numeric   |FALSE    |
+|13 |LOGALTBAR  |m          |Mean Altitude of Catchment       |numeric   |FALSE    |
+|14 |ALTITUDE   |m          |Site Altitude                    |numeric   |FALSE    |
+|15 |D_F_SOURCE |m          |Distance from Source             |numeric   |FALSE    |
+|16 |SLOPE      |m/km       |Slope at site                    |numeric   |FALSE    |
+|17 |SX         |           |Sampling Site X Coordinate (BNG) |numeric   |FALSE    |
+|18 |SY         |           |Sampling Site Y Coordinate (BNG) |numeric   |FALSE    |
 
 #### Optional values
 
@@ -594,23 +601,22 @@ comply with the following notes:
 
 #### Model 1 Optional notes:
 
-```{r}
-kable(filter(validation_rules, models %in% c("all", "physical") &
-                               source == "input" &
-                                optional_notes > 0) %>%
-                       select(Variable = "variable",
-                              "Optional note" = "optional_notes")  %>%  unique())
-```
+
+|   |Variable     |Optional note                                        |
+|:--|:------------|:----------------------------------------------------|
+|1  |DISCHARGE    |One of DISCHARGE or VELOCITY                         |
+|3  |VELOCITY     |One of DISCHARGE or VELOCITY                         |
+|5  |HARDNESS     |One of Alkalinity, Hardness, Conductivity or Calcium |
+|6  |CALCIUM      |One of Alkalinity, Hardness, Conductivity or Calcium |
+|7  |CONDUCTIVITY |One of Alkalinity, Hardness, Conductivity or Calcium |
+|8  |ALKALINITY   |One of Alkalinity, Hardness, Conductivity or Calcium |
 
 #### Model 44 Optional notes:
 
-```{r}
-kable(filter(validation_rules, models %in% c("all", "gis") &
-                               source == "input" &
-                                optional_notes > 0) %>%
-                       select(Variable = "variable",
-                              "Optional note" = "optional_notes")  %>%  unique())
-```
+
+|Variable   |Optional note                                        |
+|:----------|:----------------------------------------------------|
+|ALKALINITY |One of Alkalinity, Hardness, Conductivity or Calcium |
 
 #### Validation
 
@@ -624,46 +630,102 @@ flags the transgression in a fail message.
 
 #### Validation rules for Model 1
 
-```{r}
-knitr::kable(filter(validation_rules, models %in% c("all", "physical")) %>%
-                       select(Variable = "variable",
-                              Area = "area",
-                              "Less than fail" = "less_than_fail",
-                              "Greater than fail" = "greater_than_fail",
-                              "Less than warn" = "less_than_warn",
-                              "Greater than warn" = "greater_than_warn"))
-```
+
+|Variable         |Area | Less than fail| Greater than fail| Less than warn| Greater than warn|
+|:----------------|:----|--------------:|-----------------:|--------------:|-----------------:|
+|SITE             |all  |           0.00|                NA|             NA|                NA|
+|WATERBODY        |all  |           0.00|                NA|             NA|                NA|
+|YEAR             |all  |           0.00|                NA|   1990.0000000|                NA|
+|NGR              |all  |             NA|                NA|             NA|                NA|
+|EASTING          |all  |             NA|                NA|             NA|                NA|
+|NORTHING         |all  |             NA|                NA|             NA|                NA|
+|LATITUDE         |gb   |          49.95|             60.86|     49.9978431|        60.8034893|
+|LATITUDE         |ni   |          54.02|             55.38|     54.0684100|        55.1995835|
+|LONGITUDE        |gb   |          -7.67|              1.76|     -7.3651894|         1.3560119|
+|LONGITUDE        |ni   |          -8.20|             -5.43|     -8.0916181|        -5.7731300|
+|ALTITUDE         |gb   |           0.00|           1345.00|      0.0000000|       590.0000000|
+|ALTITUDE         |ni   |           0.00|            850.00|      3.0000000|       180.0000000|
+|SLOPE            |gb   |           0.00|                NA|      0.1000000|       150.0000000|
+|SLOPE            |ni   |           0.00|                NA|      0.1000000|        50.0000000|
+|DISCHARGE        |gb   |           1.00|             10.00|             NA|         9.0000000|
+|DISCHARGE        |ni   |           1.00|             10.00|             NA|         8.0000000|
+|VELOCITY         |gb   |           1.00|              5.00|             NA|                NA|
+|VELOCITY         |ni   |           1.00|              5.00|             NA|                NA|
+|DIST_FROM_SOURCE |gb   |           0.00|                NA|      0.1000000|       202.8000000|
+|DIST_FROM_SOURCE |ni   |           0.00|                NA|      2.2000000|        75.0000000|
+|MEAN_WIDTH       |gb   |           0.00|                NA|      0.4000000|       116.7000000|
+|MEAN_WIDTH       |ni   |           0.00|                NA|      2.0000000|        37.2000000|
+|MEAN_DEPTH       |gb   |           0.00|                NA|      1.7000000|       300.0000000|
+|MEAN_DEPTH       |ni   |           0.00|                NA|     15.0000000|       183.0000000|
+|BOULDER_COBBLES  |all  |           0.00|            100.00|             NA|                NA|
+|PEBBLES_GRAVEL   |all  |           0.00|            100.00|             NA|                NA|
+|SAND             |all  |           0.00|            100.00|             NA|                NA|
+|SILT_CLAY        |all  |           0.00|            100.00|             NA|                NA|
+|MSUBST           |gb   |             NA|                NA|     -7.7050000|         8.0000000|
+|MSUBST           |ni   |             NA|                NA|     -7.7500000|         6.6125000|
+|HARDNESS         |all  |             NA|                NA|             NA|                NA|
+|CALCIUM          |all  |             NA|                NA|             NA|                NA|
+|CONDUCTIVITY     |all  |             NA|                NA|             NA|                NA|
+|TEMPM            |gb   |           0.10|                NA|      7.5000000|        11.5000000|
+|TEMPR            |gb   |           0.10|                NA|      8.2100000|        13.9000000|
+|ALKALINITY       |gb   |           0.00|                NA|      0.7000000|       365.5000000|
+|ALKALINITY       |ni   |           0.00|                NA|      2.5000000|       193.5000000|
+|TOTSUB           |all  |          97.00|            103.00|             NA|                NA|
+|DIST_FROM_SOURCE |iom  |           0.00|                NA|      0.1000000|        20.0000000|
+|ALTITUDE         |iom  |           0.00|            621.00|      0.0000000|       100.0000000|
+|SLOPE            |iom  |           0.00|                NA|      0.1000000|        50.0000000|
+|ALKALINITY       |iom  |           0.00|                NA|      0.7000000|       130.0000000|
 
 Model 1 Validation notes:
-```{r}
-kable(filter(validation_rules, models %in% c("all", "physical") &
-               source == "input" &  validation_notes != "") %>%
-                       select(Variable = "variable",
-                              "Validation notes" = "validation_notes") )
 
-```
+|Variable |Validation notes                                                                                                                      |
+|:--------|:-------------------------------------------------------------------------------------------------------------------------------------|
+|YEAR     |Warn if samples collected prior to 1990 as unlikely to be collected using RIVPACS method                                              |
+|NGR      |Must be less than 3 letters, can be upper or lower case                                                                               |
+|EASTING  |Must be 5 digits; text not number, to retain leading zeros (input file screening). In R Code: If less than 5 digits add leading zeros |
+|NORTHING |Must be 5 digits; text not number, to retain leading zeros (input file screening). In R Code: If less than 5 digits add leading zeros |
 
 #### Validation rules for Model 44
 
-```{r}
 
-kable(filter(validation_rules, models %in% c("all", "gis")) %>%
-                       select(Variable = "variable",
-                              Area = "area",
-                              "Less than fail" = "less_than_fail",
-                              "Greater than fail" = "greater_than_fail",
-                              "Less than warn" = "less_than_warn",
-                              "Greater than warn" = "greater_than_warn"))
-```
+|Variable    |Area | Less than fail| Greater than fail| Less than warn| Greater than warn|
+|:-----------|:----|--------------:|-----------------:|--------------:|-----------------:|
+|SITE        |all  |        0.00000|                NA|             NA|                NA|
+|WATERBODY   |all  |        0.00000|                NA|             NA|                NA|
+|YEAR        |all  |        0.00000|                NA|   1990.0000000|                NA|
+|LATITUDE    |gb   |       49.95000|          60.86000|     49.9978431|        60.8034893|
+|LATITUDE    |ni   |       54.02000|          55.38000|     54.0684100|        55.1995835|
+|LONGITUDE   |gb   |       -7.67000|           1.76000|     -7.3651894|         1.3560119|
+|LONGITUDE   |ni   |       -8.20000|          -5.43000|     -8.0916181|        -5.7731300|
+|TEMPM       |gb   |        0.10000|                NA|      7.5000000|        11.5000000|
+|TEMPR       |gb   |        0.10000|                NA|      8.2100000|        13.9000000|
+|ALKALINITY  |gb   |        0.00000|                NA|      0.7000000|       366.0000000|
+|ALKALINITY  |ni   |        0.00000|                NA|      0.7000000|       194.0000000|
+|DISCH_CAT   |all  |        1.00000|          10.00000|             NA|         9.0000000|
+|PEAT        |all  |        0.00000|           1.00000|             NA|                NA|
+|CHALK       |all  |        0.00000|           1.00000|             NA|                NA|
+|CLAY        |all  |        0.00000|           1.00000|             NA|                NA|
+|HARDROCK    |all  |        0.00000|           1.00000|             NA|                NA|
+|LIMESTONE   |all  |        0.00000|           1.00000|             NA|                NA|
+|LOG_AREA    |all  |       -2.60206|           3.99875|     -0.0530000|         3.9000000|
+|LOGALTBAR   |all  |       -2.81558|           3.12905|      0.1400000|         2.8600000|
+|ALTITUDE    |all  |        0.00000|        1346.00000|             NA|       597.0000000|
+|D_F_SOURCE  |all  |        0.00000|      296037.00000|    100.0000000|    245000.0000000|
+|SLOPE       |all  |        0.00000|        1576.85000|      0.1000000|       142.0000000|
+|SX          |all  |             NA|                NA|             NA|                NA|
+|SY          |all  |             NA|                NA|             NA|                NA|
+|LgDFS_CEH   |all  |             NA|                NA|             NA|                NA|
+|LgSlope_CEH |all  |             NA|                NA|             NA|                NA|
 
 Model 44 validation notes: 
-```{r}
-kable(filter(validation_rules, models %in% c("all", "gis") &
-               source == "input" &  validation_notes != "") %>%
-                       select(Variable = "variable",
-                              "Validation notes" = "validation_notes"))
 
-```
+|Variable  |Validation notes                                                                         |
+|:---------|:----------------------------------------------------------------------------------------|
+|YEAR      |Warn if samples collected prior to 1990 as unlikely to be collected using RIVPACS method |
+|CHALK     |Combined proportion figure for chalk, clay, hardrock and limestone cannot be more than 1 |
+|CLAY      |Combined proportion figure for chalk, clay, hardrock and limestone cannot be more than 1 |
+|HARDROCK  |Combined proportion figure for chalk, clay, hardrock and limestone cannot be more than 1 |
+|LIMESTONE |Combined proportion figure for chalk, clay, hardrock and limestone cannot be more than 1 |
 
 #### Replacement values
 
@@ -672,18 +734,30 @@ avoid divide by zero errors. Specifically, variables that are used in the
 RIVPACS model discriminator functions in their log form (as you cannot take logs
 of zeroes):
 
-```{r}
 
-kable(filter(validation_rules, models %in% c("all", "gis", "physical") & source == "input" &
-               replacement_val != "") %>%
-                       select(Variable = "variable",
-                              Model = "models",
-                              Area = "area",
-                              "Replacement value" = "replacement_val",
-                              "Replacement condition" = "replacement_cond",
-                              "Replacement limit" = "replacement_limit"
-                        ) %>%  unique())
-```
+|Variable         |Model    |Area | Replacement value|Replacement condition | Replacement limit|
+|:----------------|:--------|:----|-----------------:|:---------------------|-----------------:|
+|ALTITUDE         |physical |gb   |               1.0|equals                |               0.0|
+|ALTITUDE         |physical |ni   |               1.0|equals                |               0.0|
+|SLOPE            |physical |gb   |               0.1|equals                |               0.0|
+|SLOPE            |physical |ni   |               0.1|equals                |               0.0|
+|DIST_FROM_SOURCE |physical |gb   |               0.1|lessthan              |               0.1|
+|DIST_FROM_SOURCE |physical |ni   |               0.1|lessthan              |               0.1|
+|MEAN_WIDTH       |physical |gb   |               0.1|lessthan              |               0.1|
+|MEAN_WIDTH       |physical |ni   |               0.1|lessthan              |               0.1|
+|MEAN_DEPTH       |physical |gb   |               1.0|lessthan              |               1.0|
+|MEAN_DEPTH       |physical |ni   |               1.0|lessthan              |               1.0|
+|ALKALINITY       |physical |gb   |               0.1|lessthan              |               0.1|
+|ALKALINITY       |physical |ni   |               0.1|lessthan              |               0.1|
+|ALKALINITY       |gis      |gb   |               0.1|lessthan              |               0.1|
+|ALKALINITY       |gis      |ni   |               0.1|lessthan              |               0.1|
+|ALTITUDE         |gis      |all  |               1.0|equals                |               0.0|
+|D_F_SOURCE       |gis      |all  |             100.0|lessthan              |             100.0|
+|SLOPE            |gis      |all  |               0.1|equals                |               0.0|
+|DIST_FROM_SOURCE |physical |iom  |               0.1|lessthan              |               0.1|
+|ALTITUDE         |physical |iom  |               1.0|equals                |               0.0|
+|SLOPE            |physical |iom  |               0.1|equals                |               0.0|
+|ALKALINITY       |physical |iom  |               0.1|lessthan              |               0.1|
 
 ### Validation rules
 
@@ -1238,20 +1312,21 @@ The precise order and form of the environmental variables to be used as Env 1–
 Env<sub>vN</sub> in the discrimination functions equations used to calculate the
 discriminant function axis scores (DFScore) is as follows:
 
-```{r}
 
-
-filter(validation_rules, models %in% c("physical","all"), env > 0 ) %>%
-    arrange(ev_number)  %>% 
-                       select("EV" = "env",
-                         "User input" = "variable",
-                               "Environmental predictor variable" = "pretty_name",
-                              "Derived" = "source",
-                              "Use in log10 form?" = "log") %>% 
-
-  unique() %>%
-  kable()
-```
+|   |EV              |User input       |Environmental predictor variable |Derived    |Use in log10 form? |
+|:--|:---------------|:----------------|:--------------------------------|:----------|:------------------|
+|1  |ENV 1           |LATITUDE         |Latitude                         |calculated |FALSE              |
+|3  |ENV 2           |LONGITUDE        |Longitude                        |calculated |FALSE              |
+|5  |ENV 3           |ALTITUDE         |Altitude                         |input      |TRUE               |
+|8  |ENV 4           |DIST_FROM_SOURCE |Distance from Source             |input      |TRUE               |
+|11 |ENV 5           |MEAN_WIDTH       |Stream Width                     |input      |TRUE               |
+|13 |ENV 6           |MEAN_DEPTH       |Stream Depth                     |input      |TRUE               |
+|15 |ENV 7           |MSUBST           |Mean Substratum                  |calculated |FALSE              |
+|17 |ENV 8           |DISCHARGE        |Discharge Category               |input      |FALSE              |
+|19 |ENV 9 & ENV 10* |ALKALINITY       |Alkalinity as CaCO3              |input      |TRUE               |
+|22 |ENV 11          |SLOPE            |Slope at site                    |input      |TRUE               |
+|25 |ENV 12          |TEMPM            |Air Mean Temperature             |calculated |FALSE              |
+|26 |ENV 13          |TEMPR            |Air Temperature Range            |calculated |FALSE              |
 
 ** Alkalinity is involved in the discriminant functions in both untransformed form (as Env9) and in log transformed form (as Env10) to represent its non-linear impact on the biota.
 
@@ -2667,21 +2742,123 @@ format to used and run with the experiment.
 
 GB - Model 1 input format
 
-```{r}
-knitr::kable(t(demo_observed_values[1, ]))
-```
+
+|                                 |1              |
+|:--------------------------------|:--------------|
+|SITE                             |MYR-GB-01-R    |
+|Waterbody                        |Waterbody name |
+|Year                             |2016           |
+|NGR                              |SE             |
+|Easting                          |94200          |
+|Northing                         |91000          |
+|Altitude                         |60             |
+|Slope                            |2.7            |
+|Discharge                        |2              |
+|Velocity                         |NA             |
+|Dist_from_Source                 |10             |
+|Mean_Width                       |6.4            |
+|Mean_Depth                       |21.7           |
+|Alkalinity                       |101.4          |
+|Boulder_Cobbles                  |58             |
+|Pebbles_Gravel                   |36             |
+|Sand                             |3              |
+|Silt_Clay                        |1              |
+|Hardness                         |NA             |
+|Calcium                          |NA             |
+|Conductivity                     |NA             |
+|Spr_Season_ID                    |1              |
+|Spr_TL2_WHPT_ASPT (AbW,DistFam)  |6.512          |
+|Spr_TL2_WHPT_NTaxa (AbW,DistFam) |24             |
+|Spr_Ntaxa_Bias                   |1.62           |
+|Sum_Season_ID                    |2              |
+|Sum_TL2_WHPT_ASPT (AbW,DistFam)  |6.663          |
+|Sum_TL2_WHPT_NTaxa (AbW,DistFam) |27             |
+|Sum_Ntaxa_Bias                   |1.62           |
+|Aut_Season_ID                    |3              |
+|Aut_TL2_WHPT_ASPT (AbW,DistFam)  |6.348          |
+|Aut_TL2_WHPT_NTaxa (AbW,DistFam) |27             |
+|Aut_Ntaxa_Bias                   |1.62           |
 
 NI - Model 1 input format
 
-```{r}
-knitr::kable(t(demo_ni_observed_values[1, ]))
-```
+
+|                                 |1              |
+|:--------------------------------|:--------------|
+|SITE                             |TST-NI-01-R    |
+|Waterbody                        |Waterbody name |
+|Year                             |2018           |
+|NGR                              |H              |
+|Easting                          |24720          |
+|Northing                         |36350          |
+|Altitude                         |85             |
+|Slope                            |1.3            |
+|Discharge                        |4              |
+|Velocity                         |NA             |
+|Dist_from_Source                 |16.4           |
+|Mean_Width                       |9              |
+|Mean_Depth                       |34             |
+|Alkalinity                       |97.8           |
+|Boulder_Cobbles                  |55             |
+|Pebbles_Gravel                   |15             |
+|Sand                             |25             |
+|Silt_Clay                        |5              |
+|Hardness                         |NA             |
+|Calcium                          |NA             |
+|Conductivity                     |NA             |
+|Spr_Season_ID                    |1              |
+|Spr_TL2_WHPT_ASPT (AbW,DistFam)  |6.038          |
+|Spr_TL2_WHPT_NTaxa (AbW,DistFam) |26             |
+|Spr_Ntaxa_Bias                   |1.62           |
+|Sum_Season_ID                    |2              |
+|Sum_TL2_WHPT_ASPT (AbW,DistFam)  |5.041          |
+|Sum_TL2_WHPT_NTaxa (AbW,DistFam) |22             |
+|Sum_Ntaxa_Bias                   |1.62           |
+|Aut_Season_ID                    |3              |
+|Aut_TL2_WHPT_ASPT (AbW,DistFam)  |4.935          |
+|Aut_TL2_WHPT_NTaxa (AbW,DistFam) |23             |
+|Aut_Ntaxa_Bias                   |1.62           |
 
 GIS - Model 44 input format
 
-```{r}
-knitr::kable(t(demo_gis_values_log[1, ]))
-```
+
+|                                 |1           |
+|:--------------------------------|:-----------|
+|SITE                             |TST-GB-01-R |
+|YEAR                             |2019        |
+|WATERBODY                        |TST-GB-01-R |
+|Alkalinity                       |101.4       |
+|Conductivity                     |NA          |
+|hardness                         |NA          |
+|calcium                          |NA          |
+|OBJECTID                         |NA          |
+|SX                               |494200      |
+|SY                               |491000      |
+|EX                               |NA          |
+|EY                               |NA          |
+|Altitude                         |56          |
+|d_f_source                       |16877.141   |
+|logaltbar                        |2.24428105  |
+|log_area                         |1.69537222  |
+|disch_cat                        |3           |
+|slope                            |2.57359314  |
+|chalk                            |0.0274263   |
+|clay                             |0.134409    |
+|hardrock                         |0           |
+|limestone                        |0           |
+|peat                             |0           |
+|shape_Length                     |NA          |
+|Spr_Season_ID                    |1           |
+|Spr_TL2_WHPT_ASPT (AbW,DistFam)  |6.512       |
+|Spr_TL2_WHPT_NTaxa (AbW,DistFam) |24          |
+|Spr_Ntaxa_Bias                   |1.62        |
+|Sum_Season_ID                    |2           |
+|Sum_TL2_WHPT_ASPT (AbW,DistFam)  |6.663       |
+|Sum_TL2_WHPT_NTaxa (AbW,DistFam) |27          |
+|Sum_Ntaxa_Bias                   |1.62        |
+|Aut_Season_ID                    |3           |
+|Aut_TL2_WHPT_ASPT (AbW,DistFam)  |6.348       |
+|Aut_TL2_WHPT_NTaxa (AbW,DistFam) |27          |
+|Aut_Ntaxa_Bias                   |1.62        |
 
 See the [Input
 File](https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx)
@@ -2701,52 +2878,304 @@ Prediction Output file
 
 An example of the output file for prediction is linked below: 
 
-```{r, message=FALSE}
 
-predict <- rict_predict(demo_observed_values[1, ])
-knitr::kable(t(predict))
-
-```
+|                                 |1                |
+|:--------------------------------|:----------------|
+|SITE                             |MYR-GB-01-R      |
+|LATITUDE                         |54.3059249       |
+|LONGITUDE                        |-0.553780286     |
+|LOG.ALTITUDE                     |1.77815125       |
+|LOG.DISTANCE.FROM.SOURCE         |1                |
+|LOG.WIDTH                        |0.806179974      |
+|LOG.DEPTH                        |1.33645973       |
+|MEAN.SUBSTRATUM                  |-5.6377551       |
+|DISCHARGE.CATEGORY               |2                |
+|ALKALINITY                       |101.4            |
+|LOG.ALKALINITY                   |2.00603795       |
+|LOG.SLOPE                        |0.431363764      |
+|MEAN.AIR.TEMP                    |9.48625834       |
+|AIR.TEMP.RANGE                   |11.9531393       |
+|p1                               |9.35625191e-09   |
+|p2                               |6.9258721e-07    |
+|p3                               |1.05324199e-13   |
+|p4                               |0.00000124332917 |
+|p5                               |3.49226117e-12   |
+|p6                               |0.00000563026764 |
+|p7                               |8.85886928e-07   |
+|p8                               |0.0000121781599  |
+|p9                               |0.000650372352   |
+|p10                              |0.0000101954775  |
+|p11                              |0.0000757338524  |
+|p12                              |0.00111837349    |
+|p13                              |0.00000198648293 |
+|p14                              |2.31121211e-07   |
+|p15                              |1.13547466e-08   |
+|p16                              |0.00128235533    |
+|p17                              |0.000237885641   |
+|p18                              |0.00037426176    |
+|p19                              |0.0461301439     |
+|p20                              |0.111632614      |
+|p21                              |0.0354693052     |
+|p22                              |0.000918726922   |
+|p23                              |0.015013709      |
+|p24                              |0.269136018      |
+|p25                              |0.00735522713    |
+|p26                              |0.142875017      |
+|p27                              |0.091394313      |
+|p28                              |0.104596167      |
+|p29                              |0.0000740990176  |
+|p30                              |5.90527952e-10   |
+|p31                              |0.00235158298    |
+|p32                              |0.107588442      |
+|p33                              |0.000555897078   |
+|p34                              |0.000005673203   |
+|p35                              |0.03057304       |
+|p36                              |0.0023718675     |
+|p37                              |0.0177924343     |
+|p38                              |0.00830783677    |
+|p39                              |0.000625693191   |
+|p40                              |0.0014486586     |
+|p41                              |0.0000114618661  |
+|p42                              |2.61677226e-08   |
+|p43                              |4.28703879e-17   |
+|SuitCode                         |1                |
+|SuitText                         |>5%              |
+|belongs_to_end_grp               |EndGr24          |
+|TL2_WHPT_NTAXA_AbW_DistFam_spr   |27.3034177       |
+|TL2_WHPT_ASPT_AbW_DistFam_spr    |6.69529166       |
+|TL2_WHPT_NTAXA_AbW_DistFam_aut   |26.964738        |
+|TL2_WHPT_ASPT_AbW_DistFam_aut    |6.34146345       |
+|TL2_WHPT_NTAXA_AbW_CompFam_spr   |26.6333663       |
+|TL2_WHPT_NTAXA_ASPT_CompFam_spr  |6.6786404        |
+|TL2_WHPT_NTAXA_AbW_CompFam_aut   |26.4207811       |
+|TL2_WHPT_ASPT_AbW_CompFam_aut    |6.32932751       |
+|TL2_WHPT_NTAXA_AbW_DistFam_sum   |25.1806036       |
+|TL2_WHPT_ASPT_AbW_DistFam_sum    |6.28047581       |
+|TL2_WHPT_NTAXA_AbW_CompFam_sum   |24.666582        |
+|TL2_WHPT_ASPT_AbW_CompFam_sum    |6.26393808       |
+|WATERBODY                        |Waterbody name   |
+|YEAR                             |2016             |
+|SPR_SEASON_ID                    |1                |
+|SPR_TL2_WHPT_ASPT (ABW,DISTFAM)  |6.512            |
+|SPR_TL2_WHPT_NTAXA (ABW,DISTFAM) |24               |
+|SPR_NTAXA_BIAS                   |1.62             |
+|SUM_SEASON_ID                    |2                |
+|SUM_TL2_WHPT_ASPT (ABW,DISTFAM)  |6.663            |
+|SUM_TL2_WHPT_NTAXA (ABW,DISTFAM) |27               |
+|SUM_NTAXA_BIAS                   |1.62             |
+|AUT_SEASON_ID                    |3                |
+|AUT_TL2_WHPT_ASPT (ABW,DISTFAM)  |6.348            |
+|AUT_TL2_WHPT_NTAXA (ABW,DISTFAM) |27               |
+|AUT_NTAXA_BIAS                   |1.62             |
+|area                             |gb               |
 
 #### Classification
 
 Multiple year:
 
-```{r, message=FALSE}
-multi_class <- rict(demo_observed_values[1, ])
-knitr::kable(t(multi_class))
-```
+
+|                                  |1              |
+|:---------------------------------|:--------------|
+|SITE                              |MYR-GB-01-R    |
+|YEAR                              |2016           |
+|WATERBODY                         |Waterbody name |
+|H_NTAXA_spr_aut                   |96.9           |
+|G_NTAXA_spr_aut                   |3.02           |
+|M_NTAXA_spr_aut                   |0.08           |
+|P_NTAXA_spr_aut                   |0              |
+|B_NTAXA_spr_aut                   |0              |
+|mostProb_NTAXA_spr_aut            |H              |
+|NTAXA_aver_spr_aut                |1.00079713     |
+|H_ASPT_spr_aut                    |52.14          |
+|G_ASPT_spr_aut                    |44.12          |
+|M_ASPT_spr_aut                    |3.73           |
+|P_ASPT_spr_aut                    |0.01           |
+|B_ASPT_spr_aut                    |0              |
+|mostProb_ASPT_spr_aut             |H              |
+|ASPT_aver_spr_aut                 |0.97079562     |
+|mintawhpt_spr_aut_H_MINTA_        |52.14          |
+|mintawhpt_spr_aut_G_MINTA_        |44.12          |
+|mintawhpt_spr_aut_M_MINTA_        |3.73           |
+|mintawhpt_spr_aut_P_MINTA_        |0.01           |
+|mintawhpt_spr_aut_B_MINTA_        |0              |
+|mintawhpt_spr_aut_mostProb_MINTA_ |H              |
 
 Single year:
 
-```{r, message=FALSE}
-single_class <- rict(demo_observed_values[1, ], year_type = "single")
-knitr::kable(t(single_class))
-```
+
+|                                  |1              |
+|:---------------------------------|:--------------|
+|SITE                              |MYR-GB-01-R    |
+|YEAR                              |2016           |
+|WATERBODY                         |Waterbody name |
+|H_NTAXA_spr                       |90.59          |
+|G_NTAXA_spr                       |8.82           |
+|M_NTAXA_spr                       |0.59           |
+|P_NTAXA_spr                       |0              |
+|B_NTAXA_spr                       |0              |
+|mostProb_NTAXA_spr                |H              |
+|NTAXA_eqr_av_spr                  |0.939394037    |
+|H_NTAXA_aut                       |99.24          |
+|G_NTAXA_aut                       |0.76           |
+|M_NTAXA_aut                       |0              |
+|P_NTAXA_aut                       |0              |
+|B_NTAXA_aut                       |0              |
+|mostProb_NTAXA_aut                |H              |
+|NTAXA_eqr_av_aut                  |1.06220021     |
+|H_NTAXA_spr_aut                   |96.9           |
+|G_NTAXA_spr_aut                   |3.02           |
+|M_NTAXA_spr_aut                   |0.08           |
+|P_NTAXA_spr_aut                   |0              |
+|B_NTAXA_spr_aut                   |0              |
+|mostProb_NTAXA_spr_aut            |H              |
+|NTAXA_aver_spr_aut                |1.00079713     |
+|H_ASPT_spr                        |41.97          |
+|G_ASPT_spr                        |52.45          |
+|M_ASPT_spr                        |5.52           |
+|P_ASPT_spr                        |0.06           |
+|B_ASPT_spr                        |0              |
+|mostProb_ASPT_spr                 |G              |
+|ASPT_eqr_av_spr                   |0.956092544    |
+|H_ASPT_aut                        |62.36          |
+|G_ASPT_aut                        |35.26          |
+|M_ASPT_aut                        |2.38           |
+|P_ASPT_aut                        |0              |
+|B_ASPT_aut                        |0              |
+|mostProb_ASPT_aut                 |H              |
+|ASPT_eqr_av_aut                   |0.985498696    |
+|H_ASPT_spr_aut                    |52.14          |
+|G_ASPT_spr_aut                    |44.12          |
+|M_ASPT_spr_aut                    |3.73           |
+|P_ASPT_spr_aut                    |0.01           |
+|B_ASPT_spr_aut                    |0              |
+|mostProb_ASPT_spr_aut             |H              |
+|ASPT_aver_spr_aut                 |0.97079562     |
+|mintawhpt_spr_H                   |41.97          |
+|mintawhpt_spr_G                   |52.4           |
+|mintawhpt_spr_M                   |5.57           |
+|mintawhpt_spr_P                   |0.06           |
+|mintawhpt_spr_B                   |0              |
+|mintawhpt_spr_mostProb            |G              |
+|mintawhpt_aut_H                   |62.36          |
+|mintawhpt_aut_G                   |35.26          |
+|mintawhpt_aut_M                   |2.38           |
+|mintawhpt_aut_P                   |0              |
+|mintawhpt_aut_B                   |0              |
+|mintawhpt_aut_mostProb            |H              |
+|mintawhpt_spr_aut_H               |52.14          |
+|mintawhpt_spr_aut_G               |44.12          |
+|mintawhpt_spr_aut_M               |3.73           |
+|mintawhpt_spr_aut_P               |0.01           |
+|mintawhpt_spr_aut_B               |0              |
+|mintawhpt_spr_aut_mostProb_MINTA_ |H              |
+|eqr_av_sum_aspt                   |1.0426497      |
+|H_ASPT_sum                        |88.57          |
+|G_ASPT_sum                        |11.05          |
+|M_ASPT_sum                        |0.38           |
+|P_ASPT_sum                        |0              |
+|B_ASPT_sum                        |0              |
+|mostProb_ASPT_sum                 |H              |
+|NTAXA_eqr_av_sum                  |1.13733288     |
+|H_NTAXA_sum                       |99.89          |
+|G_NTAXA_sum                       |0.11           |
+|M_NTAXA_sum                       |0              |
+|P_NTAXA_sum                       |0              |
+|B_NTAXA_sum                       |0              |
+|mostProb_NTAXA_sum                |H              |
+|mintawhpt_sum_H                   |88.57          |
+|mintawhpt_sum_G                   |11.05          |
+|mintawhpt_sum_M                   |0.38           |
+|mintawhpt_sum_P                   |0              |
+|mintawhpt_sum_B                   |0              |
+|mintawhpt_sum_mostProb            |H              |
 
 # Appendix C: Biotic included in all index prediction
 
 *Please note the format changes to the labels of the indices – see table of changes below:
 
-```{r}
 
- end_group_index <- utils::read.csv(system.file("extdat",
-    "x-103-end-group-means-formatted-jdb-17-dec-2019.csv",
-    package = "rict"
-  ),
-  check.names = F
-  )
-  end_group_index_update <- rict:::rename_end_group_means(end_group_index)
-  
-all_indices_names <- data.frame("RIVPACS DB Label"  = names(end_group_index),
-          "OUTPUT Label" =                     names(end_group_index_update) ,
-          check.names = FALSE) 
-
-
-  knitr::kable(all_indices_names[5:84, ], row.names = T)
-  
-
-```
+|   |RIVPACS DB Label                         |OUTPUT Label                            |
+|:--|:----------------------------------------|:---------------------------------------|
+|5  |TL1 BMWP                                 |TL1_BMWP                                |
+|6  |TL1 NTAXA                                |TL1_NTAXA                               |
+|7  |TL1 ASPT                                 |TL1_ASPT                                |
+|8  |TL2 WHPT Score (nonAb,DistFam)           |TL2_WHPT_Score_nonAb_DistFam            |
+|9  |TL2 WHPT NTAXA (nonAb,DistFam)           |TL2_WHPT_NTAXA_nonAb_DistFam            |
+|10 |TL2 WHPT ASPT (nonAb,DistFam)            |TL2_WHPT_ASPT_nonAb_DistFam             |
+|11 |TL2 WHPT Score (nonAb,CompFam)           |TL2_WHPT_Score_nonAb_CompFam            |
+|12 |TL2 WHPT NTAXA (nonAb,CompFam)           |TL2_WHPT_NTAXA_nonAb_CompFam            |
+|13 |TL2 WHPT ASPT (nonAb,CompFam)            |TL2_WHPT_ASPT_nonAb_CompFam             |
+|14 |TL2 WHPT Score (AbW,DistFam)             |TL2_WHPT_Score_AbW_DistFam              |
+|15 |TL2 WHPT NTAXA (AbW,DistFam)             |TL2_WHPT_NTAXA_AbW_DistFam              |
+|16 |TL2 WHPT ASPT (AbW,DistFam)              |TL2_WHPT_ASPT_AbW_DistFam               |
+|17 |TL2 WHPT Score (AbW,CompFam)             |TL2_WHPT_Score_AbW_CompFam              |
+|18 |TL2 WHPT NTAXA (AbW,CompFam)             |TL2_WHPT_NTAXA_AbW_CompFam              |
+|19 |TL2 WHPT ASPT (AbW,CompFam)              |TL2_WHPT_ASPT_AbW_CompFam               |
+|20 |TL1 AWIC(Fam)                            |TL1_AWIC_Fam                            |
+|21 |TL4 AWIC(Sp) Murphy                      |TL4_AWIC_Sp_Murphy                      |
+|22 |TL5 AWIC(Sp) Murphy                      |TL5_AWIC_Sp_Murphy                      |
+|23 |TL4 WFD AWIC(Sp) McFarland               |TL4_WFD_AWIC_Sp_McFarland               |
+|24 |TL5 WFD AWIC(Sp) McFarland               |TL5_WFD_AWIC_Sp_McFarland               |
+|25 |TL4 Raddum                               |TL4_Raddum                              |
+|26 |TL5 Raddum                               |TL5_Raddum                              |
+|27 |TL4 SEPA % Acid Sensitive Taxa           |TL4_SEPA_per_Acid_Sensitive_Taxa        |
+|28 |TL5 SEPA % Acid Sensitive Taxa           |TL5_SEPA_perc_Acid_Sensitive_Taxa       |
+|29 |TL4 MetTol                               |TL4_MetTol                              |
+|30 |TL5 MetTol                               |TL5_MetTol                              |
+|31 |TL1/2 LIFE(Fam) (CompFam)                |TL1_2_LIFE_Fam_CompFam                  |
+|32 |TL2 LIFE(Fam) (DistFam)                  |TL2_LIFE_Fam_DistFam                    |
+|33 |TL3 LIFE(Fam) (DistFam)                  |TL3_LIFE_Fam_DistFam                    |
+|34 |TL4 LIFE(Sp)                             |TL4_LIFE_Sp                             |
+|35 |TL5 LIFE(Sp)                             |TL5_LIFE_Sp                             |
+|36 |TL3 PSI(Fam)                             |TL3_PSI_Fam                             |
+|37 |TL4 PSI(Sp)                              |TL4_PSI_Sp                              |
+|38 |TL5 PSI(Sp)                              |TL5_PSI_Sp                              |
+|39 |TL3 E-PSI(fam69)                         |TL3_E_PSI_fam69                         |
+|40 |TL4 E-PSI(mixed level)                   |TL4_E_PSI_mixed_level                   |
+|41 |TL5 E-PSI(mixed level)                   |TL5_E_PSI_mixed_level                   |
+|42 |TL4 oFSIsp                               |TL4_oFSIsp                              |
+|43 |TL5 oFSIsp                               |TL5_oFSIsp                              |
+|44 |TL4 ToFSIsp                              |TL4_ToFSIsp                             |
+|45 |TL5 ToFSIsp                              |TL5_ToFSIsp                             |
+|46 |TL4 CoFSIsp                              |TL4_CoFSIsp                             |
+|47 |TL5 CoFSIsp                              |TL5_CoFSIsp                             |
+|48 |TL4 GSFI FI05                            |TL4_GSFI_FI05                           |
+|49 |TL5 GSFI FI05                            |TL5_GSFI_FI05                           |
+|50 |TL4 GSFI FI09                            |TL4_GSFI_FI09                           |
+|51 |TL5 GSFI FI09                            |TL5_GSFI_FI09                           |
+|52 |TL4 GSFI FI091                           |TL4_GSFI_FI091                          |
+|53 |TL5 GSFI FI091                           |TL5_GSFI_FI091                          |
+|54 |TL4 GSFI FI091_K                         |TL4_GSFI_FI091_K                        |
+|55 |TL5 GSFI FI091_K                         |TL5_GSFI_FI091_K                        |
+|56 |TL4 GSFI FI092                           |TL4_GSFI_FI092                          |
+|57 |TL5 GSFI FI092                           |TL5_GSFI_FI092                          |
+|58 |TL4 GSFI FI11_12                         |TL4_GSFI_FI11_12                        |
+|59 |TL5 GSFI FI11_12                         |TL5_GSFI_FI11_12                        |
+|60 |TL4 GSFI FI14_16                         |TL4_GSFI_FI14_16                        |
+|61 |TL5 GSFI FI14_16                         |TL5_GSFI_FI14_16                        |
+|62 |TL4 GSFI FI15_17                         |TL4_GSFI_FI15_17                        |
+|63 |TL5 GSFI FI15_17                         |TL5_GSFI_FI15_17                        |
+|64 |TL4 GSFI FI152                           |TL4_GSFI_FI152                          |
+|65 |TL5 GSFI FI152                           |TL5_GSFI_FI152                          |
+|66 |TL2 SPEAR(Fam) %                         |TL2_SPEAR_Fam_perc                      |
+|67 |TL4 SPEAR(Sp) %                          |TL4_SPEAR_Sp_perc                       |
+|68 |TL5 SPEAR(Sp) %                          |TL5_SPEAR_Sp_perc                       |
+|69 |SPEAR(pesticides) TL2 fam Knillmann 2018 |SPEAR_pesticides_TL2_fam_Knillmann_2018 |
+|70 |SPEAR(refuge) TL2 fam Knillmann 2018     |SPEAR_refuge_TL2_fam_Knillmann_2018     |
+|71 |SPEAR(pesticides) TL4 sp Knillmann 2018  |SPEAR_pesticides_TL4_sp_Knillmann_2018  |
+|72 |SPEAR(refuge) TL4 sp Knillmann 2018      |SPEAR_refuge_TL4_sp_Knillmann_2018      |
+|73 |SPEAR(pesticides) TL5 sp Knillmann 2018  |SPEAR_pesticides_TL5_sp_Knillmann_2018  |
+|74 |SPEAR(refuge) TL5 sp Knillmann 2018      |SPEAR_refuge_TL5_sp_Knillmann_2018      |
+|75 |TL4 CCI                                  |TL4_CCI                                 |
+|76 |TL5 CCI                                  |TL5_CCI                                 |
+|77 |TL2 08 Group ARMI NTaxa                  |TL2_08_Group_ARMI_NTaxa                 |
+|78 |TL2 08 Group ARMI Score                  |TL2_08_Group_ARMI_Score                 |
+|79 |TL2 33 Group ARMI NTaxa                  |TL2_33_Group_ARMI_NTaxa                 |
+|80 |TL2 33 Group ARMI Score                  |TL2_33_Group_ARMI_Score                 |
+|81 |TL2 33 Group Flow & Silt NTaxa           |TL2_33_Group_Flow_Silt_NTaxa            |
+|82 |TL2 33 Group Flow & Silt Score           |TL2_33_Group_Flow_Silt_Score            |
+|83 |TL2 14 Group Urban NTaxa                 |TL2_14_Group_Urban_NTaxa                |
+|84 |TL2 14 Group Urban Score                 |TL2_14_Group_Urban_Score                |
 
 A full description of each column for the prediction output table and what the values indicate can be found within the RICT2 user guide. A summary list of the column headings is given in the `rict_predict` function.
 

@@ -375,7 +375,8 @@ rict_predict <- function(data = NULL,
 
   if (taxa == TRUE && area != "iom") { # This block predicts and returns taxa predictions
     # Declare a variable where we append all sites
-    taxa_predictions <- list()
+    taxa_pred <- list()
+    taxa_predictions <- data.frame()
     # Use complete cases removing null values
     taxa.input.data <- taxa.input.data[complete.cases(taxa.input.data), ]
     nsites <- nrow(final_predictors_try2)
@@ -410,12 +411,12 @@ rict_predict <- function(data = NULL,
 
       for (k in seq_len(nrow(allUniqueSites))) { ## loop over these unique rows per SITE
         sitex <- groupSitesFunction(allUniqueSites, k, siteIndex, b1)
-        taxa_predictions[[k]] <- sitex
+        taxa_pred[[k]] <- sitex
       } # for k
+      taxa_preds <- data.frame(do.call("rbind", taxa_pred))
+      taxa_predictions <- rbind(taxa_predictions, taxa_preds)
     } # for i
 
-    taxa_predictions <- do.call("rbind", taxa_predictions)
-    taxa_predictions <- data.frame(taxa_predictions)
     # Remove the "End.Group" column
     taxa_predictions$End.Group <- NULL
     # Arrange the sites by siteName, TL, Season_Code, Furse_code

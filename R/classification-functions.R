@@ -179,4 +179,38 @@ getObsIDX9r <- function(ObsIDX9, znorm_ir) { # needs 10,000 simulations, and sto
   return((ObsIDX9 + znorm_ir))
 }
 
+combined_probability_classes <- function(spr_eqrs = NULL,
+                                         sum_eqrs = NULL,
+                                         aut_eqrs = NULL,
+                                         aspt = TRUE,
+                                         ntaxa = FALSE,
+                                         n_runs = n_runs
+                                         predictions = NULL) {
+  EQR_avg <- data.frame(rowMeans(cbind(spr_eqrs, sum_eqrs, aut_eqrs)))
+  if(aspt) {
+  class_array_combined <- getClassarray_aspt(EQR_avg)
+  }
+
+  if(ntaxa) {
+    class_array_combined <- getClassarray_ntaxa(EQR_avg)
+  }
+
+  prob_class_comb <- matrix(0, ncol = 1, nrow = 5)
+  # Process probabilities
+
+  for (i in 1:5) {
+    prob_class_comb[i] <- 100 *
+      sum(class_array_combined[class_array_combined == i, ] / i) / n_runs
+  }
+  prob_class_comb <- t(prob_class_comb)
+  colnames(prob_class_comb) <- getProbClassLabelFromEQR(area)[, 1] # Rename the columns to H G M P B
+  rownames(prob_class_comb) <- as.character(predictions[k, "SITE"])
+  # Find most probable class, i.e the maximum, and add it to the site
+  mostProb <- getMostProbableClass(prob_class_comb)
+  prob_class_comb <- cbind(prob_class_comb, mostProb)
+  probability_classes <- data.frame()
+  probability_classes <- rbind(probability_classes, prob_class_comb)
+  return(probability_classes)
+}
+
 # End Exclude Linting

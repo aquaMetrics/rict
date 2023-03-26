@@ -422,21 +422,25 @@ getSeasonIndexScores <- function(data_to_bindTo, season_to_run, index_id,
   }
 
   # Spring Dist
+  if(!is.null(spring_whpt_ntaxa_Abw_Dist)) {
   bind_all <- cbind(data_to_bindTo, spring_whpt_ntaxa_Abw_Dist)
   bind_all <- cbind(bind_all, spring_whpt_aspt_Abw_Dist)
-
+  }
   # Autumn Dist
+  if(!is.null(autumn_whpt_ntaxa_Abw_Dist)) {
   bind_all <- cbind(bind_all, autumn_whpt_ntaxa_Abw_Dist)
   bind_all <- cbind(bind_all, autumn_whpt_aspt_Abw_Dist)
-
+  }
   # Spring CompFam
+  if(!is.null(spring_whpt_ntaxa_Abw_CompFam)) {
   bind_all <- cbind(bind_all, spring_whpt_ntaxa_Abw_CompFam)
   bind_all <- cbind(bind_all, spring_whpt_aspt_Abw_CompFam)
-
+  }
   # Autumn CompFam
+  if(!is.null(autumn_whpt_ntaxa_Abw_CompFam)) {
   bind_all <- cbind(bind_all, autumn_whpt_ntaxa_Abw_CompFam)
   bind_all <- cbind(bind_all, autumn_whpt_aspt_Abw_CompFam)
-
+  }
   # Summer Dist
   if (!is.null(summer_whpt_ntaxa_Abw_Dist)) {
     bind_all <- cbind(bind_all, summer_whpt_ntaxa_Abw_Dist)

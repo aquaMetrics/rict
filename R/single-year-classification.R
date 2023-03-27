@@ -541,6 +541,17 @@ if (area == "iom") {
     SiteMINTA_whpt_spr_aut <- rbind(SiteMINTA_whpt_spr_aut, aa)
     ### MINTA ENDS HERE  -----------------------------------------------------
 
+    # Combined all seasons ---------------------------------------------------
+    browser()
+    test <- combined_probability_classes(spr_eqrs = EQR_aspt_spr,
+                                 sum_eqrs = EQR_aspt_sum,
+                                 aut_eqrs = EQR_aspt_aut,
+                                 aspt = TRUE,
+                                 ntaxa = FALSE,
+                                 n_runs = n_runs,
+                                 predictions = predictions,
+                                 area = area,
+                                 k = k)
     #### Store EQRs in list --------------------------------------------------
     if (store_eqrs == TRUE) {
       # Create variable to store list of simulated EQRs for each metric

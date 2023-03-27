@@ -184,8 +184,10 @@ combined_probability_classes <- function(spr_eqrs = NULL,
                                          aut_eqrs = NULL,
                                          aspt = TRUE,
                                          ntaxa = FALSE,
-                                         n_runs = n_runs
-                                         predictions = NULL) {
+                                         n_runs = n_runs,
+                                         predictions = NULL,
+                                         area = NULL,
+                                         k = NULL) {
   EQR_avg <- data.frame(rowMeans(cbind(spr_eqrs, sum_eqrs, aut_eqrs)))
   if(aspt) {
   class_array_combined <- getClassarray_aspt(EQR_avg)

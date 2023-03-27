@@ -69,7 +69,7 @@ if (area == "iom") {
     "AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)", "AUT_NTAXA_BIAS"
   )
 
-  biological_data <- predictions[, names_biological]
+  biological_data <- predictions[, names(predictions) %in% names_biological]
   # Remove biological_data from predictions
   predictions <- predictions[, !names(predictions) %in% names_biological]
 
@@ -301,7 +301,6 @@ if (area == "iom") {
     a_ntaxa_aut <- cbind(a_ntaxa_aut, mostProb)
     SiteProbabilityclasses_aut_ntaxa <- rbind(SiteProbabilityclasses_aut_ntaxa, a_ntaxa_aut)
     # Add the averages of spr,aut
-
     # Part 3:: Do combined spr, aut processing
     # First find the row averages of all the 10,000 simulations
     EQR_ntaxa_avg <- data.frame(rowMeans(cbind(EQR_ntaxa_spr, EQR_ntaxa_aut)))

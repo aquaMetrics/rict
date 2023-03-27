@@ -1,4 +1,4 @@
-﻿variable,pretty_name,units,area,models,shared,optional,source,pev,env,ev_number,type,fall_back_type,less_than_fail,greater_than_fail,less_than_warn,greater_than_warn,replacement,replacement_val,replacement_limit,replacement_cond,log,log_col_name,min_warning_message,max_warning_message,validation_notes,optional_notes,calculation_notes
+variable,pretty_name,units,area,models,shared,optional,source,pev,env,ev_number,type,fall_back_type,less_than_fail,greater_than_fail,less_than_warn,greater_than_warn,replacement,replacement_val,replacement_limit,replacement_cond,log,log_col_name,min_warning_message,max_warning_message,validation_notes,optional_notes,calculation_notes
 SITE,Site,,all,all,TRUE,FALSE,input,FALSE,,,character,factor,0,,,,,,,,FALSE,,min value used to train model,max value used to train model,,,
 WATERBODY,Waterbody,,all,all,TRUE,TRUE,input,FALSE,,,character,factor,0,,,,,,,,FALSE,,min value used to train model,max value used to train model,,,
 YEAR,Year,,all,all,TRUE,FALSE,input,FALSE,,,integer,numeric,0,,1990,,,,,,FALSE,,samples unlikely to be collected using RIVPACS method prior to,,Warn if samples collected prior to 1990 as unlikely to be collected using RIVPACS method,,
@@ -70,4 +70,3 @@ DIST_FROM_SOURCE,Distance from Source,km,iom,physical,FALSE,FALSE,input,TRUE,ENV
 ALTITUDE,Altitude,m,iom,physical,TRUE,FALSE,input,TRUE,ENV 3,3,numeric,integer,0,621,0,251,TRUE,1,0,equals,TRUE,vld_alt_src_log,min value used to train model,max value used to train model,,,
 SLOPE,Slope at site,m/km,iom,physical,TRUE,FALSE,input,TRUE,ENV 11,11,numeric,integer,0,,0.1,50,TRUE,0.1,0,equals,TRUE,vld_slope_log,min value used to train model,max value used to train model,,,
 ALKALINITY,Alkalinity as CaCO3,mg/L,iom,physical,TRUE,FALSE,input,TRUE,ENV 9 & ENV 10*,9,numeric,integer,0,,0.7,302,TRUE,0.1,0.1,lessthan,TRUE,vld_alkal_log,min value used to train model,max value used to train model,,"One of Alkalinity, Hardness, Conductivity or Calcium",
-,,,,,,,,,,,,,,,,,,,,,,,,,,,

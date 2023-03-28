@@ -186,6 +186,9 @@ if (area == "iom") {
   SiteProbabilityclasses_sum_sum_comb_ntaxa <- data.frame()
   SiteProbabilityclasses_sum_ntaxa <- data.frame() # Store site probabilities in a dataframe
 
+  # All seasons combined dataframes
+  all_seasons_ntaxa <- data.frame()
+  all_seasons_aspt <- data.frame()
   # MINTA
   SiteMINTA_whpt_spr <- data.frame()
   SiteMINTA_whpt_aut <- data.frame()
@@ -517,7 +520,7 @@ if (area == "iom") {
     aa <- cbind(aa, mostProb)
     # Now bind the MINTA proportion to the dataframe
     SiteMINTA_whpt_aut <- rbind(SiteMINTA_whpt_aut, aa)
-
+    browser()
     # Do the MINTA spr_aut case
     minta_ntaxa_aspt_spr_aut <- getMINTA_ntaxa_aspt(
       as.matrix(classArray_siteOne_combined_spr),
@@ -542,16 +545,39 @@ if (area == "iom") {
     ### MINTA ENDS HERE  -----------------------------------------------------
 
     # Combined all seasons ---------------------------------------------------
+    seasons_aspt <- combined_probability_classes(
+      spr_eqrs = EQR_aspt_spr,
+      sum_eqrs = EQR_aspt_sum,
+      aut_eqrs = EQR_aspt_aut,
+      aspt = TRUE,
+      ntaxa = FALSE,
+      n_runs = n_runs,
+      predictions = predictions,
+      area = area,
+      k = k)
+
+    seasons_ntaxa <- combined_probability_classes(
+      spr_eqrs = EQR_ntaxa_spr,
+      sum_eqrs = EQR_ntaxa_sum,
+      aut_eqrs = EQR_ntaxa_aut,
+      aspt = FALSE,
+      ntaxa = TRUE,
+      n_runs = n_runs,
+      predictions = predictions,
+      area = area,
+      k = k)
+
+    all_seasons_ntaxa <- rbind(all_seasons_ntaxa, seasons_ntaxa)
+    all_seasons_aspt <- rbind(all_seasons_aspt, seasons_aspt)
     browser()
-    test <- combined_probability_classes(spr_eqrs = EQR_aspt_spr,
-                                 sum_eqrs = EQR_aspt_sum,
-                                 aut_eqrs = EQR_aspt_aut,
-                                 aspt = TRUE,
-                                 ntaxa = FALSE,
-                                 n_runs = n_runs,
-                                 predictions = predictions,
-                                 area = area,
-                                 k = k)
+    test <- combined_seasons_minta(spr = EQR_aspt_spr,
+                                   sum = EQR_aspt_sum,
+                                   aut = EQR_aspt_aut,
+                                   predictions = predictions,
+                                   area = area,
+                                   k = k,
+                                   n_runs = n_runs)
+
     #### Store EQRs in list --------------------------------------------------
     if (store_eqrs == TRUE) {
       # Create variable to store list of simulated EQRs for each metric

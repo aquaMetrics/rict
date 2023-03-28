@@ -192,20 +192,18 @@ combined_probability_classes <- function(spr_eqrs = NULL,
   if(aspt) {
   class_array_combined <- getClassarray_aspt(EQR_avg)
   }
-
   if(ntaxa) {
     class_array_combined <- getClassarray_ntaxa(EQR_avg)
   }
-
   prob_class_comb <- matrix(0, ncol = 1, nrow = 5)
   # Process probabilities
-
   for (i in 1:5) {
     prob_class_comb[i] <- 100 *
       sum(class_array_combined[class_array_combined == i, ] / i) / n_runs
   }
   prob_class_comb <- t(prob_class_comb)
-  colnames(prob_class_comb) <- getProbClassLabelFromEQR(area)[, 1] # Rename the columns to H G M P B
+  # Rename the columns to H G M P B
+  colnames(prob_class_comb) <- getProbClassLabelFromEQR(area)[, 1]
   rownames(prob_class_comb) <- as.character(predictions[k, "SITE"])
   # Find most probable class, i.e the maximum, and add it to the site
   mostProb <- getMostProbableClass(prob_class_comb)
@@ -214,5 +212,32 @@ combined_probability_classes <- function(spr_eqrs = NULL,
   probability_classes <- rbind(probability_classes, prob_class_comb)
   return(probability_classes)
 }
+
+combined_seasons_minta <- function(spr = NULL,
+                                   sum = NULL,
+                                   aut = NULL,
+                                   predictions = NULL,
+                                   area = NULL,
+                                   k = NULL,
+                                   n_runs = n_runs){
+  browser()
+    localDFrame <- spr[,1]
+    for (i in 1:nrow(spr)) {
+      localDFrame[i] <- max(c(spr[i,], aut[i,], sum[i,]))
+    }
+
+    minta_probClass_aut <- matrix(0, ncol = 1, nrow = 5)
+    for (i in 1:5) {
+      minta_probClass_aut[i] <- 100 * sum(localDFrame[localDFrame == i] / i) / n_runs
+    }
+    aa <- t(minta_probClass_aut) # aut
+    colnames(aa) <- getProbClassLabelFromEQR(area)[, 1]
+    rownames(aa) <- as.character(predictions[k, "SITE"])
+    # Find most probable MINTA class, i.e the maximum, and add it to the site
+    mostProb <- getMostProbableClass(aa)
+    aa <- cbind(aa, mostProb)
+  }
+
+
 
 # End Exclude Linting

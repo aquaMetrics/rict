@@ -1,0 +1,377 @@
+---
+title: "River Invertebrate Classification Tool (RICT) User Guide"
+author: "RICT Steering Group"
+date: "`r Sys.Date()`"
+pkgdown:
+  as_is: yes
+output:
+  rmarkdown::word_document:
+    reference_docx: template.docx
+  rmarkdown::html_vignette:
+    toc: yes
+vignette: |
+  %\VignetteIndexEntry{User Guide} \usepackage[utf8]{inputenc} %\VignetteEngine{knitr::rmarkdown}
+editor_options:
+  chunk_output_type: console
+---
+
+```{r results="asis", echo=FALSE}
+# directly adding css to output html without ruining css style https://stackoverflow.com/questions/29291633/adding-custom-css-tags-to-an-rmarkdown-html-document
+cat("
+<style>
+img {
+border: 0px;
+outline: 0 ;
+}
+</style>
+")
+``` 
+
+
+![](images/rict_logo.png){ width=20% }
+
+# Purpose 
+
+This guide explains how to upload macro-invertebrate results to [RICT ](https://rictapplications.shinyapps.io/rictapp/)
+website and use them to predict and classify against reference conditions.
+Additionally, we explain how to compare results against each other.
+
+# Quick Start
+
+## Requirements
+
+1. **WHPT scores** based on macro-invertebrate results. To calculate WHPT scores, you can use the [WHPT spreadsheet calculator](). Your scores should be based on macro-invertebrate results collected and analysed following [standard techniques](#environmental-predictors).
+
+2. A list of **predictor values** based on field observations and GIS. These change depending on the geographic [area and model](#models-and-areas) you wish to use.
+
+## Prepare Input File
+
+1. **[Download the validation template spreadsheet]()**, this provides a helpful template for your input file.
+
+2. Read the README instructions in the spreadsheet for guidance on completing the template.
+
+2. **Complete the template** for the area required (GB - Great Britain. NI - Northern Ireland, IoM - Isle of Man) by adding in your WHPT results and predictor values.
+
+4. Copy and paste the completed template with column names into a blank
+spreadsheet and **save as Comma Separated File (.CSV)**.
+
+_NOTE - a template must contain data for only one region and model._
+
+## Run
+
+1. **Open the [RICT website](https://rictapplications.shinyapps.io/rictapp/)**,
+select the [options](#options) you require.
+
+2. Select 'Browse' button. Browse your files, **upload the prepared .CSV
+template file**.
+
+3. Depending on the [options](#options) selected, the following results will be displayed:
+
+- Map with named site markers. 
+  
+- Download results button.
+  
+- Table of [validation](#validation) message (or a short message if all validation pass)
+  
+- Table of [predictions](#predictions).
+  
+- If [classification](#classification) option selected, a table of classifications.
+  
+- If include [taxa option](#include-all-indices) selected, a table of predicted taxa.
+
+4. If the process fails a red error message will be displayed. 
+
+
+## Compare
+
+1. Prepare two .CSV input files using spreadsheet template. The two files will be [compared](#compare) row to row. For instance, row 1 in the first file is compared to row 1 in the second file. Then row 2 is compared with row 2... and so on. Therefore the two files must have the same number of rows in each file. 
+
+1. Open the [RICT website](https://rictapplications.shinyapps.io/rictapp/),
+navigate to the Compare tab, select the options you require, for example
+'single-year' or 'multi-year'.
+
+2. Select 'Browse' button for file 1. Browse for your saved template file and upload. Repeat for file 2.
+
+3. Your results will be displayed. An error message will appear
+if all your data failed validation.
+
+## Options
+
+![RICT options](images-user-guide/options.png)
+
+### Year Type
+
+Select to process data based on a single year or multiple years. See [Classification](#classification) for more details.
+
+### Ouputs
+
+Include [Classification](#classification) outputs and [predictions](#prediction), or only display predictions.
+
+###	Include All Indices
+
+This option will display predictions for all inverts indices not just WHPT predictions. There are around 60+ indices which can be predicted.
+
+### Predict Taxa Lists
+
+Display table of prediction for particular taxa list. See [taxon prediction](#taxon-prediction) for more information 
+
+# Validation
+
+A number of checks and validations are automatically run once the input file is uploaded. If there are any failures or warnings, these are displayed. 
+
+See the [Functional Specifications](/functional-specification.html#5-acceptance-and-validation-of-input-data) for the full list of checks, warnings and failure values.
+
+# Prediction
+
+## Models and Areas
+
+There are two models available in RICT:
+
+1. Model 1 (with IoM, GB and NI variations)
+- Based on a range of observed as well as physical/chemical predictors (substrate, river width, slope etc).
+2. Model 44 (GB only - excluding IoM).  
+- Based on GIS (geology, catchment size etc) and Alkalinity predictors.
+
+The model is automatically selected based on the input template uploaded and the
+area your grid references are located in.
+
+More information about the specification of the Models can be found in the
+[Functional
+Specifications](/functional-specification.html#5-acceptance-and-validation-of-input-data).
+
+## Environmental Predictors
+
+It’s vital that any samples analysed by RICT are collected and analysed
+according to the correct methods.
+  
+These two Environment Agency documents provide a current outline of the approach
+that we use for RIVPACS:
+
+[LIT 11610 - Freshwater Macro-invertebrate Sampling in Rivers, 2017](https://www.fba.org.uk/s/LIT-11610-Freshwater-macro-invertebrate-sampling-in-rivers-09-12-2017.pdf)
+
+[LIT 11614 - Freshwater Macro-invertebrate analysis of riverine samples, 2014](https://www.fba.org.uk/s/LIT-11614-Freshwater-macro-invertebrate-analysis-of-riverine-samples-28-Jan-2014.pdf)
+
+More general guides are available on STAR project website: 
+
+[http://www.eu-star.at/](http://www.eu-star.at/)
+
+Enter > Protocols > Macro-invertebrates: RIVPACS Macro-invertebrate Sampling
+Protocol (covers shallow water sampling only) and RIVPACS Sorting & Recording
+(by Mike Furse).
+
+Regardless of which season you want to predict, the environmental variables must always be the median long-term averages that take account of conditions throughout the whole year, including summer. Preferably they are based on annual averages collected from many years. As a minimum, these averages should be based on data collected in all three seasons (spring, summer and autumn) from at least one normal year (not a year with drought or floods). If you are unable to get such data, do not use actual measurements of width and depth when you collected an invertebrate sample, particularly in summer, but use your estimate what you think the normal width and depth should be and allow for greater imprecision in RIVPACS predictions.
+  
+Environmental data from Environment Agency monitoring sites suitable for input into RICT are available from the Ecology & Fish Data Explorer https://environment.data.gov.uk/ecology-fish/.  This includes alkalinity and discharge category.
+Discharge categories are published on maps included with the River Pollution Survey of England and Wales Updated 1975. The maps with the 1970 survey do not indicate discharge and that maps with publications for later national river quality surveys in England & Wales and for Northern Ireland, from 1980 to the early 1990s have a slightly different categorisation in which discharge categories 1, 2 and 3 are combined. Discharge category will be included in GIS data for RIVPACS model 44, which we expect to be published on the RICT2 website at the end of 2020.
+Alkalinity (and its alternatives total hardness, calcium concentration or conductivity) measured in Environment Agency chemical river quality monitoring is also available from Open WIMS data and http://eawaterquality.shinyapps.io/ecologicalstatsapp/.  The latter includes a map interface for selecting sites.
+
+
+### Predict Taxa 
+
+Predict the families and species expected at a site and their abundances. This
+powerful feature of RIVPACS enables it to be used to predict a wide range of
+indices as well as helping with investigations to further our ecological
+understanding. 
+  
+You must limit the number of sites that you include in each run
+because taxa prediction generates a very large amount of output for each site.
+For NI, select no more than 2-sites. Although there is no restriction on the GB
+model, we recommend no more than 2-sites for that too in order to ensure that
+the programme runs without a problem. Because this experiment does not include
+classification, you do not need to include biological data in the input file.
+
+###	Taxon Prediction Output
+
+The results from the taxon taxa predictions include Maitland and Furse taxonomic
+codes, some of which have leading zeroes. It you open the CSV output file with
+Excel in the normal way, you will lose these leading zeroes because Excel will
+assume that they are numbers. To preserve the leading zeroes when you open the
+results in Excel, you will need to open a blank Excel worksheet and import the
+results as text.
+
+In the output, each row includes prediction results for one taxon. For each
+site, expect about 3500 rows of data. The first block of rows will be for the
+first site selected and below it the results for the second site. For each site,
+rows are ordered by taxonomic level, then by season code, and then by Maitland
+code, so you should re-order the data if you only want data for a particular
+season but want that for all taxonomic levels.
+
+Each row includes the following columns
+
+1. _siteName_ - provided in the input file
+2. _Model_  - 1 for RIVPACS IV Model 1 GB, 2 RIVPACS IV Model 1 NI.
+3. _TL_ - Taxonomic level. The five levels (TL1 – TL5) are:
+
+•	TL1 = taxa recognised by BMWP indices
+•	TL2 = taxa recognised by WHPT indices
+•	TL3 = all families included in RIVPACS
+•	TL4 = all species included in RIVPACS species
+•	TL5 = mixed taxon level (a practical, mainly species level of analysis but with less easily recognised species identified to higher taxonomic levels)
+  
+4. _Season_Code_ Code specifying season; 1 = spring; 2 = summer; 3 = autumn.
+  
+5. _Maitland_Code_ - a code identifying the invertebrate.  Maitland codes are hierarchical.  The first two digits indicates class, the next two family, the next two genus and the final two species.  Codes with a letter are artificial combinations of taxa.
+  
+6. _Maitland_Name_ - name of the taxon represented by the Maitland code
+
+7. _Furse_Code_ - Updated Maitland code, revised by Mike Furse, 2 January 2007, useful for organising results into taxonomic order
+
+8. _Furse_Name_ - name of taxon represented by Furse code
+
+9. _NBN_Code_ - National Biodiversity Network code, compiled 2007
+
+10. _NBN_Name_ - name of taxon represented by NBN code
+
+11. _Average_Numerical_Abundance_ - predicted numerical abundance based on average of 10,000 simulations
+
+12. _Average_Log10_Abundance_ - predicted log10 abundance category, based on the average of 10.000 simulations
+
+13. _Prob_Occurrence_ - predicted probability of the taxon being present
+
+14. _Prob_Log1_ = probability of the taxon being present in log10 abundance category 1 (numerical abundance 1-9)
+
+15. _Prob_Log2_ - probability of the taxon being present in log10 abundance category 2 (numerical abundance 10-99)
+
+16. _Prob_Log3_ - probability of the taxon being present in log10 abundance category 3 (numerical abundance 100-999)
+
+17. _Prob_Log4_ - probability of the taxon being present in log10 abundance category 4 (numerical abundance 1000-9999)
+
+18. _Prob_Log5_ - probability of the taxon being present in log10 abundance category 5 (numerical abundance 10000+)
+  
+Further information about the taxonomic framework and the taxon prediction
+output is given in
+Davy-Bowker, J, R. Clarke, T. Corbin, H. Vincent, J. Pretty, A. Hawczak, J. Blackburn, J. Murphy & I. Jones (2008) River Invertebrate Classification Tool.  Final Report. SNIFFER Project WFD72c.  Edinburgh, SNIFFER
+
+# Classification
+
+The most important results from the classification reports are:
+
+-	_Class_ – the WFD status.
+
+-	_Probability of class_ – certainty of classification, taking account
+of uncertainty caused by sampling and other errors.
+
+-	ProbH, ProbG, ProbM, ProbP, ProbB – indicates other likely classes and whether your site is at the upper, mid or lower end of the class.
+
+-	_EQR_ – Ecological Quality Ratio; The value of a biotic index expressed as a
+proportion of its reference value (i.e. its value in minimally disturbed, near
+natural environmental quality).
+
+A comparison of the EQRs for different indices and seasons can help you to
+identify the environmental cause of poor quality.
+
+### Single year
+
+
+
+
+### Multi-year Prediction and Classification
+
+The multi-year option combines data from spring and autumn from more than one
+year into a single classification for the site. There is no limit to the number
+of years’ data that can be combined. Previous versions of RICT were limited to
+1, 2, or 3 years. There are slight differences in the way that RICT estimates
+the probabilities of class for multi-year classifications compared to previous
+versions of RICT. 
+
+The current RICT bases this on the proportion of all simulated
+multi-year average EQR values falling in each status class, whereas the previous
+version of RICT used an estimate of the “typical” (i.e. average) between-year
+variance within a 3-year period for the observed values of a WHPT index to allow
+for 1 or 2 years missing data. Neither is philosophically correct, as explained
+in the section about the comparison of RICT and RICT2 and differences in
+classification results.
+
+###	Multi-year classification outputs
+
+You will get only one result for each site. The year in the output is the
+earliest year for which you entered data. The multi-year experiment only gives
+output for the combined years, not for each individual year. There is a slight
+difference in the headers in the multi-year classification output file compared
+to single year, as shown in the Section Description of RICT2 classification
+output. There is no difference in classification results if you run one years’
+spring and summer data using the single year or the multi-year experiment.
+
+### Probabilities of class
+
+Probabilities of class indicate the likelihood of your site belonging to each of
+the WFD status classes. Every site must belong to one of the 5-classes, so for
+any combination of index and season(s), the probabilities always add-up to 100%.
+These estimates take account of **two types of classification error**:
+
+1. The fact that when the EQR is at exactly the class boundary, the maximum likelihood of being in either of the classes immediately above or below that boundary is only 50%.
+
+2. Uncertainty caused by sampling error (measured in a number of studies in which the same site was sampled by different people at the same time) and laboratory error (from the bias value that you enter with your biological data).
+
+The probabilities are based on the frequency if each class being indicated by
+the 10,000 Monte Carlo simulations. Each simulation includes a random component
+with the same distribution as the known bias and sampling error. Remember that
+other sources of error mentioned in this section, which cannot be qualified,
+will also contribute to the imprecision of the classification.
+
+## MINTA (Minimum of NTaxa and ASPT)
+
+The official Water Framework Directive (WFD) status classification is based on
+data (Environmental Quality Ratios) for both WHPT ASPT and WHPT NTaxa from both
+spring and autumn. Data from both seasons is combined by taking an average of the EQRs before determining the status classification. The status classification from both indices is combined by taking the worst class indicated by the two indices. MINTA is not determined from the most probable classes for each index, but by the combination of the probabilities of class for each index. 
+  
+Understanding how the probabilities of class are determined for MINTA is often
+misunderstood, particularly as the outcome is sometimes counter-intuitive and
+has caused users, including the author, to assume that there has been a mistake.
+MINTA probabilities of class are not calculated from the distribution of
+probabilities of the individual indices.
+  
+They are calculated separately, in exactly the same way as the probabilities of
+class for the individual indices, by going back to the results of each of the
+10,000 Monte Carlo simulations. The MINTA probabilities are based on the worst
+class indicated by either ASPT or NTaxa in each of the 10,000 Monte Carlo
+simulations.
+  
+The number of simulations in which the worst of these classes was High, Good,
+Moderate, Poor or Bad are summed and expressed as percentages of the 10,000
+simulations.  This is the same process used to determine the probabilities of
+class for the individual indices, but this time, for each simulation RICT only
+considers the class indicated by the index that indicated the worst class.
+
+## Interpreting Classification Output 
+
+Classification is based on both your observed data and RIVPACS prediction, so
+you must consider imprecision in both of these when interpreting classification
+results. You must take account of the reliability of the predictions, see
+Section Interpreting RICT2 prediction output.
+   
+Always check the suitability code from the prediction results, which is based on
+the combination of environmental input variables and how closely they match any
+of the RIVPACS end groups. Suitability is quite different to the probability of
+class, which does not take suitability into account.
+  
+You should also consider any environmental parameters that exceed warning limit
+values when judging the reliability of the predictions and therefore of the
+classification. Another factor is the quality of the input data: whether the
+environmental data is based on true long term averages or an estimate base on
+biologist’s expert opinion.
+  
+For classification, the quality of the observed biological data is also
+important. This is partly reflected in the bias value, which represents a
+component of sorting and data handling error. You should also consider whether
+the biologist collecting the samples collected them correctly, or experienced
+anything that made sampling difficult, such as high or low flow, poor access to
+the site, damaged nets, declining light or turbid water, which should be
+recorded with the sample data. Always consider the probabilities of class and do
+not base management decisions solely on the face value or most probable class.
+  
+A site with an objective quality of Good that is classed as Moderate is less
+likely to have failed that standard if it also has a reasonably high probability
+of being good or better, and may not have actually failed the standard, whereas
+a site classed as Moderate but with high probabilities of being Poor or Bad is
+more likely to have failed the standard and the need for management action is
+much more certain. Remember that probabilities do not always behave intuitively,
+as shown in the explanation of MINTA in the preceding Section.
+
+# Compare
+
+Compare allows you to run a comparison between two classification at multiple sites or the same site at different times. It requires two input files with the results you wish to compare. Add both output files to compare experiment and run.
+
+
+
+

@@ -213,24 +213,40 @@ combined_probability_classes <- function(spr_eqrs = NULL,
   return(probability_classes)
 }
 
-combined_seasons_minta <- function(spr = NULL,
-                                   sum = NULL,
-                                   aut = NULL,
+combined_seasons_minta <- function(spr_aspt = NULL,
+                                   sum_aspt = NULL,
+                                   aut_aspt = NULL,
+                                   spr_ntaxa = NULL,
+                                   sum_ntaxa = NULL,
+                                   aut_ntaxa = NULL,
                                    predictions = NULL,
                                    area = NULL,
                                    k = NULL,
                                    n_runs = n_runs){
-  browser()
-    localDFrame <- spr[,1]
-    for (i in 1:nrow(spr)) {
-      localDFrame[i] <- max(c(spr[i,], aut[i,], sum[i,]))
+    aspt <- spr_aspt[,1]
+    for (i in 1:nrow(spr_aspt)) {
+      aspt[i] <- max(c(spr_aspt[i,], aut_aspt[i,], sum_aspt[i,]))
     }
 
-    minta_probClass_aut <- matrix(0, ncol = 1, nrow = 5)
-    for (i in 1:5) {
-      minta_probClass_aut[i] <- 100 * sum(localDFrame[localDFrame == i] / i) / n_runs
+    ntaxa <- spr_ntaxa[,1]
+    for (i in 1:nrow(spr_ntaxa)) {
+      ntaxa[i] <- max(c(spr_aspt[i,], aut_aspt[i,], sum_aspt[i,]))
     }
-    aa <- t(minta_probClass_aut) # aut
+
+    aspt <- data.frame(aspt)
+    ntaxa <- data.frame(ntaxa)
+    aspt_array <- getClassarray_aspt(aspt)
+    ntaxa_array <- getClassarray_ntaxa(ntaxa)
+    minta_ntaxa_aspt <- getMINTA_ntaxa_aspt(
+      as.matrix(aspt_array),
+      as.matrix(ntaxa_array)
+    )
+
+    minta_prob_class <- matrix(0, ncol = 1, nrow = 5)
+    for (i in 1:5) {
+      minta_prob_class[i] <- 100 * sum(minta_ntaxa_aspt[minta_ntaxa_aspt == i, ] / i) / n_runs
+    }
+    aa <- t(minta_prob_class) # aut
     colnames(aa) <- getProbClassLabelFromEQR(area)[, 1]
     rownames(aa) <- as.character(predictions[k, "SITE"])
     # Find most probable MINTA class, i.e the maximum, and add it to the site

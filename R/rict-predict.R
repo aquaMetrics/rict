@@ -63,7 +63,7 @@
 #'   values falling into each statistical grouping of rivers.
 #' @export
 #' @importFrom rlang .data
-#' @importFrom dplyr mutate n group_by filter
+#' @importFrom dplyr mutate n group_by filter select
 #' @importFrom stats complete.cases
 #'
 #' @examples
@@ -77,7 +77,6 @@ rict_predict <- function(data = NULL,
                          rows = NULL,
                          area = NULL,
                          crs = NULL) {
-
   # Validate predictive input data
   all_validation <- rict_validate(data, area = area, crs = crs)
   model <- all_validation[["model"]] # returns model based on input headers
@@ -192,24 +191,19 @@ rict_predict <- function(data = NULL,
       ))
   }
 
-  # check season provided
-  if (all(
-    !is.null(data$SPR_SEASON_ID[1]),
-    !is.null(data$AUT_SEASON_ID[1]),
-    !is.null(data$SUM_SEASON_ID[1])
-  )) {
-    seasons_to_run <- c(
-      data$SPR_SEASON_ID[1],
-      data$AUT_SEASON_ID[1],
-      data$SUM_SEASON_ID[1]
-    ) # Choose the seasons to run e.g. spring and autumn
-  } else {
+  # check season provided#
+  seasons_to_run <-
+    length(na.omit(c(data$SPR_SEASON_ID[1],
+             data$AUT_SEASON_ID[1],
+             data$SUM_SEASON_ID[1])))
+  if(seasons_to_run < 1) {
     warning("No '...SEASON_ID' provided, predicting all seasons",
-      call. = FALSE
+            call. = FALSE
     ) # or run all seasons if not provided
     seasons_to_run <- 1:3
-  }
+  } else {
   seasons_to_run <- 1:3
+  }
   data <- all_validation[[1]]
   if (model == "gis") {
     # remove TEST-SITE_CODE column - not required and causes issues later on!
@@ -377,11 +371,12 @@ rict_predict <- function(data = NULL,
   )
 
   # Run the index Scores
-  seasons_to_run <- seasons_to_run[!is.na(seasons_to_run)]
+  # seasons_to_run <- seasons_to_run[!is.na(seasons_to_run)]
 
   if (taxa == TRUE && area != "iom") { # This block predicts and returns taxa predictions
     # Declare a variable where we append all sites
-    taxa_predictions <- list()
+    taxa_pred <- list()
+    taxa_predictions <- data.frame()
     # Use complete cases removing null values
     taxa.input.data <- taxa.input.data[complete.cases(taxa.input.data), ]
     nsites <- nrow(final_predictors_try2)
@@ -416,12 +411,12 @@ rict_predict <- function(data = NULL,
 
       for (k in seq_len(nrow(allUniqueSites))) { ## loop over these unique rows per SITE
         sitex <- groupSitesFunction(allUniqueSites, k, siteIndex, b1)
-        taxa_predictions[[k]] <- sitex
+        taxa_pred[[k]] <- sitex
       } # for k
+      taxa_preds <- data.frame(do.call("rbind", taxa_pred))
+      taxa_predictions <- rbind(taxa_predictions, taxa_preds)
     } # for i
 
-    taxa_predictions <- do.call("rbind", taxa_predictions)
-    taxa_predictions <- data.frame(taxa_predictions)
     # Remove the "End.Group" column
     taxa_predictions$End.Group <- NULL
     # Arrange the sites by siteName, TL, Season_Code, Furse_code
@@ -469,13 +464,49 @@ rict_predict <- function(data = NULL,
     "AUT_NTAXA_BIAS"
   )
   # Check user input data contains biological values
-  if (all(names_biological %in% names(data))) {
-    biological_data <- data[, names_biological]
+  if (any(names_biological %in% names(data))) {
+    biological_data <- data[, names(data) %in% names_biological]
+    if(length(biological_data[names(biological_data) %in%
+              c("SITE", "WATERBODY", "YEAR")]) < 3) {
+      stop("You provided data missing either SITE, WATERBODY or YEAR, we expect
+           all three columns to be present")
+    }
     # remove column "SITE", the first one of columns
-    biological_data <- biological_data[, -1]
+    biological_data <- select(biological_data, -.data$SITE)
+    # Check at least one season's worth of data present
+    spring <- length(grep("SPR", names(biological_data)))
+    summer <- length(grep("SUM", names(biological_data)))
+    autumn <- length(grep("AUT", names(biological_data)))
+    # If no season / observation present - then prediction only.
+    if(!all(spring, summer, autumn == 0)) {
+      spring <- 4
+      summer <- 4
+      autumn <- 4
+    }
+    if(!any(spring, summer, autumn == 4)) {
+     stop("At least one season must have SEASON_ID, ASPT, NTAXA and
+          BIAS columns present.")
+    }
     indices_predictions <- cbind(indices_predictions, biological_data)
     indices_predictions$area <- area #  needed for classify function
   }
 
+
+  else {
+    stop(paste0("You provided a data with no observation columns provided,
+                We expect at least one season's worth of observation and
+                SITE, WATERBODY, YEAR: ",
+               paste((names_biological), collapse = ",")))
+  }
+  # Add in missing columns to allow classification to run
+  # - will return empty values for missing seasons etc
+  missing_columns <-
+    names_biological[!names_biological %in% names(data)]
+  if(length(missing_columns) > 0) {
+  missing <- data.frame()
+  missing[missing_columns] <- list(numeric(0))
+  missing[1:nrow(indices_predictions), missing_columns] <- NA
+  indices_predictions <- cbind(indices_predictions, missing)
+  }
   return(indices_predictions)
 }

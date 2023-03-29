@@ -195,7 +195,6 @@ server <- function(input, output) {
         round, 2
       )
     )
-
     output_files <- list(predictions)
     results <- data.frame()
     if (!is.null(predictions) & input$output == "predict_classify") {

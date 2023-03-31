@@ -87,7 +87,7 @@ rict_classify <- function(data = NULL,
 
     # Change all names to upper case for consistency
     names(data) <- toupper(names(data))
-
+   browser()
     # Get the biological data TL2_WHPT_NTAXA_AbW_DistFam_spr
     names_biological <- names(data)[grep("ABW,DISTFAM|SEASON_ID|BIAS", names(data))]
     biological_data <- data[, names_biological]
@@ -148,11 +148,12 @@ rict_classify <- function(data = NULL,
     # OBSERVED ASPT
     obs_aspt_spr <- biological_data[, "SPR_TL2_WHPT_ASPT (ABW,DISTFAM)"]
     obs_aspt_aut <- biological_data[, "AUT_TL2_WHPT_ASPT (ABW,DISTFAM)"]
+    obs_aspt_sum <- biological_data[, "SUM_TL2_WHPT_ASPT (ABW,DISTFAM)"]
 
     # OBSERVED NTAXA
     obs_ntaxa_spr <- biological_data[, "SPR_TL2_WHPT_NTAXA (ABW,DISTFAM)"]
     obs_ntaxa_aut <- biological_data[, "AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)"]
-
+    obs_ntaxa_sum <- biological_data[, "SUM_TL2_WHPT_NTAXA (ABW,DISTFAM)"]
 
     # Part 3:  Calculation of Exp_ref from "AdjustedExpected_new" values,
     # divide by K ( = 1.0049 for NTAXA,  = 0.9921 for ASPT)
@@ -165,6 +166,9 @@ rict_classify <- function(data = NULL,
       obs_aspt_spr / dplyr::select(Exp_ref_aspt, dplyr::contains("_spr"))
     nonBiasCorrected_WHPT_aspt_aut <-
       obs_aspt_aut / dplyr::select(Exp_ref_aspt, dplyr::contains("_aut"))
+    nonBiasCorrected_WHPT_aspt_sum <-
+      obs_aspt_sum / dplyr::select(Exp_ref_aspt, dplyr::contains("_sum"))
+
 
     # Now do the obs_rb with ONE SITE obs_aspt_spr[1]
     sdobs_aspt <- sdobs_one_year_new(0.269, 0.279, 1)
@@ -206,6 +210,11 @@ rict_classify <- function(data = NULL,
     SiteMINTA_whpt_aut <- data.frame()
     SiteMINTA_whpt_spr_aut <- data.frame()
 
+    # All seasons combined
+    all_seasons_ntaxa <- data.frame()
+    all_seasons_aspt <- data.frame()
+    all_seasons_minta <- data.frame()
+
     # ASPT
     SiteProbabilityclasses_spr_aspt <- data.frame() # Store site probabilities in a dataframe
     SiteProbabilityclasses_aut_aspt <- data.frame() # Store site probabilities in a dataframe
@@ -216,6 +225,7 @@ rict_classify <- function(data = NULL,
     # Setup biases
     Ubias8r_spr <- getUbias8r_new(n_runs, ubias_main, seed, set_seed)
     Ubias8r_aut <- getUbias8r_new(n_runs, ubias_main, seed, set_seed)
+    Ubias8r_sum <- getUbias8r_new(n_runs, ubias_main, seed, set_seed)
 
     # Store all multiYear
     EQRAverages_ntaxa_spr_aut <- data.frame() # Store average EQRs for spr in a dataframe
@@ -251,11 +261,13 @@ rict_classify <- function(data = NULL,
       # initalise all MultiYear AGAIN for each site
       multiYear_EQRAverages_ntaxa_spr <- data.frame(n = n_runs)
       multiYear_EQRAverages_ntaxa_aut <- data.frame(n = n_runs)
+      multiYear_EQRAverages_ntaxa_sum <- data.frame(n = n_runs)
       # Stores averages for nyears-use to calculate, find all spring, all autumn, then average these for each index
       multiYear_EQRAverages_ntaxa_spr_aut <- data.frame(n = n_runs)
 
       multiYear_EQRAverages_aspt_spr <- data.frame(n = n_runs)
       multiYear_EQRAverages_aspt_aut <- data.frame(n = n_runs)
+      multiYear_EQRAverages_aspt_sum <- data.frame(n = n_runs)
       # Stores averages for nyears-use to calculate, find all spring, all
       # autumn, then average these for each index
       multiYear_EQRAverages_aspt_spr_aut <- data.frame(n = n_runs)
@@ -284,20 +296,29 @@ rict_classify <- function(data = NULL,
                                                                      n_runs,
                                                                      seed,
                                                                      set_seed))
+        obsIDX8r_sum <- getObsIDX8rB(obs_ntaxa_sum[j], getZObs_r_new(sdobs_ntaxa,
+                                                                     n_runs,
+                                                                     seed,
+                                                                     set_seed))
         obs_site1_ntaxa_spr <- obsIDX8r_spr + Ubias8r_spr # rename "obs_site1_ntaxa_spr" to obsIDX8rb_spr
         obs_site1_ntaxa_aut <- obsIDX8r_aut + Ubias8r_aut # rename "obs_site1_ntaxa_aut" to obsIDX8rb_aut
+        obs_site1_ntaxa_sum <- obsIDX8r_sum + Ubias8r_sum
         # Part 2 . Do the RefAdjExpected bias
+
         ExpIDX8r_ntaxa_spr <- data.frame(val = (Exp_ref_ntaxa[j, 1] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed, set_seed)))
         ExpIDX8r_ntaxa_aut <- data.frame(val = (Exp_ref_ntaxa[j, 2] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed, set_seed)))
+        ExpIDX8r_ntaxa_sum <- data.frame(val = (Exp_ref_ntaxa[j, 3] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed, set_seed)))
 
         EQR_ntaxa_spr <- as.data.frame(obs_site1_ntaxa_spr / ExpIDX8r_ntaxa_spr[, 1])
         EQR_ntaxa_aut <- as.data.frame(obs_site1_ntaxa_aut / ExpIDX8r_ntaxa_aut[, 1])
+        EQR_ntaxa_sum <- as.data.frame(obs_site1_ntaxa_sum / ExpIDX8r_ntaxa_sum[, 1])
 
         # Store these multi sites for ntaxa here
         # Afterwards, use:  EQR_ntaxa_spr <- rowMeans(multiYear_EQRAverages_ntaxa_spr[,-1])
         multiYear_EQRAverages_ntaxa_spr <- cbind(multiYear_EQRAverages_ntaxa_spr, EQR_ntaxa_spr)
         # Afterwards, use  EQR_ntaxa_aut <- rowMeans(multiYear_EQRAverages_ntaxa_aut[,-1])
         multiYear_EQRAverages_ntaxa_aut <- cbind(multiYear_EQRAverages_ntaxa_aut, EQR_ntaxa_aut)
+        multiYear_EQRAverages_ntaxa_sum <- cbind(multiYear_EQRAverages_ntaxa_sum, EQR_ntaxa_sum)
 
         # Part 1: Deal with ASPT: observed and Expected Calculations
         # ****************************************
@@ -306,24 +327,41 @@ rict_classify <- function(data = NULL,
 
         Ubias9r_spr <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_spr[j], n_runs, Ubias8r_spr, seed, set_seed)
         Ubias9r_aut <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_aut[j], n_runs, Ubias8r_aut, seed, set_seed)
+        Ubias9r_sum <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_sum[j], n_runs, Ubias8r_aut, seed, set_seed)
+
         Ubias7r_spr <- Ubias8r_spr * Ubias9r_spr
         Ubias7r_aut <- Ubias8r_aut * Ubias9r_aut
+        Ubias7r_sum <- Ubias8r_sum * Ubias9r_sum
+
         obsIDX9r_spr <- getObsIDXniner(obs_aspt_spr[j], getZObs_r_new(sdobs_aspt, n_runs, seed, set_seed))
         obsIDX9r_aut <- getObsIDXniner(obs_aspt_aut[j], getZObs_r_new(sdobs_aspt, n_runs, seed, set_seed))
+        obsIDX9r_sum <- getObsIDXniner(obs_aspt_sum[j], getZObs_r_new(sdobs_aspt, n_runs, seed, set_seed))
+
         obsIDX7r_spr <- obsIDX8r_spr * obsIDX9r_spr
         obsIDX7r_aut <- obsIDX8r_aut * obsIDX9r_aut
+        obsIDX7r_sum <- obsIDX8r_sum * obsIDX9r_sum
+
         obsIDX7rb_spr <- obsIDX7r_spr + Ubias7r_spr
         obsIDX7rb_aut <- obsIDX7r_aut + Ubias7r_aut
+        obsIDX7rb_sum <- obsIDX7r_sum + Ubias7r_sum
+
         obsIDX8rb_spr <- obsIDX8r_spr + Ubias8r_spr
         obsIDX8rb_aut <- obsIDX8r_aut + Ubias8r_aut
+        obsIDX8rb_sum <- obsIDX8r_sum + Ubias8r_sum
+
         obsIDX9rb_spr <- obsIDX7rb_spr / obsIDX8rb_spr
         obsIDX9rb_aut <- obsIDX7rb_aut / obsIDX8rb_aut
+        obsIDX9rb_sum <- obsIDX7rb_sum / obsIDX8rb_sum
+
         # Part 2 . Do the RefAdjExpected bias
         ExpIDX9r_aspt_spr <- data.frame(val = (Exp_ref_aspt[j, 1] + getZObs_r_new(sdexp9_aspt, n_runs, seed, set_seed)))
         ExpIDX9r_aspt_aut <- data.frame(val = (Exp_ref_aspt[j, 2] + getZObs_r_new(sdexp9_aspt, n_runs, seed, set_seed)))
+        ExpIDX9r_aspt_sum <- data.frame(val = (Exp_ref_aspt[j, "TL2_WHPT_ASPT_ABW_DISTFAM_SUM"] + getZObs_r_new(sdexp9_aspt, n_runs, seed, set_seed)))
+
         # Calculating simulated EQR
         EQR_aspt_spr <- data.frame(obsIDX9rb_spr / ExpIDX9r_aspt_spr[, 1])
         EQR_aspt_aut <- data.frame(obsIDX9rb_aut / ExpIDX9r_aspt_aut[, 1])
+        EQR_aspt_sum <- data.frame(obsIDX9rb_sum / ExpIDX9r_aspt_sum[, 1])
 
         # Store these multi sites for aspt here
         # Afterwards, use:  EQR_aspt_spr <- rowMeans(multiYear_EQRAverages_aspt_spr[,-1])
@@ -341,11 +379,14 @@ rict_classify <- function(data = NULL,
         # Part 1: Deal with NTAXA: observed and Expected Calculations
         obsIDX8r_spr <- getObsIDX8rB(obs_ntaxa_spr[k], getZObs_r_new(sdobs_ntaxa, n_runs, seed, set_seed))
         obsIDX8r_aut <- getObsIDX8rB(obs_ntaxa_aut[k], getZObs_r_new(sdobs_ntaxa, n_runs, seed, set_seed))
+        browser("needs summer adding to this section")
         obs_site1_ntaxa_spr <- obsIDX8r_spr + Ubias8r_spr # rename "obs_site1_ntaxa_spr" to obsIDX8rb_spr
         obs_site1_ntaxa_aut <- obsIDX8r_aut + Ubias8r_aut # rename "obs_site1_ntaxa_aut" to obsIDX8rb_aut
+        obs_site1_ntaxa_sum <- obsIDX8r_sum + Ubias8r_sum
         # Part 2 . Do the RefAdjExpected bias
         ExpIDX8r_ntaxa_spr <- data.frame(val = (Exp_ref_ntaxa[k, 1] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed, set_seed)))
         ExpIDX8r_ntaxa_aut <- data.frame(val = (Exp_ref_ntaxa[k, 2] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed, set_seed)))
+        ExpIDX8r_ntaxa_sum <- data.frame(val = (Exp_ref_ntaxa[k, 3] + getZObs_r_new(sdexp8_ntaxa, n_runs, seed, set_seed)))
 
         EQR_ntaxa_spr <- as.data.frame(obs_site1_ntaxa_spr / ExpIDX8r_ntaxa_spr[, 1])
         EQR_ntaxa_aut <- as.data.frame(obs_site1_ntaxa_aut / ExpIDX8r_ntaxa_aut[, 1])
@@ -399,7 +440,7 @@ rict_classify <- function(data = NULL,
         EQR_aspt_spr <- data.frame(EQR_aspt_spr = rowMeans(data.frame(multiYear_EQRAverages_aspt_spr[, -1])))
         EQR_aspt_aut <- data.frame(EQR_aspt_aut = rowMeans(data.frame(multiYear_EQRAverages_aspt_aut[, -1])))
       }
-
+      browser()
       # Calculate EQRs here, i.e. rowSums if multipleTrue else just getAvgEQR() for single season
       eqr_av_spr <- data.frame(rowMeans(getAvgEQR_SprAut(EQR_ntaxa_spr, EQR_ntaxa_aut, k, row_name = TRUE)))
       eqr_av_spr_aspt <- data.frame(rowMeans(getAvgEQR_SprAut(EQR_aspt_spr, EQR_aspt_aut, k, row_name = TRUE)))
@@ -503,6 +544,44 @@ rict_classify <- function(data = NULL,
       # bind EQRs into list dataframe column
       # eqr <- list(c(EQR_minta_spr))
       # MINTA <- rbind(MINTA, eqr)
+      # Combined all seasons ---------------------------------------------------
+      if(area == "iom") {
+        seasons_aspt <- combined_probability_classes(
+          spr_eqrs = EQR_aspt_spr,
+          sum_eqrs = EQR_aspt_sum,
+          aut_eqrs = EQR_aspt_aut,
+          aspt = TRUE,
+          ntaxa = FALSE,
+          n_runs = n_runs,
+          predictions = data,
+          area = area,
+          k = k)
+
+        seasons_ntaxa <- combined_probability_classes(
+          spr_eqrs = EQR_ntaxa_spr,
+          sum_eqrs = EQR_ntaxa_sum,
+          aut_eqrs = EQR_ntaxa_aut,
+          aspt = FALSE,
+          ntaxa = TRUE,
+          n_runs = n_runs,
+          predictions = data,
+          area = area,
+          k = k)
+
+        all_seasons_ntaxa <- rbind(all_seasons_ntaxa, seasons_ntaxa)
+        all_seasons_aspt <- rbind(all_seasons_aspt, seasons_aspt)
+        all_seasons <- combined_seasons_minta(spr_aspt = EQR_aspt_spr,
+                                              sum_aspt = EQR_aspt_sum,
+                                              aut_aspt = EQR_aspt_aut,
+                                              spr_ntaxa = EQR_ntaxa_spr,
+                                              sum_ntaxa = EQR_ntaxa_sum,
+                                              aut_ntaxa =EQR_ntaxa_aut,
+                                              predictions = data,
+                                              area = area,
+                                              k = k,
+                                              n_runs = n_runs)
+        all_seasons_minta <- rbind(all_seasons_minta, all_seasons)
+      }
 
       ##### MINTA ENDS HERE  #####
 
@@ -542,8 +621,14 @@ rict_classify <- function(data = NULL,
     # MINTA outputs
     colnames(SiteMINTA_whpt_spr_aut) <- c(paste0("mintawhpt_spr_aut_", names(SiteMINTA_whpt_spr_aut)))
     # Combine all MINTA
-
     allMINTA_whpt <- SiteMINTA_whpt_spr_aut
+
+    ### All seasons combined
+    if(area == "iom") {
+      colnames(all_seasons_ntaxa) <- c(paste0("all_seasons_ntaxa_", names(all_seasons_ntaxa)))
+      colnames(all_seasons_aspt) <- c(paste0("all_seasons_ntaxa_", names(all_seasons_aspt)))
+      colnames(all_seasons_minta) <- c(paste0("all_seasons_minta_", names(all_seasons_minta)))
+    }
 
     # DO for NTAXA
     colnames(EQRAverages_ntaxa_spr_aut) <- c(paste0("NTAXA_", colnames(EQRAverages_ntaxa_spr_aut)))
@@ -616,6 +701,10 @@ rict_classify <- function(data = NULL,
       classification_results <-
         bind_cols(classification_results[, c("SITE","YEAR", "WATERBODY")],
                   iom_results)
+    }
+
+    if(area == "iom") {
+      classification_results <- cbind(classification_results, all_seasons_aspt, all_seasons_ntaxa, all_seasons_minta)
     }
     return(classification_results)  }
 }

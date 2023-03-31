@@ -188,7 +188,8 @@ combined_probability_classes <- function(spr_eqrs = NULL,
                                          predictions = NULL,
                                          area = NULL,
                                          k = NULL) {
-  EQR_avg <- data.frame(rowMeans(cbind(spr_eqrs, sum_eqrs, aut_eqrs)))
+  EQR_avg <- data.frame(rowMeans(cbind(spr_eqrs, sum_eqrs, aut_eqrs),
+                                 na.rm = TRUE))
   if(aspt) {
   class_array_combined <- getClassarray_aspt(EQR_avg)
   }
@@ -223,14 +224,15 @@ combined_seasons_minta <- function(spr_aspt = NULL,
                                    area = NULL,
                                    k = NULL,
                                    n_runs = n_runs){
+
     aspt <- spr_aspt[,1]
     for (i in 1:nrow(spr_aspt)) {
-      aspt[i] <- max(c(spr_aspt[i,], aut_aspt[i,], sum_aspt[i,]))
+      aspt[i] <- max(c(spr_aspt[i,], aut_aspt[i,], sum_aspt[i,]),na.rm = TRUE)
     }
 
     ntaxa <- spr_ntaxa[,1]
     for (i in 1:nrow(spr_ntaxa)) {
-      ntaxa[i] <- max(c(spr_aspt[i,], aut_aspt[i,], sum_aspt[i,]))
+      ntaxa[i] <- max(c(spr_aspt[i,], aut_aspt[i,], sum_aspt[i,]),na.rm = TRUE)
     }
 
     aspt <- data.frame(aspt)

@@ -620,7 +620,7 @@ if (area == "iom") {
       eqr_metrics <- c(eqr_metrics, list(eqrs))
     }
   } # END of FOR LOOP
- browser()
+
   ### All seasons combined
   if(area == "iom") {
   colnames(all_seasons_ntaxa) <- c(paste0("all_seasons_ntaxa_", names(all_seasons_ntaxa)))

@@ -87,7 +87,7 @@ rict_classify <- function(data = NULL,
 
     # Change all names to upper case for consistency
     names(data) <- toupper(names(data))
-   browser()
+
     # Get the biological data TL2_WHPT_NTAXA_AbW_DistFam_spr
     names_biological <- names(data)[grep("ABW,DISTFAM|SEASON_ID|BIAS", names(data))]
     biological_data <- data[, names_biological]
@@ -440,7 +440,6 @@ rict_classify <- function(data = NULL,
         EQR_aspt_spr <- data.frame(EQR_aspt_spr = rowMeans(data.frame(multiYear_EQRAverages_aspt_spr[, -1])))
         EQR_aspt_aut <- data.frame(EQR_aspt_aut = rowMeans(data.frame(multiYear_EQRAverages_aspt_aut[, -1])))
       }
-      browser()
       # Calculate EQRs here, i.e. rowSums if multipleTrue else just getAvgEQR() for single season
       eqr_av_spr <- data.frame(rowMeans(getAvgEQR_SprAut(EQR_ntaxa_spr, EQR_ntaxa_aut, k, row_name = TRUE)))
       eqr_av_spr_aspt <- data.frame(rowMeans(getAvgEQR_SprAut(EQR_aspt_spr, EQR_aspt_aut, k, row_name = TRUE)))

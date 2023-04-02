@@ -483,7 +483,7 @@ rict_predict <- function(data = NULL,
       summer <- 4
       autumn <- 4
     }
-    if(!any(spring, summer, autumn == 4)) {
+    if(!any(c(spring, summer, autumn) == 4)) {
      stop("At least one season must have SEASON_ID, ASPT, NTAXA and
           BIAS columns present.")
     }

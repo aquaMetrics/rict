@@ -478,7 +478,7 @@ rict_predict <- function(data = NULL,
     summer <- length(grep("SUM", names(biological_data)))
     autumn <- length(grep("AUT", names(biological_data)))
     # If no season / observation present - then prediction only.
-    if(!all(c(spring, summer, autumn) == 0)) {
+    if(all(c(spring, summer, autumn) == 0)) {
       spring <- 4
       summer <- 4
       autumn <- 4

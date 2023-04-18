@@ -21,7 +21,7 @@ An R package for calculating River Invertebrate Classification Tool
 
 This R package is in development. Please don’t use in production. Please
 use the [RICT
-website](https://www.fba.org.uk/FBA/Discover-and-Learn/Projects/RIVPACS-RICT/Public/Discover-and-Learn/Projects/RIVPACS-RICT-Landing-Page.aspx?hkey=72b27a8b-d566-4bab-b863-ca39545226ae)
+website](https://www.fba.org.uk/other-scientific-collaborations/rivpacs-and-rict)
 for official documentation and links to the Azure experiments.
 
 ## Install

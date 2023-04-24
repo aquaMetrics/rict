@@ -1,5 +1,5 @@
 SITE,Waterbody,Year,NGR,Easting,Northing,Altitude,Slope,Discharge,Velocity,Dist_from_Source,Mean_Width,Mean_Depth,Alkalinity,Boulder_Cobbles,Pebbles_Gravel,Sand,Silt_Clay,Hardness,Calcium,Conductivity,Spr_Season_ID,"Spr_TL2_WHPT_ASPT (AbW,DistFam)","Spr_TL2_WHPT_NTaxa (AbW,DistFam)",Spr_Ntaxa_Bias,Sum_Season_ID,"Sum_TL2_WHPT_ASPT (AbW,DistFam)","Sum_TL2_WHPT_NTaxa (AbW,DistFam)",Sum_Ntaxa_Bias,Aut_Season_ID,"Aut_TL2_WHPT_ASPT (AbW,DistFam)","Aut_TL2_WHPT_NTaxa (AbW,DistFam)",Aut_Ntaxa_Bias
-MYR-GB-01-R,Waterbody name,2016,NX,40000,10000,60,2.7,2,,10,6.4,21.7,75,58,36,3,1,,,,1,6.512,24,1.62,2,6.663,27,1.62,3,6.348,27,1.62
+MYR-IOM-01-R,Waterbody name,2016,NX,40000,10000,60,2.7,2,,10,6.4,21.7,75,58,36,3,1,,,,1,6.512,24,1.62,2,6.663,27,1.62,3,6.348,27,1.62
 MYR-GB-01-R,Waterbody name,2017,NX,40000,10000,60,2.7,2,,10,6.4,21.7,75,58,36,3,1,,,,1,6.476,25,1.62,2,6.811,21,1.62,3,5.892,25,1.62
 MYR-GB-01-R,Waterbody name,2018,NX,40000,10000,60,2.7,2,,10,6.4,21.7,75,58,36,3,1,,,,1,6.739,28,1.62,2,5.989,28,1.62,3,6.132,28,1.62
 MYR-GB-05-R,Waterbody name,2016,SC,39840,88130,15,1.3,3,,28,6.6,14.4,50,12,80,8,0,,,,1,4.908,24,1.62,2,5.35,22,1.62,3,4.881,31,1.62

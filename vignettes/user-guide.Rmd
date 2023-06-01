@@ -31,18 +31,22 @@ outline: 0 ;
 ``` 
 
 
-![](images/rict_logo.png){ width=20% }
+![](images/rict_logo.png){ width=20%, align=center }
 
 # Purpose 
 
-Welcome to the RICT user guide! Here we explain how to upload macro-invertebrate results to [RICT website](https://rictapplications.shinyapps.io/rictapp/). Then demonstrate how to predict reference values for indices and taxa lists. Additionally, we explain how to classify status and compare results.
+Welcome to the RICT user guide. Here we explain how to upload macro-invertebrate
+results to [RICT website](https://rictapplications.shinyapps.io/rictapp/). We then
+demonstrate how to predict reference values for indices and taxa lists.
+Additionally, we explain how to classify status and compare results.
 
 # Background
 
-RICT uses data collected from sampling locations with minimal environmental
-pressures to predict expected conditions across the river network. RICT
-is used by the UK environment agencies to classify rivers for Water Framework
-Directive (WFD) assessment, and provide a way of enforcing statutory objectives.
+RICT uses a model based on data collected from sampling locations with minimal
+environmental pressures to predict expected conditions across the river network.
+UK environment agencies use RICT to classify rivers for
+Water Framework Directive (WFD) assessment, and to enforce
+statutory objectives.
 
 Key Functionality:
   
@@ -52,15 +56,24 @@ Key Functionality:
 -	Give a probability of status class.
 -	Compare two samples and give a likelihood of whether they are significantly different.
 
+RICT is maintained by:
+- Environment Agency (EA)
+- Natural Resources Wales (NRW)
+- Northern Ireland Environment Agency (NIEA) 
+- Scottish Environment Protection Agency (SEPA)
+
+NOTE: The latest release of RICT replaces the version hosted on Azure ML Studio. 
 # Quick Start
 
 ## Requirements
 
 Before you start, you need data to process. If you do not have any data prepared, example data is provided in the  [validation template spreadsheet](). However, if you are looking to run your own results, you will need the following:
 
-1. **WHPT scores** based on macro-invertebrate results. To calculate WHPT scores, you can use the [WHPT spreadsheet calculator](). Your scores should be based on macro-invertebrate results collected and analysed following [standard techniques](#sampling).
+1. WHPT scores based on macro-invertebrate results. To calculate WHPT scores, you can use the [WHPT spreadsheet calculator](). Your scores should be based on macro-invertebrate results collected and analysed following [standard techniques](#sampling).
 
-2. A list of **predictor values** based on field observations and GIS. Predictor values change depending on the geographic [area and model](#models-and-areas) you wish to use.
+2. A list of predictor values based on field observations and GIS. Predictor values change depending on the geographic [area and model](#models-and-areas) you wish to use.
+
+If you are unsure under what circumstances RICT should be used, read the [Usage](#usage) section.
 
 ## Prepare Input File
 
@@ -100,6 +113,8 @@ template file.
 ![Example of predict and classify section of the RICT website.](images/user-guide/rict-website.png){ width=90% }
 
 4. If the process fails, the website displays a red error message. 
+
+5. See [Prediction](#prediction) and  
 
 ## Compare
 
@@ -141,12 +156,6 @@ This option will display predictions for all inverts indices not just WHPT predi
 
 Display table of prediction for taxa list(s). See [taxa prediction](#taxa) for more information. 
 
-# Validation
-
-A number of checks and validations are automatically run once the input file is uploaded. RICT will detect and display any failures or warnings.
-
-See the [Functional Specifications](/functional-specification.html#5-acceptance-and-validation-of-input-data) for the full list of checks, warnings and failure values.
-
 # Usage
 
 RICT is only suitable for freshwater (not estuarine or marine) sites on rivers
@@ -164,8 +173,9 @@ The probabilities of class provided by RICT are only appropriate for samples
 analysed in the laboratory and expressed in the correct form of WHPT to which
 the bias values relate.
   
-RICT classifications cannot be used for official purposes if based on single seasons, different forms of WHPT indices or samples not
-analysed in the laboratory.
+RICT classifications cannot be used for official purposes if based on single
+seasons, different forms of WHPT indices or samples not analysed in the
+laboratory.
 
 # Sampling
 
@@ -184,27 +194,35 @@ Enter > Protocols > Macro-invertebrates: RIVPACS Macro-invertebrate Sampling
 Protocol (covers shallow water sampling only) and RIVPACS Sorting & Recording
 (by Mike Furse).
 
+# Validation
+
+A number of checks and validations are automatically run once the input file is uploaded. RICT will detect and display any failures or warnings.
+
+See the [Functional Specifications](https://aquametrics.github.io/rict/articles/functional-specification.html#acceptance-and-validation-of-input-data) for the full list of checks, warnings and failure values.
+
 # Prediction
 
-RICT uses environmental predictors to model expected reference conditions. The model is called RIVPACS (River InVertebrate Prediction and Classification System). It is based on TWINSPAN grouping model. 
+RICT uses environmental predictors to model expected reference conditions.
+Specifically, RICT uses the RIVPACS IV models (River InVertebrate Prediction and
+Classification System). It is based on TWINSPAN grouping.
 
-More information about the specification of the Models can be found in the
+More information about the specification of the models can be found in the
 [Functional
-Specifications](/functional-specification.html#5-acceptance-and-validation-of-input-data).
+Specifications](https://aquametrics.github.io/rict/articles/functional-specification.html#acceptance-and-validation-of-input-data).
 
 ## Models and Areas
 
-There are two models available in RICT:
+There are two models available:
 
 1. Model 1 (with IoM, GB and NI variations)
 - Based on a range of observed as well as physical/chemical predictors (substrate, river width, slope etc). Model 1 is the original predictive model, and this is still the definitive version, used for WFD river invertebrate status classification and objectives setting.
 2. Model 44 (GB only)
-- Based on GIS (geology, catchment size etc) and Alkalinity predictors using a new predictive model for GB only. This is a model new for testing and evaluation only.
+- Based on GIS (geology, catchment size etc) and Alkalinity predictors using a new predictive model for GB only. This is a new model for testing and evaluation only.
 
-The model is automatically selected based on the input template uploaded and the
-area your grid references are located in.
+RICT will automatically select the model based on the input template uploaded
+and the area your grid references are located in.
 
-## Envrionmental Predictors
+## Environmental Predictors
 
 Regardless of which season you want to predict, the environmental variables must
 always be the median long-term averages that take account of conditions
@@ -222,7 +240,7 @@ Environmental data from Environment Agency monitoring sites suitable for input
 into RICT are available from the Ecology & Fish Data Explorer
 https://environment.data.gov.uk/ecology-fish/.  This includes alkalinity and
 discharge category.
-  
+ 
 ### Discharge Category
   
 Discharge category can be found using [Defra GIS wesbsite](https://environment.data.gov.uk/DefraDataDownload/?mapService=EA/RICT&mode-spatial). Additionally, GIS data for RIVPACS model 44 can also be downloaded.
@@ -235,7 +253,59 @@ is also available from Open WIMS data and
 http://eawaterquality.shinyapps.io/ecologicalstatsapp/.  The latter includes a
 map interface for selecting sites.
 
+## Grid Reference
+  
+RICT uses 10-figure grid references. The 4th and 5th digits are often inaccurate
+unless based on GPS. Grid references are a common cause of [data input errors](#grid-reference-errors).
+  
+The GB [Ordnance Survey grid
+references](https://en.wikipedia.org/wiki/Ordnance_Survey_National_Grid) starts
+with two letters. Where in as Northern Ireland, starts with one letter based on the
+[Irish Grid Reference
+System](https://en.wikipedia.org/wiki/Irish_grid_reference_system)) These
+letters represent a unique 100 km square. These are followed by eastings and
+northings that locate the southwest (bottom left) corner of the grid square but
+describe the whole grid square, something that is often forgotten. The size of
+the grid square is indicated by the number of digits in the easting and
+northing. Each successive pair of easting and northing refers to a smaller grid
+within the square indicated by the previous easting and northing, so the 100 m
+square ST3605 is roughly in the middle of the 1 km square ST30.
+
+## Default Outputs
+
+The output from predictions always includes various 'book keeping' columns for reference:
+
+|                                 Column Name            |     Definition                                                         |
+|-----------------------------------------------------------|------------------------------------------------------------------------|
+|     SITE                                                  |     Site reference number, from input file                             |
+|     LATITUDE                                              |     Location point                                                     |
+|     LONGITUDE                                             |     Location point                                                     |
+|     LOG.ALTITUDE                                          |     Logarithmic value for Altitude                                     |
+|     LOG.DISTANCE.FROM.SOURCE                              |     Logarithmic value for Distance from source                         |
+|     LOG.WIDTH                                             |     Logarithmic value for Stream Width                                 |
+|     LOG.DEPTH                                             |     Logarithmic value for Stream Depth                                 |
+|     MEAN.SUBSTRATUM                                       |     Calculated mean substratum                                         |
+|     DISCHARGE.CATEGORY                                    |     Discharge category                                                 |
+|     ALKALINITY                                            |     Alkalinity                                                         |
+|     LOG.ALKALINITY                                        |     Logarithmic value for Alkalinity                                   |
+|     LOG.SLOPE                                             |     Logarithmic value for Slope                                        |
+|     MEAN.AIR.TEMP (GB only)                               |     Calculated Mean Air Temperature                                    |
+|     AIR.TEMP.RANGE (GB only)                              |     Calculated Air Temperature Range                                   |
+|     p1 … p43 (GB) or p1 … p11 (NI)                        |     Probability of test site belonging to each RIVPACS IV end-group    |
+|     SuitCode                                              |     Calculated Suitability code for test site                          |
+|     SuitText                                              |     Text definition of suitability code for the test site              |
+|     BelongsTo_endGrp                                      |     Most probable RIVPACS IV end-group the test site belongs to        |
+|     Season                                                |     Season to which prediction relates                                 |
+
 ## Indices
+
+RICT provides predicted indices outputs for a range of purposes. Primarily,
+'WHPT NTAXA Abund' and 'WHPT ASPT Abund' reference condition values are
+predicted compared against observed values in the
+[Classification](#classification) process. However, selecting the 'All indices'
+option will predicted indices for a range of other possible ecological insights.
+
+### Indices Usage
 
 Indices simplify complex biological results to help ecologists explain them to
 managers. Although their format is intentionally very simple (usually a single
@@ -264,29 +334,112 @@ impact to individual pressures unless an environmental pressure is so severe
 that it is overwhelming. This will increasingly be the case as gross pressures
 are eliminated by environmental regulation.
   
-Finally, the inclusion of an index in the RICT ‘all indices' prediction must not
-be regarded as an endorsement of that index. Some indices have been included to
+### Included Indices
+
+The inclusion of an index in the RICT ‘all indices' prediction must not be
+regarded as an endorsement of that index. Some indices have been included to
 allow them to be evaluated or compared to other indices. Similarly, the
 exclusion of an index does not imply that it is not useful.
 
-**Add table**
+| Indices Column Name | Description |
+|---|---|
+|           TL1_BMWP         |           Taxon Level 1    Biological Monitoring Working Party score         |
+|         TL1_NTAXA       |         Taxon Level 1   Number of BMWP-scoring taxa       |
+|         TL1_ASPT       |         Taxon Level 1   Average (BMWP) score per taxon       |
+|         TL2_WHPT_Score_nonAb_DistFam       |         Taxon Level 2   Walley Hawkes Paisley Trigg score based on presence only (not   abundance-related) index values for distinct families       |
+|         TL2_WHPT_NTAXA_nonAb_DistFam       |         Taxon Level 2   Number of Walley Hawkes Paisley Trigg scoring taxa based on distinct families       |
+|         TL2_WHPT_ASPT_nonAb_DistFam       |         Taxon Level 2   Average Walley Hawkes Paisley Trigg score per taxon based on presence only   (not abundance-related) index values for distinct families       |
+|         TL2_WHPT_Score_nonAb_CompFam       |         Taxon Level 2   Walley Hawkes Paisley Trigg score based on presence only (not   abundance-related) index values and BMWP composite families       |
+|         TL2_WHPT_NTAXA_nonAb_CompFam       |         Taxon Level 2   Number of Walley Hawkes Paisley Trigg scoring taxa based and BMWP composite   families       |
+|         TL2_WHPT_ASPT_nonAb_CompFam       |         Taxon Level 2   Average Walley Hawkes Paisley Trigg score per taxon based on presence only   (not abundance-related) index values and BMWP composite families       |
+|         TL2_WHPT_Score_AbW_DistFam       |         Taxon Level 2   Walley Hawkes Paisley Trigg score based on abundance-related index values for   distinct families       |
+|         TL2_WHPT_NTAXA_AbW_DistFam       |         Taxon Level 2   Number of Walley Hawkes Paisley Trigg scoring taxa based distinct families   (this is the form of WHPT NTaxa used for status classification)       |
+|         TL2_WHPT_ASPT_AbW_DistFam       |         Taxon Level 2   Average Walley Hawkes Paisley Trigg score per taxon based on   abundance-related index values for distinct families (this is the form of   WHPT NTaxa used for status classification)       |
+|         TL2_WHPT_Score_AbW_CompFam       |         Taxon Level 2   Walley Hawkes Paisley Trigg score based on abundance-related index values and   BMWP composite families       |
+|         TL2_WHPT_NTAXA_AbW_CompFam       |         Taxon Level 2   Number of Walley Hawkes Paisley Trigg scoring taxa based on BMWP composite   families       |
+|         TL2_WHPT_ASPT_AbW_CompFam       |         Taxon Level 2   Average Walley Hawkes Paisley Trigg score per taxon based on   abundance-related index values and BMWP composite families       |
+|         TL1_AWIC_Fam       |         Taxon Level 1   Acid Water Indicator Community (family level), Davy-Bowker et al. (2005)   The development and testing of a macroinvertebrate biotic index for detecting   the impact of acidity on streams. Archiv für Hydrobiologie 163: 383-403       |
+|         TL4_AWIC_Sp_Murphy       |         Taxon Level 4   Acid Water Indicator Community (species level). Murphy, et al. (2013) A   diagnostic biotic index for assessing acidity in sensitive streams in   Britain. Ecological Indicators 24: 562–572.       |
+|         TL5_AWIC_Sp_Murphy       |         Taxon Level 5   Acid Water Indicator Community (species level). Murphy, et al. (2013) A   diagnostic biotic index for assessing acidity in sensitive streams in   Britain. Ecological Indicators 24: 562–572.       |
+|         TL4_WFD_AWIC_Sp_McFarland       |         Taxon Level 4   Acid Water Indicator Community (species level). McFarland, B (2010)   Developing typology and class boundaries for WFD-AWICsp to assess   acidification in UK rivers using macroinvertebrates. WFD UK Technical   Advisory Group       |
+|         TL5_WFD_AWIC_Sp_McFarland       |         Taxon Level 5   Acid Water Indicator Community (species level). McFarland, B (2010)   Developing typology and class boundaries for WFD-AWICsp to assess   acidification in UK rivers using macroinvertebrates. WFD UK Technical   Advisory Group       |
+|         TL4_Raddum       |         Taxon Level 4   Raddum index. Fjellheim A. & Raddum G.G. (1990) Acid precipitation:   Biological monitoring of streams and lakes. Science of the Total Environment   96: 57-66       |
+|         TL5_Raddum       |         Taxon Level 4   Raddum index. Fjellheim A. & Raddum G.G. (1990) Acid precipitation:   Biological monitoring of streams and lakes. Science of the Total Environment   96: 57-66       |
+|         TL4_SEPA_per_Acid_Sensitive_Taxa       |         Taxon Level 4   Scottish Environment Protection Agency percentage Acid Sensitive Taxa. David   Rendall, Scottish Environment Protection Agency, 20th January 2010       |
+|         TL5_SEPA_perc_Acid_Sensitive_Taxa       |         Taxon Level 5   Scottish Environment Protection Agency percentage Acid Sensitive Taxa. David   Rendall, Scottish Environment Protection Agency, 20th January 2010       |
+|         TL4_MetTol       |         Taxon Level 4   Metal Tolerance index. Jones, IJ, et al. (2019) The Ecological Impacts   of Contaminated Sediment from Abandoned Metal Mines. Final report of WT0970   Characterisation and targeting of measures for (non-coal) polluted mine   waters – Impacts of contaminated sediment on ecological recovery September 2016.   London, Defra.       |
+|         TL5_MetTol       |         Taxon Level 5   Metal Tolerance index. Jones, IJ, et al. (2019) The Ecological Impacts   of Contaminated Sediment from Abandoned Metal Mines. Final report of WT0970   Characterisation and targeting of measures for (non-coal) polluted mine   waters – Impacts of contaminated sediment on ecological recovery September   2016. London, Defra.       |
+|         TL1_2_LIFE_Fam_CompFam       |         Taxon Level 1,   supplemented by Taxon Level 2 families, Lotic-invertebrate Index for Flow   Evaluation (family level) but with BMWP composite taxa as composites. Extence   et al., (1999). River flow indexing using British benthic macroinvertebrates:   a framework for setting hydroecological objectives. Regulated Rivers:   Research & Management 15: 543-574.       |
+|         TL2_LIFE_Fam_DistFam       |         Taxon Level 2,   Lotic-invertebrate Index for Flow Evaluation (family level) Distinct Families   Extence et al., (1999). River flow indexing using British benthic   macroinvertebrates: a framework for setting hydroecological objectives.   Regulated Rivers: Research & Management 15: 543-574.       |
+|         TL3_LIFE_Fam_DistFam       |         Taxon Level 3,   Lotic-invertebrate Index for Flow Evaluation (family level) Distinct Families   Extence et al., (1999). River flow indexing using British benthic   macroinvertebrates: a framework for setting hydroecological objectives.   Regulated Rivers: Research & Management 15: 543-574.       |
+|         TL4_LIFE_Sp       |         Taxon Level 4,   Lotic-invertebrate Index for Flow Evaluation (species level) Extence et al.,   (1999). River flow indexing using British benthic macroinvertebrates: a   framework for setting hydroecological objectives. Regulated Rivers: Research   & Management 15: 543-574.       |
+|         TL5_LIFE_Sp       |         Taxon Level 5,   Lotic-invertebrate Index for Flow Evaluation (species level) Extence et al.,   (1999). River flow indexing using British benthic macroinvertebrates: a   framework for setting hydroecological objectives. Regulated Rivers: Research   & Management 15: 543-574.       |
+|         TL3_PSI_Fam       |         Taxon Level 3,   Proportion of Sediment-sensitive Invertebrates (family level) Extence et al.,   (2011) The Assessment of Fine Sediment Accumulation in Rivers Using   Macro-Invertebrate Community Response. River Research and Applications, 29:   17–55       |
+|         TL4_PSI_Sp       |         Taxon Level 4,   Proportion of Sediment-sensitive Invertebrates (species level) Extence et   al., (2011) The Assessment of Fine Sediment Accumulation in Rivers Using   Macro-Invertebrate Community Response. River Research and Applications, 29:   17–55       |
+|         TL5_PSI_Sp       |         Taxon Level 5,   Proportion of Sediment-sensitive Invertebrates (species level) Extence et   al., (2011) The Assessment of Fine Sediment Accumulation in Rivers Using   Macro-Invertebrate Community Response. River Research and Applications, 29:   17–55       |
+|         TL3_E_PSI_fam69       |         Taxon Level 3,   Empirically-weighted Proportion of Sediment-sensitive Invertebrates (family   level) Turley et al., (2016). A sediment-specific family-level biomonitoring   tool to identify the impacts of fine sediment in temperate rivers and   streams. Ecological Indicators 70: 151–165       |
+|         TL4_E_PSI_mixed_level       |         Taxon Level 4,   Empirically-weighted Proportion of Sediment-sensitive Invertebrates (mixed   taxon level)       |
+|         TL5_E_PSI_mixed_level       |         Taxon Level 5,   Empirically-weighted Proportion of Sediment-sensitive Invertebrates (mixed   taxon level)       |
+|         TL4_oFSIsp       |         Taxon Level 4,   organic Fine Sediment Index (species) Murphy et al., (2015) Development of a   biotic index using stream macroinvertebrates to assess stress from deposited   fine sediment. Freshwater Biology 60: 2019-2036       |
+|         TL5_oFSIsp       |         Taxon Level 5,   organic Fine Sediment Index (species) Murphy et al., (2015) Development of a   biotic index using stream macroinvertebrates to assess stress from deposited   fine sediment. Freshwater Biology 60: 2019-2036       |
+|         TL4_ToFSIsp       |         Taxon Level 4,   Total Fine Sediment Index (species) Murphy et al., (2015) Development of a   biotic index using stream macroinvertebrates to assess stress from deposited   fine sediment. Freshwater Biology 60: 2019-2036       |
+|         TL5_ToFSIsp       |         Taxon Level 5,   Total Fine Sediment Index (species) Murphy et al., (2015) Development of a   biotic index using stream macroinvertebrates to assess stress from deposited   fine sediment. Freshwater Biology 60: 2019-2036       |
+|         TL4_CoFSIsp       |         Taxon Level 4,   Combined Fine Sediment Index (species) Murphy et al., (2015) Development of a   biotic index using stream macroinvertebrates to assess stress from deposited   fine sediment. Freshwater Biology 60: 2019-2036       |
+|         TL5_CoFSIsp       |         Taxon Level 5,   Combined Fine Sediment Index (species) Murphy et al., (2015) Development of a   biotic index using stream macroinvertebrates to assess stress from deposited   fine sediment. Freshwater Biology 60: 2019-2036       |
+|         TL4_GSFI_FI05       |         Taxon Level 4,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Type 05 (Siliceous   mountain streams rich in coarse material)       |
+|         TL5_GSFI_FI05       |         Taxon Level 5,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Type 05 (Siliceous   mountain streams rich in coarse material)       |
+|         TL4_GSFI_FI09       |         Taxon Level 4,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Type 09 (Silicate   low mountain rivers, rich in fine to coarse material)       |
+|         TL5_GSFI_FI09       |         Taxon Level 5,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Type 09 (Silicate   low mountain rivers, rich in fine to coarse material)       |
+|         TL4_GSFI_FI091       |         Taxon Level 4,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Type 09.1   (Carbonatic low mountain rivers, rich in fine to coarse material)       |
+|         TL5_GSFI_FI091       |         Taxon Level 5,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Type 09.1   (Carbonatic low mountain rivers, rich in fine to coarse material)       |
+|         TL4_GSFI_FI091_K       |         Taxon Level 4,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Type 09.1_K   (Carbonatic low mountain rivers, rich in fine to coarse material (Keuper))       |
+|         TL5_GSFI_FI091_K       |         Taxon Level 5,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Type 09.1_K   (Carbonatic low mountain rivers, rich in fine to coarse material (Keuper))       |
+|         TL4_GSFI_FI092       |         Taxon Level 4,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Type 09.2 (Large   rivers of the low mountain range)       |
+|         TL5_GSFI_FI092       |         Taxon Level 5,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Type 09.2 (Large   rivers of the low mountain range)       |
+|         TL4_GSFI_FI11_12       |         Taxon Level 4,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Types 11   (Organically characterised streams) and Type 12 (Organically characterised   rivers)       |
+|         TL5_GSFI_FI11_12       |         Taxon Level 5,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Types 11 (Organic   streams) and Type 12 (Organic rivers)       |
+|         TL4_GSFI_FI14_16       |         Taxon Level 4,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Types 14 (Sandy   lowland streams) + Stream Type 16 (Gravelly lowland streams) + Stream Type 18   (Loose loamy lowland streams)       |
+|         TL5_GSFI_FI14_16       |         Taxon Level 5,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Types 14 (Sandy   lowland streams) + Stream Type 16 (Gravelly lowland streams) + Stream Type 18   (Loose loamy lowland streams)       |
+|         TL4_GSFI_FI15_17       |         Taxon Level 4,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Types 15 (Sand and   clay lowland rivers) + Type 17 (Gravelly lowland rivers)       |
+|         TL5_GSFI_FI15_17       |         Taxon Level 5,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Types 15 (Sand and   clay lowland rivers) + Type 17 (Gravelly lowland rivers)       |
+|         TL4_GSFI_FI152       |         Taxon Level 4,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Types 15.2_Große   (Large lowland rivers of sand and clay)       |
+|         TL5_GSFI_FI152       |         Taxon Level 5,   German Stream Fauna Index (Deutscher Fauna-Index) Stream Types 15.2_Große   (Large lowland rivers of sand and clay)       |
+|         TL2_SPEAR_Fam_perc       |         Taxon Level 2,   Species at Risk from pesticides (family level) as a percentage, Beketov et   al., (2008) Freshwater biological indicators of pesticide contamination – an   adaptation of the SPEAR approach for the UK. Science Report – SC030189/SR4.   Bristol, Environment Agency.       |
+|         TL4_SPEAR_Sp_perc       |         Taxon Level 4,   Species at Risk from pesticides (species level) as a percentage, Beketov et   al., (2008) Freshwater biological indicators of pesticide contamination – an   adaptation of the SPEAR approach for the UK. Science Report – SC030189/SR4.   Bristol, Environment Agency.       |
+|         TL5_SPEAR_Sp_perc       |         Taxon Level 5,   Species at Risk from pesticides (species level) as a percentage, Beketov et   al., (2008) Freshwater biological indicators of pesticide contamination – an   adaptation of the SPEAR approach for the UK. Science Report – SC030189/SR4.   Bristol, Environment Agency.       |
+|         SPEAR_pesticides_TL2_fam_Knillmann_2018       |         Taxon Level 2,   Species at Risk from pesticides (family level), Knillmann et al., (2018)   Indication of pesticide effects and recolonization in streams. Science of the   Total Environment 630: 1619-1627       |
+|         SPEAR_refuge_TL2_fam_Knillmann_2018       |         Taxon Level 2,   Species at Risk refuge areas (family level), Knillmann et al., (2018)   Indication of pesticide effects and recolonization in streams. Science of the   Total Environment 630: 1619-1627       |
+|         SPEAR_pesticides_TL4_sp_Knillmann_2018       |         Taxon Level 4,   Species at Risk from pesticides (family level), Knillmann et al., (2018)   Indication of pesticide effects and recolonization in streams. Science of the   Total Environment 630: 1619-1627       |
+|         SPEAR_refuge_TL4_sp_Knillmann_2018       |         Taxon Level 4,   Species at Risk refuge areas (species level), Knillmann et al., (2018)   Indication of pesticide effects and recolonization in streams. Science of the   Total Environment 630: 1619-1627       |
+|         SPEAR_pesticides_TL5_sp_Knillmann_2018       |         Taxon Level 5,   Species at Risk from pesticides (species level), Knillmann et al., (2018)   Indication of pesticide effects and recolonization in streams. Science of the   Total Environment 630: 1619-1627       |
+|         SPEAR_refuge_TL5_sp_Knillmann_2018       |         Taxon Level 5,   Species at Risk refuge areas (species level), Knillmann et al., (2018)   Indication of pesticide effects and recolonization in streams. Science of the   Total Environment 630: 1619-1627       |
+|         TL4_CCI       |         Taxon Level 4,   Community Conservation Index, Chadd & Extence (2004). The conservation of   freshwater macroinvertebrate populations: a community-based classification   scheme. Aquat. Conserv. Mar. Freshwater Ecosyst. 14: 597–624       |
+|         TL5_CCI       |         Taxon Level 5,   Community Conservation Index, Chadd & Extence (2004). The conservation of   freshwater macroinvertebrate populations: a community-based classification   scheme. Aquat. Conserv. Mar. Freshwater Ecosyst. 14: 597–624       |
+|         TL2_08_Group_ARMI_NTaxa       |         Taxon Level 2,   Number of taxa belonging to the Anglers’ Riverfly Monitoring Initiative   Index, Brooks et al., (2019) Anglers’ Riverfly Monitoring Initiative (ARMI):   a UK-wide citizen science project for water quality assessment. Freshwater   Science 38 (2): 270-280       |
+|         TL2_08_Group_ARMI_Score       |         Taxon Level 2,   Anglers’ Riverfly Monitoring Initiative Index score, Brooks et al., (2019)   Anglers’ Riverfly Monitoring Initiative (ARMI): a UK-wide citizen science   project for water quality assessment. Freshwater Science 38 (2): 270-280       |
+|         TL2_33_Group_ARMI_NTaxa       |         Taxon Level 2,   Number of taxa belonging to the Extended Anglers’ Riverfly Monitoring   Initiative Index       |
+|         TL2_33_Group_ARMI_Score       |         Taxon Level 2,   Extended Anglers’ Riverfly Monitoring Initiative Index score       |
+|         TL2_33_Group_Flow_Silt_NTaxa       |         Taxon Level 2,   Number of taxa belonging to the Extended Anglers’ Riverfly Monitoring   Initiative Silt Index       |
+|         TL2_33_Group_Flow_Silt_Score       |         Taxon Level 2,   Extended Anglers’ Riverfly Monitoring Initiative Silt Index score       |
+|         TL2_14_Group_Urban_NTaxa       |         Taxon Level 2,   Number of taxa belonging to the Urban Riverfly index       |
+|         TL2_14_Group_Urban_Score       |         Taxon Level 2,   Urban Riverfly index score       |
 
 ## Taxa 
 
 Predict the families and species expected at a site and their abundances. This
-powerful feature of RIVPACS enables it to predict a wide range of
-indices as well as helping with investigations to further our ecological
+powerful feature of the RIVPACS model enables the prediction of a wide range of
+outputs, helping with investigations and furthering our ecological
 understanding.
   
-Five taxa lists predicted at different levels of taxonomic resolution. 
+Predict five taxa lists (TL) at different levels of taxonomic resolution: 
 
 - TL1 - Super-Family
-- TL2 - Super and Family level
+- TL2 - Super and Family level (used for routine WFD classification)
 - TL3 - Family 
-- Tl4 - Mainly species level
+- TL4 - Mainly species level
 - TL5 - Family / Species level
 
-Find more information about the taxa lists and their taxonomies in [WFD100 report]().
+Find more information about the taxa lists and their taxonomies in [WFD100 report](https://www.fba.org.uk/s/WFD100-FINAL-Report.pdf).
 
 The website restricts the number of sites to no more than 24 sites due to the
 large amount of processing and output generated for each site. Taxa prediction
@@ -365,7 +518,7 @@ Davy-Bowker, J, R. Clarke, T. Corbin, H. Vincent, J. Pretty, A. Hawczak, J. Blac
 
 # Classification
 
-The most important results from the classification reports are:
+The most important columns from the Classification output are:
 
 -	_Class_ – the WFD status.
 
@@ -388,11 +541,12 @@ year. There is no difference in classification results if you run one years’
 spring and summer data using the single year or the multi-year experiment.
 However, there is a slight difference in the headers in the output file.
 
-Single-year option also calculates single season classifications. Single season classification are intended only for investigative work. They are
-unsuitable for setting environmental quality objectives or testing compliance
-against them.
+Single-year option also calculates single season classifications. Single season
+classification are intended only for investigative work. They are unsuitable for
+setting environmental quality objectives or testing compliance against them.
 
-If you do not enter results for a season(s), RICT will leave the outputs for any missing season(s) empty.
+If you do not enter results for a season(s), RICT will leave the outputs for any
+missing season(s) empty.
 
 ### Single-Year Outputs
 
@@ -403,9 +557,10 @@ knitr::kable(t(single_class))
 
 ## Multi-year
 
-The multi-year option combines data from spring and autumn from one or more years into a single classification for the site. There is no limit to the number
-of years’ data that can be combined. Therefore, the multi-year experiment only gives
-output for the combined years, not for each individual year.
+The multi-year option combines data from spring and autumn from one or more
+years into a single classification for the site. There is no limit to the number
+of years’ data that can be combined. Therefore, the multi-year option only
+gives output for the combined years, not for each individual year.
   
 There is a slight difference in the headers in the multi-year classification
 output file compared to single year, as shown in the Section Description of RICT
@@ -420,8 +575,7 @@ The current RICT bases this on the proportion of all simulated multi-year
 average EQR values falling in each status class, whereas RICT 1.0 used an
 estimate of the “typical” (i.e., average) between-year variance within a 3-year
 period for the observed values of a WHPT index to allow for 1 or 2 years missing
-data. Neither is philosophically correct, as explained in the section about the
-comparison of RICT and RICT2 and differences in classification results.
+data. Neither is philosophically correct, as explained [Development History](#development-history) section.
 
 ### Multi-Year Outputs
 
@@ -510,23 +664,108 @@ more likely to have failed the standard and the need for management action is
 much more certain. Remember that probabilities do not always behave intuitively,
 as shown in the explanation of MINTA in the preceding Section.
   
-Two examples below illustrate how the result can be counter-intuitive.
+Two examples below illustrate how the result can be counter-intuitive:
   
-Site A The most probable class of both ASPT and NTaxa are the same, Good, but MINTA indicated Moderate. Many of the simulations in which the worst class was indicated as Moderate by ASPT were different to the simulations where this was the worst class indicated as Moderate by NTaxa. As a result, when the number of simulations in which Moderate was indicated by ASPT and by NTaxa were added together, it came to a greater number than for each individual index, hence Moderate was the most probable MINTA class even though the most probable class for both indices individually was Good. It’s not uncommon for the MINTA most probable class to be worse that the most probable classes indicated by either ASPT or NTaxa separately.
+Site A The most probable class of both ASPT and NTaxa are the same, Good, but
+MINTA indicated Moderate. Many of the simulations in which the worst class was
+indicated as Moderate by ASPT were different to the simulations where this was
+the worst class indicated as Moderate by NTaxa. As a result, when the number of
+simulations in which Moderate was indicated by ASPT and by NTaxa were added
+together, it came to a greater number than for each individual index, hence
+Moderate was the most probable MINTA class even though the most probable class
+for both indices individually was Good. It’s not uncommon for the MINTA most
+probable class to be worse that the most probable classes indicated by either
+ASPT or NTaxa separately.
   
-Site B The most probable class indicated by ASPT and NTaxa were different, but MINTA indicated an even worse class. A similar thing happened here as at Site A, but more extreme. Some of the simulations in which Bad was indicated by ASPT were different to the simulations in which Bad was indicated by NTaxa, so when combined, more simulations were Bad according to MINTA than any other class.
-At Site A, the probability of the MINTA class being Good and Moderate are similar, and at Site B there is little difference in the probabilities of the MINTA class being poor or bad.  This indicates the importance of using the probabilities of class to make decisions rather than simply the face value class or even the most probable class.
+Site B The most probable class indicated by ASPT and NTaxa were different, but
+MINTA indicated an even worse class. A similar thing happened here as at Site A,
+but more extreme. Some of the simulations in which Bad was indicated by ASPT
+were different to the simulations in which Bad was indicated by NTaxa, so when
+combined, more simulations were Bad according to MINTA than any other class. At
+Site A, the probability of the MINTA class being Good and Moderate are similar,
+and at Site B there is little difference in the probabilities of the MINTA class
+being poor or bad.  This indicates the importance of using the probabilities of
+class to make decisions rather than simply the face value class or even the most
+probable class.
 
 # Compare Results
 
-Compare allows you to run a comparison between two 
-sites or the same site at different times. The outputs consist of ASPT & NTAXA EQRs and their difference statistics. Probabilities of sites being different and probabilities of each site class combination are also given.
+Compare allows you to run a comparison between two sites or the same site at
+different times. The outputs consist of ASPT & NTAXA EQRs and their difference
+statistics. Probabilities of sites being different and probabilities of each
+site class combination are also given.
+
+# Development History
+
+## Before RICT
+
+Before RICT was available, RIVPACS III+, a FORTRAN programme, was ran locally,
+implemented the RIVPACS III predictive models.
+
+## Rewrite in R
+
+There first version of RICT was a web application hosted by SEPA. This version
+was written in Oracle Express. The second version of RICT was re-written in R
+and hosted on Azure ML Studio. Re-writing in R made it more accessible to
+researchers and other ecologists to modify and customise. This also makes the
+software easier and cheaper to maintain.
+
+## Changes Made
+
+RICT version 2 corrected several errors in the original RICT, particularly the
+prediction and classification programmes.  Because of this, results from RICT
+version 2 differ from those produced by RICT. The following errors were
+discovered in RICT and corrected in RICT version 2:
+
+•	The RICT inadvertently used the ‘composite families’ version of WHPT ASPT (i.e. TL2 WHPT Score AbW,CompFam) rather than the ‘distinct families’ version (TL2 WHPT Score AbW,DistFam), although it did take account of the additional families included in WHPT.  The composite families are those that were grouped together in the BMWP-score in compliance with the current taxonomy of the time, outlined in Maitland (1977), see Appendix A
+
+•	RICT did not adjust for sample bias correctly in the calculation of simulated EQI/EQR values for WHPT ASPT
+
+•	RICT suffered from other errors that caused estimates of probability of class based on WHPT ASPT adjusted for sample bias to differ from independent estimates even when the error in sample bias correction was taken into account.
+
+The errors above were reported in Clarke, R.T. & J. Davy-Bowker (2018) Testing
+old (2008-18) RICT predictions and classification uncertainty using independent
+RIVPACS code and new RIVPACS test data: Components 1-3. A Report to the
+Environment Agency. Wareham, Freshwater Biological Association: pp 84 +
+preliminaries
+
+•	In addition, RICT used an old table of Biologists’ Assessment Values indicating which of the RIVPACS reference sites complied with WFD intercalibration screening criteria that caused a slight error in the conversion factors used to determine EQRs.
+
+Results from RICT version 2 were checked against independent programmes using
+the test data. This provides assurance against errors that previous versions of
+RICT did not have.
+  
+There is a difference in the way that the probabilities of class are estimated
+for multi-year classifications.
+  
+Multi-year site assessments in RICT version 2 are based on averaging the EQR for
+each available year, so are just the status class of the average EQR for the
+years for which data is available.  The proportion of all simulated multi-year
+average EQR values falling in each status class gives us the estimated
+probability of class. This is not philosophically correct because we must be
+less sure about the confidence of class for the average EQR over several years,
+but because we do not have any data for the missing years, we cannot estimate
+it.
+  
+The initial version of RICT used an estimate of the “typical” (I.e. average)
+between-year variance within a 3-year period for the observed values of a WHPT
+index to allow for 1- or 2-years missing data. This was also not satisfactory
+because a site could differ by any amount within a 3-year period depending on
+the extent of natural variation, extreme years and/or anthropogenic related
+stress. There are three advantages to the new approach to multi-year
+classification used in RICT2:
+  
+1.	If you do a multi-year site classification based on just one year, you will get the same probabilities of class as if you had done a single year classification for the same single year’s data.
+
+2.	The number of years that can be combined is not limited, whereas in the original RICT, the maximum was limited to three over a 3-year period.
+
+3.	The same approach can be used to determine classifications based on data from multiple sites
 
 # Contributing
 
 The RICT code is available as open-source R package available on github. If you
-wish to customise the workflow or run large dataset, it may be useful to run the
-code on your local machine. You can download the [package from
+wish to customise the workflow or run large datasets, it may be useful to run
+the code on your local machine. You can download the [package from
 Github](https://github.com/aquaMetrics/rict) for this purpose. For contributing
 to the code, please see [contributing
 guidelines](https://github.com/aquaMetrics/rict/blob/master/CONTRIBUTING.md).
@@ -536,23 +775,35 @@ guidelines](https://github.com/aquaMetrics/rict/blob/master/CONTRIBUTING.md).
 This section describes some common issues that can cause the tool to fail.
 
 ### Re-run
-Sometimes, the website can fail the first time that you run it. Before checking anything else, always reload, to see if it runs on a second attempt. These unexplained failures, possibly caused by a data transfer drop-out somewhere along the line, are the common causes of app failing to run.
+Sometimes, the website can fail the first time that you run it. Before checking
+anything else, always reload, to see if it runs on a second attempt. These
+unexplained failures, possibly caused by a data transfer drop-out somewhere
+along the line, are the common causes of app failing to run.
 
 ###	Use Correct Validation Input File
-The latest input file can be obtained from the RICT site. Ensure you have downloaded the correct version of the input file.
+The latest input file can be obtained from the RICT site. Ensure you have
+downloaded the correct version of the input file.
 
 ###	Check Input File is in Correct Format
-Once you have entered the data into the Excel (xls) file, the input file must be saved in CSV (comma delimited) file format only. Other formats will not be processed by RICT. Other formats may not be able to be uploaded or the tool may not run.
+Once you have entered the data into the Excel (xls) file, the input file must be
+saved in CSV (comma delimited) file format only. Other formats will not be
+processed by RICT. Other formats may not be able to be uploaded or the tool may
+not run.
 
 ###	Remove Empty or Null Lines Within Input File
-Any empty lines at the end of the input file may cause RICT to fail. Ensure the last line of the input file is the last site you have submitted. Blank lines, or lines of commas may cause RICT to fail.
+Any empty lines at the end of the input file may cause RICT to fail. Ensure the
+last line of the input file is the last site you have submitted. Blank lines, or
+lines of commas may cause RICT to fail.
 
 ###	Remove Red Validation Fails from the Input File
-When using the validation spreadsheet any cells with values above/below the tolerances/ranges will show as red in the spreadsheet. These sites may fail the whole run therefore remove these sites from the input file.
+When using the validation spreadsheet any cells with values above/below the
+tolerances/ranges will show as red in the spreadsheet. These sites may fail the
+whole run therefore remove these sites from the input file.
 
 ###	Site Not Appearing in the Output
-If a site is included in the input file but it is not appearing in the output file, it is likely that some of the inputted data exceeds the failure tolerances.
-To check validations output to see if this is the case.
+If a site is included in the input file but it is not appearing in the output
+file, it is likely that some of the inputted data exceeds the failure
+tolerances. Check validations output to see if this is the case.
 
 ### Errors
 
@@ -564,7 +815,7 @@ The data provided contains more than one area of the UK. Hint: Check your data c
 Arguments imply differing number of rows  | Season code missing from input file Grid reference in the sea so no temperature (can be caused by 4-figure easting and/or northing)
 Argument is of length zero | Temperature data missing because grid reference in the sea or too close to the shore
 
-### Check the Grid Reference
+### Grid Reference Errors
  
 Incorrect grid references are a common cause of problems, particularly if they
 are in the sea. RICT uses the grid references to extract mean air temperature

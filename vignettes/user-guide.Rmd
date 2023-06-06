@@ -78,7 +78,7 @@ If you are unsure under what circumstances RICT should be used, read the [Usage]
 
 ## Prepare Input File
 
-1. [Download the validation template spreadsheet](), this provides a helpful template for your input file. For reference and testing, the template spreadsheet also includes example data.
+1. [Download the validation template spreadsheet](https://github.com/aquaMetrics/rict/tree/master/inst/extdat/input-file-template.xls), this provides a helpful template for your input file. For reference and testing, the template spreadsheet also includes example data.
 
 2. Read the README instructions in the spreadsheet for guidance on completing the template.
 

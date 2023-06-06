@@ -1,17 +1,17 @@
 ---
-title: "River Invertebrate Classification Tool (RICT) User Guide"
-author: "RICT Steering Group"
+title: "Web App User Guide"
+author: "River Invertebrate Classification Tool (RICT) Steering Group"
 date: "`r Sys.Date()` version: `r packageVersion('rict')`"
 pkgdown:
   as_is: yes
 output:
+  rmarkdown::html_vignette:
+    toc: yes
   rmarkdown::word_document:
     reference_docx: template.docx
     toc: yes
-  rmarkdown::html_vignette:
-    toc: yes
 vignette: |
-  %\VignetteIndexEntry{User Guide} \usepackage[utf8]{inputenc} %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Web App User Guide} \usepackage[utf8]{inputenc} %\VignetteEngine{knitr::rmarkdown}
 editor_options:
   chunk_output_type: console
 ---
@@ -70,7 +70,7 @@ NOTE: The latest release of RICT replaces the version hosted on Azure ML Studio.
 
 Before you start, you need data to process. If you do not have any data prepared, example data is provided in the  [validation template spreadsheet](). However, if you are looking to run your own results, you will need the following:
 
-1. WHPT scores based on macro-invertebrate results. To calculate WHPT scores, you can use the [WHPT spreadsheet calculator](). Your scores should be based on macro-invertebrate results collected and analysed following [standard techniques](#sampling).
+1. WHPT scores based on macro-invertebrate results. To calculate WHPT scores, you can use the [WHPT spreadsheet calculator](https://www.fba.org.uk/s/WHPT-calculator-v38.xlsx). Your scores should be based on macro-invertebrate results collected and analysed following [standard techniques](#sampling).
 
 2. A list of predictor values based on field observations and GIS. Predictor values change depending on the geographic [area and model](#models-and-areas) you wish to use.
 
@@ -136,7 +136,7 @@ if all your data failed validation. See the [Compare](#compare-results) section 
 
 ## Options
 
-![RICT options](images-user-guide/options.png)
+![RICT options](images/user-guide/options.png)
 
 ### Year Type
 

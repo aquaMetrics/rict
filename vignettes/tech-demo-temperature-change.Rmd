@@ -28,8 +28,16 @@ If you don't have R installed on your local machine, try using [Rstudio Cloud](h
 
 Before starting, make sure to have the required packages installed in RStudio. We are going to use `tidyverse` and `rict` packages:
 
-```{r, message=FALSE, warning=FALSE}
+```r
+library(rict)
 library(tidyverse)
+```
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+library(dplyr)
+library(purrr)
+library(magrittr)
+library(ggplot2)
 library(rict)
 ```
 

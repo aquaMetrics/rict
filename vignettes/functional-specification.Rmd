@@ -13,9 +13,9 @@ output:
     toc: yes
     toc_depth: 2
 vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Functional Specification}
-  %\VignetteEngine{knitr::knitr}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 editor_options:
   chunk_output_type: console
 ---
@@ -49,7 +49,7 @@ outline: 0 ;
 ``` 
 
 
-![](images/rict_logo.png){ width=20% }
+![](images/rict_logo.png)
 
 # Introduction 
 
@@ -555,22 +555,24 @@ All input variables as well as their validation rules are listed in the
 validation-rules.csv file within the package. The tables below are generated
 from this file.
 
-#### Model 1 User input file (using physical predictors) 
+#### Model 1 User input file
 
-Required values:
+Required values (including using physical predictors) :
 
 ```{r}
- validation_rules <-
-    utils::read.csv(system.file("extdat", "validation-rules.csv", package = "rict"),
-      stringsAsFactors = F
-    )
+validation_rules <-
+  utils::read.csv(system.file("extdat", "validation-rules.csv", package = "rict"),
+    stringsAsFactors = F
+  )
 
 kable(filter(validation_rules, models %in% c("all", "physical") & source == "input") %>%
-                       select(Variable = "variable",
-                              Units = "units",
-                              Description = "pretty_name",
-                              Type = "type",
-                              Optional = "optional")  %>%  unique())
+  select(
+    Variable = "variable",
+    Units = "units",
+    Description = "pretty_name",
+    Type = "type",
+    Optional = "optional"
+  ) %>% unique())
 ```
 
 #### Model 44 Input files (using GIS predictors) 
@@ -579,11 +581,13 @@ Required values:
   
 ```{r}
 kable(filter(validation_rules, models %in% c("all", "gis") & source == "input") %>%
-                       select(Variable = "variable",
-                              Units = "units", 
-                              Description = "pretty_name",
-                              Type = "type",
-                              Optional = "optional") %>%  unique())
+  select(
+    Variable = "variable",
+    Units = "units",
+    Description = "pretty_name",
+    Type = "type",
+    Optional = "optional"
+  ) %>% unique())
 ```
 
 #### Optional values
@@ -596,20 +600,24 @@ comply with the following notes:
 
 ```{r}
 kable(filter(validation_rules, models %in% c("all", "physical") &
-                               source == "input" &
-                                optional_notes > 0) %>%
-                       select(Variable = "variable",
-                              "Optional note" = "optional_notes")  %>%  unique())
+  source == "input" &
+  optional_notes > 0) %>%
+  select(
+    Variable = "variable",
+    "Optional note" = "optional_notes"
+  ) %>% unique())
 ```
 
 #### Model 44 Optional notes:
 
 ```{r}
 kable(filter(validation_rules, models %in% c("all", "gis") &
-                               source == "input" &
-                                optional_notes > 0) %>%
-                       select(Variable = "variable",
-                              "Optional note" = "optional_notes")  %>%  unique())
+  source == "input" &
+  optional_notes > 0) %>%
+  select(
+    Variable = "variable",
+    "Optional note" = "optional_notes"
+  ) %>% unique())
 ```
 
 #### Validation
@@ -626,43 +634,48 @@ flags the transgression in a fail message.
 
 ```{r}
 knitr::kable(filter(validation_rules, models %in% c("all", "physical")) %>%
-                       select(Variable = "variable",
-                              Area = "area",
-                              "Less than fail" = "less_than_fail",
-                              "Greater than fail" = "greater_than_fail",
-                              "Less than warn" = "less_than_warn",
-                              "Greater than warn" = "greater_than_warn"))
+  select(
+    Variable = "variable",
+    Area = "area",
+    "Less than fail" = "less_than_fail",
+    "Greater than fail" = "greater_than_fail",
+    "Less than warn" = "less_than_warn",
+    "Greater than warn" = "greater_than_warn"
+  ))
 ```
 
 Model 1 Validation notes:
 ```{r}
 kable(filter(validation_rules, models %in% c("all", "physical") &
-               source == "input" &  validation_notes != "") %>%
-                       select(Variable = "variable",
-                              "Validation notes" = "validation_notes") )
-
+  source == "input" & validation_notes != "") %>%
+  select(
+    Variable = "variable",
+    "Validation notes" = "validation_notes"
+  ))
 ```
 
 #### Validation rules for Model 44
 
 ```{r}
-
 kable(filter(validation_rules, models %in% c("all", "gis")) %>%
-                       select(Variable = "variable",
-                              Area = "area",
-                              "Less than fail" = "less_than_fail",
-                              "Greater than fail" = "greater_than_fail",
-                              "Less than warn" = "less_than_warn",
-                              "Greater than warn" = "greater_than_warn"))
+  select(
+    Variable = "variable",
+    Area = "area",
+    "Less than fail" = "less_than_fail",
+    "Greater than fail" = "greater_than_fail",
+    "Less than warn" = "less_than_warn",
+    "Greater than warn" = "greater_than_warn"
+  ))
 ```
 
 Model 44 validation notes: 
 ```{r}
 kable(filter(validation_rules, models %in% c("all", "gis") &
-               source == "input" &  validation_notes != "") %>%
-                       select(Variable = "variable",
-                              "Validation notes" = "validation_notes"))
-
+  source == "input" & validation_notes != "") %>%
+  select(
+    Variable = "variable",
+    "Validation notes" = "validation_notes"
+  ))
 ```
 
 #### Replacement values
@@ -673,16 +686,16 @@ RIVPACS model discriminator functions in their log form (as you cannot take logs
 of zeroes):
 
 ```{r}
-
 kable(filter(validation_rules, models %in% c("all", "gis", "physical") & source == "input" &
-               replacement_val != "") %>%
-                       select(Variable = "variable",
-                              Model = "models",
-                              Area = "area",
-                              "Replacement value" = "replacement_val",
-                              "Replacement condition" = "replacement_cond",
-                              "Replacement limit" = "replacement_limit"
-                        ) %>%  unique())
+  replacement_val != "") %>%
+  select(
+    Variable = "variable",
+    Model = "models",
+    Area = "area",
+    "Replacement value" = "replacement_val",
+    "Replacement condition" = "replacement_cond",
+    "Replacement limit" = "replacement_limit"
+  ) %>% unique())
 ```
 
 ### Validation rules
@@ -778,7 +791,7 @@ follows:
 The required conversion rules and some validation rules that need to be applied
 are described below.
 
-## Convert Grid References and British National Grid to Latitude and Longitude 
+## Convert Grid References 
 
 Grid references consists of:  
   
@@ -811,7 +824,7 @@ in the rict_validate.R function.
 
 Same as above - `using area = "ni"` within `getLatLong()` function.
 
-## Calculating Mean and Range of Air Temperature from Latitude and Longitude
+## Calculate Air Temperature
 
 This conversion process is only applicable to GB model sites.
   
@@ -971,6 +984,7 @@ TempGrid_out<-as.data.frame(TempGrid_out)
 #write.csv(TempGrid_out,"TempGrid.csv", row.names = FALSE, append = TRUE)
 }
 ```
+
 The temperature grid below is used to obtain mean air temperature and mean air
 temperature range for RICT predictions. The dots represent points on the
 existing temperature grid if the site has exactly the same coordinates as the
@@ -987,6 +1001,7 @@ centre point
 If the point has exactly the same coordinates as the centre point it samples
 only the centre point to provide the temperature mean and range if that point
 exists in the dataset:
+
 ```  
 0 0 0 0 0  
 0 0 0 0 0  
@@ -994,9 +1009,11 @@ exists in the dataset:
 0 0 0 0 0  
 0 0 0 0 0 
 ```
+
 If the centre point doesn't exist in the above example then the surrounding 8
 points are sampled, if more than 4 of the 8 pts are present within the dataset a
 value is returned:
+
 ```
 0 0 0 0 0   
 0 1 1 1 0   
@@ -1004,9 +1021,11 @@ value is returned:
 0 1 1 5 5   
 0 0 0 0 0   
 ```
+
 If the above condition is not satisfied then the sampling is expanded to include
 the adjacent points, if at least 5 of the 24 possible points are available a
 result is returned - if less than 5 no result is returned:
+
 ```
 1 1 1 1 1     
 1 1 5 5 5 
@@ -1014,10 +1033,12 @@ result is returned - if less than 5 no result is returned:
 1 1 5 5 5   
 1 1 1 1 1   
 ```
+
 2. If the site lies exactly on the N/S line of the centre point
   
 If the point lies exactly on the N/S line of the centre point then the nearest
 point and the one above are sampled if both points are present in the dataset:
+
 ```
 0 0 0 0 0   
 0 0 1 0 0   
@@ -1025,31 +1046,37 @@ point and the one above are sampled if both points are present in the dataset:
 0 0 0 0 0   
 0 0 0 0 0   
 ```
+
 If one of the two points above is not present in the dataset then the two either
 side are also sampled, if more than three points are present a result is
 returned:
-``` 
+
+```
 0 0 0 0 0  
 0 1 5 1 0  
 0 1 1 1 0  
 0 0 0 0 0  
 0 0 0 0 0  
 ```
+
 If less than 4 of the 6 points above are present in the dataset then the three
 above and below are also sampled if that at least 4 of the 12 are present a
 result is returned:
+
 ```
 0 1 1 1 0  
 0 1 5 5 0  
 0 1 1 5 0  
 0 1 1 1 0  
 0 0 0 0 0  
-```  
+```
+
 3. if the site lies exactly on the E/W line of the centre point
 
 If the point lies exactly on the E/W line of the centre point then the nearest
 point and the east of it will be sampled if both points are present in the
 dataset:
+
 ```
 0 0 0 0 0  
 0 0 0 0 0  
@@ -1060,26 +1087,31 @@ dataset:
 If one of the two pointts above are not present in the dataset then the two
 either side are also sampled, if more than three points are present a result is
 returned:
-``` 
+
+```
 0 0 0 0 0  
 0 0 1 1 0  
 0 0 1 1 0  
 0 0 1 1 0  
 0 0 0 0 0   
 ```
+
 If less than  4 of the 6 points above are  present in the dataset then the three
 east and west are also sampled assuming that at least 4 of the 12 are present:
+
 ```
 0 0 0 0 0  
 0 1 5 5 1   
 0 1 1 5 1   
 0 1 1 1 1   
 0 0 0 0 0  
-```  
+```
+
 4. If none of the above are satisfied - the majority of sites. The site is not coincident with any point or the n/s or e/w line of any point.
   
 Interpolates between four values, 3 of the 4 points must be present to return a
 value:
+
 ```
 0 0 0 0 0  
 0 0 1 1 0  
@@ -1087,26 +1119,31 @@ value:
 0 0 0 0 0  
 0 0 0 0 0  
 ```
+
 If the above is not satisfied then the sampling is expanded to take in 16 points
 of which 5 or more must be present:
-```  
+
+```
 0 1 1 1 1  
 0 1 1 5 5     
 0 1 1 5 5    
 0 1 1 1 1  
 0 0 0 0 0  
 ```
+
 ## Calculating Mean Substratum Composition
 
 MSUBST (in phi units) is derived from the following user-supplied environmental
 variables  from the input file for the river bed substratum composition observed
 at the sampling site:
+
 ```
 BOULDER_COBBLES	= percentage cover of Boulders/Cobbles  
 PEBBLES_GRAVEL	= percentage cover of Pebbles/Gravel  
 *SAND	= percentage cover of sand  
 *SILT_CLAY	= percentage cover of silt/clay  
-```  
+```
+
 The Algorithm used is:
   
 ```
@@ -1116,7 +1153,7 @@ MSUBST = ( -7.75*BOULDER_COBBLES - 3.25*PEBBLES_GRAVEL + 2*SAND + 8*SILT_CLAY ) 
   
 The specific function code `get_substrate` used can be found within helper-functions.R
 
-## Estimating Discharge Category (if unavailable) from Stream Velocity
+## Estimating Discharge Category
 
 If a value for discharge category (DCH) is not supplied by the user for the test
 site, it is to be estimated from a measurement of surface water velocity
@@ -1156,6 +1193,7 @@ The conversion from user-supplied velocity category (VEL) to discharge category
 |10                     |>80                                         |
 
 The FORTRAN algorithm for estimating DCH from Stream Velocity is: 
+
 ```
 DATA cdch / 0.31, 0.62, 1.25, 2.5, 5.0, 10.0, 20.0, 40.0, 80.0 /  
 CDCH(1) = 0.31  
@@ -1180,9 +1218,10 @@ DCH=K
 K=K-1  
 UNTIL RDCH>CDCH(K)`
 ```
+
 The specific function code is `get_discharge()` used can be found within helper-functions.R.
 
-## Estimating Alkalinity (if unavailable) from Hardness, Calcium or Conductivity
+## Estimating Alkalinity
 
 If a value for alkalinity (ALK) is not supplied by the user for the test site,
 then it is to be assumed that alkalinity is to be estimated from, in order of
@@ -1204,10 +1243,11 @@ ALK = 14.552 + 1.7606*CALCIUM
 ELSE  
 IF CONDUCT is provided THEN  
 ALK = 0.3201*CONDUCT -8.0593
-``` 
+```
+
 The specific helper function is `get_alkalinity()`.
 
-## Transform Environmental Variables to Logarithm Base 10 Form
+## Transform Environmental Variables
   
 Some environmental predictor variables are used in discriminant functions in a
 logarithm to base10 transformed form (denoted Log10). They, therefore, need to
@@ -1239,16 +1279,15 @@ Env<sub>vN</sub> in the discrimination functions equations used to calculate the
 discriminant function axis scores (DFScore) is as follows:
 
 ```{r}
-
-
-filter(validation_rules, models %in% c("physical","all"), env > 0 ) %>%
-    arrange(ev_number)  %>% 
-                       select("EV" = "env",
-                         "User input" = "variable",
-                               "Environmental predictor variable" = "pretty_name",
-                              "Derived" = "source",
-                              "Use in log10 form?" = "log") %>% 
-
+filter(validation_rules, models %in% c("physical", "all"), env > 0) %>%
+  arrange(ev_number) %>%
+  select(
+    "EV" = "env",
+    "User input" = "variable",
+    "Environmental predictor variable" = "pretty_name",
+    "Derived" = "source",
+    "Use in log10 form?" = "log"
+  ) %>%
   unique() %>%
   kable()
 ```
@@ -1294,7 +1333,7 @@ The flow diagram below summarises the prediction process and calculations
 above) as well as identifying the relevant section for further information from
 the WFD72C final report:
 
-![](images/rict-prediction.png){ width=100% }
+![](images/rict-prediction.png)
 
 ## Prediction Overview
   
@@ -1332,11 +1371,11 @@ during the acceptance, validation and subsequent conversion processing of the
 input data as described in section 5 and 6 of this document. These are referred
 to in the algorithm below as EnvvN.
 
-## Discriminant Functions (DFs) and the Coefficients
+## Discriminant Functions and Coefficients
 
-The RIVPACS model used will determine the DFs that have to be run. For the GB
-model 1 with 13 EVs the DFs values can be found in the inst/ext folder for GB in
-a file called DFCOEFF_GB685.
+The RIVPACS model used will determine the  Discriminant Functions (DFs) that
+have to be run. For the GB model 1 with 13 EVs the DFs values can be found in
+the inst/ext folder for GB in a file called DFCOEFF_GB685.
   
 For the GB model 44 with 17 EVs the DFs values can be found in the prediction
 support files folder for GB in a file called
@@ -1350,7 +1389,7 @@ These are separate occurrences of DF. Each of these has a single ‘constant’ 
 for each component EV, a co-efficient that is to be applied to the EV value. The
 coefficients are referred to in the algorithm below as DFCoef.
 
-## Calculate the Discriminant Function Scores
+## Calculate Discriminant Function Scores
 
 (Step 4 in diagram above) 
 
@@ -1389,9 +1428,11 @@ For a particular End Group g, the probability of End Group Membership is
 calculated as follows:
   
 - Calculate Mahanalobis distance (MahDistg) of test site from each End Group
+
 ```
 MahDistg = (DFScore1 - DFMeang,1)2 + ... + (DFScoredN - DFMeang,dN )2 ; for g = 1,...,gN
 ```
+
 Definitions – these have been copied from WFD72C:
   
 g 	= id of current end group (set ID: 1 = GB, 2 =NI)  
@@ -1405,8 +1446,9 @@ end-group-means-discriminant-scores-model-44.csv for Model 44.
 MahDistg	= Mahalanobis distance of test site from end group g  
 
 
-## Use Mahanalobis Distance to Determine Probability of End Group Membership
-(Step 6 in diagram above)
+## Mahanalobis Distance
+
+Use Mahanalobis distance to determine probability of End Group membership (Step 6 in diagram above):
 
 ![](images/rict-probability-end-group.png){ width=200px }
 
@@ -1434,7 +1476,9 @@ At the end of this process we end up with a set of probabilities of End Group
 Membership, one for each End Group. These are referred to below as Prob~1~ to
 Prob~n~.
 
-## Determine Environmental Suitability of the Test Site for Prediction
+## Determine Environmental Suitability
+
+Determine environmental suitability of the test site for prediction:
 
 ![](images/rict-environmental-suitability.png){ width=200px }
 
@@ -1525,7 +1569,7 @@ A separate file called `x-103-end-group-means-formatted-jdb-17-dec-2019.csv` wil
   
 IDXMean~i,s,g~ = Mean value of index i for season s for reference sites in end group g  
   
-## Completion and Outputs of Prediction Processing
+## Prediction Outputs
 
 Once the prediction processing has been completed, the following data has been
 calculated for each occurrence of site data:
@@ -1563,7 +1607,7 @@ present at the site. For each taxon, the prediction provides:
   
 The steps involved are described below. 
 
-## Identify the Relevant sites for the run
+## Identify Relevant Sites for the Run
 
 Because of a potentially overwhelming amount of data in the output files, the
 user must specify which sites included in the input file the prediction is to be
@@ -1602,7 +1646,7 @@ choose.
 Figure 1 Example data entered to indicate two sites in the data input file
 selected for taxon prediction.
   
-## Methods and Algorithms to predict Expected values for each taxon
+## Predict Expected values for each taxon
 
 ![](images/rict-prediction-azure-3.png){ width=500px }
 
@@ -1640,7 +1684,8 @@ The final 8 columns (11-18) are the 8 parameters whose expected values for any t
 16.	Prob_Log3
 17.	Prob_Log4
 18.	Prob_Log5
-```  
+```
+
 Note: For the GB model, at any one taxonomic level (TL1 – TL5) and particular
 season (1-3), any particular taxon at that level only occurs as a row in this
 input file if it occurred (i.e. has at least one positive taxonomic parameter
@@ -1657,7 +1702,7 @@ of the RIVPACS IV model reference sites.
   
 Season 1 = spring, 2 = summer, 3 = autumn.
   
-### Algorithm to calculate Expected values of the 8 parameters for a GB test site
+### Calculate Expected for a GB test site
   
 End-group means of the 8 parameters to be predicted are supplied in columns
 11-18 of the above taxon prediction data file.
@@ -1681,7 +1726,7 @@ end-group and season combinations for which Expected values are required, but
 also because the number of taxa included in the input file varies between
 seasons.
   
-### Computing trick to calculate all taxonomic expected values for a test site
+### Calculate all taxonomic expected values
   
 The following computing trick calculates the expected values of taxonomic
 parameters for all taxa at all levels in all seasons in one step.
@@ -1693,10 +1738,12 @@ to each of the 43 GB Model End-groups, then:
   
 (ii) Use a software coding (translation) function to recode the new ‘End_Group_Prob’ column so that : 1 becomes P~1~ , ~2~ becomes P~2~, … , 43 becomes P~43~
   
-(iii)	For any particular taxonomic parameter J (denoted here ParamJ and supplied in one of columns 11-18), calculate new column ParamJ_Prob as:  
+(iii)	For any particular taxonomic parameter J (denoted here ParamJ and supplied in one of columns 11-18), calculate new column ParamJ_Prob as: 
+
+```
+ParamJ_Prob = End_Group_Prob  x ParamJ
+```
   
-```ParamJ_Prob = End_Group_Prob  x ParamJ```
-		  
 ![](images/rict-prediction-azure-4.png){ width=500px }
 
 (iv) Use a software multi-way table function using columns (4, 3, 7, 5, 6, 8, 9, 10,) in that order as multi-way table classifiers and then sum the column ‘ParamJ_Prob’ across all 43 ‘End-groups’ which it will do by default in any sum function as ‘End_Group’ is not one of the table classifiers.  
@@ -1740,7 +1787,7 @@ site selected and below it the results for the second site. Each row includes
 the same columns as the taxon prediction data file, together with siteName.
 Sections below are based on notes from write up with Maybin (March 2020):
   
-## Data Input files in addition to the taxon prediction data file 
+## Data Input files
 
 ### GB & NI
 
@@ -1768,7 +1815,7 @@ The flow diagram below summarises the classification process and calculations as
 well as identifying the relevant section for further information from the WFD72C
 final report and other sources of information:
 
-![](images/rict-classification.png){ width=100% }
+![](images/rict-classification.png)
   
 Note that the blue boxes indicate processes that are simulated.
   
@@ -1791,7 +1838,7 @@ classification support files folder. The algorithms and definitions provided
 below are copied from WFD72C plus other sources and have been used to create the
 functions.
 
-## Expected Values calculated by the Prediction programme
+## Calculate Expected Values
 
 (Step 1 in process diagram above and Section 7)
 
@@ -1803,7 +1850,7 @@ of the index expected at the site if it was in the best quality available for
 that type of site, based on samples collected from best available reference
 sites.
 
-## Adjust Expected Values to Standardise against the High/Good Boundary
+## Adjust Expected Values
 
 (Step 2 in process diagram above)
 
@@ -1964,7 +2011,7 @@ number, i.e.:
 
 * WHPT ASPT (index 9)
 
-## User input of observed index value and bias; calculation of bias adjustment
+## Calculate Bias Adjustment
 
 (Step 6 in process diagram above)
 
@@ -2038,10 +2085,12 @@ Ubias~8~ is either:
   
 1. input by the user of the RICT2 software
 2. estimated as 36% higher than the user-input bias (Ubias2) for number of BMWP taxa i.e. 	Ubias~8~ = 1.36 Ubias~2~
+
 ```
 Ubiasir   =	Estimate of bias (net under-estimation) of index i for simulation r
 ObsIDXirB = Bias-corrected observed value of index i for simulation r
 ```
+
 Special case: when no WHPT taxa were recorded in the sample (i.e. ObsIDX8 = 0), assume none were missed (i.e, set Ubias8 = 0)
 
 Ubias~8r~ = bias (net under-estimate of number of WHPT taxa) for simulated sample r, estimated as a random deviate from a Poisson distribution with a mean of Ubias~8~
@@ -2160,7 +2209,7 @@ EQR~irB,Au~ 	  = EQR value for autumn season as calculated in section 8.10
 This is calculated in RICT2 using the `getAvgEQR_SpAut()` function found in the
 `classification-functions.R` (within the classification support files folder).
 
-## Determine the probability of the class being High, Good, Moderate, Poor and Bad status
+## Determine the probability of the class
 
 (Step 12 in process diagram above)
 
@@ -2179,7 +2228,7 @@ As copied from Section 6.5 of the WHPT and other Abundance-Weighted Indices SEPA
   
 So to summarise, the probability of each class is simply the sum of the simulations resulting in that class and this data is calculated and then included in the output file.
 
-## Determine the worst class indicated by WHPT ASPT and WHPT Ntaxa using MINTA
+## Determine the worst overall class
   
 (Step 13 in process diagram above)
 
@@ -2291,7 +2340,7 @@ new RICT Compare procedure.
   
 Compare flow chart:
 
-![](images/rict-compare.png){ width=100% }
+![](images/rict-compare.png)
   
 The Compare procedure allows the user to assess whether there is a real
 difference in EQR values and/or status class between a pair of samples and/or
@@ -2684,12 +2733,12 @@ knitr::kable(t(demo_gis_values_log[1, ]))
 ```
 
 See the [Input
-File](https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx)
+File](https://aquametrics.github.io/rict/)
 excel spreadsheet which includes test data and validation
 
 A full description of each column for the input table and how it is completed
 can be found within the [RICT2 user
-guide](https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx).
+guide](https://aquametrics.github.io/rict/).
 
 # Annex B: Output Files predict and classify
 
@@ -2702,10 +2751,8 @@ Prediction Output file
 An example of the output file for prediction is linked below: 
 
 ```{r, message=FALSE}
-
 predict <- rict_predict(demo_observed_values[1, ])
 knitr::kable(t(predict))
-
 ```
 
 #### Classification
@@ -2729,23 +2776,23 @@ knitr::kable(t(single_class))
 *Please note the format changes to the labels of the indices – see table of changes below:
 
 ```{r}
-
- end_group_index <- utils::read.csv(system.file("extdat",
+end_group_index <- utils::read.csv(
+  system.file("extdat",
     "x-103-end-group-means-formatted-jdb-17-dec-2019.csv",
     package = "rict"
   ),
   check.names = F
-  )
-  end_group_index_update <- rict:::rename_end_group_means(end_group_index)
-  
-all_indices_names <- data.frame("RIVPACS DB Label"  = names(end_group_index),
-          "OUTPUT Label" =                     names(end_group_index_update) ,
-          check.names = FALSE) 
+)
+end_group_index_update <- rict:::rename_end_group_means(end_group_index)
+
+all_indices_names <- data.frame(
+  "RIVPACS DB Label" = names(end_group_index),
+  "OUTPUT Label" = names(end_group_index_update),
+  check.names = FALSE
+)
 
 
-  knitr::kable(all_indices_names[5:84, ], row.names = T)
-  
-
+knitr::kable(all_indices_names[5:84, ], row.names = T)
 ```
 
 A full description of each column for the prediction output table and what the values indicate can be found within the RICT2 user guide. A summary list of the column headings is given in the `rict_predict` function.

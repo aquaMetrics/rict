@@ -11,7 +11,9 @@ output:
     reference_docx: template.docx
     toc: yes
 vignette: |
-  %\VignetteIndexEntry{Web App User Guide} \usepackage[utf8]{inputenc} %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Web App User Guide}
+  %\VignetteEngine{knitr::knitr}
+  \usepackage[utf8]{inputenc}
 editor_options:
   chunk_output_type: console
 ---

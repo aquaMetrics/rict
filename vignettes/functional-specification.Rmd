@@ -49,7 +49,7 @@ outline: 0 ;
 ``` 
 
 
-![](images/rict_logo.png){ width=20% }
+![](images/rict_logo.png)
 
 # Introduction 
 
@@ -1333,7 +1333,7 @@ The flow diagram below summarises the prediction process and calculations
 above) as well as identifying the relevant section for further information from
 the WFD72C final report:
 
-![](images/rict-prediction.png){ width=100% }
+![](images/rict-prediction.png)
 
 ## Prediction Overview
   
@@ -1812,7 +1812,7 @@ The flow diagram below summarises the classification process and calculations as
 well as identifying the relevant section for further information from the WFD72C
 final report and other sources of information:
 
-![](images/rict-classification.png){ width=100% }
+![](images/rict-classification.png)
   
 Note that the blue boxes indicate processes that are simulated.
   
@@ -2337,7 +2337,7 @@ new RICT Compare procedure.
   
 Compare flow chart:
 
-![](images/rict-compare.png){ width=100% }
+![](images/rict-compare.png)
   
 The Compare procedure allows the user to assess whether there is a real
 difference in EQR values and/or status class between a pair of samples and/or
@@ -2730,12 +2730,12 @@ knitr::kable(t(demo_gis_values_log[1, ]))
 ```
 
 See the [Input
-File](https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx)
+File](https://aquametrics.github.io/rict/)
 excel spreadsheet which includes test data and validation
 
 A full description of each column for the input table and how it is completed
 can be found within the [RICT2 user
-guide](https://www.fba.org.uk/FBA/Public/Discover-and-Learn/Projects/User%20Guides.aspx).
+guide](https://aquametrics.github.io/rict/).
 
 # Annex B: Output Files predict and classify
 

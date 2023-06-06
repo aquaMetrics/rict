@@ -555,9 +555,9 @@ All input variables as well as their validation rules are listed in the
 validation-rules.csv file within the package. The tables below are generated
 from this file.
 
-#### Model 1 User input file (using physical predictors) 
+#### Model 1 User input file
 
-Required values:
+Required values (including using physical predictors) :
 
 ```{r}
 validation_rules <-
@@ -791,7 +791,7 @@ follows:
 The required conversion rules and some validation rules that need to be applied
 are described below.
 
-## Convert Grid References and British National Grid to Latitude and Longitude 
+## Convert Grid References 
 
 Grid references consists of:  
   
@@ -824,7 +824,7 @@ in the rict_validate.R function.
 
 Same as above - `using area = "ni"` within `getLatLong()` function.
 
-## Calculating Mean and Range of Air Temperature from Latitude and Longitude
+## Calculating Mean and Range of Air Temperature
 
 This conversion process is only applicable to GB model sites.
   
@@ -1153,7 +1153,7 @@ MSUBST = ( -7.75*BOULDER_COBBLES - 3.25*PEBBLES_GRAVEL + 2*SAND + 8*SILT_CLAY ) 
   
 The specific function code `get_substrate` used can be found within helper-functions.R
 
-## Estimating Discharge Category (if unavailable) from Stream Velocity
+## Estimating Discharge Category
 
 If a value for discharge category (DCH) is not supplied by the user for the test
 site, it is to be estimated from a measurement of surface water velocity
@@ -1221,7 +1221,7 @@ UNTIL RDCH>CDCH(K)`
 
 The specific function code is `get_discharge()` used can be found within helper-functions.R.
 
-## Estimating Alkalinity (if unavailable) from Hardness, Calcium or Conductivity
+## Estimating Alkalinity
 
 If a value for alkalinity (ALK) is not supplied by the user for the test site,
 then it is to be assumed that alkalinity is to be estimated from, in order of
@@ -1247,7 +1247,7 @@ ALK = 0.3201*CONDUCT -8.0593
 
 The specific helper function is `get_alkalinity()`.
 
-## Transform Environmental Variables to Logarithm Base 10 Form
+## Transform Environmental Variables
   
 Some environmental predictor variables are used in discriminant functions in a
 logarithm to base10 transformed form (denoted Log10). They, therefore, need to
@@ -1371,11 +1371,11 @@ during the acceptance, validation and subsequent conversion processing of the
 input data as described in section 5 and 6 of this document. These are referred
 to in the algorithm below as EnvvN.
 
-## Discriminant Functions (DFs) and the Coefficients
+## Discriminant Functions and Coefficients
 
-The RIVPACS model used will determine the DFs that have to be run. For the GB
-model 1 with 13 EVs the DFs values can be found in the inst/ext folder for GB in
-a file called DFCOEFF_GB685.
+The RIVPACS model used will determine the  Discriminant Functions (DFs) that
+have to be run. For the GB model 1 with 13 EVs the DFs values can be found in
+the inst/ext folder for GB in a file called DFCOEFF_GB685.
   
 For the GB model 44 with 17 EVs the DFs values can be found in the prediction
 support files folder for GB in a file called
@@ -1389,7 +1389,7 @@ These are separate occurrences of DF. Each of these has a single ‘constant’ 
 for each component EV, a co-efficient that is to be applied to the EV value. The
 coefficients are referred to in the algorithm below as DFCoef.
 
-## Calculate the Discriminant Function Scores
+## Calculate Discriminant Function Scores
 
 (Step 4 in diagram above) 
 
@@ -1446,8 +1446,9 @@ end-group-means-discriminant-scores-model-44.csv for Model 44.
 MahDistg	= Mahalanobis distance of test site from end group g  
 
 
-## Use Mahanalobis Distance to Determine Probability of End Group Membership
-(Step 6 in diagram above)
+## Mahanalobis Distance
+
+Use Mahanalobis distance to determine probability of End Group membership (Step 6 in diagram above):
 
 ![](images/rict-probability-end-group.png){ width=200px }
 
@@ -1475,7 +1476,9 @@ At the end of this process we end up with a set of probabilities of End Group
 Membership, one for each End Group. These are referred to below as Prob~1~ to
 Prob~n~.
 
-## Determine Environmental Suitability of the Test Site for Prediction
+## Determine Environmental Suitability
+
+Determine environmental suitability of the test site for prediction:
 
 ![](images/rict-environmental-suitability.png){ width=200px }
 
@@ -1566,7 +1569,7 @@ A separate file called `x-103-end-group-means-formatted-jdb-17-dec-2019.csv` wil
   
 IDXMean~i,s,g~ = Mean value of index i for season s for reference sites in end group g  
   
-## Completion and Outputs of Prediction Processing
+## Prediction Outputs
 
 Once the prediction processing has been completed, the following data has been
 calculated for each occurrence of site data:
@@ -1604,7 +1607,7 @@ present at the site. For each taxon, the prediction provides:
   
 The steps involved are described below. 
 
-## Identify the Relevant sites for the run
+## Identify Relevant Sites for the Run
 
 Because of a potentially overwhelming amount of data in the output files, the
 user must specify which sites included in the input file the prediction is to be
@@ -1643,7 +1646,7 @@ choose.
 Figure 1 Example data entered to indicate two sites in the data input file
 selected for taxon prediction.
   
-## Methods and Algorithms to predict Expected values for each taxon
+## Predict Expected values for each taxon
 
 ![](images/rict-prediction-azure-3.png){ width=500px }
 
@@ -1699,7 +1702,7 @@ of the RIVPACS IV model reference sites.
   
 Season 1 = spring, 2 = summer, 3 = autumn.
   
-### Algorithm to calculate Expected values of the 8 parameters for a GB test site
+### Calculate Expected for a GB test site
   
 End-group means of the 8 parameters to be predicted are supplied in columns
 11-18 of the above taxon prediction data file.
@@ -1723,7 +1726,7 @@ end-group and season combinations for which Expected values are required, but
 also because the number of taxa included in the input file varies between
 seasons.
   
-### Computing trick to calculate all taxonomic expected values for a test site
+### Calculate all taxonomic expected values
   
 The following computing trick calculates the expected values of taxonomic
 parameters for all taxa at all levels in all seasons in one step.
@@ -1784,7 +1787,7 @@ site selected and below it the results for the second site. Each row includes
 the same columns as the taxon prediction data file, together with siteName.
 Sections below are based on notes from write up with Maybin (March 2020):
   
-## Data Input files in addition to the taxon prediction data file 
+## Data Input files
 
 ### GB & NI
 
@@ -1835,7 +1838,7 @@ classification support files folder. The algorithms and definitions provided
 below are copied from WFD72C plus other sources and have been used to create the
 functions.
 
-## Expected Values calculated by the Prediction programme
+## Calculate Expected Values
 
 (Step 1 in process diagram above and Section 7)
 
@@ -1847,7 +1850,7 @@ of the index expected at the site if it was in the best quality available for
 that type of site, based on samples collected from best available reference
 sites.
 
-## Adjust Expected Values to Standardise against the High/Good Boundary
+## Adjust Expected Values
 
 (Step 2 in process diagram above)
 
@@ -2008,7 +2011,7 @@ number, i.e.:
 
 * WHPT ASPT (index 9)
 
-## User input of observed index value and bias; calculation of bias adjustment
+## Calculate Bias Adjustment
 
 (Step 6 in process diagram above)
 
@@ -2206,7 +2209,7 @@ EQR~irB,Au~ 	  = EQR value for autumn season as calculated in section 8.10
 This is calculated in RICT2 using the `getAvgEQR_SpAut()` function found in the
 `classification-functions.R` (within the classification support files folder).
 
-## Determine the probability of the class being High, Good, Moderate, Poor and Bad status
+## Determine the probability of the class
 
 (Step 12 in process diagram above)
 
@@ -2225,7 +2228,7 @@ As copied from Section 6.5 of the WHPT and other Abundance-Weighted Indices SEPA
   
 So to summarise, the probability of each class is simply the sum of the simulations resulting in that class and this data is calculated and then included in the output file.
 
-## Determine the worst class indicated by WHPT ASPT and WHPT Ntaxa using MINTA
+## Determine the worst overall class
   
 (Step 13 in process diagram above)
 

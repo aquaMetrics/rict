@@ -13,9 +13,9 @@ output:
     toc: yes
     toc_depth: 2
 vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Functional Specification}
-  %\VignetteEngine{knitr::knitr}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 editor_options:
   chunk_output_type: console
 ---
@@ -824,7 +824,7 @@ in the rict_validate.R function.
 
 Same as above - `using area = "ni"` within `getLatLong()` function.
 
-## Calculating Mean and Range of Air Temperature
+## Calculate Air Temperature
 
 This conversion process is only applicable to GB model sites.
   

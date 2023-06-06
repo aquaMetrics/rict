@@ -1,7 +1,7 @@
 ---
 title: "River Invertebrate Classification Tool (RICT) User Guide"
 author: "RICT Steering Group"
-date: "`r Sys.Date()`"
+date: "`r Sys.Date()` version: `r packageVersion('rict')`"
 pkgdown:
   as_is: yes
 output:
@@ -63,6 +63,7 @@ RICT is maintained by:
 - Scottish Environment Protection Agency (SEPA)
 
 NOTE: The latest release of RICT replaces the version hosted on Azure ML Studio. 
+
 # Quick Start
 
 ## Requirements
@@ -144,7 +145,7 @@ if all your data failed validation. See the [Compare](#compare-results) section 
 
 See [Classification](#classification) for more details.
 
-### Ouputs
+### Outputs
 
 Include [Classification](#classification) outputs and [predictions](#prediction), or only display predictions.
 
@@ -196,7 +197,7 @@ Protocol (covers shallow water sampling only) and RIVPACS Sorting & Recording
 
 # Validation
 
-A number of checks and validations are automatically run once the input file is uploaded. RICT will detect and display any failures or warnings.
+RICT automatically checks and validates the uploaded input file, displaying any failures or warnings.
 
 See the [Functional Specifications](https://aquametrics.github.io/rict/articles/functional-specification.html#acceptance-and-validation-of-input-data) for the full list of checks, warnings and failure values.
 
@@ -273,7 +274,7 @@ square ST3605 is roughly in the middle of the 1 km square ST30.
 
 ## Default Outputs
 
-The output from predictions always includes various 'book keeping' columns for reference:
+The output from predictions always includes various 'bookkeeping' columns for reference:
 
 |                                 Column Name            |     Definition                                                         |
 |-----------------------------------------------------------|------------------------------------------------------------------------|
@@ -301,9 +302,9 @@ The output from predictions always includes various 'book keeping' columns for r
 
 RICT provides predicted indices outputs for a range of purposes. Primarily,
 'WHPT NTAXA Abund' and 'WHPT ASPT Abund' reference condition values are
-predicted compared against observed values in the
+predicted and compared against observed values in the
 [Classification](#classification) process. However, selecting the 'All indices'
-option will predicted indices for a range of other possible ecological insights.
+option will predict indices for a range of other possible ecological insights.
 
 ### Indices Usage
 
@@ -336,8 +337,7 @@ are eliminated by environmental regulation.
   
 ### Included Indices
 
-The inclusion of an index in the RICT ‘all indices' prediction must not be
-regarded as an endorsement of that index. Some indices have been included to
+You should not regard the inclusion of an index in the RICT ‘all indices' output as an endorsement of that index. Some indices have been included to
 allow them to be evaluated or compared to other indices. Similarly, the
 exclusion of an index does not imply that it is not useful.
 
@@ -431,7 +431,7 @@ powerful feature of the RIVPACS model enables the prediction of a wide range of
 outputs, helping with investigations and furthering our ecological
 understanding.
   
-Predict five taxa lists (TL) at different levels of taxonomic resolution: 
+Predict five taxa lists (TL) at various levels of taxonomic resolution: 
 
 - TL1 - Super-Family
 - TL2 - Super and Family level (used for routine WFD classification)
@@ -690,9 +690,9 @@ probable class.
 
 # Compare Results
 
-Compare allows you to run a comparison between two sites or the same site at
-different times. The outputs consist of ASPT & NTAXA EQRs and their difference
-statistics. Probabilities of sites being different and probabilities of each
+Compare allows you to run a comparison between two sites or the same site on 
+different dates. The outputs consist of ASPT & NTAXA EQRs and their difference
+statistics. Probabilities of sites being different, and probabilities of each
 site class combination are also given.
 
 # Development History
@@ -704,7 +704,7 @@ implemented the RIVPACS III predictive models.
 
 ## Rewrite in R
 
-There first version of RICT was a web application hosted by SEPA. This version
+The first version of RICT was a web application hosted by SEPA. This version
 was written in Oracle Express. The second version of RICT was re-written in R
 and hosted on Azure ML Studio. Re-writing in R made it more accessible to
 researchers and other ecologists to modify and customise. This also makes the
@@ -717,7 +717,7 @@ prediction and classification programmes.  Because of this, results from RICT
 version 2 differ from those produced by RICT. The following errors were
 discovered in RICT and corrected in RICT version 2:
 
-•	The RICT inadvertently used the ‘composite families’ version of WHPT ASPT (i.e. TL2 WHPT Score AbW,CompFam) rather than the ‘distinct families’ version (TL2 WHPT Score AbW,DistFam), although it did take account of the additional families included in WHPT.  The composite families are those that were grouped together in the BMWP-score in compliance with the current taxonomy of the time, outlined in Maitland (1977), see Appendix A
+•	The RICT inadvertently used the ‘composite families’ version of WHPT ASPT (i.e. TL2 WHPT Score AbW, CompFam) rather than the ‘distinct families’ version (TL2 WHPT Score AbW, DistFam), although it did take account of the additional families included in WHPT.  The composite families are those that were grouped together in the BMWP-score in compliance with the current taxonomy of the time, outlined in Maitland (1977), see Appendix A
 
 •	RICT did not adjust for sample bias correctly in the calculation of simulated EQI/EQR values for WHPT ASPT
 
@@ -747,7 +747,7 @@ less sure about the confidence of class for the average EQR over several years,
 but because we do not have any data for the missing years, we cannot estimate
 it.
   
-The initial version of RICT used an estimate of the “typical” (I.e. average)
+The initial version of RICT used an estimate of the “typical” (i.e. average)
 between-year variance within a 3-year period for the observed values of a WHPT
 index to allow for 1- or 2-years missing data. This was also not satisfactory
 because a site could differ by any amount within a 3-year period depending on
@@ -759,7 +759,7 @@ classification used in RICT2:
 
 2.	The number of years that can be combined is not limited, whereas in the original RICT, the maximum was limited to three over a 3-year period.
 
-3.	The same approach can be used to determine classifications based on data from multiple sites
+3.	The same approach can be used to determine classifications based on data from multiple sites.
 
 # Contributing
 
@@ -772,7 +772,7 @@ guidelines](https://github.com/aquaMetrics/rict/blob/master/CONTRIBUTING.md).
 
 # Troubleshooting
 
-This section describes some common issues that can cause the tool to fail.
+This section describes common issues that can cause the tool to fail.
 
 ### Re-run
 Sometimes, the website can fail the first time that you run it. Before checking
@@ -781,7 +781,7 @@ unexplained failures, possibly caused by a data transfer drop-out somewhere
 along the line, are the common causes of app failing to run.
 
 ###	Use Correct Validation Input File
-The latest input file can be obtained from the RICT site. Ensure you have
+Obtain the latest input file from the RICT site. Ensure you have
 downloaded the correct version of the input file.
 
 ###	Check Input File is in Correct Format

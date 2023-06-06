@@ -22,7 +22,7 @@ An R package encapsulating the River Invertebrate Classification Tool
 Install [R](rstats.org/install) and we also recommend installing
 [Rstudio](rstudio.com/install).
 
-Alternatively, use [R Cloud](https://rstudio.cloud) through your
+Alternatively, use [Posit Cloud](https://posit.cloud/) through your
 browser.
 
 In the R console, install the development version from GitHub:

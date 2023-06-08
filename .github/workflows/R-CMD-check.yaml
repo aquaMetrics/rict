@@ -50,10 +50,6 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: |
-            any::devtools
-            any::pkgdown
 
       - name: Query dependencies
         run: |
@@ -98,7 +94,7 @@ jobs:
         shell: bash
 
       - name: Upload check results
-        # upload artifacts to transfer package to Azure ML Studio.
+        # upload artifacts to export package to system without direct access to github.
         uses: actions/upload-artifact@main
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results

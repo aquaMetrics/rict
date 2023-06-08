@@ -52,8 +52,8 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: |
-          any::devtools
-          any::pkgdown
+            any::devtools
+            any::pkgdown
 
       - name: Query dependencies
         run: |

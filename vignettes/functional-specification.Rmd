@@ -5,13 +5,13 @@ date: "`r Sys.Date()`"
 pkgdown:
   as_is: yes
 output:
+  rmarkdown::html_vignette:
+    number_sections: yes
+    toc: yes
   rmarkdown::word_document:
     reference_docx: template.docx
     toc: yes
     toc_depth: 2
-  rmarkdown::html_vignette:
-    number_sections: yes
-    toc: yes
 vignette: >
   %\VignetteIndexEntry{Functional Specification}
   %\VignetteEncoding{UTF-8}

@@ -1,7 +1,0 @@
-citHeader("To cite rict in publications use:")
-
-citEntry(
-  title    = "River Invertebrate Classification Tool",
-  author   = "Maybin Muyeba and Tim Foster and Tim Loveday",
-  year     = {2023},
-)

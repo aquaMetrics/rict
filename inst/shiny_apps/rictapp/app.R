@@ -10,6 +10,7 @@ library(leaflet)
 library(rict)
 library(htmltools)
 library(DT)
+library(MASS)
 
 # Define UI for application
 
@@ -73,7 +74,6 @@ ui <- tagList(
     tabPanel(
       "Compare",
       sidebarPanel(
-        h4("This app is in TESTING"),
         p(),
         fileInput("dataset_one", "Choose CSV input file 1",
           accept = c(
@@ -106,7 +106,7 @@ ui <- tagList(
     ),
     tabPanel(
       "Help",
-      HTML('<h4 style="color:grey;">Work in progress - updated user guide will be provided here </h3></style>')
+      HTML('<a href="https://aquametrics.github.io/rict/articles/user-guide.html">User Guide</a>')
     ),
   )
 )
@@ -119,7 +119,7 @@ server <- function(input, output) {
       return(HTML(
         '<h3 style="color:grey;">Upload a prepared .CSV input file or use the following:</h3></style>
         <h4 style="color:grey;">Template File</h4></style>
-          <p><a href="https://www.fba.org.uk/s/New-Input-file-wValidation-wTestData-v12.xls" target="_blank">Validation Spreadsheet for Standard (Model 1) GB and NI</a></p>
+          <p><a href="https://github.com/aquaMetrics/rict/raw/master/inst/extdat/input-file-template.xls" target="_blank">Validation Spreadsheet</a></p>
           <h4 style="color:grey;">Example Input Files</h4></style>
           <p style="color:grey;">Open link, right-click and save as CSV: </p></style>
           <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/new-input-file-data-to-use-multi-year-1.csv" target="_blank">Great Britain</a></p>

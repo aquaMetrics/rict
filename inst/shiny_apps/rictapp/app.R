@@ -10,7 +10,6 @@ library(leaflet)
 library(rict)
 library(htmltools)
 library(DT)
-library(MASS)
 
 # Define UI for application
 

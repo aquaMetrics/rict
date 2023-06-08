@@ -1,5 +1,5 @@
 ---
-title: "Web App User Guide"
+title: "User Guide"
 author: "River Invertebrate Classification Tool (RICT) Steering Group"
 date: "`r Sys.Date()` version: `r packageVersion('rict')`"
 pkgdown:
@@ -33,7 +33,9 @@ outline: 0 ;
 ``` 
 
 
-![](images/rict_logo.png){ width=20%, align=center }
+<p align="center" width="100%">
+    <img width="33%" src="images/rict_logo.png">
+</p>
 
 # Purpose 
 
@@ -70,7 +72,7 @@ NOTE: The latest release of RICT replaces the version hosted on Azure ML Studio.
 
 ## Requirements
 
-Before you start, you need data to process. If you do not have any data prepared, example data is provided in the  [validation template spreadsheet](). However, if you are looking to run your own results, you will need the following:
+Before you start, you need data to process. If you do not have any data prepared, example data is provided in the  [validation template spreadsheet](https://github.com/aquaMetrics/rict/raw/master/inst/extdat/input-file-template.xls). However, if you are looking to run your own results, you will need the following:
 
 1. WHPT scores based on macro-invertebrate results. To calculate WHPT scores, you can use the [WHPT spreadsheet calculator](https://www.fba.org.uk/s/WHPT-calculator-v38.xlsx). Your scores should be based on macro-invertebrate results collected and analysed following [standard techniques](#sampling).
 
@@ -80,7 +82,7 @@ If you are unsure under what circumstances RICT should be used, read the [Usage]
 
 ## Prepare Input File
 
-1. [Download the validation template spreadsheet](https://github.com/aquaMetrics/rict/tree/master/inst/extdat/input-file-template.xls), this provides a helpful template for your input file. For reference and testing, the template spreadsheet also includes example data.
+1. [Download the validation template spreadsheet](https://github.com/aquaMetrics/rict/raw/master/inst/extdat/input-file-template.xls), this provides a helpful template for your input file. For reference and testing, the template spreadsheet also includes example data.
 
 2. Read the README instructions in the spreadsheet for guidance on completing the template.
 
@@ -540,7 +542,7 @@ identify the environmental cause of poor quality.
 
 This option undertakes status classifications for spring and autumn for a single
 year. There is no difference in classification results if you run one years’
-spring and summer data using the single year or the multi-year experiment.
+spring and summer data using the single year or the multi-year option.
 However, there is a slight difference in the headers in the output file.
 
 Single-year option also calculates single season classifications. Single season
@@ -706,20 +708,20 @@ implemented the RIVPACS III predictive models.
 
 ## Rewrite in R
 
-The first version of RICT was a web application hosted by SEPA. This version
-was written in Oracle Express. The second version of RICT was re-written in R
-and hosted on Azure ML Studio. Re-writing in R made it more accessible to
-researchers and other ecologists to modify and customise. This also makes the
-software easier and cheaper to maintain.
+The first version of RICT was a web application hosted by SEPA. This version was
+written in Oracle Express. RICT version 2 (RICT2) was re-written in R and hosted
+on Azure ML Studio. Re-writing in R made it more accessible to researchers and
+other ecologists to modify and customise. This also makes the software easier
+and cheaper to maintain. RICT version 3 hosted the R code in Github and
+provide a single web app replacing what was available on Azure ML Studio .
 
 ## Changes Made
 
-RICT version 2 corrected several errors in the original RICT, particularly the
-prediction and classification programmes.  Because of this, results from RICT
-version 2 differ from those produced by RICT. The following errors were
-discovered in RICT and corrected in RICT version 2:
+RICT2 corrected several errors in the original RICT, particularly the
+prediction and classification programmes.  Because of this, results from RICT2 differ from those produced by RICT. The following errors were
+discovered in RICT and corrected in RICT2:
 
-•	The RICT inadvertently used the ‘composite families’ version of WHPT ASPT (i.e. TL2 WHPT Score AbW, CompFam) rather than the ‘distinct families’ version (TL2 WHPT Score AbW, DistFam), although it did take account of the additional families included in WHPT.  The composite families are those that were grouped together in the BMWP-score in compliance with the current taxonomy of the time, outlined in Maitland (1977), see Appendix A
+•	RICT inadvertently used the ‘composite families’ version of WHPT ASPT (i.e. TL2 WHPT Score AbW, CompFam) rather than the ‘distinct families’ version (TL2 WHPT Score AbW, DistFam), although it did take account of the additional families included in WHPT.  The composite families are those that were grouped together in the BMWP-score in compliance with the current taxonomy of the time, outlined in Maitland (1977), see Appendix A
 
 •	RICT did not adjust for sample bias correctly in the calculation of simulated EQI/EQR values for WHPT ASPT
 
@@ -733,14 +735,14 @@ preliminaries
 
 •	In addition, RICT used an old table of Biologists’ Assessment Values indicating which of the RIVPACS reference sites complied with WFD intercalibration screening criteria that caused a slight error in the conversion factors used to determine EQRs.
 
-Results from RICT version 2 were checked against independent programmes using
+Results from RICT2 were checked against independent programmes using
 the test data. This provides assurance against errors that previous versions of
 RICT did not have.
   
 There is a difference in the way that the probabilities of class are estimated
 for multi-year classifications.
   
-Multi-year site assessments in RICT version 2 are based on averaging the EQR for
+Multi-year site assessments in RICT2 are based on averaging the EQR for
 each available year, so are just the status class of the average EQR for the
 years for which data is available.  The proportion of all simulated multi-year
 average EQR values falling in each status class gives us the estimated
@@ -762,6 +764,8 @@ classification used in RICT2:
 2.	The number of years that can be combined is not limited, whereas in the original RICT, the maximum was limited to three over a 3-year period.
 
 3.	The same approach can be used to determine classifications based on data from multiple sites.
+
+RICT version 3 keeps these changes.
 
 # Contributing
 

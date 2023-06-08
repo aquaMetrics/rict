@@ -147,5 +147,6 @@ jobs:
       - name: Deploy to shinyapps.io
         if: runner.os == 'Linux'
         run: |
+          devtools::install_version("MASS", "7.3-58.4")
           rsconnect::deployApp(appName = "rictapp", appDir = "inst/shiny_apps/rictapp")
         shell: Rscript {0}

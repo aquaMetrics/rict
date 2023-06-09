@@ -69,8 +69,8 @@ information for any future RICT development.
 ## Background
 
 The UK Regulatory Agencies have a requirement to classify ecological quality in
-rivers using data from invertebrate samples. The RIVPACS (River Invertebrate
-Prediction and Classification Tool) model and software tool, which was developed
+rivers using data from invertebrate samples. The RIVPACS (River InVertebrate
+Prediction and Classification System) model and software tool, which was developed
 on behalf of the agencies by the Freshwater Biological Association (FBA) and
 subsequently by the Centre for Ecology and Hydrology (CEH), was originally used
 for this purpose. It incorporates a set of summarised reference data from sites

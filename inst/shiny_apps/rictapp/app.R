@@ -105,7 +105,7 @@ ui <- tagList(
     ),
     tabPanel(
       "Help",
-      HTML('<a href="https://aquametrics.github.io/rict/articles/user-guide.html">User Guide</a>')
+      HTML('<a href="https://aquametrics.github.io/rict/articles/user-guide.html" target="_blank">User Guide</a>')
     ),
   )
 )

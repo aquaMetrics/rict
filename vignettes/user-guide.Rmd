@@ -44,37 +44,13 @@ results to [RICT website](https://rictapplications.shinyapps.io/rictapp/). We th
 demonstrate how to predict reference values for indices and taxa lists.
 Additionally, we explain how to classify status and compare results.
 
-# Background
-
-RICT uses a model based on data collected from sampling locations with minimal
-environmental pressures to predict expected conditions across the river network.
-UK environment agencies use RICT to classify rivers for
-Water Framework Directive (WFD) assessment, and to enforce
-statutory objectives.
-
-Key Functionality:
-  
--	Predict reference indices values.
--	Predict reference taxa.
--	Classify the status of observed results compared to expected reference conditions.
--	Give a probability of status class.
--	Compare two samples and give a likelihood of whether they are significantly different.
-
-RICT is maintained by:
-- Environment Agency (EA)
-- Natural Resources Wales (NRW)
-- Northern Ireland Environment Agency (NIEA) 
-- Scottish Environment Protection Agency (SEPA)
-
-NOTE: The latest release of RICT replaces the version hosted on Azure ML Studio. 
-
 # Quick Start
 
 ## Requirements
 
-Before you start, you need data to process. If you do not have any data prepared, example data is provided in the  [validation template spreadsheet](https://github.com/aquaMetrics/rict/raw/master/inst/extdat/input-file-template.xls). However, if you are looking to run your own results, you will need the following:
+Before you start, you need river macro-invertebrate data to process. If you do not have any data prepared, example data is provided in the  [validation template spreadsheet](https://github.com/aquaMetrics/rict/raw/master/inst/extdat/input-file-template.xls). However, if you are looking to run your own results, you will need the following:
 
-1. WHPT scores based on macro-invertebrate results. To calculate WHPT scores, you can use the [WHPT spreadsheet calculator](https://www.fba.org.uk/s/WHPT-calculator-v38.xlsx). Your scores should be based on macro-invertebrate results collected and analysed following [standard techniques](#sampling).
+1. WHPT (Walley, Hawkes, Paisley and Trigg) scores based on macro-invertebrate results. To calculate WHPT index scores, you can use the [WHPT spreadsheet calculator](https://www.fba.org.uk/s/WHPT-calculator-v38.xlsx). Your scores should be based on macro-invertebrate results collected and analysed following [standard techniques](#sampling).
 
 2. A list of predictor values based on field observations and GIS. Predictor values change depending on the geographic [area and model](#models-and-areas) you wish to use.
 
@@ -160,6 +136,30 @@ This option will display predictions for all inverts indices not just WHPT predi
 ### Predict Taxa Lists
 
 Display table of prediction for taxa list(s). See [taxa prediction](#taxa) for more information. 
+
+# Background
+
+RICT uses a model based on data collected from sampling locations with minimal
+environmental pressures to predict expected conditions across the river network.
+UK environment agencies use RICT to classify rivers for
+Water Framework Directive (WFD) assessment, and to enforce
+statutory objectives.
+
+Key Functionality:
+  
+-	Predict reference indices values.
+-	Predict reference taxa.
+-	Classify the status of observed results compared to expected reference conditions.
+-	Give a probability of status class.
+-	Compare two samples and give a likelihood of whether they are significantly different.
+
+RICT is maintained by:
+- Environment Agency (EA)
+- Natural Resources Wales (NRW)
+- Northern Ireland Environment Agency (NIEA) 
+- Scottish Environment Protection Agency (SEPA)
+
+NOTE: The latest release of RICT replaces the version hosted on Azure ML Studio.
 
 # Usage
 
@@ -462,10 +462,10 @@ assume that they are numbers. To preserve the leading zeroes when you open the
 results in Excel, you will need to open a blank Excel worksheet and import the
 results as text.
 
-![Import csv as text into Excel using the Data tab](images/user-guide/taxa-download-excel-1.jpg){width=100%}
-![Select comma separated, then 'Next'](images/user-guide/taxa-download-excel-2.jpg){width=100%}
-![Click on maitland code column and select text, repeat for Furse Code. Click 'Finish'](images/user-guide/taxa-download-excel-3.jpg){width=100%}
-![Click 'OK' (move the cursor to A1 if nesssary)](images/user-guide/taxa-download-excel-4.jpg){width=100%}
+![Import csv as text into Excel using the Data tab](images/user-guide/taxa-download-excel-1.jpg){width=60%}
+![Select comma separated, then 'Next'](images/user-guide/taxa-download-excel-2.jpg){width=60%}
+![Click on maitland code column and select text, repeat for Furse Code. Click 'Finish'](images/user-guide/taxa-download-excel-3.jpg){width=60%}
+![Click 'OK' (move the cursor to A1 if nesssary)](images/user-guide/taxa-download-excel-4.jpg){width=60%}
   
 In the output, each row includes prediction results for one taxon. For each
 site, expect about 3500 rows of data if predicting all taxa lists. The first

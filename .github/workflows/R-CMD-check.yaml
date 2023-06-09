@@ -146,7 +146,8 @@ jobs:
         # deploy the app on shinyapps server
       - name: Deploy to shinyapps.io
         if: runner.os == 'Linux'
+        # install exact version MASS due to issue with installing MASS 7.3-58.4
         run: |
-          devtools::install_version("MASS", "7.3-58.4")
+          devtools::install_version("MASS", "7.3-58.3")
           rsconnect::deployApp(appName = "rictapp", appDir = "inst/shiny_apps/rictapp")
         shell: Rscript {0}

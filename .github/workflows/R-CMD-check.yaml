@@ -147,6 +147,7 @@ jobs:
         # deploy the app on shinyapps server
       - name: Deploy to shinyapps.io
         if: runner.os == 'Linux'
+        if: github.event_name != 'pull_request'
         # install exact version MASS due to issue with installing MASS 7.3-58.4
         run: |
           devtools::install_version("MASS", "7.3-58.3")

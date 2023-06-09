@@ -4,7 +4,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# rict <img src='man/figures/rict_logo.png' align="right" height="139" />
+# rict <img src='man/figures/rict_logo.png' align="right" width="33%" />
 
 <!-- badges: start -->
 [![R build status](https://github.com/aquaMetrics/rict/workflows/R-CMD-check/badge.svg)](https://github.com/aquaMetrics/rict/actions)

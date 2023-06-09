@@ -30,13 +30,14 @@ jobs:
         config:
           - {os: macOS-latest, r: 'release'}
           - {os: windows-latest, r: 'release'}
+          # Use older windows to maximise backward compatibility
           - {os: windows-latest, r: '4.0.2'}
-          # Use older ubuntu to maximise backward compatibility
           - {os: ubuntu-latest, r: 'release'}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
-      RSPM: ${{ matrix.config.rspm }}
+      R_KEEP_PKG_SOURCE: yes
+      R_COMPILE_AND_INSTALL_PACKAGES: never
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
@@ -48,14 +49,9 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
 
-      - name: Restore R package cache
-        if: runner.os != 'Windows'
-        uses: actions/cache@v2
-        with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+      - uses: r-lib/actions/setup-r-dependencies@v2
 
       - name: Query dependencies
         run: |
@@ -100,7 +96,7 @@ jobs:
         shell: bash
 
       - name: Upload check results
-        # upload artifacts to transfer package to Azure ML Studio.
+        # upload artifacts to export package to system without direct access to github.
         uses: actions/upload-artifact@main
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
@@ -136,7 +132,7 @@ jobs:
           devtools::install_github("aquaMetrics/rict")
         shell: Rscript {0}
 
-                # Connect on shinyapps server
+        # Connect on shinyapps server
       - name: Connect to ShinyApps
         if: runner.os == 'Linux'
         env:
@@ -150,7 +146,9 @@ jobs:
         shell: Rscript {0}
         # deploy the app on shinyapps server
       - name: Deploy to shinyapps.io
-        if: runner.os == 'Linux'
+        if: ${{ (runner.os == 'Linux') && (github.event_name != 'pull_request') }}
+        # install exact version MASS due to issue with installing MASS 7.3-58.4
         run: |
+          devtools::install_version("MASS", "7.3-58.3")
           rsconnect::deployApp(appName = "rictapp", appDir = "inst/shiny_apps/rictapp")
         shell: Rscript {0}

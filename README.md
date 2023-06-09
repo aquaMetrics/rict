@@ -17,13 +17,6 @@ status](https://github.com/aquaMetrics/rict/workflows/test-coverage/badge.svg)](
 An R package for calculating River Invertebrate Classification Tool
 (RICT) predictions
 
-# Work in progress
-
-This R package is in development. Please don’t use in production. Please
-use the [RICT
-website](https://www.fba.org.uk/other-scientific-collaborations/rivpacs-and-rict)
-for official documentation and links to the Azure experiments.
-
 ## Install
 
 Install [R](rstats.org/install) and we also recommend installing

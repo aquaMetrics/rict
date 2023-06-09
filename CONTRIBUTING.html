@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rict</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.3</span>
       </span>
     </div>
 
@@ -38,7 +38,7 @@
       <a href="articles/tech-demo-temperature-change.html">Tech demo: Temperature change</a>
     </li>
     <li>
-      <a href="articles/user-guide.html">Web App User Guide</a>
+      <a href="articles/user-guide.html">User Guide</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
@@ -118,20 +118,13 @@
 <li>Wait for response from maintainers.</li>
 </ol></div>
 <div class="section level3">
-<h3 id="updating-azure-experiments">Updating Azure Experiments<a class="anchor" aria-label="anchor" href="#updating-azure-experiments"></a></h3>
+<h3 id="deploying">Deploying<a class="anchor" aria-label="anchor" href="#deploying"></a></h3>
+<p>Github <a href="https://github.com/aquaMetrics/rict/actions" class="external-link">actions</a> will automatically update and deploy all changes to the package, docs and web app as long as automated tests pass:</p>
 <ol style="list-style-type: decimal"><li>After, your PR is merged to master branch, automatic tests and builds will be run in “the cloud”.</li>
 <li>These tests check the code for any problems and compatibility by running on Windows, Linux and Mac.</li>
 <li>On the README document (displayed on the repo in github) are the ‘build’ badge icons - these indicate that all tests are running correctly in the cloud.</li>
-<li>The first build badge: <a href="https://github.com/aquaMetrics/rict/actions" class="external-link"><img src="https://github.com/aquaMetrics/rict/actions" alt="R-CMD-Check"></a> links to the Github actions page.</li>
-<li>Click this icon and go to the this Github actions page, select the most recent ‘R-CMD-Check’ build, and then select the ‘Artifacts’ tab.</li>
-<li>Scroll down to Artifacts section and click on Windows-r3.5-results link to download binary package.</li>
-<li>Next, on your local file system, create an empty folder called <code>support-files</code>, right-click and compress this folder to create support-files.zip.</li>
-<li>Open the downloaded Windows-r3.5-results.zip folder right-click the <code>rict</code> folder and ‘extract’.</li>
-<li>Right-click and compress the rict folder to create <code>rict.zip</code>. Add this file to the <code>support-files.zip</code> folder.</li>
-<li>Within Azure ML Studio, upload the <code>support-files.zip</code> file as a dataset - this will replace the pre-existing <code>support-files.zip</code>.</li>
-<li>Delete the existing support-files dataset from the experiment and drag the new supporting-files dataset from the ‘Saved Dataset’ &gt; ‘My Dataset’ sidebar menu. Connect the new version of the support-files.zip to all experiments needing to be updated.</li>
-<li>For documentation reasons, you may wish to re-name the experiment/version number.</li>
-<li>Run the experiments to double-check everything is working.</li>
+<li>The first build badge: <a href="https://github.com/aquaMetrics/rict/actions" class="external-link"><img src="https://github.com/aquaMetrics/rict/actions" alt="R-CMD-Check"></a> links to the Github actions page</li>
+<li>Click this icon to see more details of the automated testing.</li>
 </ol><div class="section level4">
 <h4 id="all-done-">All Done! ☺<a class="anchor" aria-label="anchor" href="#all-done-"></a></h4>
 </div>

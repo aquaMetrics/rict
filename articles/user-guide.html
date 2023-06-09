@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Web App User Guide • rict</title>
+<title>User Guide • rict</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Web App User Guide">
+<script src="../pkgdown.js"></script><meta property="og:title" content="User Guide">
 <meta property="og:description" content="rict">
 <meta name="robots" content="noindex">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rict</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.3</span>
       </span>
     </div>
 
@@ -57,7 +57,7 @@
       <a href="../articles/tech-demo-temperature-change.html">Tech demo: Temperature change</a>
     </li>
     <li>
-      <a href="../articles/user-guide.html">Web App User Guide</a>
+      <a href="../articles/user-guide.html">User Guide</a>
     </li>
   </ul>
 </li>
@@ -82,12 +82,12 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Web App User Guide</h1>
+      <h1 data-toc-skip>User Guide</h1>
                         <h4 data-toc-skip class="author">River
 Invertebrate Classification Tool (RICT) Steering Group</h4>
             
-            <h4 data-toc-skip class="date">2023-06-06 version:
-3.1.2</h4>
+            <h4 data-toc-skip class="date">2023-06-09 version:
+3.1.3</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/aquaMetrics/rict/blob/HEAD/vignettes/user-guide.Rmd" class="external-link"><code>vignettes/user-guide.Rmd</code></a></small>
       <div class="hidden name"><code>user-guide.Rmd</code></div>
@@ -102,7 +102,8 @@ border: 0px;
 outline: 0 ;
 }
 </style>
-<p><img src="images/rict_logo.png" align="center"></p>
+<p align="center" width="100%">
+<img width="33%" src="images/rict_logo.png"></p>
 <div class="section level2">
 <h2 id="purpose">Purpose<a class="anchor" aria-label="anchor" href="#purpose"></a>
 </h2>
@@ -113,42 +114,19 @@ lists. Additionally, we explain how to classify status and compare
 results.</p>
 </div>
 <div class="section level2">
-<h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
-</h2>
-<p>RICT uses a model based on data collected from sampling locations
-with minimal environmental pressures to predict expected conditions
-across the river network. UK environment agencies use RICT to classify
-rivers for Water Framework Directive (WFD) assessment, and to enforce
-statutory objectives.</p>
-<p>Key Functionality:</p>
-<ul>
-<li>Predict reference indices values.</li>
-<li>Predict reference taxa.</li>
-<li>Classify the status of observed results compared to expected
-reference conditions.</li>
-<li>Give a probability of status class.</li>
-<li>Compare two samples and give a likelihood of whether they are
-significantly different.</li>
-</ul>
-<p>RICT is maintained by: - Environment Agency (EA) - Natural Resources
-Wales (NRW) - Northern Ireland Environment Agency (NIEA) - Scottish
-Environment Protection Agency (SEPA)</p>
-<p>NOTE: The latest release of RICT replaces the version hosted on Azure
-ML Studio.</p>
-</div>
-<div class="section level2">
 <h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
 <div class="section level3">
 <h3 id="requirements">Requirements<a class="anchor" aria-label="anchor" href="#requirements"></a>
 </h3>
-<p>Before you start, you need data to process. If you do not have any
-data prepared, example data is provided in the <a href="">validation
+<p>Before you start, you need river macro-invertebrate data to process.
+If you do not have any data prepared, example data is provided in the <a href="https://github.com/aquaMetrics/rict/raw/master/inst/extdat/input-file-template.xls" class="external-link">validation
 template spreadsheet</a>. However, if you are looking to run your own
 results, you will need the following:</p>
 <ol style="list-style-type: decimal">
-<li><p>WHPT scores based on macro-invertebrate results. To calculate
-WHPT scores, you can use the <a href="https://www.fba.org.uk/s/WHPT-calculator-v38.xlsx" class="external-link">WHPT
+<li><p>WHPT (Walley, Hawkes, Paisley and Trigg) scores based on
+macro-invertebrate results. To calculate WHPT index scores, you can use
+the <a href="https://www.fba.org.uk/s/WHPT-calculator-v38.xlsx" class="external-link">WHPT
 spreadsheet calculator</a>. Your scores should be based on
 macro-invertebrate results collected and analysed following <a href="#sampling">standard techniques</a>.</p></li>
 <li><p>A list of predictor values based on field observations and GIS.
@@ -161,7 +139,7 @@ the <a href="#usage">Usage</a> section.</p>
 <h3 id="prepare-input-file">Prepare Input File<a class="anchor" aria-label="anchor" href="#prepare-input-file"></a>
 </h3>
 <ol style="list-style-type: decimal">
-<li><p><a href="https://github.com/aquaMetrics/rict/tree/master/inst/extdat/input-file-template.xls" class="external-link">Download
+<li><p><a href="https://github.com/aquaMetrics/rict/raw/master/inst/extdat/input-file-template.xls" class="external-link">Download
 the validation template spreadsheet</a>, this provides a helpful
 template for your input file. For reference and testing, the template
 spreadsheet also includes example data.</p></li>
@@ -271,6 +249,30 @@ WHPT predictions. RICT can predict around 60+ indices. See <a href="#indices">Al
 <p>Display table of prediction for taxa list(s). See <a href="#taxa">taxa prediction</a> for more information.</p>
 </div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
+</h2>
+<p>RICT uses a model based on data collected from sampling locations
+with minimal environmental pressures to predict expected conditions
+across the river network. UK environment agencies use RICT to classify
+rivers for Water Framework Directive (WFD) assessment, and to enforce
+statutory objectives.</p>
+<p>Key Functionality:</p>
+<ul>
+<li>Predict reference indices values.</li>
+<li>Predict reference taxa.</li>
+<li>Classify the status of observed results compared to expected
+reference conditions.</li>
+<li>Give a probability of status class.</li>
+<li>Compare two samples and give a likelihood of whether they are
+significantly different.</li>
+</ul>
+<p>RICT is maintained by: - Environment Agency (EA) - Natural Resources
+Wales (NRW) - Northern Ireland Environment Agency (NIEA) - Scottish
+Environment Protection Agency (SEPA)</p>
+<p>NOTE: The latest release of RICT replaces the version hosted on Azure
+ML Studio.</p>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
@@ -1086,7 +1088,7 @@ the CSV output file with Excel in the normal way, you will lose these
 leading zeroes because Excel will assume that they are numbers. To
 preserve the leading zeroes when you open the results in Excel, you will
 need to open a blank Excel worksheet and import the results as text.</p>
-<p><img src="images/user-guide/taxa-download-excel-1.jpg" style="width:100.0%" alt="Import csv as text into Excel using the Data tab"><img src="images/user-guide/taxa-download-excel-2.jpg" style="width:100.0%" alt="Select comma separated, then ‘Next’"><img src="images/user-guide/taxa-download-excel-3.jpg" style="width:100.0%" alt="Click on maitland code column and select text, repeat for Furse Code. Click ‘Finish’"><img src="images/user-guide/taxa-download-excel-4.jpg" style="width:100.0%" alt="Click ‘OK’ (move the cursor to A1 if nesssary)"></p>
+<p><img src="images/user-guide/taxa-download-excel-1.jpg" style="width:60.0%" alt="Import csv as text into Excel using the Data tab"><img src="images/user-guide/taxa-download-excel-2.jpg" style="width:60.0%" alt="Select comma separated, then ‘Next’"><img src="images/user-guide/taxa-download-excel-3.jpg" style="width:60.0%" alt="Click on maitland code column and select text, repeat for Furse Code. Click ‘Finish’"><img src="images/user-guide/taxa-download-excel-4.jpg" style="width:60.0%" alt="Click ‘OK’ (move the cursor to A1 if nesssary)"></p>
 <p>In the output, each row includes prediction results for one taxon.
 For each site, expect about 3500 rows of data if predicting all taxa
 lists. The first block of rows will be for the first site selected and
@@ -1181,8 +1183,8 @@ you to identify the environmental cause of poor quality.</p>
 <p>This option undertakes status classifications for spring and autumn
 for a single year. There is no difference in classification results if
 you run one years’ spring and summer data using the single year or the
-multi-year experiment. However, there is a slight difference in the
-headers in the output file.</p>
+multi-year option. However, there is a slight difference in the headers
+in the output file.</p>
 <p>Single-year option also calculates single season classifications.
 Single season classification are intended only for investigative work.
 They are unsuitable for setting environmental quality objectives or
@@ -1798,22 +1800,22 @@ locally, implemented the RIVPACS III predictive models.</p>
 <h3 id="rewrite-in-r">Rewrite in R<a class="anchor" aria-label="anchor" href="#rewrite-in-r"></a>
 </h3>
 <p>The first version of RICT was a web application hosted by SEPA. This
-version was written in Oracle Express. The second version of RICT was
+version was written in Oracle Express. RICT version 2 (RICT2) was
 re-written in R and hosted on Azure ML Studio. Re-writing in R made it
 more accessible to researchers and other ecologists to modify and
-customise. This also makes the software easier and cheaper to
-maintain.</p>
+customise. This also makes the software easier and cheaper to maintain.
+RICT version 3 hosted the R code in Github and provide a single web app
+replacing what was available on Azure ML Studio .</p>
 </div>
 <div class="section level3">
 <h3 id="changes-made">Changes Made<a class="anchor" aria-label="anchor" href="#changes-made"></a>
 </h3>
-<p>RICT version 2 corrected several errors in the original RICT,
-particularly the prediction and classification programmes. Because of
-this, results from RICT version 2 differ from those produced by RICT.
-The following errors were discovered in RICT and corrected in RICT
-version 2:</p>
-<p>• The RICT inadvertently used the ‘composite families’ version of
-WHPT ASPT (i.e. TL2 WHPT Score AbW, CompFam) rather than the ‘distinct
+<p>RICT2 corrected several errors in the original RICT, particularly the
+prediction and classification programmes. Because of this, results from
+RICT2 differ from those produced by RICT. The following errors were
+discovered in RICT and corrected in RICT2:</p>
+<p>• RICT inadvertently used the ‘composite families’ version of WHPT
+ASPT (i.e. TL2 WHPT Score AbW, CompFam) rather than the ‘distinct
 families’ version (TL2 WHPT Score AbW, DistFam), although it did take
 account of the additional families included in WHPT. The composite
 families are those that were grouped together in the BMWP-score in
@@ -1834,15 +1836,15 @@ Biological Association: pp 84 + preliminaries</p>
 Values indicating which of the RIVPACS reference sites complied with WFD
 intercalibration screening criteria that caused a slight error in the
 conversion factors used to determine EQRs.</p>
-<p>Results from RICT version 2 were checked against independent
-programmes using the test data. This provides assurance against errors
-that previous versions of RICT did not have.</p>
+<p>Results from RICT2 were checked against independent programmes using
+the test data. This provides assurance against errors that previous
+versions of RICT did not have.</p>
 <p>There is a difference in the way that the probabilities of class are
 estimated for multi-year classifications.</p>
-<p>Multi-year site assessments in RICT version 2 are based on averaging
-the EQR for each available year, so are just the status class of the
-average EQR for the years for which data is available. The proportion of
-all simulated multi-year average EQR values falling in each status class
+<p>Multi-year site assessments in RICT2 are based on averaging the EQR
+for each available year, so are just the status class of the average EQR
+for the years for which data is available. The proportion of all
+simulated multi-year average EQR values falling in each status class
 gives us the estimated probability of class. This is not philosophically
 correct because we must be less sure about the confidence of class for
 the average EQR over several years, but because we do not have any data
@@ -1865,6 +1867,7 @@ period.</p></li>
 <li><p>The same approach can be used to determine classifications based
 on data from multiple sites.</p></li>
 </ol>
+<p>RICT version 3 keeps these changes.</p>
 </div>
 </div>
 <div class="section level2">

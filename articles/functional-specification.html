@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rict</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.3</span>
       </span>
     </div>
 
@@ -57,7 +57,7 @@
       <a href="../articles/tech-demo-temperature-change.html">Tech demo: Temperature change</a>
     </li>
     <li>
-      <a href="../articles/user-guide.html">Web App User Guide</a>
+      <a href="../articles/user-guide.html">User Guide</a>
     </li>
   </ul>
 </li>
@@ -87,7 +87,7 @@ Functional Specification</h1>
                         <h4 data-toc-skip class="author">RICT Steering
 Group</h4>
             
-            <h4 data-toc-skip class="date">2023-06-06</h4>
+            <h4 data-toc-skip class="date">2023-06-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/aquaMetrics/rict/blob/HEAD/vignettes/functional-specification.Rmd" class="external-link"><code>vignettes/functional-specification.Rmd</code></a></small>
       <div class="hidden name"><code>functional-specification.Rmd</code></div>
@@ -102,7 +102,8 @@ border: 0px;
 outline: 0 ;
 }
 </style>
-<p><img src="images/rict_logo.png"></p>
+<p align="center" width="100%">
+<img width="33%" src="images/rict_logo.png"></p>
 <div class="section level2" number="1">
 <h2 id="introduction">
 <span class="header-section-number">1</span> Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
@@ -113,8 +114,8 @@ outline: 0 ;
 document<a class="anchor" aria-label="anchor" href="#purpose-of-the-document"></a>
 </h3>
 <p>The purpose of this document is to define the business, functional
-and non-functional capabilities of RICT2 to support the design and
-implementation of RICT2 software tool.</p>
+and non-functional capabilities of RICT to support the design and
+implementation of RICT software tool.</p>
 <p>The details will be sufficient to enable the software tool to be
 designed and built without having to continually refer queries to
 business representatives.</p>
@@ -127,7 +128,7 @@ documented information for any future RICT development.</p>
 </h3>
 <p>The UK Regulatory Agencies have a requirement to classify ecological
 quality in rivers using data from invertebrate samples. The RIVPACS
-(River Invertebrate Prediction and Classification Tool) model and
+(River InVertebrate Prediction and Classification System) model and
 software tool, which was developed on behalf of the agencies by the
 Freshwater Biological Association (FBA) and subsequently by the Centre
 for Ecology and Hydrology (CEH), was originally used for this purpose.
@@ -143,10 +144,10 @@ written in a modern programming language and did not have flexibility to
 allow changes without significant cost. Therefore, a new tool was
 developed that allowed future changes to be made with minimal cost in
 many cases (e.g. the addition of a new index). This was the River
-Invertebrate Classification Tool (RICT) which went live in 2007. This
-version of RICT was a web-served application which was accessed via a
-website hosted by SEPA. The SEPA website also hosted copies of the
-manual, guidance and background documents.</p>
+Invertebrate Classification Tool (RICT) version 1 which went live in
+2007. This version of RICT was a web-served application which was
+accessed via a website hosted by SEPA. The SEPA website also hosted
+copies of the manual, guidance and background documents.</p>
 <p>RICT has had some updates since 2007, including the addition of
 ‘split season’ classification to enable WHPT (Walley, Hawkes, Paisley
 and Trigg) calculations using seasonal average EQRs (Ecological Quality
@@ -165,230 +166,23 @@ Annex C.</p>
 <p>A shortlist of options to resolve the issues was discussed which
 resulted in the recommendation that RICT should adopt a Platform as a
 Service arrangement and run a modified application.</p>
-<p>A new cloud-based open source version of RICT has been developed
-which will incorporate the current RIVPACS IV model and WFD status
-classification and uses the same basic algorithms to provide the same
-final results (other than correction of errors). Code and data tables
-for the new version will be more accessible to developers who wish to
-further develop RICT and their own project experiments. This new version
-of RICT is called RICT2 (version 1).</p>
-<p>The platform chosen for RICT2 is Microsoft Azure Machine Learning
-(ML) Studio with open source R programming language as the development
-choice. Users will need to create a Microsoft Azure ML Studio account to
-allow them to access the RICT2 software tool. The majority of users will
-be able to use the free account subscription provided which allows
-adequate processing time for the number of runs required for a typical
-user. For more intensive RICT2 users, a monthly subscription account can
-be used on an ad-hoc basis, i.e. a user could subscribe for a month
-during the month when intensive processing is required, then unsubscribe
-the following month. This will keep costs minimal. Further, advanced
-users can create their own experiments and edit the R code or the
-pipeline process to suit their own computing needs.</p>
-<p>The RICT2 service is accessible via ML with the latest documentation
-including the technical specification and user guide being hosted on a
-SharePoint site containing the link to the RICT2 tool along with
-information and guidance.</p>
-</div>
-<div class="section level3" number="1.3">
-<h3 id="document-version-history">
-<span class="header-section-number">1.3</span> Document version
-history<a class="anchor" aria-label="anchor" href="#document-version-history"></a>
-</h3>
-<table class="table">
-<colgroup>
-<col width="14%">
-<col width="10%">
-<col width="75%">
-</colgroup>
-<thead><tr class="header">
-<th><strong>Version</strong></th>
-<th><strong>Date</strong></th>
-<th><strong>Purpose</strong></th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>previous spec 1.0</td>
-<td>06/08/07</td>
-<td>Initial version of the 2007 detailed functional specification issued
-to Steering Group and CEH</td>
-</tr>
-<tr class="even">
-<td>v0.1</td>
-<td>02/07/18</td>
-<td>Updated and amended version of the previous functional
-specification</td>
-</tr>
-<tr class="odd">
-<td>v0.2</td>
-<td>18/07/18</td>
-<td>Updated and amended version of the new functional specification
-following review by John Murray Bligh.</td>
-</tr>
-<tr class="even">
-<td>v0.3</td>
-<td>16/08/18</td>
-<td>Updated and amended version of the new functional specification
-following review by Technical Group members, decisions made during
-Technical group discussion and clarification via emails.</td>
-</tr>
-<tr class="odd">
-<td>v0.4</td>
-<td>07/09/18</td>
-<td>Updated and amended version of the new functional specification
-following discussions held on 30th August to confirm the classification
-process in RICT2.</td>
-</tr>
-<tr class="even">
-<td>v0.5</td>
-<td>11/12/18</td>
-<td>Further amended version with questions to highlight areas that need
-input for meeting on 12/12/18</td>
-</tr>
-<tr class="odd">
-<td>v0.6</td>
-<td>24/12/18</td>
-<td>Further amended version following some clarifications at meeting on
-12/12/18</td>
-</tr>
-<tr class="even">
-<td>v0.7</td>
-<td>23/01/19</td>
-<td>Updated and amended version following clarification meetings held
-over w/c 14th Jan. Sent out for review on 23/01/19.</td>
-</tr>
-<tr class="odd">
-<td>v0.8</td>
-<td>01/02/19</td>
-<td>Updated and amended version following review.</td>
-</tr>
-<tr class="even">
-<td>v0.9</td>
-<td>12/02/19</td>
-<td>Update and amended following developer review</td>
-</tr>
-<tr class="odd">
-<td>v0.10</td>
-<td>23/04/19</td>
-<td>Update following comments from SEPA Lead</td>
-</tr>
-<tr class="even">
-<td>v1.1</td>
-<td>28/11/19</td>
-<td>Updated to reflect the addition of Summer calculations</td>
-</tr>
-<tr class="odd">
-<td>v1.2</td>
-<td>09/12/19</td>
-<td>Updated with reflect comments from the team</td>
-</tr>
-<tr class="even">
-<td>v1.3</td>
-<td>16/01/20</td>
-<td>Updated with All Indices functional specification</td>
-</tr>
-<tr class="odd">
-<td>v1.4</td>
-<td>28/01/20</td>
-<td>Updated with Model 44 functional specification</td>
-</tr>
-<tr class="even">
-<td>v1.5</td>
-<td>30/01/20</td>
-<td>Updated with minor amendments from Tim Foster</td>
-</tr>
-<tr class="odd">
-<td>v1.6</td>
-<td>16/03/20</td>
-<td>Updated with Compare functional specification</td>
-</tr>
-<tr class="even">
-<td>v1.6.1</td>
-<td>19/03/20</td>
-<td>Updated by Tim Foster - Model 44 variable section has been updated
-to include the new variable names and validation. A few minor mismatches
-between validation rules for Model 44 variables were also corrected. A
-comment suggesting adding more detail on the average temperature and
-range algorithm was added.</td>
-</tr>
-<tr class="odd">
-<td>v1.7</td>
-<td>23/03/20</td>
-<td>Updated with Taxa Prediction functional specification</td>
-</tr>
-<tr class="even">
-<td>v1.8</td>
-<td>03/04/20</td>
-<td>Updated with an explanation of the temperature grid illustrated in a
-table and the program used to calculate mean temperature and annual
-temperature range.</td>
-</tr>
-<tr class="odd">
-<td>v1.9 JMB</td>
-<td>06/04/20</td>
-<td>Page numbers added, revised chapter on taxa predictions, future
-experiments, multi-site classification, etc.</td>
-</tr>
-<tr class="even">
-<td>v1.10 JMB</td>
-<td>06/04/20</td>
-<td>Correction to 9.2.1 – table defining taxon levels replaces incorrect
-table of abundance categories; draft watermark added, spell-checked,
-chapter numbers in flow diagram boxes updated</td>
-</tr>
-<tr class="odd">
-<td>v2.0</td>
-<td>07/04/20</td>
-<td>2.0 Draft version made after review by SC: removed old comments,
-updated the ToC.</td>
-</tr>
-<tr class="even">
-<td>v2.1</td>
-<td>22/07/20</td>
-<td>Tidied-up some headings; Section 2 updated screenshot of experiment
-in MS Azure ML Studio; note about NGR being upper-case added to table in
-Section 5.1; explanations of limit values added to Section 5.1.1.
-Section 6.3 about velocity re-written, Section 7.8 minor correction to
-suitability code 5 SuitText &lt;0.1; Section 9 edited for clarity and
-erroneous headers removed. Numbering of sub-sections in Section 10
-corrected; Annex A embedded input template updated to current Version
-1.2</td>
-</tr>
-<tr class="odd">
-<td>v2.2</td>
-<td>18/09/2020</td>
-<td>Validations tables are based on the validation-rules.csv; The
-validation section has been split into three parts: variables; rules,
-replacements values; Updated future experiments (removed experiments
-which are now available); Updated Compare experiment details to note
-that individual seasons can be compared; Updated R file names for
-functions where these have changes; Updated R .csv file names where
-required; Added info on rict supporting files; Add info on common Azure
-/ R compatibility bugs; Details on github version control; Validation
-tables/rules split into requited columns, validation rules and
-replacement values for clarity/ease of use; Updated validation to
-explain more detail of how the process/function currently work; Mention
-validation rules .csv (where all rules are contained); Updated inputs
-and outputs examples (In Annex) to show all GIS/NI/GB model 44/Model 1
-etc; Slight change to order of headings (readability) and heading titles
-(for brevity); Merged NI and GB lat/lon calculations into a single
-section (as these are both dealt with in one R function and reduce
-repetition).</td>
-</tr>
-<tr class="even">
-<td>v2.3</td>
-<td>25/11/2020</td>
-<td>Updated validation rules</td>
-</tr>
-<tr class="odd">
-<td>v2.4</td>
-<td>22/04/2021</td>
-<td>Added M44 info in introduction to validation rules, corrected
-Helperfunctionv1.r to <code>helper-functions.R</code>, correct typo:
-$≤$10, input file reference from <code>wValidation wTestData.csv</code>
-to <code>New_Input_file_Data_to_use_multi_year</code>.</td>
-</tr>
-</tbody>
-</table>
+<p>A new cloud-based open source version of RICT was developed which
+incorporated the current RIVPACS IV model and WFD status classification
+and uses the same basic algorithms to provide the same final results
+(other than correction of errors). Code and data tables for the new
+version will be more accessible to developers who wish to further
+develop RICT. This new version of RICT is called RICT version 2
+(RICT2).</p>
+<p>The platform chosen for RICT2 was Microsoft Azure Machine Learning
+(ML) Studio with open source R programming language. Due to Azure
+closing down this service, the platform moved to a ‘Shiny’ web server
+hosted by Posit. This version is called RICT version 3 (RICT3). The code
+was moved to an R package on Github.</p>
+<p>Advanced users can create their version of R code or run the R
+package locally on their machines.</p>
+<p>The RICT web app and latest documentation including the technical
+specification and user guide via <a href="https://rictapplications.shinyapps.io/rictapp/" class="external-link">RICT web
+app</a>.</p>
 </div>
 </div>
 <div class="section level2" number="2">
@@ -396,7 +190,7 @@ to <code>New_Input_file_Data_to_use_multi_year</code>.</td>
 <span class="header-section-number">2</span> Functional
 Overview<a class="anchor" aria-label="anchor" href="#functional-overview"></a>
 </h2>
-<p>RICT2 is an application that implements the RIVPACS IV predictive
+<p>RICT is an application that implements the RIVPACS IV predictive
 model. The primary requirement of the tool is to allocate WFD (Water
 Framework Directive) compliant classifications to rivers with regard to
 the quality of the river invertebrate community.</p>
@@ -404,13 +198,12 @@ the quality of the river invertebrate community.</p>
 good, M = moderate, P = poor or B = bad. This is achieved by comparing
 sample data from a river site against sample data previously taken from
 river sites considered to be the best available of their type.</p>
-<p>The primary functions of the RICT2 tool are:</p>
+<p>The primary functions of the RICT tool are:</p>
 <ol style="list-style-type: decimal">
 <li><p><strong>Predict</strong> - Predict the value of various biotic
-indices and (in a separate experiment) the presence and abundance of
-invertebrate species, genera or families that you would expect at any
-place on any stream or river in the UK if it was not environmentally
-disturbed.</p></li>
+indices and the presence and abundance of invertebrate species, genera
+or families that you would expect at any place on any stream or river in
+the UK if it was not environmentally disturbed.</p></li>
 <li><p><strong>Classify</strong> - Determine the Water Framework
 Directive (WFD) quality status class and statistical information about
 its confidence.</p></li>
@@ -420,163 +213,33 @@ of differences between classifications.</p></li>
 <p>It is to be capable of doing this for one or more sites at a time,
 with the results provided in an output file for subsequent processing by
 the relevant user.</p>
-<p>Each operation of the tool is carried out within a project experiment
-which may cover anything from a single site up to all sites within the
-UK that require classification.</p>
-<p>Standard experiments with default settings will be provided and made
-available on Microsoft Azure ML studio. RICT2 experiments will be
-collated as a “Collection” in Microsoft Azure Learning Studio to help
-users find all the experiments relevant to RICT2 as per the link
-below:</p>
-<p><a href="https://gallery.azure.ai/Collection/River-Invertebrate-Classification-Tool-RICT-Current-Versions" class="external-link uri">https://gallery.azure.ai/Collection/River-Invertebrate-Classification-Tool-RICT-Current-Versions</a></p>
-<p>Users can amend and save these experiments in their own azure ML
-studio workspace to create a experiments to suit their own requirements.
-The R source code can also be download from <a href="https://github.com/aquaMetrics/rict" class="external-link">github</a> and edited in
-local R environment for example in Rstudio.</p>
-<p>However, it must be noted that the version of R software studio on
-Microsoft Azure ML studio, at the time of writing this document, are
-currently older (latest being 3.4.4) than the latest version of R
-available. Therefore, if the experiment is downloaded and the user does
-some amendments to the R code using their latest version of the R, it
-may have compatibility issues if this experiment is subsequently
-uploaded back into Microsoft Azure ML studio.</p>
-<p>It should be noted that this document is written from the expectation
-that the user will be running the experiment in <a href="https://studio.azureml.net/" class="external-link">Microsoft Azure ML studio</a>.</p>
-<p>There are some minor compatibility issues between R running in Azure
-and running R locally. Azure does provide error <a href="https://docs.microsoft.com/en-us/azure/machine-learning/studio-module-reference/errors/machine-learning-module-error-codes" class="external-link">documentation</a>.
-The common issues are encountered are:</p>
-<ul>
-<li>Packages not loading (fix by re-running the experiment).</li>
-<li>Dataframes must have row.names when exported from one Azure module
-to the next.</li>
-<li>Using namespaces on some Non-standard evaluation functions can
-sometimes cause issues, for instance
-<code>dplyr::summarise(data, n())</code> - the <code>n()</code> won’t
-work on Azure. Solution is not to use namespace but add
-<code>#' @importFrom dplyr summarise n</code> to top of file.</li>
-</ul>
-<p>For initial release (2019), the GB Single year, GB multi-year and NI
-single year for WFD classification have been produced. These three
-experiments are available in the Azure ML Studio gallery.</p>
 <p>The diagram below shows a diagrammatical representation of the main
-functionality of the RICT2 tool with numbered links to more detailed
+functionality of the RICT tool with numbered links to more detailed
 information.</p>
-<p><img src="images/application-flow-chart.png" width="650"></p>
-<p><strong>1. LOGIN TO RICT:</strong> A new user will need to create a
-Microsoft account and log in to be able to access to the RICT tool as
-the tool uses the Microsoft Azure Machine Learning Studio as its
-platform. How to access RICT is outlined in the RICT user guide.</p>
-<p><strong>2. COMPLETE DATA INPUT:</strong> User will need to complete a
-CSV (comma delimited) input file containing the data for the run
-required. A standard template excel spreadsheet will be provided to
-enter this data which can be downloaded via a SharePoint link from the
-website.</p>
-<p>Validation will be done on the spreadsheet as the user enters the
-data via conditional formatting to warn the user if the data input will
-not meet certain validation limits.</p>
-<p>Annex A of this document has a copy of the data input table in more
-detail.</p>
-<p><strong>3. PROVIDE DATA:</strong> User will need to upload data into
-the RICT2 Tool and link the data to the project experiment in Microsoft
-Azure ML Studio.</p>
-<p>Support file data tables and R code support functions will be
-contained within Microsoft Azure ML Studio and will be linked to the
-project experiment. Section 3 of this document describes the support
-file data tables and R code support functions in more detail.</p>
-<p><strong>4. TRIGGER RUN:</strong> User can choose to run a project
-experiment for Predict and Classify experiment using the GB (Great
-Britain) model or a Predict and Classify experiment using the NI
-(Northern Ireland) model using default values.</p>
-<p>Users can also choose to download and amend the standard default
-experiments, including amending the support file data table values and
-create their own experiments in their own work area to run.</p>
-<p>Section 4 of this document describes the default values used in more
-detail.</p>
-<p><strong>5. VALIDATE DATA:</strong> A series of validation checks to
-ensure data provided meets specified requirements will be carried out
-using R code in RICT2.</p>
-<p>Section 5 of this document describes the validation steps in more
-detail.</p>
-<p><strong>6. PREDICTION:</strong> Tool will perform a series of steps
-in the project experiment to calculate Prediction:</p>
-<ul>
-<li>Convert Environmental Data</li>
-<li>Calculate Probability of End Group Membership</li>
-<li>Calculate Environmental Suitability</li>
-<li>Calculate Predicted Index Values (WHPT indices only in predict &amp;
-classify experiments, multiple indices in a separate experiment)</li>
-<li>Calculate Predicted Taxa (in a separate Experiment)</li>
-</ul>
-<p>Section 6 and 7 of this document describe the conversion and
-prediction steps in more detail.</p>
-<p><strong>7. CLASSIFICATION:</strong> Tool will perform a series of
-steps in the project experiment to calculate Classification:</p>
-<ul>
-<li>Calculate reference values from expected values</li>
-<li>Apply bias to Observed Values</li>
-<li>Run simulations to take account of errors in observed and
-expected</li>
-<li>Calculate EQR for all simulations</li>
-<li>Average spring and autumn EQR for all simulations</li>
-<li>Calculate probability of class from the simulations</li>
-</ul>
-<p>Section 10 of this document describe the classification steps in more
-detail.</p>
-<p><strong>9. COMPARE EXPERIMENT:</strong> Tool runs processing steps to
-compare data outputs from two previous predict and classify runs to
-produce a compare output file report.</p>
-<p><strong>10. OUTPUT FILE:</strong> RICT2 will generate an output file
-with processed data for Predict and Classify in csv format for the user
-to download. This data extract can th en be used for analysis and
-reporting.</p>
-<p>Annex B of this document has a copy of the data output table in more
-detail.</p>
-<p>Users can also choose the R Device dataset option in Machine studio
-to visualise the data and, if required, could write code to create the
-output file in the format they choose.</p>
-<p>A screenshot of the RICT2 prediction and classification experiment
-for GB in Microsoft Azure ML Studio being used with the default GB test
-data from the input template is shown below:</p>
-<p><img src="images/rict-azure.png" width="650"></p>
 </div>
 <div class="section level2" number="3">
 <h2 id="supporting-files">
 <span class="header-section-number">3</span> Supporting files<a class="anchor" aria-label="anchor" href="#supporting-files"></a>
 </h2>
-<p>RICT2 uses the RIVPACS reference data which contain sites that are
+<p>RICT uses the RIVPACS reference data which contain sites that are
 considered to be the best available of their type. The latest version of
 the complete RIVPACS reference database for RICT can be downloaded from
-the RICT2 Website:</p>
+the RICT Website:</p>
 <p><a href="https://fba.org.uk/FBA/Public/Discover-and-Learn/Projects/RIVPACS-Reference-Sites-and-Reports.aspx" class="external-link uri">https://fba.org.uk/FBA/Public/Discover-and-Learn/Projects/RIVPACS-Reference-Sites-and-Reports.aspx</a></p>
-<p>Within RICT2, the RIVPACS reference data is not used at site level
-but is used at the End Group level, where an End Group contains combined
+<p>Within RICT, the RIVPACS reference data is not used at site level but
+is used at the End Group level, where an End Group contains combined
 data for sites considered to be of a similar biological composition. End
 Groups are grouped up to End Group Sets (e.g. New GB – 43 Group
 level).</p>
-<p>As well as this data table, RICT2 needs other data which will be held
-and used as internal data tables and R software code functions in the
-project experiment.</p>
-<p>A list of the tables and functions required for the <strong>GB model
-experiment</strong> is as below.</p>
+<p>As well as this data table, RICT needs other data which will be held
+and used as internal data tables and R software code functions.</p>
 <p>All the following files can be found within the rict package on <a href="https://github.com/aquaMetrics/rict" class="external-link">github</a>.</p>
-<p>Each experiment uses the exact same supporting files/package. The
-code within each experiment determines which functions and supporting
-tables are called from the supporting files.</p>
 <p>The rict code is automatically tested and compiled/built on every
 update to the master branch on Github. This process is carried out by
-the Appveyor website, which monitors Github for any changes and
-re-builds and tests the code on a Windows machine in the cloud.</p>
-<p>The Microsoft Windows binary rict.zip package file (Azure requires a
-Windows binary package) is stored on the Appveyor <a href="https://ci.appveyor.com/project/ecodata1/rict/branch/master/artifacts" class="external-link">artifacts</a>
-page. It is currently built using R 3.5 (slightly above the Azure
-version R 3.4.4) for compatibility with Appveyor. But this has not
-caused any issues.</p>
-<p>Alternatively, the rict package binary can be compile/built locally
-on a Windows machine.</p>
-<p>The .zip binary package file, is then moved to a folder called
-‘support-files’ and that folder is also zip compressed. This zipped
-folder is then uploaded to Azure Studio and drag and dropped into all
-experiments as required.</p>
+the Github actions website, which monitors repo for any changes and
+re-builds and tests the code on a Windows, Mac and Linux machine in the
+cloud. It then automatically deploys updates to the web app and/or
+documentation.</p>
 <div class="section level3" number="3.1">
 <h3 id="prediction">
 <span class="header-section-number">3.1</span> Prediction<a class="anchor" aria-label="anchor" href="#prediction"></a>
@@ -623,7 +286,7 @@ taxa.</li>
 <li>
 <code>x-103-end-group-means-formatted-jdb-17-dec-2019.csv</code> –
 combined data for sites considered to be of a similar biological
-compositionthe End Group table used in RICT2 is called</li>
+composition the End Group table used in RICT is called</li>
 </ul>
 </div>
 <div class="section level4" number="3.1.2">
@@ -660,9 +323,9 @@ the expected values during classification for calculating
 proportion.</li>
 </ul>
 <p><strong>Note</strong>, no classification is carried out on the 80
-indices – the experiment is carried out for Prediction only!</p>
+indices – carried out for Prediction only!</p>
 <p>A list of the tables and functions required for the NI model
-experiment is as below: Prediction support files:</p>
+below:</p>
 <ul>
 <li>
 <code>DFCOEFF_NI.DAT</code> file used for Discriminant score as
@@ -701,38 +364,18 @@ adjustment values which are used as described in Section 8.2.</li>
 expected values during classification as described in Section 8.2.</li>
 </ul>
 <p>All source code and support files can be downloaded into R
-environment for example Rstudio from github for users who wish to amend
-and create their own versions and set up their own experiments.</p>
+environment for example Rstudio from Github for users who wish to amend
+and create their own versions.</p>
 </div>
 </div>
 </div>
 <div class="section level2" number="4">
-<h2 id="rict2-experiments">
-<span class="header-section-number">4</span> RICT2 Experiments<a class="anchor" aria-label="anchor" href="#rict2-experiments"></a>
+<h2 id="rict">
+<span class="header-section-number">4</span> RICT<a class="anchor" aria-label="anchor" href="#rict"></a>
 </h2>
 <div class="section level3" number="4.1">
-<h3 id="settings">
-<span class="header-section-number">4.1</span> Settings<a class="anchor" aria-label="anchor" href="#settings"></a>
-</h3>
-<p>The “settings” will be determined by the project experiment which
-will use default values relevant for that project experiment. However,
-the tool will allow a user to open experiments in their own workspace
-and change the settings and values and save their own experiments.
-Standard published experiments can only be amended by an administrator
-user. These will be a “locked down” version displayed in the Azure
-Studio gallery.</p>
-<p>Below are described the default settings values for the WFD
-Classification experiments.</p>
-<p>A run of the tool can only be carried out against one Reference End
-Group model. Users can choose to run an experiment for either:</p>
-<ul>
-<li>RIVPACS IV GB (M1) (Set ID = 1)</li>
-<li>RIVPACS IV NI (M1) (Set ID = 2)</li>
-</ul>
-</div>
-<div class="section level3" number="4.2">
 <h3 id="default-values">
-<span class="header-section-number">4.2</span> Default values<a class="anchor" aria-label="anchor" href="#default-values"></a>
+<span class="header-section-number">4.1</span> Default values<a class="anchor" aria-label="anchor" href="#default-values"></a>
 </h3>
 <p>The list below describes the default values used:</p>
 <ul>
@@ -741,14 +384,14 @@ Group model. Users can choose to run an experiment for either:</p>
 <li>Season type – Spring, Autumn, Spring/Autumn Combined, Summer</li>
 <li>Classification boundary limits – Coded as per WFD compliant values
 found in the classification support files (user would need to amend the
-function in this file to alter values for their own experiments)</li>
+function in this file to alter values for their own version)</li>
 <li>Bias - Bias values can be provided in the input file by the user and
-will be used in the experiment if they have been provided. However, if
-no data values for Bias or “-9” has been entered in the input file, then
-the hard-coded default value of 1.62 (GB) or 0 (NI) will be used.</li>
+will be used if provided. However, if no data values for Bias or “-9”
+has been entered in the input file, then the hard-coded default value of
+1.62 (GB) or 0 (NI) will be used.</li>
 </ul>
 <p>Note that 1.62 is the default value currently being used for Bias as
-this was input as the default value in the previous version of RICT2 as
+this was input as the default value in the previous version of RICT as
 used in SEPA for BMWP NTAXA. However, the EA uses a value of 1.68 as the
 Bias value for WHPT which was based on an audit of the analytical
 quality of Environment Agency laboratories. The Bias value for WHPT
@@ -757,30 +400,28 @@ analytical quality, because WHPT uses more taxa than BMWP. Plus WHPT
 taxa also includes additional Diptera families which are less easy to
 identify.</p>
 </div>
-<div class="section level3" number="4.3">
-<h3 id="future-experiments">
-<span class="header-section-number">4.3</span> Future
-Experiments<a class="anchor" aria-label="anchor" href="#future-experiments"></a>
+<div class="section level3" number="4.2">
+<h3 id="future-developments">
+<span class="header-section-number">4.2</span> Future
+Developments<a class="anchor" aria-label="anchor" href="#future-developments"></a>
 </h3>
 <p>A multi-site classification will be added to enable water bodies to
 be classified from more than one site. The GIS data location checker and
 delivery system and multi-site classification are currently in
 development and we hope to release them in a couple of months.</p>
-<p>Additional standard default experiments to calculate the output for
-more specific Index sets (e.g. for hydro-ecological evaluation) may be
-added later, if the need arises.</p>
-<p>Future RICT2 release may allow a user to run predictions and
+<p>Additional standard default to calculate the output for more specific
+Index sets (e.g. for hydro-ecological evaluation) may be added later, if
+the need arises.</p>
+<p>Future RICT release may allow a user to run predictions and
 classifications against previous classifications and RIVPACS models to
 allow historical data to be analysed in a consistent way with current
 monitoring data. That may include BMWP (Biological Monitoring Working
 Party) classification based on RIVPACS IV (used before 2015) or RIVPACS
 III+ (used 1990-1009), or using WHPT based on BMWP taxa including BMWP
 composite taxa.</p>
-<p>We may also correct or improve experiments. If we need to do that, or
-we add new experiments to the gallery, we will run them through testing
-to ensure that the modifications do not affect the results and if they
-do, we know what the effect is. Information about that will be added to
-this document and to user guides, as appropriate.</p>
+<p>We may correct or improve features, if we need to do that, we will
+run them through testing and add to this document and user guides, as
+appropriate.</p>
 </div>
 </div>
 <div class="section level2" number="5">
@@ -803,8 +444,7 @@ applied to the data that has been input for each column to help the user
 meet the validation requirements detailed below.</p>
 <p>The input data spreadsheet template can be found in Annex A of this
 document. Once completed, this spreadsheet will need to be saved as a
-csv format and uploaded by the user to link to the required project
-experiment.</p>
+csv format and uploaded by the user.</p>
 <div class="section level3" number="5.1">
 <h3 id="environmental-variable-values-and-validation">
 <span class="header-section-number">5.1</span> Environmental
@@ -816,7 +456,7 @@ of some Environmental Variables are provided and input by the user. The
 values of other Environmental Variables have to be derived using the
 values of one or more provided Environmental Variables and then
 converted. The complete set of input and derived Environmental Variables
-used by RICT2 are called Predictive Environmental Variables (PEVs).</p>
+used by RICT are called Predictive Environmental Variables (PEVs).</p>
 <p>The tables below refers to the Environmental Variable data required
 and the data field validation for the RIVPACS IV Great Britain and
 Northern Ireland Model M1 and additionally the model M44. The M1 model
@@ -828,10 +468,10 @@ spreadsheet. This will be done by the conditional formatting tool within
 the MS Excel ribbon to check and highlight to the user where data does
 not meet validation requirements. It will highlight failures in red and
 warnings in orange. However, it will not stop the user from supplying
-that data to RICT2 for processing. When RICT2 processes the data, the
+that data to RICT for processing. When RICT processes the data, the
 appropriate Fail and Warn errors will be generated as described
 below.</p>
-<p>Validation has also been coded into RICT2 for validation of the value
+<p>Validation has also been coded into RICT for validation of the value
 ranges, i.e. “all”, “gb” and “ni”.</p>
 <p>Note that at least one set of the following data will be required for
 each site but there may be up to three sets of data where the ‘raw’ data
@@ -2185,18 +1825,18 @@ data into the input spreadsheet:</p>
 Environmental Values are present and they are the correct format as user
 enters data.</li>
 </ul>
-<p>The user then inputs the values into RICT2 on Azure and the software
-carries out further validation:</p>
-<p>If any columns are missing when data is imported to RICT2 the program
+<p>The user then inputs the values into RICT and the software carries
+out further validation:</p>
+<p>If any columns are missing when data is imported to RICT the program
 fails.</p>
 <ul>
 <li>Check against ‘Overall’ Valid Max/Min Values</li>
 <li>Check that each provided EV value is greater than or equal to the
 ‘overall’ minimum value and less than or equal to the ‘overall’ maximum
-value defined in the Environmenjtal Variable parameter table above.</li>
-<li>Within RICT2 code, if the values do not meet the validation criteria
+value defined in the Environmental Variable parameter table above.</li>
+<li>Within RICT code, if the values do not meet the validation criteria
 the site is flagged as a failure and that particular site is removed
-from the experiment.</li>
+from the run.</li>
 </ul>
 <p>The fail limits are based on the minimum and maximum values likely in
 GB or NI. Values exceeding these limits must be wrong.</p>
@@ -2206,7 +1846,7 @@ GB or NI. Values exceeding these limits must be wrong.</p>
 ‘warning’ minimum value and less than or equal to the ‘warning’ maximum
 value defined in the Environmental Variable parameter table above.</li>
 <li>If not, then this should be recorded so that it can be flagged as a
-‘warning’ in the output file but the experiment will proceed as
+‘warning’ in the output file but the software will proceed as
 normal.</li>
 </ul>
 <p>The warning limits are the minimum and maximum values of the
@@ -2230,15 +1870,13 @@ IV Northern Ireland Model 1.</p>
 <p>Conditional formatting validation will be carried out for all of the
 validation rules described in the table below when a user enters data
 into the input file spreadsheet. There is no validation for the Observed
-Biological data within RICT2.</p>
-<p>However, RICT2 will validate that relevant values have been provided
-from the prediction process of the experiment prior to the
-classification process. This is to check that there are no null values
-if these values are required for the classification to be
-successful.</p>
-<p>Note, this data will need to be entered for each season relevant for
-the project experiment. For WFD classification, this will be data for
-spring and autumn.</p>
+Biological data within RICT.</p>
+<p>However, RICT will validate that relevant values have been provided
+from the prediction process prior to the classification process. This is
+to check that there are no null values if these values are required for
+the classification to be successful.</p>
+<p>Note, this data will need to be entered for each season as relevant.
+For WFD classification, this will be data for spring and autumn.</p>
 <p>Data Item<br>
 Validation<br>
 Season ID</p>
@@ -2330,7 +1968,7 @@ Temperature<a class="anchor" aria-label="anchor" href="#calculate-air-temperatur
 </h3>
 <p>This conversion process is only applicable to GB model sites.</p>
 <p>When converting Latitude and Longitude to Long Term Average Mean
-Temperature and Range of Air Temperature, RICT2 uses a data file
+Temperature and Range of Air Temperature, RICT uses a data file
 containing previously derived values for Mean air temperature and Air
 temperature range for points in the centres of 5km interval grid
 squares. This data file can be found in the inst/ext directory and is
@@ -2789,9 +2427,9 @@ temperature range (TEMPR), which were not available for Northern Ireland
 and probably would not add discriminatory power within this relatively
 small geographic region.</p>
 <p>For the purposes of specifying the discriminant functions and
-inputting their coefficients (DFCoeff<sub>v,d</sub>), RICT2 will have a
+inputting their coefficients (DFCoeff<sub>v,d</sub>), RICT will have a
 <code>helper-functions.R</code> file (among the support files) for the
-Northern Ireland model experiment.</p>
+Northern Ireland model.</p>
 <p>Some of the environmental predictor variables are used in the
 discriminant functions in a logarithm to base 10 transformed form
 (denoted Log<sub>10</sub>), as detailed below.</p>
@@ -2923,7 +2561,7 @@ follows:</p>
 untransformed form (as Env9) and in log transformed form (as Env10) to
 represent its non-linear impact on the biota.</p>
 <p>This table also shows which EVs are supplied by the user in the input
-file and which EVs are internally derived by RICT2 conversions.</p>
+file and which EVs are internally derived by RICT conversions.</p>
 </div>
 <div class="section level3" number="6.8">
 <h3 id="validation-of-derived-environmental-variables">
@@ -3037,7 +2675,7 @@ Discriminant Function Scores<a class="anchor" aria-label="anchor" href="#calcula
 </h3>
 <p>(Step 4 in diagram above)</p>
 <p><img src="images/rict-discriminant-function-score.png" width="200"></p>
-<p>The functions that RICT2 uses for the calculations in the steps below
+<p>The functions that RICT uses for the calculations in the steps below
 (steps 4 - 8) can be found in the prediction-functions.R file. The
 algorithms and definitions provided below are copied from WFD72C and
 have been used to create the functions.</p>
@@ -3206,11 +2844,11 @@ Predicted Values of Indices<a class="anchor" aria-label="anchor" href="#determin
 <p>(Step 8 in diagram above)</p>
 <p><img src="images/rict-prediction-of-index.png" width="200"></p>
 <p>The indices that require to be processed will be identified from the
-project experiment settings. For the initial release of RICT2 this will
-be for WHPT ASPT and WHPT NTAXA sets which are the indices required for
-the WFD classification. However, for Prediction, all 80 indices (which
-includes WHPT ASPT and WHPT NTAXA sets), will be used at this point and
-for Prediction only.</p>
+options panel. For the initial release of RICT this will be for WHPT
+ASPT and WHPT NTAXA sets which are the indices required for the WFD
+classification. However, for Prediction, all 80 indices (which includes
+WHPT ASPT and WHPT NTAXA sets), will be used at this point and for
+Prediction only.</p>
 <p><code>prediction-functions.R</code> contains the following functions
 which will do this calculation:</p>
 <p><code>rict:::getSeasonIndexScores()</code></p>
@@ -3262,9 +2900,7 @@ process.</p>
 <span class="header-section-number">8</span> All index
 prediction<a class="anchor" aria-label="anchor" href="#all-index-prediction"></a>
 </h2>
-<p>This is a modification of the prediction undertaken in the predict
-and classify experiments. It provides predictions for a wide range of
-indices.</p>
+<p>This provides predictions for a wide range of indices.</p>
 <p>However, it uses a different end group means data file derived from
 the RIVPACS database.</p>
 <p>The all indices output file will only show the output for prediction
@@ -3288,50 +2924,15 @@ provides:</p>
 </ul>
 <p>The steps involved are described below.</p>
 <div class="section level3" number="9.1">
-<h3 id="identify-relevant-sites-for-the-run">
-<span class="header-section-number">9.1</span> Identify Relevant
-Sites for the Run<a class="anchor" aria-label="anchor" href="#identify-relevant-sites-for-the-run"></a>
+<h3 id="data-limits">
+<span class="header-section-number">9.1</span> Data Limits<a class="anchor" aria-label="anchor" href="#data-limits"></a>
 </h3>
-<p>Because of a potentially overwhelming amount of data in the output
-files, the user must specify which sites included in the input file the
-prediction is to be carried out. This additional step is undertaken
-using the manual data entry, explained below.</p>
-<p>Notes from write up with Maybin (March 2020):</p>
-<p>The following images illustrate the process flow and data
-requirements for the experiment to be run. The data inputs and support
-files are different for the GB and NI experiments.</p>
-<p>Click on Enter Data Manually</p>
-<p><img src="images/rict-prediction-azure-1.png" width="500"></p>
-<p>At this point, you choose which sites to run, this is in a .csv
-format.</p>
-<p>Leave the HasHeader box unchecked, if checked it will have a header
-file.</p>
-<p>The data fields are the sites you choose to run for the
-experiment.</p>
-<p>Note, the GB model has no restrictions when it comes to the number of
-sites that can be run in the experiment, however, the NI model is
-restricted to a maximum of two sites that can be run for each
-experiment. Therefore, it is suggested that only two sites are run for
-the GB model at any one time for it to work effectively. If you want to
-run all the sites for the GB model you need to put a 0 in the data
-line.</p>
-<p>Example: GB – 1,2 2,3 3,5 4,7 etc., however, for NI only two sites
-can be run at one time, 1,2 and 3,10 or 2,7 and 3,4 in whichever
-sequential order you choose.</p>
-<p><img src="images/rict-prediction-azure-2.png" width="500"></p>
-<p>Figure 1 Example data entered to indicate two sites in the data input
-file selected for taxon prediction.</p>
-</div>
-<div class="section level3" number="9.2">
-<h3 id="predict-expected-values-for-each-taxon">
-<span class="header-section-number">9.2</span> Predict Expected
-values for each taxon<a class="anchor" aria-label="anchor" href="#predict-expected-values-for-each-taxon"></a>
-</h3>
-<p><img src="images/rict-prediction-azure-3.png" width="500"></p>
-<p>From Ralph Clarke 30/01/20</p>
-<div class="section level4" number="9.2.1">
+<p>Because of the large amounts data in the output files and stain on
+the server, the user is limited to 20 sites per run. This restriction is
+only on the web app. Running the RICT package locally is unlimited.</p>
+<div class="section level4" number="9.1.1">
 <h4 id="taxon-prediction-data-file">
-<span class="header-section-number">9.2.1</span> Taxon prediction
+<span class="header-section-number">9.1.1</span> Taxon prediction
 data file<a class="anchor" aria-label="anchor" href="#taxon-prediction-data-file"></a>
 </h4>
 <p>All of the required taxon prediction data was supplied by John
@@ -3379,9 +2980,9 @@ IV model reference sites.</p>
 </ul>
 <p>Season 1 = spring, 2 = summer, 3 = autumn.</p>
 </div>
-<div class="section level4" number="9.2.2">
+<div class="section level4" number="9.1.2">
 <h4 id="calculate-expected-for-a-gb-test-site">
-<span class="header-section-number">9.2.2</span> Calculate Expected
+<span class="header-section-number">9.1.2</span> Calculate Expected
 for a GB test site<a class="anchor" aria-label="anchor" href="#calculate-expected-for-a-gb-test-site"></a>
 </h4>
 <p>End-group means of the 8 parameters to be predicted are supplied in
@@ -3404,9 +3005,9 @@ taxonomic level, end-group and season combinations for which Expected
 values are required, but also because the number of taxa included in the
 input file varies between seasons.</p>
 </div>
-<div class="section level4" number="9.2.3">
+<div class="section level4" number="9.1.3">
 <h4 id="calculate-all-taxonomic-expected-values">
-<span class="header-section-number">9.2.3</span> Calculate all
+<span class="header-section-number">9.1.3</span> Calculate all
 taxonomic expected values<a class="anchor" aria-label="anchor" href="#calculate-all-taxonomic-expected-values"></a>
 </h4>
 <p>The following computing trick calculates the expected values of
@@ -3426,7 +3027,6 @@ supplied in one of columns 11-18), calculate new column ParamJ_Prob
 as:</p></li>
 </ol>
 <pre><code>ParamJ_Prob = End_Group_Prob  x ParamJ</code></pre>
-<p><img src="images/rict-prediction-azure-4.png" width="500"></p>
 <ol start="4" style="list-style-type: lower-roman">
 <li><p>Use a software multi-way table function using columns (4, 3, 7,
 5, 6, 8, 9, 10,) in that order as multi-way table classifiers and then
@@ -3464,12 +3064,11 @@ Tax code, as required. For example, to just get predictions of taxonomic
 parameters for taxa at taxonomic level TL1 (BMWP family level), you just
 subset the 18 output columns by column TL= TL2.</p>
 <p>If the user wishes to only view the prediction results, a csv output
-will be generated in the project experiment which can be downloaded and
-used for reports.</p>
+will be generated which can be downloaded and used for reports.</p>
 </div>
-<div class="section level4" number="9.2.4">
+<div class="section level4" number="9.1.4">
 <h4 id="taxon-prediction-output">
-<span class="header-section-number">9.2.4</span> Taxon prediction
+<span class="header-section-number">9.1.4</span> Taxon prediction
 Output<a class="anchor" aria-label="anchor" href="#taxon-prediction-output"></a>
 </h4>
 <p>Taxon prediction output includes a row for each taxon predicted. For
@@ -3480,28 +3079,26 @@ file, together with siteName. Sections below are based on notes from
 write up with Maybin (March 2020):</p>
 </div>
 </div>
-<div class="section level3" number="9.3">
+<div class="section level3" number="9.2">
 <h3 id="data-input-files">
-<span class="header-section-number">9.3</span> Data Input files<a class="anchor" aria-label="anchor" href="#data-input-files"></a>
+<span class="header-section-number">9.2</span> Data Input files<a class="anchor" aria-label="anchor" href="#data-input-files"></a>
 </h3>
-<div class="section level4" number="9.3.1">
+<div class="section level4" number="9.2.1">
 <h4 id="gb-ni">
-<span class="header-section-number">9.3.1</span> GB &amp; NI<a class="anchor" aria-label="anchor" href="#gb-ni"></a>
+<span class="header-section-number">9.2.1</span> GB &amp; NI<a class="anchor" aria-label="anchor" href="#gb-ni"></a>
 </h4>
 <ul>
-<li>New Input File on Azure:
+<li>New Input File:
 <code>New_Input_file_Data_to_use_multi_year.csv</code>
 </li>
 <li><code>prediction-functions.R</code></li>
-<li>
-<code>helper-functions.R</code> – contains all the functions used to
-run the experiment</li>
+<li><code>helper-functions.R</code></li>
 </ul>
 </div>
 </div>
-<div class="section level3" number="9.4">
+<div class="section level3" number="9.3">
 <h3 id="r-code-for-taxa-prediction">
-<span class="header-section-number">9.4</span> R code for taxa
+<span class="header-section-number">9.3</span> R code for taxa
 prediction<a class="anchor" aria-label="anchor" href="#r-code-for-taxa-prediction"></a>
 </h3>
 <p>The <code>rict_predict</code> function this is the same as previous
@@ -3536,16 +3133,14 @@ information:</p>
 <span class="header-section-number">10.2</span> Classification
 overview<a class="anchor" aria-label="anchor" href="#classification-overview"></a>
 </h3>
-<p>For every site in the experiment, the input to the classification
-process consists of Observed and Expected Index Values for the ‘current
-year’ for each applicable index.</p>
+<p>For every site in the input to the classification process consists of
+Observed and Expected Index Values for the ‘current year’ for each
+applicable index.</p>
 <p>Multiyear classification will include Observed and Expected Index
 Values for up to two previous years for each applicable index.</p>
-<p>The indices that need to be classified will be relevant to the
-project experiment. For the WFD classification default experiment, RICT2
-will use TL2 WHPT Abundance weighted with distinct taxa for ASPT and
-NTAXA indices.</p>
-<p>Any functions that RICT2 uses for the calculations described in the
+<p>For the WFD classification, RICT will use TL2 WHPT Abundance weighted
+with distinct taxa for ASPT and NTAXA indices.</p>
+<p>Any functions that RICT uses for the calculations described in the
 steps below (steps 1 - 13), can be found in the
 ClassificationfunctionsV2 within the classification support files
 folder. The algorithms and definitions provided below are copied from
@@ -3597,15 +3192,14 @@ predictions (NTAXA and ASPT) to get the adjusted expected value
 (ExpIDXadj,i) for each site and each index.</p></li>
 </ul>
 <p>The reference adjustment values referred to above are default values
-for the WFD classification experiment and can be found in
-adjustParams_ntaxa_aspt csv file within the classification support files
-folder.</p>
+for the WFD classification and can be found in adjustParams_ntaxa_aspt
+csv file within the classification support files folder.</p>
 <p>This supporting data table csv file contains the number of reference
 sites by Biologist assessment score (1-5) for each End Group together
 with the five adjustment factors (Q1, Q2, Q3, Q4, Q5) for each
 index.</p>
 <p>The source for this csv file is based on the Table 6 from the Testing
-RICT2 predictions and classifications draft report 2018 which is as
+RICT predictions and classifications draft report 2018 which is as
 below:</p>
 <table class="table">
 <thead><tr class="header">
@@ -3645,15 +3239,13 @@ below:</p>
 Q4, Q5) for abundance-weighted WHPT NTAXA and WHPT ASPT</p>
 <p>However, further work has been done which has resulted in slightly
 different values for these adjustment factors which are reflected in the
-<code>adjustParams_ntaxa_aspt.csv</code> file used by RICT2, It is
-expected that the Testing RICT2 predictions and classifications draft
+<code>adjustParams_ntaxa_aspt.csv</code> file used by RICT, It is
+expected that the Testing RICT predictions and classifications draft
 report 2018 will be shortly updated to include a Table 7 to show these
 changes.</p>
 <p>There is one set of adjustment factors for each index. Within current
-RICT2, adjustment factors for WHPT NTAXA and WHPT ASPT have been
-calculated for the default WFD experiment. If a user wants to try a
-different value then they will need to amend and create their own
-experiment.</p>
+RICT, adjustment factors for WHPT NTAXA and WHPT ASPT have been
+calculated.</p>
 </div>
 <div class="section level3" number="10.5">
 <h3 id="eqr-conversion-factor">
@@ -3671,8 +3263,8 @@ reference sites in reference condition = high status)</p>
 value of the index at all RIVPACS Reference Sites divided by the value
 at RIVPACS reference sites that are in WFD high status (reflected in
 Biologists’ Assessment values for each reference site).</p>
-<p>For the default WFD classification in RICT2 the conversion factor
-value will be (as copied from Section 5.5 of the Testing RICT2
+<p>For the default WFD classification in RICT the conversion factor
+value will be (as copied from Section 5.5 of the Testing RICT
 predictions and classifications draft report 2018):</p>
 <ul>
 <li>1.0049 for WHPT NTAXA</li>
@@ -3707,7 +3299,7 @@ referring to EQI (Environmental Quality Indices) values (which are
 calculated as EQI = Obs / ExpAdj) and means that the site
 classifications can use the published class limits for index EQR values
 directly.</p>
-<p>This calculation is done directly within RICT2 code and not via any
+<p>This calculation is done directly within RICT code and not via any
 function.</p>
 </div>
 <div class="section level3" number="10.7">
@@ -3725,7 +3317,7 @@ SDExpi / √(NExpyear) as described in further detail below. It is the
 error term used to adjust the expected value.</p>
 <p>The simulation of uncertainty in ExpRef is obtained using the
 algorithms in Section 6.4 of the Clarke &amp; Davy-Bowker WHPT indices
-RICT2 Report of March 2014 report, but now where uncertainty in the
+RICT Report of March 2014 report, but now where uncertainty in the
 Expected values is measured about the WFD Reference-adjusted value
 ExpRef., this has been amended as described below.</p>
 <p>Main algorithm used:</p>
@@ -3771,7 +3363,7 @@ Adjustment<a class="anchor" aria-label="anchor" href="#calculate-bias-adjustment
 </h3>
 <p>(Step 6 in process diagram above)</p>
 <p><img src="images/rict-classification-6.png" width="200"></p>
-<p>RICT2 classification requires users to input an observed value for an
+<p>RICT classification requires users to input an observed value for an
 index (ObsIDXi), based on samples collected in the field. This value is
 provided by the user completing the relevant data field in the input
 file as described in section 5 and Annex B of this document. Values are
@@ -3781,12 +3373,12 @@ autumn.</p>
 the impact of analytical error (measured by auditing) on the observed
 index values. This value is provided by the user completing the relevant
 data field in the input file as described in section 5 and Annex B of
-this document. RICT2 calculates bias for ASPT from bias for NTAXA and
-the observed NTAXA. If no input value for Bias is provided, RICT2 will
-use a default value of 1.62.</p>
+this document. RICT calculates bias for ASPT from bias for NTAXA and the
+observed NTAXA. If no input value for Bias is provided, RICT will use a
+default value of 1.62.</p>
 <p>If bias correction is not wanted, users should enter a bias value of
 zero into the relevant data field in the input file. The zero value must
-be entered and not left blank or RICT2 will use a default value.</p>
+be entered and not left blank or RICT will use a default value.</p>
 </div>
 <div class="section level3" number="10.9">
 <h3 id="simulate-uncertainty-in-observed-values">
@@ -3812,7 +3404,7 @@ SDObs<sub>i</sub> For single-year runs: SDObs<sub>i</sub> = √(
 (SDRep<sub>i</sub>)<sup>2</sup> +
 (SDTSeas<sub>i</sub>)<sup>2</sup>)<br>
 Where values for SDRep = 0.269 and SDTSeas = 0.279<br>
-Definitions for each index used within RICT2 (which are only the
+Definitions for each index used within RICT (which are only the
 abundance-weighted WHPT indices are as below copied from Section 6.3.3.2
 (b) of the WHPT and other Abundance-Weighted Indices SEPA Report:<br>
 ObsIDX8r = (√(ObsIDX8) + ZObs8r)<sup>2</sup> = rth simulated value for
@@ -3821,8 +3413,8 @@ ObsIDX9r = ObsIDX<sub>9</sub> + ZObs<sub>9r</sub> = rth simulated value
 for observed weighted WHPT ASPT<br>
 ObsIDX7r = ObsIDX<sub>8r</sub> * ObsIDX<sub>9r</sub> = rth simulated
 value for observed weighted WHPT Score</p>
-<p>Within RICT2, these calculations are done using functions which can
-be found in the <code>classification-functions.R</code>.</p>
+<p>Within RICT, these calculations are done using functions which can be
+found in the <code>classification-functions.R</code>.</p>
 </div>
 <div class="section level3" number="10.10">
 <h3 id="simulate-variation-in-bias">
@@ -3831,7 +3423,7 @@ in Bias<a class="anchor" aria-label="anchor" href="#simulate-variation-in-bias">
 </h3>
 <p>(Step 8 in process diagram above)</p>
 <p><img src="images/rict-classification-8.png" width="200"></p>
-<p>This is simulation of user input bias which is calculated in RICT2
+<p>This is simulation of user input bias which is calculated in RICT
 using the <code>getUbias8r()</code> function found in the
 <code>classification-functions.R</code>.</p>
 <p>The algorithms used within this function are as below which is copied
@@ -3844,7 +3436,7 @@ for current test site (uncorrected for bias)</p>
 NTAXA for the observed sample</p>
 <p>Ubias<sub>8</sub> is either:</p>
 <ol style="list-style-type: decimal">
-<li>input by the user of the RICT2 software</li>
+<li>input by the user of the RICT software</li>
 <li>estimated as 36% higher than the user-input bias (Ubias2) for number
 of BMWP taxa i.e. Ubias<sub>8</sub> = 1.36 Ubias<sub>2</sub>
 </li>
@@ -3888,8 +3480,8 @@ above.</p>
 ObsIDX<sub>ir</sub> = Simulated observed value from Section 8.7
 above<br>
 Ubias<sub>ir</sub> = Simulated Bias value from Section 8.8 above</p>
-<p>Within RICT2, these calculations are done using functions which can
-be found in the ClassificationfunctionsV2 (within the classification
+<p>Within RICT, these calculations are done using functions which can be
+found in the ClassificationfunctionsV2 (within the classification
 support files folder).</p>
 <p>The algorithms used within this function are as below which is copied
 from Section 6.3.3.3 of the WHPT and other Abundance-Weighted Indices
@@ -3911,8 +3503,8 @@ index. As indicated above, each index has a number, i.e.:</p>
 <li>WHPT NTAXA (index 8)</li>
 <li>WHPT ASPT (index 9)</li>
 </ul>
-<p>The simulated EQRs are stored for each metric at this point if
-required for Compare experiment.</p>
+<p>Optionally, the simulated EQRs are stored for each metric at this
+point if required for Compare.</p>
 </div>
 <div class="section level3" number="10.12">
 <h3 id="calculate-environmental-quality-ratio-eqr">
@@ -3936,7 +3528,7 @@ i</p>
 simulation r as calculated in section 8.9.</p>
 <p>ExpIDX<sub>Ref,ir</sub> = Reference-adjusted Expected value of index
 i in simulation r as calculated in section 8.5.</p>
-<p>This calculation is done directly within RICT2 code and not via any
+<p>This calculation is done directly within RICT code and not via any
 function.</p>
 </div>
 <div class="section level3" number="10.13">
@@ -3949,8 +3541,8 @@ autumn EQRs<a class="anchor" aria-label="anchor" href="#combine-spring-and-autum
 <p>The aim of this step is to increase precision of classification and
 take account of seasonal variations in environmental quality.</p>
 <p>The WFD status must be based on EQRs calculated from spring and
-autumn samples. These values must be calculated and available within the
-experiment for this step to calculate the seasonal average.</p>
+autumn samples. These values must be calculated and available for this
+step to calculate the seasonal average.</p>
 <p>The EQR values for spring and autumn samples are divided by the
 number of season (i.e. 2) to calculate the seasonal average for each
 simulation. The main algorithm is:</p>
@@ -3962,7 +3554,7 @@ EQR<sub>irB,Au</sub>) / 2</p>
 section 8.10</p>
 <p>EQR<sub>irB,Au</sub> = EQR value for autumn season as calculated in
 section 8.10</p>
-<p>This is calculated in RICT2 using the <code>getAvgEQR_SpAut()</code>
+<p>This is calculated in RICT using the <code>getAvgEQR_SpAut()</code>
 function found in the <code>classification-functions.R</code> (within
 the classification support files folder).</p>
 </div>
@@ -4012,7 +3604,7 @@ indicated by either WHPT ASPT or WHPT Ntaxa, following the ‘one out all
 out’ rule.</p>
 <p>The WFD requires that all water bodies, including rivers sites, are
 classified into one of five ecological status class. These classes in
-RICT2 are coded as classes 1-5 with 1= ‘high’, 2=‘good’, 3=‘moderate’,
+RICT are coded as classes 1-5 with 1= ‘high’, 2=‘good’, 3=‘moderate’,
 4=‘poor’ and 5=‘bad’.</p>
 <p>There are a number of processes involved in this step as described
 below:</p>
@@ -4036,11 +3628,10 @@ recorded in the output file and displayed in the MINTA column</li>
 <span class="header-section-number">10.16</span> Classification
 output<a class="anchor" aria-label="anchor" href="#classification-output"></a>
 </h3>
-<p>An output file will be created from running a project experiment to
-show the calculated data results of the experiment run for prediction
-and classification. The output file will also indicate any validation
-errors found during the run of the project experiment and specify which
-values resulted in either a “fail” or “warn”.</p>
+<p>An output file will be created to show the calculated data results
+for prediction and classification. The output file will also indicate
+any validation errors found during the run and specify which values
+resulted in either a “fail” or “warn”.</p>
 <p>The output file will be in csv format to be downloaded by the user
 and used for reporting. There will be an output file available for
 prediction and an output file available for classification.</p>
@@ -4051,19 +3642,16 @@ prediction and an output file available for classification.</p>
 <span class="header-section-number">11</span> Multi Year
 Classification<a class="anchor" aria-label="anchor" href="#multi-year-classification"></a>
 </h2>
-<p>The aim of the multi-year experiment is to take account of temporary
-differences in quality and improve precision if a user has more than one
-year of sample data.</p>
+<p>The aim of multi-year is to take account of temporary differences in
+quality and improve precision if a user has more than one year of sample
+data.</p>
 <p>River Invertebrate status must be assessed every 3 years for WFD.
 Where sites are sampled in a 3 year monitoring cycle, WFD status can be
 based on samples collected in more than one year.</p>
 <p>Multi-year status classification takes account of inter-year
 variation based on observations from specific rivers and streams.</p>
-<p>When the multi-year classification experiment is developed it will
-need to follow the agreed principles and process as described below:</p>
+<p>The multi-year classification will need to following:</p>
 <ul>
-<li>This will be a separate experiment that can be downloaded for any
-user wanting to carry out a multi-year classification.</li>
 <li>Assessment is always on a 3 year period.</li>
 <li>Users may supply 1, 2 or 3 years data.</li>
 <li>A complete year’s data must include spring and autumn – otherwise
@@ -4072,13 +3660,12 @@ this year cannot be included in the assessment.</li>
 spring and autumn.</li>
 <li>Each year will be added as a separate row on the input file and for
 each year of data will have the same site name</li>
-<li>RICT2 will check each row to see if it is same site name, if it is
+<li>RICT will check each row to see if it is same site name, if it is
 will store the simulations and include this in the assessment and will
 carry out this check for the next row to collect a maximum of 3 years of
 data.</li>
-<li>There will be no changes needed to the input file as by the user
-selecting the multi-year experiment, RICT2 will be expecting multi-year
-data.</li>
+<li>There will be no changes needed to the input file as the user will
+select the multi-year option.</li>
 <li>Ralph will be able to obtain some test data which can be used to
 clarify if the calculations are correct.</li>
 <li>Output file will need to be amended to display the multi-year data
@@ -4099,14 +3686,14 @@ status classification must always be based on 2-season spring + autumn
 data.</p>
 </div>
 <div class="section level2" number="12">
-<h2 id="multi-site-classification-experiment">
+<h2 id="multi-site-classification">
 <span class="header-section-number">12</span> Multi-site
-classification experiment<a class="anchor" aria-label="anchor" href="#multi-site-classification-experiment"></a>
+classification<a class="anchor" aria-label="anchor" href="#multi-site-classification"></a>
 </h2>
-<p>The aim of multi-site classification experiment is to determine the
-overall status class for a water body based on samples collected from
-more than one site. The Environment Agency collects samples from some
-water bodies from more than one site.</p>
+<p>The aim of multi-site classification is to determine the overall
+status class for a water body based on samples collected from more than
+one site. The Environment Agency collects samples from some water bodies
+from more than one site.</p>
 <p>The Environment Agency currently uses VISCOUS software to calculate
 WFD status for water bodies monitored from more than one site, as well
 as sites sampled in more than one year before 2019. Multi-site will
@@ -4126,15 +3713,12 @@ classification must always be based on 2-season spring + autumn
 data.</p>
 </div>
 <div class="section level2" number="13">
-<h2 id="compare-project-experiment">
-<span class="header-section-number">13</span> Compare Project
-Experiment<a class="anchor" aria-label="anchor" href="#compare-project-experiment"></a>
+<h2 id="compare">
+<span class="header-section-number">13</span> Compare<a class="anchor" aria-label="anchor" href="#compare"></a>
 </h2>
 <p>The relevant parts of the algorithms section of the SNIFFER WFD72C
 project 2008 Final Report have been extracted and adapted here to
-explain the algorithms needed to code the Compare procedure in the new R
-studio and Microsoft AZURE versions of the RICT software developed in
-2019-20.</p>
+explain the algorithms needed to code the Compare procedure in R.</p>
 <p>The new RICT only refers to EQR values (which are bias-corrected
 observed (Obs) values divided by WFD reference-adjusted Expected
 (ExpRef) values, all WFD72C algorithms section references to former EQI
@@ -4158,18 +3742,11 @@ in section 8.9 Correct observed values for bias. In this context,
 independent simulations means that the various random uncertainty terms
 are different and completely independent for the two simulated samples A
 and B for any simulation r.</p>
-<p>Calculations for the EQR simulations are run as part of the
-classification process and are stored and available for output in each
-experiment. These EQR simulations can be saved and imported into the
-Compare experiment. To compare results, the two input files into Compare
-experiment must contain the same number of rows. The two files are then
-compared pair-wise, row to row for each result. For instance, if
-comparing a single upstream result to multiple downstream results,
-repeat the single result over multiple rows (equal to the number of
-downstream results) in the input file. Then run through the
-classification experiment and save results in Azure. Then run the
-downstream results through the classification and save dataset. Drag and
-drop both datasets into the Compare experiment and run.</p>
+<p>To compare results, the two input files into Compare must contain the
+same number of rows. The two files are then compared pair-wise, row to
+row for each result. For instance, if comparing a single upstream result
+to multiple downstream results, repeat the single result over multiple
+rows (equal to the number of downstream results) in the input file.</p>
 <p>Note, Compare allows individual-season estimates of class for spring
 and autumn to be compared.</p>
 <p><strong>Calculate Difference and Related Statistics:</strong></p>
@@ -4431,13 +4008,13 @@ here</strong></p>
 these predictive variables is detailed in the report ‘GIS Re-calibration
 of the hydromorphology-independent RIVPACS predictive model (M37): new
 model M44’.</p>
-<p>RICT2 will be used with the new RIVPACS Model 44 to give better
+<p>RICT will be used with the new RIVPACS Model 44 to give better
 predictions of streams impacted by siltation due to flow alteration.</p>
-<p>The majority of the coding that has been done in RICT2 for prediction
-and classification will also be suitable when running the experiment for
-the Model 44 prediction and classification.</p>
-<p>With minor adjustments, the RICT2 prediction and classification code
-is suitable for running both Model 1 and Model 44 experiments.</p>
+<p>The majority of the coding that has been done in RICT for prediction
+and classification will also be suitable when running Model 44
+prediction and classification.</p>
+<p>With minor adjustments, the RICT prediction and classification code
+is suitable for running both Model 1 and Model 44.</p>
 <p>The main areas of development involved understanding how to extract
 the data from RIVPACS and to link to a location checker as outlined in
 the picture below:</p>
@@ -4494,26 +4071,21 @@ Support<a class="anchor" aria-label="anchor" href="#operational-support"></a>
 online.</p>
 <p>User support for EA users will be via the Defra service desk (at Tier
 4 service level) who will route the issue to the appropriate team to
-deal with. This routing could be to RICT2 support email or to the
+deal with. This routing could be to RICT support email or to the
 Environmental systems team depending on the nature of the issue. EA
 users will also be able to access an article in MyIT which will provide
 FAQs to help users with common issues.</p>
 <p>User support for other UK regulatory agency users will be via the
-support email box called RICT2 support.</p>
+support email box called RICT support.</p>
 <p>There will be no official contracted support for external users but
-they can send issues and comments to the RICT2 support inbox</p>
+they can send issues and comments to the RICT support inbox</p>
 </div>
 <div class="section level3" number="15.2">
 <h3 id="look-and-feel-of-user-interface">
 <span class="header-section-number">15.2</span> Look and Feel of
 User Interface<a class="anchor" aria-label="anchor" href="#look-and-feel-of-user-interface"></a>
 </h3>
-<p>The user interface will be provided via Azure Studio which is
-intuitive and ‘user friendly’ and consistent with similar windows-based
-or web-based user interface applications.</p>
-<p>Official RICT2 experiments will be collated in a designated
-“Collection” in Microsoft Azure Learning Studio to help users find all
-the experiments relevant to RICT2.</p>
+<p>The user interface will provide intuitive and ‘user friendly’.</p>
 </div>
 <div class="section level3" number="15.3">
 <h3 id="input-and-output-files">
@@ -4522,9 +4094,9 @@ Files<a class="anchor" aria-label="anchor" href="#input-and-output-files"></a>
 </h3>
 <p>Input files will be a standard template in Excel which can be
 downloaded, completed by the user and then uploaded as a CSV file to
-RICT2. A user guide will be available to help users understand and
+RICT. A user guide will be available to help users understand and
 complete the input file.</p>
-<p>The output file will be produced by RICT2 as a CSV file following the
+<p>The output file will be produced by RICT as a CSV file following the
 run. A CSV file can easily be opened in Excel or other applications to
 view the results.</p>
 </div>
@@ -4532,26 +4104,24 @@ view the results.</p>
 <h3 id="hosting">
 <span class="header-section-number">15.4</span> Hosting<a class="anchor" aria-label="anchor" href="#hosting"></a>
 </h3>
-<p>RICT2 is cloud hosted within Microsoft Azure Learning Studio.</p>
+<p>RICT web app is cloud hosted by Posit. The code is hosted on
+Github.</p>
 </div>
 <div class="section level3" number="15.5">
 <h3 id="accessibility">
 <span class="header-section-number">15.5</span> Accessibility<a class="anchor" aria-label="anchor" href="#accessibility"></a>
 </h3>
-<p>Access to RICT2 functionality may be required by a number of
-different device types. RICT2 will be useable at a minimum by the
-following device types (model not specified):</p>
+<p>Access to RICT functionality may be required by a number of different
+device types. RICT will be use-able at a minimum by the following device
+types (model not specified):</p>
 <ul>
 <li>Desktop</li>
 <li>Laptop</li>
 </ul>
-<p>Access to RICT2 functionality may be required by a number of
-different browser types. RICT2 will be useable in the following browser
-types (which must be updated to the latest version as required by
-Microsoft Azure):</p>
+<p>Access to RICT functionality may be required by a number of different
+browser types. RICT will be use-able in the following browser types:</p>
 <ul>
-<li>IE</li>
-<li>Google Chrome</li>
+<li>Chrome</li>
 <li>Firefox</li>
 <li>Edge</li>
 </ul>
@@ -4562,13 +4132,13 @@ input or output from other users.</p>
 <h3 id="performance">
 <span class="header-section-number">15.6</span> Performance<a class="anchor" aria-label="anchor" href="#performance"></a>
 </h3>
-<p>RICT2 will be accessible by multiple concurrent users at any one time
+<p>RICT will be accessible by multiple concurrent users at any one time
 without degradation of performance or limitation of features. Users will
 be internal EA, other UK regulatory body users (SEPA, NRW and NIEA) and
 external users.</p>
-<p>RICT2 will be capable of processing the prediction and classification
+<p>RICT will be capable of processing the prediction and classification
 of a very large number of sites (approx. 5,000) once per year.</p>
-<p>RICT2 will meet the following rough order estimates of service usage
+<p>RICT will meet the following rough order estimates of service usage
 and performance requirements:</p>
 <ul>
 <li>Service Availability: In excess of 97% at all times;</li>
@@ -4576,7 +4146,7 @@ and performance requirements:</p>
 <li>Maximum Nos. of Users: &lt;1000;</li>
 <li>Max number of Concurrent Users: 50.</li>
 </ul>
-<p>RICT2 availability must be at an acceptable level. Planned downtime
+<p>RICT availability must be at an acceptable level. Planned downtime
 for maintenance must be advised in advance (minimum 48 hours’ notice).
 Unplanned downtime must be communicated regularly with up to date
 information on tools/services affected and projected downtime.</p>
@@ -4586,26 +4156,16 @@ information on tools/services affected and projected downtime.</p>
 <span class="header-section-number">15.7</span> System
 Administration<a class="anchor" aria-label="anchor" href="#system-administration"></a>
 </h3>
-<p>An “expert” user (system administrator) will be identified and given
-permission to publish new standard experiments using default values to
-the “official” Microsoft Azure ML Studio gallery collection.</p>
-<p>These experiments will be “locked down” for normal users and can only
-be amended by downloading to the users own work area to create their own
-copy of a project experiment.</p>
-<p>The System administrator will be permitted to amend the published
-standard experiments and the data tables used by the experiment
-(e.g. amend end group data) if required.</p>
+<p>Updates to documentation, web app or input template are made via
+Github but the R developer appointed by the RICT group.</p>
 </div>
 <div class="section level3" number="15.8">
 <h3 id="data-protection">
 <span class="header-section-number">15.8</span> Data Protection<a class="anchor" aria-label="anchor" href="#data-protection"></a>
 </h3>
-<p>Data protection requirements are handled by Microsoft as the tool is
-hosted on Microsoft ML Studio. It is freely available to access but
-requires the user to use an existing/or create a Microsoft account. This
-account requires an email address and password. These credentials are
-held solely by Microsoft and the usage is outlined in the Microsoft
-Privacy Statement (<a href="https://privacy.microsoft.com/en-gb/privacystatement" class="external-link uri">https://privacy.microsoft.com/en-gb/privacystatement</a>).</p>
+<p>Data protection requirements are handled by Posit as the tool is
+hosted on Posit cloud. No name or email is required to access the
+site.</p>
 </div>
 </div>
 <div class="section level2" number="16">
@@ -4614,7 +4174,7 @@ Privacy Statement (<a href="https://privacy.microsoft.com/en-gb/privacystatement
 File<a class="anchor" aria-label="anchor" href="#annex-a-input-file"></a>
 </h2>
 <p>Below are examples of the import file format to help understand and
-verify the format to used and run with the experiment.</p>
+verify the format to used.</p>
 <p>GB - Model 1 input format</p>
 <table class="table">
 <thead><tr class="header">
@@ -5053,7 +4613,7 @@ verify the format to used and run with the experiment.</p>
 <p>See the <a href="https://aquametrics.github.io/rict/">Input File</a>
 excel spreadsheet which includes test data and validation</p>
 <p>A full description of each column for the input table and how it is
-completed can be found within the <a href="https://aquametrics.github.io/rict/">RICT2 user guide</a>.</p>
+completed can be found within the <a href="https://aquametrics.github.io/rict/">RICT user guide</a>.</p>
 </div>
 <div class="section level2" number="17">
 <h2 id="annex-b-output-files-predict-and-classify">
@@ -5065,8 +4625,8 @@ predict and classify<a class="anchor" aria-label="anchor" href="#annex-b-output-
 <span class="header-section-number">17.0.0.1</span> Prediction
 outputs<a class="anchor" aria-label="anchor" href="#prediction-outputs-1"></a>
 </h5>
-<p>RICT2 predict and classify experiments will produce two output files;
-one for prediction, one for classification</p>
+<p>RICT predict and classify will produce two output files; one for
+prediction, one for classification</p>
 <p>Prediction Output file</p>
 <p>An example of the output file for prediction is linked below:</p>
 <table class="table">
@@ -6297,7 +5857,7 @@ table of changes below:</p>
 </tbody>
 </table>
 <p>A full description of each column for the prediction output table and
-what the values indicate can be found within the RICT2 user guide. A
+what the values indicate can be found within the RICT user guide. A
 summary list of the column headings is given in the
 <code>rict_predict</code> function.</p>
 </div>

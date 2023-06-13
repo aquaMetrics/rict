@@ -1,4 +1,6 @@
 url: https://aquametrics.github.io/rict/
+template:
+  bootstrap: 5
 destination: docs
 pkgdown:
   as_is: yes

@@ -4,14 +4,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="rict">
 <title>User Guide • rict</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="User Guide">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="User Guide">
 <meta property="og:description" content="rict">
 <meta name="robots" content="noindex">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -19,79 +19,65 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">rict</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.3</span>
-      </span>
-    </div>
+    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    
+    <a class="navbar-brand me-2" href="../index.html">rict</a>
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../reference/index.html">Reference</a>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.1.4</small>
+
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item">
+  <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/functional-specification.html">River Invertebrate Classification Tool (RICT) Functional Specification</a>
-    </li>
-    <li>
-      <a href="../articles/tech-demo-temperature-change.html">Tech demo: Temperature change</a>
-    </li>
-    <li>
-      <a href="../articles/user-guide.html">User Guide</a>
-    </li>
-  </ul>
-</li>
-      </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/aquaMetrics/rict/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
-</div>
-<!--/.nav-collapse -->
+<li class="active nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/functional-specification.html">River Invertebrate Classification Tool (RICT) Functional Specification</a>
+    <a class="dropdown-item" href="../articles/tech-demo-temperature-change.html">Tech demo: Temperature change</a>
+    <a class="dropdown-item" href="../articles/user-guide.html">User Guide</a>
   </div>
-<!--/.container -->
+</li>
+      </ul>
+<form class="form-inline my-2 my-lg-0" role="search">
+        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
+</form>
+
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/aquaMetrics/rict/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
-<!--/.navbar -->
 
-      
+    
+  </div>
+</nav><div class="container template-article">
 
-      </header><div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>User Guide</h1>
+
+<div class="row">
+  <main id="main" class="col-md-9"><div class="page-header">
+      <img src="" class="logo" alt=""><h1>User Guide</h1>
                         <h4 data-toc-skip class="author">River
 Invertebrate Classification Tool (RICT) Steering Group</h4>
             
-            <h4 data-toc-skip class="date">2023-06-09 version:
-3.1.3</h4>
+            <h4 data-toc-skip class="date">2023-06-13 version:
+3.1.4</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/aquaMetrics/rict/blob/HEAD/vignettes/user-guide.Rmd" class="external-link"><code>vignettes/user-guide.Rmd</code></a></small>
-      <div class="hidden name"><code>user-guide.Rmd</code></div>
-
+      <div class="d-none name"><code>user-guide.Rmd</code></div>
     </div>
 
     
@@ -177,22 +163,26 @@ a table displaying Classification</p></li>
 predicted taxa</p></li>
 </ul>
 <div class="figure">
-<img src="images/user-guide/rict-website.png" style="width:90.0%" alt=""><p class="caption">Example of predict and classify section of the RICT
+<img src="images/user-guide/rict-website.png" style="width:90.0%" alt=""><p class="caption">Example of options, map, download section of the RICT
 website.</p>
 </div>
 <ol start="4" style="list-style-type: decimal">
 <li><p>If the process fails, the website displays a red error
 message.</p></li>
-<li><p>See <a href="#prediction">Prediction</a> and</p></li>
+<li><p>See <a href="#prediction">Prediction</a> and <a href="#classification">Classification</a> section for more info on these
+outputs.</p></li>
 </ol>
 </div>
 <div class="section level3">
 <h3 id="compare">Compare<a class="anchor" aria-label="anchor" href="#compare"></a>
 </h3>
+<p>Compare allows you to run a comparison between two sites or the same
+site on different dates.</p>
 <ol style="list-style-type: decimal">
 <li>Prepare two .CSV input files using spreadsheet template. Use the
-demo <a href="">up</a> and <a href="">downstream</a> files provided as a
-guide or to test out.</li>
+demo <a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/compare-data/rict-input-1-upstream-compare.csv" class="external-link">up</a>
+and <a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/compare-data/rict-input-2-downstream-compare.csv" class="external-link">downstream</a>
+files provided as a guide or to test out.</li>
 </ol>
 <p><em>NOTE: RICT compares the two files row to row. For instance, row 1
 in the first file is compared to row 1 in the second file. Then row 2 is
@@ -268,9 +258,13 @@ reference conditions.</li>
 <li>Compare two samples and give a likelihood of whether they are
 significantly different.</li>
 </ul>
-<p>RICT is maintained by: - Environment Agency (EA) - Natural Resources
-Wales (NRW) - Northern Ireland Environment Agency (NIEA) - Scottish
-Environment Protection Agency (SEPA)</p>
+<p>RICT is maintained by:</p>
+<ul>
+<li>Environment Agency (EA)</li>
+<li>Natural Resources Wales (NRW)</li>
+<li>Northern Ireland Environment Agency (NIEA)</li>
+<li>Scottish Environment Protection Agency (SEPA)</li>
+</ul>
 <p>NOTE: The latest release of RICT replaces the version hosted on Azure
 ML Studio.</p>
 </div>
@@ -358,13 +352,21 @@ uploaded and the area your grid references are located in.</p>
 <div class="section level3">
 <h3 id="environmental-predictors">Environmental Predictors<a class="anchor" aria-label="anchor" href="#environmental-predictors"></a>
 </h3>
-<p>Regardless of which season you want to predict, the environmental
-variables must always be the median long-term averages that take account
-of conditions throughout the whole year, including summer. Preferably
-they are based on annual averages collected from many years. As a
-minimum, these averages should be based on data collected in all three
-seasons (spring, summer and autumn) from at least one normal year (not a
-year with drought or floods).</p>
+<p>General guidance on available data sources and use of predictor
+variables is outlined in sections below. More information regarding the
+units and exact definition of the input predictor variables for all
+models can be found in the <a href="https://aquametrics.github.io/rict/articles/user-guide.html">functional
+specification</a>.</p>
+<div class="section level4">
+<h4 id="model-1-predictors">Model 1 Predictors<a class="anchor" aria-label="anchor" href="#model-1-predictors"></a>
+</h4>
+<p>River substrate, width and depth predictors required for GB and NI
+variations of Model 1 must be the median long-term averages that take
+account of conditions throughout the whole year, including summer.
+Preferably they are based on annual averages collected from many years.
+As a minimum, these averages should be based on data collected in all
+three seasons (spring, summer and autumn) from at least one normal year
+(not a year with drought or floods).</p>
 <p>If you are unable to get such data, do not use actual measurements of
 width and depth when you collected an invertebrate sample, particularly
 in summer, but use your estimate what you think the normal width and
@@ -374,20 +376,20 @@ predictions.</p>
 for input into RICT are available from the Ecology &amp; Fish Data
 Explorer <a href="https://environment.data.gov.uk/ecology-fish/" class="external-link uri">https://environment.data.gov.uk/ecology-fish/</a>. This
 includes alkalinity and discharge category.</p>
+</div>
 <div class="section level4">
-<h4 id="discharge-category">Discharge Category<a class="anchor" aria-label="anchor" href="#discharge-category"></a>
+<h4 id="model-44-predictors">Model 44 Predictors<a class="anchor" aria-label="anchor" href="#model-44-predictors"></a>
 </h4>
-<p>Discharge category can be found using <a href="https://environment.data.gov.uk/DefraDataDownload/?mapService=EA/RICT&amp;mode-spatial" class="external-link">Defra
-GIS wesbsite</a>. Additionally, GIS data for RIVPACS model 44 can also
-be downloaded.</p>
+<p>Input variables for Model 44 can be download from <a href="https://environment.data.gov.uk/DefraDataDownload/?mapService=EA/RICT&amp;mode-spatial" class="external-link">Defra
+GIS website</a>. These can be copied and pasted into the corresponding
+columns on the Model 44 template.</p>
 </div>
 <div class="section level4">
 <h4 id="alkalinity">Alkalinity<a class="anchor" aria-label="anchor" href="#alkalinity"></a>
 </h4>
 <p>Alkalinity (and its alternatives total hardness, calcium
 concentration or conductivity) measured in Environment Agency chemical
-river quality monitoring is also available from Open WIMS data and <a href="http://eawaterquality.shinyapps.io/ecologicalstatsapp/" class="external-link uri">http://eawaterquality.shinyapps.io/ecologicalstatsapp/</a>.
-The latter includes a map interface for selecting sites.</p>
+river quality monitoring is available from Open WIMS data and <a href="http://eawaterquality.shinyapps.io/ecologicalstatsapp/" class="external-link uri">http://eawaterquality.shinyapps.io/ecologicalstatsapp/</a>.</p>
 </div>
 </div>
 <div class="section level3">
@@ -1985,33 +1987,26 @@ used.</p>
 for RICT. The RICT site can be accessed by visiting: <a href="https://www.fba.org.uk/other-scientific-collaborations/rivpacs-and-rict" class="external-link uri">https://www.fba.org.uk/other-scientific-collaborations/rivpacs-and-rict</a></p>
 </div>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
-
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
-      <footer><div class="copyright">
+    <footer><div class="pkgdown-footer-left">
   <p></p>
 <p>Developed by Maybin Muyeba, Tim Foster, Tim Loveday.</p>
 </div>
 
-<div class="pkgdown">
+<div class="pkgdown-footer-right">
   <p></p>
 <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
 
   
-
 
   
 

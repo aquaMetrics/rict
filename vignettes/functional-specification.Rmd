@@ -1,7 +1,7 @@
 ---
 title: "River Invertebrate Classification Tool (RICT) Functional Specification"
 author: "RICT Steering Group"
-date: "`r Sys.Date()`"
+date: "`r Sys.Date()` version: `r packageVersion('rict')`"
 pkgdown:
   as_is: yes
 output:

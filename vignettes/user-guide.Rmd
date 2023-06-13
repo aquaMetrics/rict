@@ -91,15 +91,17 @@ template file.
   
 - If [Predict Taxa Option](#taxa) selected, a table of predicted taxa
 
-![Example of predict and classify section of the RICT website.](images/user-guide/rict-website.png){ width=90% }
+![Example of options, map, download section of the RICT website.](images/user-guide/rict-website.png){ width=90% }
 
 4. If the process fails, the website displays a red error message. 
 
-5. See [Prediction](#prediction) and  
+5. See [Prediction](#prediction) and  [Classification](#classification) section for more info on these outputs.
 
 ## Compare
 
-1. Prepare two .CSV input files using spreadsheet template. Use the demo [up]() and [downstream]() files provided as a guide or to test out.
+Compare allows you to run a comparison between two sites or the same site on different dates.
+
+1. Prepare two .CSV input files using spreadsheet template. Use the demo [up](https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/compare-data/rict-input-1-upstream-compare.csv) and [downstream](https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/compare-data/rict-input-2-downstream-compare.csv) files provided as a guide or to test out.
 
 *NOTE: RICT compares the two files row to row. For instance, row 1 in the first file is compared to row 1 in the second file. Then row 2 is compared with row 2... and so on. Therefore, the two files being compared must contain the same number of rows.*
 
@@ -154,6 +156,7 @@ Key Functionality:
 -	Compare two samples and give a likelihood of whether they are significantly different.
 
 RICT is maintained by:
+  
 - Environment Agency (EA)
 - Natural Resources Wales (NRW)
 - Northern Ireland Environment Agency (NIEA) 
@@ -229,8 +232,12 @@ and the area your grid references are located in.
 
 ## Environmental Predictors
 
-Regardless of which season you want to predict, the environmental variables must
-always be the median long-term averages that take account of conditions
+General guidance on available data sources and use of predictor variables is outlined in sections below. More information regarding the units and exact definition of the input predictor variables for all models can be found in the [functional specification](https://aquametrics.github.io/rict/articles/user-guide.html).
+
+### Model 1 Predictors
+
+River substrate, width and depth predictors required for GB and NI variations of Model 1 must
+be the median long-term averages that take account of conditions
 throughout the whole year, including summer. Preferably they are based on annual
 averages collected from many years. As a minimum, these averages should be based
 on data collected in all three seasons (spring, summer and autumn) from at least
@@ -245,18 +252,17 @@ Environmental data from Environment Agency monitoring sites suitable for input
 into RICT are available from the Ecology & Fish Data Explorer
 https://environment.data.gov.uk/ecology-fish/.  This includes alkalinity and
 discharge category.
- 
-### Discharge Category
-  
-Discharge category can be found using [Defra GIS wesbsite](https://environment.data.gov.uk/DefraDataDownload/?mapService=EA/RICT&mode-spatial). Additionally, GIS data for RIVPACS model 44 can also be downloaded.
+
+### Model 44 Predictors
+
+Input variables for Model 44 can be download from [Defra GIS website](https://environment.data.gov.uk/DefraDataDownload/?mapService=EA/RICT&mode-spatial). These can be copied and pasted into the corresponding columns on the Model 44 template.
 
 ### Alkalinity
 
 Alkalinity (and its alternatives total hardness, calcium concentration or
 conductivity) measured in Environment Agency chemical river quality monitoring
-is also available from Open WIMS data and
-http://eawaterquality.shinyapps.io/ecologicalstatsapp/.  The latter includes a
-map interface for selecting sites.
+is available from Open WIMS data and
+http://eawaterquality.shinyapps.io/ecologicalstatsapp/.
 
 ## Grid Reference
   

@@ -226,9 +226,13 @@ server <- function(input, output) {
         taxa_table <- taxa
         } else {
         taxa$Season_Code <- as.numeric(taxa$Season_Code)
-        taxa_table <- dplyr::arrange(taxa, NBN_Name, Season_Code)
+        taxa <- dplyr::arrange(taxa,
+                               siteName,
+                               TL,
+                               Maitland_Name,
+                               Season_Code)
         taxa_table <- dplyr::select(
-          taxa_table,
+          taxa,
           siteName,
           TL,
           Season_Code,

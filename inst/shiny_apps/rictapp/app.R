@@ -229,7 +229,7 @@ server <- function(input, output) {
         taxa <- dplyr::arrange(taxa,
                                siteName,
                                TL,
-                               Maitland_Name,
+                               Maitland_Code,
                                Season_Code)
         taxa_table <- dplyr::select(
           taxa,
@@ -461,7 +461,7 @@ server <- function(input, output) {
             fs <- c(fs, path)
             write.csv(output_files[[i]], file = path, row.names = FALSE)
         }
-        zip(zipfile = fname, files = fs)
+        zip::zip(zipfile = fname, files = fs)
       }
     )
 

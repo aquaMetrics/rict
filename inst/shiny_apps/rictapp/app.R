@@ -120,7 +120,7 @@ server <- function(input, output) {
         <h4 style="color:grey;">Template File</h4></style>
           <p><a href="https://github.com/aquaMetrics/rict/raw/master/inst/extdat/input-file-template.xls" target="_blank">Validation Spreadsheet</a></p>
           <h4 style="color:grey;">Example Input Files</h4></style>
-          <p style="color:grey;">Open link, right-click and save as CSV: </p></style>
+          <p style="color:grey;">Right-click and select "Save link as": </p></style>
           <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/new-input-file-data-to-use-multi-year-1.csv" target="_blank">Great Britain</a></p>
           <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/ni-model-1-test-data.csv" target="_blank">Northern Ireland</a></p>
           <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/input-file-data-to-use-multi-year-iom.csv" target="_blank">Isle of Man</a></p>

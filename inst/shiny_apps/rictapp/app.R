@@ -112,6 +112,7 @@ ui <- tagList(
 
 # Define server logic ----------------------------------------------------------
 server <- function(input, output) {
+  message(system("which zip"))
   output$message <- renderUI({
     inFile <- input$dataset
     if (is.null(inFile)) {
@@ -456,7 +457,6 @@ server <- function(input, output) {
         fs <- c()
         tmpdir <- tempdir()
         setwd(tempdir())
-        message(system("which zip"))
         for (i in seq_along(output_files)) {
             path <- paste0(names(output_files)[i], ".csv")
             fs <- c(fs, path)

@@ -28,7 +28,8 @@ Imports:
   rlang,
   sp,
   sf,
-  shiny
+  shiny,
+  zip
 Suggests: 
   ggplot2, 
   httr, 

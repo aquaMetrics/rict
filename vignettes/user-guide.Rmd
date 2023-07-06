@@ -46,8 +46,6 @@ Additionally, we explain how to classify status and compare results.
 
 # Quick Start
 
-## Requirements
-
 Before you start, you need river macro-invertebrate data to process. If you do not have any data prepared, example data is provided in the  [validation template spreadsheet](https://github.com/aquaMetrics/rict/raw/master/inst/extdat/input-file-template.xls). However, if you are looking to run your own results, you will need the following:
 
 1. WHPT (Walley, Hawkes, Paisley and Trigg) scores based on macro-invertebrate results. To calculate WHPT index scores, you can use the [WHPT spreadsheet calculator](https://www.fba.org.uk/s/WHPT-calculator-v38.xlsx). Your scores should be based on macro-invertebrate results collected and analysed following [standard techniques](#sampling).

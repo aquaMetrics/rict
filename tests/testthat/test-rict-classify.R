@@ -60,24 +60,31 @@ test_that("Outputs match azure NI single-year outputs", {
   azure_classification$mintawhpt_spr_aut_mostProb <-
     as.character(azure_classification$mintawhpt_spr_aut_mostProb)
   # status are the same
-  ### (not all the same) - broken because some changes to set.seed/randomness: -----
   equal <- all.equal(
-    classification$mintawhpt_spr_aut_mostProb[4:21],
-    azure_classification$mintawhpt_spr_aut_mostProb[4:21]
+    classification$mintawhpt_spr_aut_mostProb,
+    azure_classification$mintawhpt_spr_aut_mostProb
   )
   expect_true(equal == TRUE)
-  # Check spr NTAXA equal (EQR different but by luck no changes in class caused but set.seed change)
+  # Check spr NTAXA equal
   equal <- all.equal(
-    as.character(classification$mostProb_NTAXA_spr[4:21]),
-    as.character(azure_classification$mostProb_NTAXA_spr[4:21])
+    as.character(classification$mostProb_NTAXA_spr),
+    as.character(azure_classification$mostProb_NTAXA_spr)
   )
   expect_true(equal == TRUE)
-  # Check spr ASPT  ### (not all the same) - broken because some changes to set.seed/randomness: -----
+  # Check spr ASPT   -----
   equal <- all.equal(
-    as.character(classification$mostProb_ASPT_spr[c(7, 8, 9, 12, 13, 14, 15)]),
-    as.character(azure_classification$mostProb_ASPT_spr[c(7, 8, 9, 12, 13, 14, 15)])
+    as.character(classification$mostProb_ASPT_spr),
+    as.character(azure_classification$mostProb_ASPT_spr)
   )
   expect_true(equal == TRUE)
+
+  # check a confidence of class
+  max_diff <- max(as.numeric(classification$H_ASPT_aut) -
+                     as.numeric(azure_classification$H_ASPT_aut))
+  min_diff <- min(as.numeric(classification$H_ASPT_aut) -
+                    as.numeric(azure_classification$H_ASPT_aut))
+
+  expect_true(max_diff < 2 && min_diff < 2)
 })
 
 ### -----------------------------------------------------------------------------------------

@@ -1,20 +1,19 @@
 Package: rict
 Type: Package
-Title: Calculates River Invertebrate Classification Tool 2 (RICT2) predictions
-Version: 3.1.1
+Title: River Invertebrate Classification Tool (RICT)
+Version: 3.1.5
 Authors@R: c(person("Maybin", "Muyeba", email = "Maybin.Muyeba@environment-agency.gov.uk", role = "aut"),
              person("Tim", "Foster", email = "tim.foster@sepa.org.uk", role = "aut"),
              person("Tim", "Loveday", email = "tim.loveday@environment-agency.gov.uk", role = c("cre","aut"))) 
 Maintainer: Tim Foster <tim.foster@sepa.org.uk>
-Description: This is an R implementation of the River Invertebrate
-  Classification Tool (RICT) system with some minor changes. This system is reimplementation of original
+Description: This is an R implementation and update of the original River Invertebrate
+  Classification Tool (RICT) system. This system is reimplementation of original
   Fortran and Oracle SQL procedures. The model uses environmental variables to
   make predictions based on invertebrate reference data. It is based on the work
-  of many other authors. For background, user guides and technical information
-  see Freshwater Biological Association http://www.fba.org.uk/river-invertebrate-classification-tool-rict-and-rivpacs
-  for details.
+  of many other authors.
 License: GPL-3 + file LICENSE
-URL: https://github.com/aquaMetrics/rict
+URL: https://github.com/aquaMetrics/rict,
+    https://aquametrics.github.io/rict/
 Encoding: UTF-8
 LazyData: true
 Depends: 
@@ -29,7 +28,8 @@ Imports:
   rlang,
   sp,
   sf,
-  shiny
+  shiny,
+  zip
 Suggests: 
   ggplot2, 
   httr, 
@@ -40,7 +40,6 @@ Suggests:
   testthat (>= 2.1.0),
   tibble,
   tidyr,
-  tidyverse,
   png,
   pkgdown
 RoxygenNote: 7.2.3

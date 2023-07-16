@@ -124,7 +124,7 @@ if (area == "iom") {
   # obs_ntaxa_spr <- observed_ntaxa[,1]
   obs_ntaxa_spr <- biological_data[, "SPR_TL2_WHPT_NTAXA (ABW,DISTFAM)"]
   # Obs_ntaxa_aut <- observed_ntaxa[,2]
-  Obs_ntaxa_aut <- biological_data[, "AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)"] # change AZURE
+  Obs_ntaxa_aut <- biological_data[, "AUT_TL2_WHPT_NTAXA (ABW,DISTFAM)"]
   Obs_ntaxa_sum <- biological_data[, "SUM_TL2_WHPT_NTAXA (ABW,DISTFAM)"]
   # Input Multiplicative Adjustment factors adjusted_params, 1,..,5)
   adjusted_params <- as.matrix(adjusted_params)

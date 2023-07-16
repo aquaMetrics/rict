@@ -73,7 +73,6 @@ ui <- tagList(
     tabPanel(
       "Compare",
       sidebarPanel(
-        h4("This app is in TESTING"),
         p(),
         fileInput("dataset_one", "Choose CSV input file 1",
           accept = c(
@@ -106,22 +105,23 @@ ui <- tagList(
     ),
     tabPanel(
       "Help",
-      HTML('<h4 style="color:grey;">Work in progress - updated user guide will be provided here </h3></style>')
+      HTML('<a href="https://aquametrics.github.io/rict/articles/user-guide.html" target="_blank">User Guide</a>')
     ),
   )
 )
 
 # Define server logic ----------------------------------------------------------
 server <- function(input, output) {
+  message(system("which zip"))
   output$message <- renderUI({
     inFile <- input$dataset
     if (is.null(inFile)) {
       return(HTML(
         '<h3 style="color:grey;">Upload a prepared .CSV input file or use the following:</h3></style>
         <h4 style="color:grey;">Template File</h4></style>
-          <p><a href="https://www.fba.org.uk/s/New-Input-file-wValidation-wTestData-v12.xls" target="_blank">Validation Spreadsheet for Standard (Model 1) GB and NI</a></p>
+          <p><a href="https://github.com/aquaMetrics/rict/raw/master/inst/extdat/input-file-template.xls" target="_blank">Validation Spreadsheet</a></p>
           <h4 style="color:grey;">Example Input Files</h4></style>
-          <p style="color:grey;">Open link, right-click and save as CSV: </p></style>
+          <p style="color:grey;">Right-click and select "Save link as": </p></style>
           <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/new-input-file-data-to-use-multi-year-1.csv" target="_blank">Great Britain</a></p>
           <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/ni-model-1-test-data.csv" target="_blank">Northern Ireland</a></p>
           <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/input-file-data-to-use-multi-year-iom.csv" target="_blank">Isle of Man</a></p>
@@ -227,9 +227,13 @@ server <- function(input, output) {
         taxa_table <- taxa
         } else {
         taxa$Season_Code <- as.numeric(taxa$Season_Code)
-        taxa_table <- dplyr::arrange(taxa, NBN_Name, Season_Code)
+        taxa <- dplyr::arrange(taxa,
+                               siteName,
+                               TL,
+                               Maitland_Code,
+                               Season_Code)
         taxa_table <- dplyr::select(
-          taxa_table,
+          taxa,
           siteName,
           TL,
           Season_Code,
@@ -458,7 +462,7 @@ server <- function(input, output) {
             fs <- c(fs, path)
             write.csv(output_files[[i]], file = path, row.names = FALSE)
         }
-        zip(zipfile = fname, files = fs)
+        zip::zip(zipfile = fname, files = fs)
       }
     )
 

@@ -1,0 +1,13 @@
+name: rictapp
+title: rictapp
+username:
+account: rictapplications
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 7829139
+bundleId: 7320985
+url: https://rictapplications.shinyapps.io/rictapp/
+when: 1686232285.11735
+lastSyncTime: 1686232285.11737
+asMultiple: FALSE
+asStatic: FALSE

@@ -1,39 +1,37 @@
+url: https://aquametrics.github.io/rict/
 destination: docs
-
 pkgdown:
-  as_is: true
-
+  as_is: yes
 template:
+  bootstrap: 5
   params:
-    noindex: true
-
+    noindex: yes
 reference:
-  - title: "Predictions and classification"
-    desc: "Functions for calculating predictions and classification"
-    contents:
-      - rict
-      - rict_predict
-      - rict_classify
-  - title: "Compare"
-    desc: "Function for comparing two or more classification results"
-    contents:
-      - rict_compare
-  - title: "Example Datasets"
-    desc: "Example datasets for different areas and model inputs for the UK"
-    contents:
-      - demo_ni_observed_values
-      - demo_observed_values
-      - demo_gis_values_log
-      - demo_iom_observed_values
-  - title: "Launch RICT web app"
-    desc: "Demo RICT web app interactive web app for rict package"
-    contents:
-      - rict_app
-  - title: "Helper functions"
-    desc: "Used for testing and examples"
-    contents:
-      - rict_validate
-      - compare_probability
-      - compare_test
-      - demo_eqr_values
-      - osg_parse
+- title: Predictions and classification
+  desc: Functions for calculating predictions and classification
+  contents:
+  - rict
+  - rict_predict
+  - rict_classify
+- title: Compare
+  desc: Function for comparing two or more classification results
+  contents: rict_compare
+- title: Example Datasets
+  desc: Example datasets for different areas and model inputs for the UK
+  contents:
+  - demo_ni_observed_values
+  - demo_observed_values
+  - demo_gis_values_log
+  - demo_iom_observed_values
+- title: Launch RICT web app
+  desc: Demo RICT web app interactive web app for rict package
+  contents: rict_app
+- title: Helper functions
+  desc: Used for testing and examples
+  contents:
+  - rict_validate
+  - compare_probability
+  - compare_test
+  - demo_eqr_values
+  - osg_parse
+

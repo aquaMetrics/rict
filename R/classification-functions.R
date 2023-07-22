@@ -190,6 +190,7 @@ combined_probability_classes <- function(spr_eqrs = NULL,
                                          k = NULL) {
   EQR_avg <- data.frame(rowMeans(cbind(spr_eqrs, sum_eqrs, aut_eqrs),
                                  na.rm = TRUE))
+  browser()
   if(aspt) {
   class_array_combined <- getClassarray_aspt(EQR_avg)
   }
@@ -199,8 +200,8 @@ combined_probability_classes <- function(spr_eqrs = NULL,
   prob_class_comb <- matrix(0, ncol = 1, nrow = 5)
   # Process probabilities
   for (i in 1:5) {
-    prob_class_comb[i] <- 100 *
-      sum(class_array_combined[class_array_combined == i, ] / i) / n_runs
+    prob_class_comb[i] <- (100 / n_runs) *
+      sum(class_array_combined[class_array_combined == i, ] / i)
   }
   prob_class_comb <- t(prob_class_comb)
   # Rename the columns to H G M P B
@@ -211,6 +212,8 @@ combined_probability_classes <- function(spr_eqrs = NULL,
   prob_class_comb <- cbind(prob_class_comb, mostProb)
   probability_classes <- data.frame()
   probability_classes <- rbind(probability_classes, prob_class_comb)
+  eqr <- data.frame("EQR" = mean(EQR_avg[,1]))
+  probability_classes <- cbind(probability_classes, eqr)
   return(probability_classes)
 }
 

@@ -448,5 +448,18 @@ test_that("IoM classify", {
   )
   test$NTAXA_aver_spr_aut <- round(test$NTAXA_aver_spr_aut, 6)
   test$ASPT_aver_spr_aut <- round(test$ASPT_aver_spr_aut, 6)
-  expect_equal(test[1, ], valid)
+  row.names(valid) <- NULL
+  row.names(test) <- NULL
+  expect_equal(test[1, 1:23], valid)
+})
+
+test_that("IoM classify all seasons", {
+# Input file used for fortran version
+iom_fortran_input <- utils::read.csv(
+  system.file("extdat",
+             "input-file-to-test-iom-against-fortran-outputs.csv",
+             package = "rict"
+), check.names = FALSE)
+test <- rict(iom_fortran_input[1:5, ])
+
 })

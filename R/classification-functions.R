@@ -190,7 +190,6 @@ combined_probability_classes <- function(spr_eqrs = NULL,
                                          k = NULL) {
   EQR_avg <- data.frame(rowMeans(cbind(spr_eqrs, sum_eqrs, aut_eqrs),
                                  na.rm = TRUE))
-  browser()
   if(aspt) {
   class_array_combined <- getClassarray_aspt(EQR_avg)
   }

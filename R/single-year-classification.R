@@ -624,7 +624,7 @@ if (area == "iom") {
   ### All seasons combined
   if(area == "iom") {
   colnames(all_seasons_ntaxa) <- c(paste0("all_seasons_ntaxa_", names(all_seasons_ntaxa)))
-  colnames(all_seasons_aspt) <- c(paste0("all_seasons_ntaxa_", names(all_seasons_aspt)))
+  colnames(all_seasons_aspt) <- c(paste0("all_seasons_aspt_", names(all_seasons_aspt)))
   colnames(all_seasons_minta) <- c(paste0("all_seasons_minta_", names(all_seasons_minta)))
   }
   ### MINTA outputs ----------------------------------------------------------------------------------------

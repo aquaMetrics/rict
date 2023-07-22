@@ -460,6 +460,14 @@ iom_fortran_input <- utils::read.csv(
              "input-file-to-test-iom-against-fortran-outputs.csv",
              package = "rict"
 ), check.names = FALSE)
-test <- rict(iom_fortran_input[1:5, ])
+test <- rict(iom_fortran_input[1:5, ], seed = TRUE)
 
+testthat::expect_equal(round(test$all_seasons_ntaxa_EQR, 2),
+                       c(0.95, 1.01, 1.22, 1.23, 0.75))
+
+single_year_test <- rict(iom_fortran_input[1:5, ],
+                         seed= TRUE,
+                         year_type = "single")
+testthat::expect_equal(round(single_year_test$all_seasons_ntaxa_EQR, 2),
+                       c(0.95, 1.01, 1.22, 1.23, 0.75))
 })

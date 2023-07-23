@@ -190,6 +190,10 @@ if (area == "iom") {
   all_seasons_ntaxa <- data.frame()
   all_seasons_aspt <- data.frame()
   all_seasons_minta <- data.frame()
+  all_seasons_ntaxa_eqr <- data.frame()
+  all_seasons_aspt_eqr <- data.frame()
+  all_seasons_minta_classes <- data.frame()
+
   # MINTA
   SiteMINTA_whpt_spr <- data.frame()
   SiteMINTA_whpt_aut <- data.frame()
@@ -545,6 +549,13 @@ if (area == "iom") {
 
     # Combined all seasons ---------------------------------------------------
     if(area == "iom") {
+      aspt_eqrs <- data.frame(rowMeans(cbind(EQR_aspt_spr,
+                                              EQR_aspt_sum,
+                                              EQR_aspt_aut),
+                                        na.rm = TRUE))
+      all_seasons_aspt_eqr <- dplyr::bind_rows(all_seasons_aspt_eqr,
+                                                aspt_eqrs)
+
     seasons_aspt <- combined_probability_classes(
       spr_eqrs = EQR_aspt_spr,
       sum_eqrs = EQR_aspt_sum,
@@ -556,6 +567,13 @@ if (area == "iom") {
       area = area,
       k = k)
 
+    ntaxa_eqrs <- data.frame(rowMeans(cbind(EQR_ntaxa_spr,
+                                            EQR_ntaxa_sum,
+                                            EQR_ntaxa_aut),
+                                   na.rm = TRUE))
+    all_seasons_ntaxa_eqr <- dplyr::bind_rows(all_seasons_ntaxa_eqr,
+                                              ntaxa_eqrs)
+
     seasons_ntaxa <- combined_probability_classes(
       spr_eqrs = EQR_ntaxa_spr,
       sum_eqrs = EQR_ntaxa_sum,
@@ -566,25 +584,38 @@ if (area == "iom") {
       predictions = predictions,
       area = area,
       k = k)
+    all_seasons_ntaxa <- dplyr::bind_rows(all_seasons_ntaxa, seasons_ntaxa)
+    all_seasons_aspt <- dplyr::bind_rows(all_seasons_aspt, seasons_aspt)
 
-    all_seasons_ntaxa <- rbind(all_seasons_ntaxa, seasons_ntaxa)
-    all_seasons_aspt <- rbind(all_seasons_aspt, seasons_aspt)
     all_seasons <- combined_seasons_minta(spr_aspt = EQR_aspt_spr,
                                    sum_aspt = EQR_aspt_sum,
                                    aut_aspt = EQR_aspt_aut,
                                    spr_ntaxa = EQR_ntaxa_spr,
                                    sum_ntaxa = EQR_ntaxa_sum,
-                                   aut_ntaxa =EQR_ntaxa_aut,
+                                   aut_ntaxa = EQR_ntaxa_aut,
                                    predictions = predictions,
                                    area = area,
                                    k = k,
                                    n_runs = n_runs)
-    all_seasons_minta <- rbind(all_seasons_minta, all_seasons)
+    all_seasons_minta <- rbind(all_seasons_minta, all_seasons[[1]])
+    all_seasons_minta_classes <-  rbind(all_seasons_minta_classes,
+                                        all_seasons[[2]])
     }
     #### Store EQRs in list --------------------------------------------------
     if (store_eqrs == TRUE) {
       # Create variable to store list of simulated EQRs for each metric
+      if(nrow(all_seasons_ntaxa_eqr) < 1) {
+        all_seasons_ntaxa_eqr  <- data.frame("EQR" = NA)
+      }
+      if(nrow(all_seasons_aspt_eqr) < 1) {
+        all_seasons_aspt_eqr  <- data.frame("EQR" = NA)
+      }
+      if(nrow(all_seasons_minta_classes) < 1) {
+        all_seasons_minta_classes  <- data.frame("EQR" = NA)
+      }
       eqrs <- list(
+        all_seasons_ntaxa_eqr,
+        all_seasons_aspt_eqr,
         EQR_aspt_avg, EQR_ntaxa_avg,
         EQR_aspt_spr, EQR_ntaxa_spr,
         EQR_aspt_aut, EQR_ntaxa_aut,
@@ -592,10 +623,12 @@ if (area == "iom") {
         data.frame(minta_ntaxa_aspt_spr),
         data.frame(minta_ntaxa_aspt_aut),
         data.frame(minta_ntaxa_aspt_spr_aut),
-        data.frame(minta_ntaxa_aspt_sum)
+        data.frame(minta_ntaxa_aspt_sum),
+        all_seasons_minta_classes
       )
       # Create variable to store list of 'pretty' names for eqr metrics
       eqr_names <- list(
+        "ALL_SEASONS_ASPT", "ALL_SEASONS_NTAXA",
         "AVG_ASPT", "AVG_NTAXA",
         "SPR_ASPT", "SPR_NTAXA",
         "AUT_ASPT", "AUT_NTAXA",
@@ -603,7 +636,8 @@ if (area == "iom") {
         "MINTA_SPR",
         "MINTA_AUT",
         "MINTA",
-        "MINTA_SUM"
+        "MINTA_SUM",
+        "ALL_SEASONS_MINTA"
       )
       # To make it easier to merge and process simulated EQRs and
       # classification results, bind all simulated EQRs into single dataframe

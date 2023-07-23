@@ -15,6 +15,7 @@
 #' @export
 #' @importFrom rlang .data
 #' @importFrom dplyr bind_cols select
+#' @importFrom tidyr any_of
 #'
 #' @examples
 #' \dontrun{
@@ -214,6 +215,9 @@ rict_classify <- function(data = NULL,
     all_seasons_ntaxa <- data.frame()
     all_seasons_aspt <- data.frame()
     all_seasons_minta <- data.frame()
+    all_seasons_ntaxa_eqr <- data.frame()
+    all_seasons_aspt_eqr <- data.frame()
+    all_seasons_minta_classes <- data.frame()
 
     # ASPT
     SiteProbabilityclasses_spr_aspt <- data.frame() # Store site probabilities in a dataframe
@@ -557,6 +561,12 @@ rict_classify <- function(data = NULL,
       # MINTA <- rbind(MINTA, eqr)
       # Combined all seasons ---------------------------------------------------
       if(area == "iom") {
+        aspt_eqrs <- data.frame(rowMeans(cbind(EQR_aspt_spr,
+                                               EQR_aspt_sum,
+                                               EQR_aspt_aut),
+                                         na.rm = TRUE))
+        all_seasons_aspt_eqr <- dplyr::bind_rows(all_seasons_aspt_eqr,
+                                                 aspt_eqrs)
         seasons_aspt <- combined_probability_classes(
           spr_eqrs = EQR_aspt_spr,
           sum_eqrs = EQR_aspt_sum,
@@ -568,6 +578,12 @@ rict_classify <- function(data = NULL,
           area = area,
           k = k)
 
+        ntaxa_eqrs <- data.frame(rowMeans(cbind(EQR_ntaxa_spr,
+                                                EQR_ntaxa_sum,
+                                                EQR_ntaxa_aut),
+                                          na.rm = TRUE))
+        all_seasons_ntaxa_eqr <- dplyr::bind_rows(all_seasons_ntaxa_eqr,
+                                                  ntaxa_eqrs)
         seasons_ntaxa <- combined_probability_classes(
           spr_eqrs = EQR_ntaxa_spr,
           sum_eqrs = EQR_ntaxa_sum,
@@ -591,21 +607,41 @@ rict_classify <- function(data = NULL,
                                               area = area,
                                               k = k,
                                               n_runs = n_runs)
-        all_seasons_minta <- rbind(all_seasons_minta, all_seasons)
-      }
+        all_seasons_minta <- rbind(all_seasons_minta, all_seasons[[1]])
+        all_seasons_minta_classes <-  rbind(all_seasons_minta_classes,
+                                            all_seasons[[2]])
+        }
 
       ##### MINTA ENDS HERE  #####
 
       #### Store EQRs in list
       if (store_eqrs == TRUE) {
         # Create variable to store list of simulated EQRs for each metric
+        if(nrow(all_seasons_ntaxa_eqr) < 1) {
+          all_seasons_ntaxa_eqr  <- data.frame("EQR" = NA)
+        }
+        if(nrow(all_seasons_aspt_eqr) < 1) {
+          all_seasons_aspt_eqr  <- data.frame("EQR" = NA)
+        }
+        if(nrow(all_seasons_minta_classes) < 1) {
+          all_seasons_minta_classes  <- data.frame("EQR" = NA)
+        }
+
         eqrs <- list(
           multiYear_EQRAverages_aspt_spr_aut,
           multiYear_EQRAverages_ntaxa_spr_aut,
-          data.frame(minta_ntaxa_aspt_spr_aut)
+          data.frame(minta_ntaxa_aspt_spr_aut),
+          all_seasons_ntaxa_eqr,
+          all_seasons_aspt_eqr,
+          all_seasons_minta_classes
         )
         # Create variable to store list of 'pretty' names for eqr metrics
-        eqr_names <- list("AVG_ASPT", "AVG_NTAXA", "MINTA")
+        eqr_names <- list("AVG_ASPT",
+                          "AVG_NTAXA",
+                          "MINTA",
+                          "ALL_SEASONS_ASPT",
+                          "ALL_SEASONS_NTAXA",
+                          "ALL_SEASONS_MINTA")
         # To make it easier to merge and process simulated EQRs and
         # classification results, bind all simluated EQRs into single dataframe
         # with a 'pretty' name for later manipulation
@@ -700,16 +736,15 @@ rict_classify <- function(data = NULL,
     if(area == "iom") {
       # Change results output for iom
       iom_results <- dplyr::select(classification_results,
-                                   -.data$SITE,
-                                   -.data$YEAR,
-                                   -.data$WATERBODY)
+                                   -any_of(c("SITE","YEAR","WATERBODY")))
       iom_results[iom_results == "E"] <- "Excellent"
       iom_results[iom_results == "G"] <- "Good"
       iom_results[iom_results == "M"] <- "Moderate"
       iom_results[iom_results == "P"] <- "Poor"
       iom_results[iom_results == "B"] <- "Bad"
       classification_results <-
-        bind_cols(classification_results[, c("SITE","YEAR", "WATERBODY")],
+        bind_cols(dplyr::select(classification_results,
+                                any_of(c("SITE","YEAR","WATERBODY"))),
                   iom_results)
     }
 

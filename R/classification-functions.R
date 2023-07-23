@@ -256,6 +256,7 @@ combined_seasons_minta <- function(spr_aspt = NULL,
     # Find most probable MINTA class, i.e the maximum, and add it to the site
     mostProb <- getMostProbableClass(aa)
     aa <- cbind(aa, mostProb)
+    return(list(aa,minta_ntaxa_aspt))
   }
 
 

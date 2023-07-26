@@ -253,7 +253,7 @@ discharge category.
 
 ### Model 44 Predictors
 
-Input variables for Model 44 can be download from [Defra GIS website](https://environment.data.gov.uk/DefraDataDownload/?mapService=EA/RICT&mode-spatial). These can be copied and pasted into the corresponding columns on the Model 44 template.
+Input variables for Model 44 can be download from [Defra GIS website](https://environment.data.gov.uk/DefraDataDownload/?mapService=EA/RICT&mode=spatial). These can be copied and pasted into the corresponding columns on the Model 44 template.
 
 ### Alkalinity
 

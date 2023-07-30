@@ -112,7 +112,6 @@ ui <- tagList(
 
 # Define server logic ----------------------------------------------------------
 server <- function(input, output) {
-  message(system("which zip"))
   output$message <- renderUI({
     inFile <- input$dataset
     if (is.null(inFile)) {

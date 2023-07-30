@@ -29,7 +29,7 @@ Imports:
   sp,
   sf,
   shiny,
-  zip
+  tidyr
 Suggests: 
   ggplot2, 
   httr, 
@@ -39,7 +39,6 @@ Suggests:
   covr,
   testthat (>= 2.1.0),
   tibble,
-  tidyr,
   png,
   pkgdown
 RoxygenNote: 7.2.3

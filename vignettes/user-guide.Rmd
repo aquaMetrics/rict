@@ -12,8 +12,8 @@ output:
     toc: yes
 vignette: |
   %\VignetteIndexEntry{Web App User Guide}
-  %\VignetteEngine{knitr::knitr}
   \usepackage[utf8]{inputenc}
+  %\VignetteEngine{knitr::knitr}
 editor_options:
   chunk_output_type: console
 ---

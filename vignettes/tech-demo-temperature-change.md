@@ -1,7 +1,7 @@
 ---
 title: 'Tech demo: Temperature change'
 author: "Tim Foster"
-date: "2023-02-25"
+date: "2023-07-16"
 output: html_document
 vignette: >
   %\VignetteIndexEntry{Tech demo: Temperature change}
@@ -26,11 +26,12 @@ If you don't have R installed on your local machine, try using [Rstudio Cloud](h
 
 Before starting, make sure to have the required packages installed in RStudio. We are going to use `tidyverse` and `rict` packages:
 
-
 ```r
-library(tidyverse)
 library(rict)
+library(tidyverse)
 ```
+
+
 
 **NOTE: If these packages fail to load, follow this [example](https://moderndive.netlify.app/1-3-packages.html) (replacing `ggplot2` with `tidyverse`) *and* follow this separate [guide](https://github.com/aquaMetrics/rict#install) to installing `rict`.**
 

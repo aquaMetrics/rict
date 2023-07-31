@@ -1,7 +1,7 @@
 ---
 title: "User Guide"
 author: "River Invertebrate Classification Tool (RICT) Steering Group"
-date: "`r Sys.Date()` version: `r packageVersion('rict')`"
+date: "2023-07-16 version: 3.1.5"
 pkgdown:
   as_is: yes
 output:
@@ -12,25 +12,19 @@ output:
     toc: yes
 vignette: |
   %\VignetteIndexEntry{Web App User Guide}
-  \usepackage[utf8]{inputenc}
   %\VignetteEngine{knitr::knitr}
+  \usepackage[utf8]{inputenc}
 editor_options:
   chunk_output_type: console
 ---
 
-```{r results="asis", echo=FALSE, message=FALSE, warning=FALSE}
-library(rict)
-library(knitr)
-# directly adding css to output html without ruining css style https://stackoverflow.com/questions/29291633/adding-custom-css-tags-to-an-rmarkdown-html-document
-cat("
+
 <style>
 img {
 border: 0px;
 outline: 0 ;
 }
 </style>
-")
-``` 
 
 
 <p align="center" width="100%">
@@ -253,7 +247,7 @@ discharge category.
 
 ### Model 44 Predictors
 
-Input variables for Model 44 can be download from [Defra GIS website](https://environment.data.gov.uk/DefraDataDownload/?mapService=EA/RICT&mode=spatial). These can be copied and pasted into the corresponding columns on the Model 44 template.
+Input variables for Model 44 can be download from [Defra GIS website](https://environment.data.gov.uk/DefraDataDownload/?mapService=EA/RICT&mode-spatial). These can be copied and pasted into the corresponding columns on the Model 44 template.
 
 ### Alkalinity
 
@@ -558,10 +552,99 @@ missing season(s) empty.
 
 ### Single-Year Outputs
 
-```{r, message=FALSE, echo=FALSE}
-single_class <- rict(demo_observed_values[1, ], year_type = "single")
-knitr::kable(t(single_class))
+
 ```
+## Warning in rict_validate(data, area = area, crs = crs): Your input data file includes mean temperature and/or range (MEAN.AIR.TEMP & AIR.TEMP.RANGE).
+## These values will be used instead of calculating them from Grid Reference values.
+```
+
+
+
+|                                  |1              |
+|:---------------------------------|:--------------|
+|SITE                              |MYR-GB-01-R    |
+|YEAR                              |2016           |
+|WATERBODY                         |Waterbody name |
+|H_NTAXA_spr                       |90.59          |
+|G_NTAXA_spr                       |8.82           |
+|M_NTAXA_spr                       |0.59           |
+|P_NTAXA_spr                       |0              |
+|B_NTAXA_spr                       |0              |
+|mostProb_NTAXA_spr                |H              |
+|NTAXA_eqr_av_spr                  |0.939394037    |
+|H_NTAXA_aut                       |99.24          |
+|G_NTAXA_aut                       |0.76           |
+|M_NTAXA_aut                       |0              |
+|P_NTAXA_aut                       |0              |
+|B_NTAXA_aut                       |0              |
+|mostProb_NTAXA_aut                |H              |
+|NTAXA_eqr_av_aut                  |1.06220021     |
+|H_NTAXA_spr_aut                   |96.9           |
+|G_NTAXA_spr_aut                   |3.02           |
+|M_NTAXA_spr_aut                   |0.08           |
+|P_NTAXA_spr_aut                   |0              |
+|B_NTAXA_spr_aut                   |0              |
+|mostProb_NTAXA_spr_aut            |H              |
+|NTAXA_aver_spr_aut                |1.00079713     |
+|H_ASPT_spr                        |41.97          |
+|G_ASPT_spr                        |52.45          |
+|M_ASPT_spr                        |5.52           |
+|P_ASPT_spr                        |0.06           |
+|B_ASPT_spr                        |0              |
+|mostProb_ASPT_spr                 |G              |
+|ASPT_eqr_av_spr                   |0.956092544    |
+|H_ASPT_aut                        |62.36          |
+|G_ASPT_aut                        |35.26          |
+|M_ASPT_aut                        |2.38           |
+|P_ASPT_aut                        |0              |
+|B_ASPT_aut                        |0              |
+|mostProb_ASPT_aut                 |H              |
+|ASPT_eqr_av_aut                   |0.985498696    |
+|H_ASPT_spr_aut                    |52.14          |
+|G_ASPT_spr_aut                    |44.12          |
+|M_ASPT_spr_aut                    |3.73           |
+|P_ASPT_spr_aut                    |0.01           |
+|B_ASPT_spr_aut                    |0              |
+|mostProb_ASPT_spr_aut             |H              |
+|ASPT_aver_spr_aut                 |0.97079562     |
+|mintawhpt_spr_H                   |41.97          |
+|mintawhpt_spr_G                   |52.4           |
+|mintawhpt_spr_M                   |5.57           |
+|mintawhpt_spr_P                   |0.06           |
+|mintawhpt_spr_B                   |0              |
+|mintawhpt_spr_mostProb            |G              |
+|mintawhpt_aut_H                   |62.36          |
+|mintawhpt_aut_G                   |35.26          |
+|mintawhpt_aut_M                   |2.38           |
+|mintawhpt_aut_P                   |0              |
+|mintawhpt_aut_B                   |0              |
+|mintawhpt_aut_mostProb            |H              |
+|mintawhpt_spr_aut_H               |52.14          |
+|mintawhpt_spr_aut_G               |44.12          |
+|mintawhpt_spr_aut_M               |3.73           |
+|mintawhpt_spr_aut_P               |0.01           |
+|mintawhpt_spr_aut_B               |0              |
+|mintawhpt_spr_aut_mostProb_MINTA_ |H              |
+|eqr_av_sum_aspt                   |1.0426497      |
+|H_ASPT_sum                        |88.57          |
+|G_ASPT_sum                        |11.05          |
+|M_ASPT_sum                        |0.38           |
+|P_ASPT_sum                        |0              |
+|B_ASPT_sum                        |0              |
+|mostProb_ASPT_sum                 |H              |
+|NTAXA_eqr_av_sum                  |1.13733288     |
+|H_NTAXA_sum                       |99.89          |
+|G_NTAXA_sum                       |0.11           |
+|M_NTAXA_sum                       |0              |
+|P_NTAXA_sum                       |0              |
+|B_NTAXA_sum                       |0              |
+|mostProb_NTAXA_sum                |H              |
+|mintawhpt_sum_H                   |88.57          |
+|mintawhpt_sum_G                   |11.05          |
+|mintawhpt_sum_M                   |0.38           |
+|mintawhpt_sum_P                   |0              |
+|mintawhpt_sum_B                   |0              |
+|mintawhpt_sum_mostProb            |H              |
 
 ## Multi-year
 
@@ -587,10 +670,218 @@ data. Neither is philosophically correct, as explained [Development History](#de
 
 ### Multi-Year Outputs
 
-```{r, message=FALSE, echo=FALSE}
-multi_class <- rict(demo_observed_values[1, ])
-knitr::kable(t(multi_class))
+
 ```
+## Warning in rict_validate(data, area = area, crs = crs): Your input data file includes mean temperature and/or range (MEAN.AIR.TEMP & AIR.TEMP.RANGE).
+## These values will be used instead of calculating them from Grid Reference values.
+```
+
+```
+## Called from: rict_classify(predictions, year_type, store_eqrs = store_eqrs, 
+##     seed = seed)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#383: obs_site1_ntaxa_spr <- obsIDX8r_spr + Ubias8r_spr
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#384: obs_site1_ntaxa_aut <- obsIDX8r_aut + Ubias8r_aut
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#385: obs_site1_ntaxa_sum <- obsIDX8r_sum + Ubias8r_sum
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#387: ExpIDX8r_ntaxa_spr <- data.frame(val = (Exp_ref_ntaxa[k, 1] + 
+##     getZObs_r_new(sdexp8_ntaxa, n_runs, seed, set_seed)))
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#388: ExpIDX8r_ntaxa_aut <- data.frame(val = (Exp_ref_ntaxa[k, 2] + 
+##     getZObs_r_new(sdexp8_ntaxa, n_runs, seed, set_seed)))
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#389: ExpIDX8r_ntaxa_sum <- data.frame(val = (Exp_ref_ntaxa[k, 3] + 
+##     getZObs_r_new(sdexp8_ntaxa, n_runs, seed, set_seed)))
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#391: EQR_ntaxa_spr <- as.data.frame(obs_site1_ntaxa_spr/ExpIDX8r_ntaxa_spr[, 
+##     1])
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#392: EQR_ntaxa_aut <- as.data.frame(obs_site1_ntaxa_aut/ExpIDX8r_ntaxa_aut[, 
+##     1])
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#399: Ubias9r_spr <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_spr[k], 
+##     n_runs, Ubias8r_spr, seed, set_seed)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#400: Ubias9r_aut <- getUbias9r_new(u_9a, u_9b, u_9c, obs_aspt_aut[k], 
+##     n_runs, Ubias8r_aut, seed, set_seed)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#401: Ubias7r_spr <- Ubias8r_spr * Ubias9r_spr
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#402: Ubias7r_aut <- Ubias8r_aut * Ubias9r_aut
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#403: obsIDX9r_spr <- getObsIDXniner(obs_aspt_spr[k], getZObs_r_new(sdobs_aspt, 
+##     n_runs, seed, set_seed))
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#404: obsIDX9r_aut <- getObsIDXniner(obs_aspt_aut[k], getZObs_r_new(sdobs_aspt, 
+##     n_runs, seed, set_seed))
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#405: obsIDX7r_spr <- obsIDX8r_spr * obsIDX9r_spr
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#406: obsIDX7r_aut <- obsIDX8r_aut * obsIDX9r_aut
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#407: obsIDX7rb_spr <- obsIDX7r_spr + Ubias7r_spr
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#408: obsIDX7rb_aut <- obsIDX7r_aut + Ubias7r_aut
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#409: obsIDX8rb_spr <- obsIDX8r_spr + Ubias8r_spr
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#410: obsIDX8rb_aut <- obsIDX8r_aut + Ubias8r_aut
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#411: obsIDX9rb_spr <- obsIDX7rb_spr/obsIDX8rb_spr
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#412: obsIDX9rb_aut <- obsIDX7rb_aut/obsIDX8rb_aut
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#414: ExpIDX9r_aspt_spr <- data.frame(val = (Exp_ref_aspt[k, 1] + getZObs_r_new(sdexp9_aspt, 
+##     n_runs, seed, set_seed)))
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#415: ExpIDX9r_aspt_aut <- data.frame(val = (Exp_ref_aspt[k, 2] + getZObs_r_new(sdexp9_aspt, 
+##     n_runs, seed, set_seed)))
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#417: EQR_aspt_spr <- as.data.frame(obsIDX9rb_spr/ExpIDX9r_aspt_spr[, 
+##     1])
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#418: EQR_aspt_aut <- as.data.frame(obsIDX9rb_aut/ExpIDX9r_aspt_aut[, 
+##     1])
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#421: if (multipleSite_encoutered == TRUE) {
+##     if ((j == nrow(data)) || (j - 1 == nrow(data))) {
+##         lastSiteProcessed <- TRUE
+##     }
+##     EQR_ntaxa_spr <- data.frame(EQR_ntaxa_spr = rowMeans(data.frame(multiYear_EQRAverages_ntaxa_spr[, 
+##         -1])))
+##     EQR_ntaxa_aut <- data.frame(EQR_ntaxa_aut = rowMeans(data.frame(multiYear_EQRAverages_ntaxa_aut[, 
+##         -1])))
+##     EQR_aspt_spr <- data.frame(EQR_aspt_spr = rowMeans(data.frame(multiYear_EQRAverages_aspt_spr[, 
+##         -1])))
+##     EQR_aspt_aut <- data.frame(EQR_aspt_aut = rowMeans(data.frame(multiYear_EQRAverages_aspt_aut[, 
+##         -1])))
+## }
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#444: eqr_av_spr <- data.frame(rowMeans(getAvgEQR_SprAut(EQR_ntaxa_spr, 
+##     EQR_ntaxa_aut, k, row_name = TRUE)))
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#445: eqr_av_spr_aspt <- data.frame(rowMeans(getAvgEQR_SprAut(EQR_aspt_spr, 
+##     EQR_aspt_aut, k, row_name = TRUE)))
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#450: multiYear_EQRAverages_ntaxa_spr_aut <- data.frame(rbind(cbind(EQR_ntaxa_spr, 
+##     EQR_ntaxa_aut)))
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#451: multiYear_EQRAverages_ntaxa_spr_aut <- data.frame(EQR_ntax_aspr_aut = rowMeans(multiYear_EQRAverages_ntaxa_spr_aut))
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#455: multiYear_EQRAverages_aspt_spr_aut <- data.frame(rbind(cbind(EQR_aspt_spr, 
+##     EQR_aspt_aut)))
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#456: multiYear_EQRAverages_aspt_spr_aut <- data.frame(EQR_aspt_spr_aut = rowMeans(multiYear_EQRAverages_aspt_spr_aut))
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#462: classArray_siteOne_spr_aut_ntaxa <- getClassarray_ntaxa(multiYear_EQRAverages_ntaxa_spr_aut)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#467: probClass_spr <- matrix(0, ncol = 1, nrow = 5)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#468: for (i in 1:5) {
+##     probClass_spr[i] <- 100 * sum(classArray_siteOne_spr_aut_ntaxa[classArray_siteOne_spr_aut_ntaxa == 
+##         i, ]/i)/n_runs
+## }
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#469: probClass_spr[i] <- 100 * sum(classArray_siteOne_spr_aut_ntaxa[classArray_siteOne_spr_aut_ntaxa == 
+##     i, ]/i)/n_runs
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#469: probClass_spr[i] <- 100 * sum(classArray_siteOne_spr_aut_ntaxa[classArray_siteOne_spr_aut_ntaxa == 
+##     i, ]/i)/n_runs
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#469: probClass_spr[i] <- 100 * sum(classArray_siteOne_spr_aut_ntaxa[classArray_siteOne_spr_aut_ntaxa == 
+##     i, ]/i)/n_runs
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#469: probClass_spr[i] <- 100 * sum(classArray_siteOne_spr_aut_ntaxa[classArray_siteOne_spr_aut_ntaxa == 
+##     i, ]/i)/n_runs
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#469: probClass_spr[i] <- 100 * sum(classArray_siteOne_spr_aut_ntaxa[classArray_siteOne_spr_aut_ntaxa == 
+##     i, ]/i)/n_runs
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#474: probabilityClass <- getProbClassLabelFromEQR(area)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#475: a_ntaxa_spr_aut <- t(probClass_spr)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#476: colnames(a_ntaxa_spr_aut) <- getProbClassLabelFromEQR(area)[, 
+##     1]
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#477: rownames(a_ntaxa_spr_aut) <- as.character(data[k, "SITE"])
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#480: mostProb <- getMostProbableClass(a_ntaxa_spr_aut)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#481: a_ntaxa_spr_aut <- data.frame(cbind(a_ntaxa_spr_aut, mostProb))
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#482: SiteProbabilityclasses_spr_aut_comb_ntaxa <- rbind(SiteProbabilityclasses_spr_aut_comb_ntaxa, 
+##     a_ntaxa_spr_aut)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#485: EQRAverages_ntaxa_spr_aut <- rbind(EQRAverages_ntaxa_spr_aut, 
+##     eqr_av_spr)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#492: classArray_siteOne_spr_aut_aspt <- getClassarray_aspt(multiYear_EQRAverages_aspt_spr_aut)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#495: probClass_spr <- matrix(0, ncol = 1, nrow = 5)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#497: for (i in 1:5) {
+##     probClass_spr[i] <- 100 * sum(classArray_siteOne_spr_aut_aspt[classArray_siteOne_spr_aut_aspt == 
+##         i, ]/i)/n_runs
+## }
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#498: probClass_spr[i] <- 100 * sum(classArray_siteOne_spr_aut_aspt[classArray_siteOne_spr_aut_aspt == 
+##     i, ]/i)/n_runs
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#498: probClass_spr[i] <- 100 * sum(classArray_siteOne_spr_aut_aspt[classArray_siteOne_spr_aut_aspt == 
+##     i, ]/i)/n_runs
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#498: probClass_spr[i] <- 100 * sum(classArray_siteOne_spr_aut_aspt[classArray_siteOne_spr_aut_aspt == 
+##     i, ]/i)/n_runs
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#498: probClass_spr[i] <- 100 * sum(classArray_siteOne_spr_aut_aspt[classArray_siteOne_spr_aut_aspt == 
+##     i, ]/i)/n_runs
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#498: probClass_spr[i] <- 100 * sum(classArray_siteOne_spr_aut_aspt[classArray_siteOne_spr_aut_aspt == 
+##     i, ]/i)/n_runs
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#504: a_aspt_spr_aut <- t(probClass_spr)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#505: colnames(a_aspt_spr_aut) <- getProbClassLabelFromEQR(area)[, 
+##     1]
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#507: rownames(a_aspt_spr_aut) <- as.character(data[k, "SITE"])
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#510: mostProb <- getMostProbableClass(a_aspt_spr_aut)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#512: a_aspt_spr_aut <- data.frame(cbind(a_aspt_spr_aut, mostProb))
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#513: SiteProbabilityclasses_spr_aut_comb_aspt <- rbind(SiteProbabilityclasses_spr_aut_comb_aspt, 
+##     a_aspt_spr_aut)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#515: EQRAverages_aspt_spr_aut <- rbind(EQRAverages_aspt_spr_aut, eqr_av_spr_aspt)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#520: minta_ntaxa_aspt_spr_aut <- getMINTA_ntaxa_aspt(as.matrix(classArray_siteOne_spr_aut_ntaxa), 
+##     as.matrix(classArray_siteOne_spr_aut_aspt))
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#526: minta_probClass_spr_aut <- matrix(0, ncol = 1, nrow = 5)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#528: for (i in 1:5) {
+##     minta_probClass_spr_aut[i] <- 100 * sum(minta_ntaxa_aspt_spr_aut[minta_ntaxa_aspt_spr_aut == 
+##         i, ]/i)/n_runs
+## }
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#529: minta_probClass_spr_aut[i] <- 100 * sum(minta_ntaxa_aspt_spr_aut[minta_ntaxa_aspt_spr_aut == 
+##     i, ]/i)/n_runs
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#529: minta_probClass_spr_aut[i] <- 100 * sum(minta_ntaxa_aspt_spr_aut[minta_ntaxa_aspt_spr_aut == 
+##     i, ]/i)/n_runs
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#529: minta_probClass_spr_aut[i] <- 100 * sum(minta_ntaxa_aspt_spr_aut[minta_ntaxa_aspt_spr_aut == 
+##     i, ]/i)/n_runs
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#529: minta_probClass_spr_aut[i] <- 100 * sum(minta_ntaxa_aspt_spr_aut[minta_ntaxa_aspt_spr_aut == 
+##     i, ]/i)/n_runs
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#529: minta_probClass_spr_aut[i] <- 100 * sum(minta_ntaxa_aspt_spr_aut[minta_ntaxa_aspt_spr_aut == 
+##     i, ]/i)/n_runs
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#534: aa <- t(minta_probClass_spr_aut)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#535: colnames(aa) <- getProbClassLabelFromEQR(area)[, 1]
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#536: rownames(aa) <- as.character(data[k, "SITE"])
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#538: mostProb <- getMostProbableClass(aa)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#539: aa <- data.frame(cbind(aa, mostProb))
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#541: SiteMINTA_whpt_spr_aut <- rbind(SiteMINTA_whpt_spr_aut, aa)
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#547: if (area == "iom") {
+##     seasons_aspt <- combined_probability_classes(spr_eqrs = EQR_aspt_spr, 
+##         sum_eqrs = EQR_aspt_sum, aut_eqrs = EQR_aspt_aut, aspt = TRUE, 
+##         ntaxa = FALSE, n_runs = n_runs, predictions = data, area = area, 
+##         k = k)
+##     seasons_ntaxa <- combined_probability_classes(spr_eqrs = EQR_ntaxa_spr, 
+##         sum_eqrs = EQR_ntaxa_sum, aut_eqrs = EQR_ntaxa_aut, aspt = FALSE, 
+##         ntaxa = TRUE, n_runs = n_runs, predictions = data, area = area, 
+##         k = k)
+##     all_seasons_ntaxa <- rbind(all_seasons_ntaxa, seasons_ntaxa)
+##     all_seasons_aspt <- rbind(all_seasons_aspt, seasons_aspt)
+##     all_seasons <- combined_seasons_minta(spr_aspt = EQR_aspt_spr, 
+##         sum_aspt = EQR_aspt_sum, aut_aspt = EQR_aspt_aut, spr_ntaxa = EQR_ntaxa_spr, 
+##         sum_ntaxa = EQR_ntaxa_sum, aut_ntaxa = EQR_ntaxa_aut, 
+##         predictions = data, area = area, k = k, n_runs = n_runs)
+##     all_seasons_minta <- rbind(all_seasons_minta, all_seasons)
+## }
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#588: if (store_eqrs == TRUE) {
+##     eqrs <- list(multiYear_EQRAverages_aspt_spr_aut, multiYear_EQRAverages_ntaxa_spr_aut, 
+##         data.frame(minta_ntaxa_aspt_spr_aut))
+##     eqr_names <- list("AVG_ASPT", "AVG_NTAXA", "MINTA")
+##     eqrs <- lapply(seq_len(length(eqrs)), function(n) {
+##         df <- eqrs[[n]]
+##         eqr <- cbind(df, eqr_names[n], k)
+##         names(eqr) <- c("EQR", "EQR Metrics", "ID")
+##         return(eqr)
+##     })
+##     eqrs <- do.call("rbind", eqrs)
+##     eqr_metrics <- c(eqr_metrics, list(eqrs))
+## }
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#613: if (multipleSite_encoutered) {
+##     k <- j
+## } else {
+##     k <- j
+## }
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#616: k <- j
+## debug at /home/tim/Documents/Projects/rict/R/rict-classify.R#260: (while) k <= nrow(data) || (lastSiteProcessed == FALSE)
+```
+
+
+
+|                                  |1              |
+|:---------------------------------|:--------------|
+|SITE                              |MYR-GB-01-R    |
+|YEAR                              |2016           |
+|WATERBODY                         |Waterbody name |
+|H_NTAXA_spr_aut                   |96.9           |
+|G_NTAXA_spr_aut                   |3.02           |
+|M_NTAXA_spr_aut                   |0.08           |
+|P_NTAXA_spr_aut                   |0              |
+|B_NTAXA_spr_aut                   |0              |
+|mostProb_NTAXA_spr_aut            |H              |
+|NTAXA_aver_spr_aut                |1.00079713     |
+|H_ASPT_spr_aut                    |52.14          |
+|G_ASPT_spr_aut                    |44.12          |
+|M_ASPT_spr_aut                    |3.73           |
+|P_ASPT_spr_aut                    |0.01           |
+|B_ASPT_spr_aut                    |0              |
+|mostProb_ASPT_spr_aut             |H              |
+|ASPT_aver_spr_aut                 |0.97079562     |
+|mintawhpt_spr_aut_H_MINTA_        |52.14          |
+|mintawhpt_spr_aut_G_MINTA_        |44.12          |
+|mintawhpt_spr_aut_M_MINTA_        |3.73           |
+|mintawhpt_spr_aut_P_MINTA_        |0.01           |
+|mintawhpt_spr_aut_B_MINTA_        |0              |
+|mintawhpt_spr_aut_mostProb_MINTA_ |H              |
 
 ## Probabilities of class
 

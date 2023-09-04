@@ -204,7 +204,7 @@ test_that("GIS variables classification against Ralph's output", {
   demo_gis_values_log$WATERBODY <- demo_gis_values_log$SITE
   predictions <- rict_predict(demo_gis_values_log)
   results <- rict_classify(predictions, year_type = "single", seed = FALSE)
-  results_two <- rict(demo_gis_values_log, year_type = "single")
+  results_two <- rict(demo_gis_values_log, year_type = "single", seed = FALSE)
   # test that creating predictions then classifying works the same as  going straight to
   # classifying
   equal <- all.equal(
@@ -266,7 +266,7 @@ test_that("Single year: Only return results for seasons provided", {
 
   remove_cols <- grep("Sum_TL2|Spr_TL2", names(demo_observed_values))
   demo_observed_values[, remove_cols] <- NA
-  test <- rict(demo_observed_values, year_type = "single")
+  test <- rict(demo_observed_values, year_type = "single", seed = FALSE)
 
   expect_equal(all(is.na(test$M_NTAXA_spr)), TRUE)
   expect_equal(all(is.na(test$M_NTAXA_sum)), TRUE)
@@ -278,7 +278,7 @@ test_that("Single year: Only return results for seasons provided", {
   demo_observed_values[1:2, remove_cols] <- NA
   remove_cols <- grep("Sum_TL2", names(demo_observed_values))
   demo_observed_values[5:7, remove_cols] <- NA
-  test <- rict(demo_observed_values, year_type = "single")
+  test <- rict(demo_observed_values, year_type = "single", seed = FALSE)
 
   expect_equal(all(is.na(test$M_NTAXA_spr[1])), TRUE)
   expect_equal(all(is.na(test$M_NTAXA_spr[3])), FALSE)
@@ -292,7 +292,7 @@ test_that("Single year: Only return results for seasons provided", {
   remove_cols <- grep("Sum_Season_ID|Sum_Ntaxa_Bias", names(demo_gis_values_log))
   demo_gis_values_log[1:2, remove_cols] <- NA
   prediction <- rict_predict(demo_gis_values_log)
-  test <- rict(demo_gis_values_log, year_type = "single")
+  test <- rict(demo_gis_values_log, year_type = "single", seed = FALSE)
 
   # Only summer from GIS:
   demo_gis_values_log <- rict::demo_gis_values_log
@@ -300,8 +300,8 @@ test_that("Single year: Only return results for seasons provided", {
   demo_gis_values_log[1:2, remove_cols] <- NA
   remove_cols <- grep("Aut_Season_ID|Aut_Ntaxa_Bias|Spr_Season_ID|Spr_Ntaxa_Bias", names(demo_gis_values_log))
   demo_gis_values_log[1:2, remove_cols] <- NA
-  test <- rict(demo_gis_values_log, year_type = "single")
-  test <- rict(demo_gis_values_log[1, ], year_type = "single")
+  test <- rict(demo_gis_values_log, year_type = "single", seed = FALSE)
+  test <- rict(demo_gis_values_log[1, ], year_type = "single", seed = FALSE)
 })
 
 test_that("Single year: Summer only", {
@@ -341,11 +341,11 @@ test_that("Test single row of multi-year input works", {
   ), check.names = FALSE)
   # Run data through multi-year classification and check output is created for all sites
   sites <- unique(single_row_test$SITE)
-  check <- rict(single_row_test)
+  check <- rict(single_row_test, seed = FALSE)
   expect_equal(sort(as.character(unique(check$SITE))), sort(as.character(sites)))
 
   # Test a single row input also works
-  check <- rict(single_row_test[1, ])
+  check <- rict(single_row_test[1, ], seed = FALSE)
   # Quick test to see it return a value
   expect_gte(as.numeric(as.character(check$H_NTAXA_spr_aut)), 0)
 })
@@ -353,7 +353,7 @@ test_that("Test single row of multi-year input works", {
 test_that("NI classification", {
   classification <- rict(demo_ni_observed_values,
     year_type = "single",
-    crs = 29903
+    crs = 29903, seed = FALSE
   )
 
   verfied_classification <- utils::read.csv(system.file("extdat",
@@ -380,8 +380,8 @@ test_that("test reproducibility", {
   test <- rbind(demo_observed_values[4:6, ], test)
 
   # Change the order - switch first and second site/multi-year around
-  test1 <- rict(demo_observed_values[1:3, ])
-  test2 <- rict(test)
+  test1 <- rict(demo_observed_values[1:3, ], seed = FALSE)
+  test2 <- rict(test, seed = FALSE)
   # First results from test1 should match second result from test2
   expect_equal(as.numeric(as.character(test1$H_NTAXA_spr_aut)), as.numeric(as.character(test2$H_NTAXA_spr_aut[2])))
 })
@@ -390,7 +390,7 @@ test_that("missing observations in multi-year return NA", {
   test <- demo_observed_values
   test$`Aut_TL2_WHPT_ASPT (AbW,DistFam)` <- NA
   test$`Aut_TL2_WHPT_NTaxa (AbW,DistFam)` <- NA
-  test <- rict(test)
+  test <- rict(test, seed = FALSE)
   expect_equal(length(test[is.na(test)]), 200)
 })
 
@@ -398,7 +398,8 @@ test_that("missing observations in multi-year return NA", {
 test_that("NI summer", {
   classification <- rict(demo_ni_observed_values,
     year_type = "single",
-    crs = 29903
+    crs = 29903,
+    seed = FALSE
   )
 
   azure_classification <- utils::read.csv(
@@ -419,7 +420,7 @@ test_that("NI summer", {
 
 test_that("IoM classify", {
   # test one site for speed
-  test <- rict(demo_iom_observed_values[1, ])
+  test <- rict(demo_iom_observed_values[1, ], seed = FALSE)
   # compare to output 2023-02-26
   valid <- data.frame(
     "SITE" = "TEST-01-R",

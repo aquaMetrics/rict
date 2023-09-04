@@ -10,7 +10,7 @@ rict(
   store_eqrs = FALSE,
   area = NULL,
   crs = NULL,
-  seed = FALSE
+  seed = TRUE
 )
 }
 \arguments{

@@ -31,15 +31,16 @@ Imports:
   shiny,
   tidyr
 Suggests: 
+  covr,
+  devtools,
   ggplot2, 
   httr, 
   knitr,
-  rmarkdown,
-  devtools,
-  covr,
-  testthat (>= 2.1.0),
-  tibble,
+  markdown,
   png,
-  pkgdown
+  pkgdown,
+  rmarkdown,
+  testthat (>= 2.1.0),
+  tibble
 RoxygenNote: 7.2.3
 VignetteBuilder: knitr

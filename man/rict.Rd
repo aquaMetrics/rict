@@ -10,7 +10,7 @@ rict(
   store_eqrs = FALSE,
   area = NULL,
   crs = NULL,
-  seed = FALSE
+  seed = TRUE
 )
 }
 \arguments{
@@ -34,7 +34,8 @@ the area parameter either 'iom', 'gb, 'ni' for testing purposes.}
 
 \item{crs}{optionally set crs to `29903` for Irish projection system.}
 
-\item{seed}{Use seed as setup in RICT2 Azure, useful for testing only.}
+\item{seed}{Use seed as setup in RICT2 Azure as default, useful for testing
+only.}
 }
 \value{
 Dataframe of classification results (and simulated EQRs if store_eqrs

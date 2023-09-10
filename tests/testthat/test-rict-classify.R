@@ -461,16 +461,17 @@ iom_fortran_input <- utils::read.csv(
              "input-file-to-test-iom-against-fortran-outputs.csv",
              package = "rict"
 ), check.names = FALSE)
-# test multi year classification
+
 test <- rict(iom_fortran_input[1:5, ], seed = TRUE, year_type = "multi")
-# test against expected values from fortran outputs
+# Test against expected values from fortran outputs
 testthat::expect_equal(round(test$all_seasons_ntaxa_EQR, 2),
                        c(0.95, 1.01, 1.22, 1.23, 0.75))
 
+# Test single-year classification
 single_year_test <- rict(iom_fortran_input[1:5, ],
                          seed= TRUE,
                          year_type = "single")
-# test against expected values from fortran outputs
+# Test against expected values from fortran outputs
 testthat::expect_equal(round(single_year_test$all_seasons_ntaxa_EQR, 2),
                        c(0.95, 1.01, 1.22, 1.23, 0.75))
 })

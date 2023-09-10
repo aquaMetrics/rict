@@ -525,6 +525,7 @@ These values will be used instead of calculating them from Grid Reference values
   # Bind checks into data frame
   checks <- dplyr::bind_rows(checks)
   ### Add discharge and velocity columns missing data fails ---------------------------
+  if(area != "iom") {
   discharge_velocity_fails <- data[is.na(data$DISCHARGE) & is.na(data$VELO_TRUE), ]
   discharge_velocity_fails <- data.frame(
     "ROW" = discharge_velocity_fails$ROW,
@@ -540,6 +541,7 @@ These values will be used instead of calculating them from Grid Reference values
     discharge_velocity_fails$REPLACEMENT <- ""
     # Add discharge and velocity fails
     checks <- rbind(checks, discharge_velocity_fails)
+  }
   }
   ### Replace values if value is less than the ‘overall’ minimum value ------------------------------
   validation_rules_input <- validation_rules[validation_rules$source == "input", ]

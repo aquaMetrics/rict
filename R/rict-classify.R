@@ -76,15 +76,8 @@ rict_classify <- function(data = NULL,
         )
       )
     }
-    # Enter source files
-    # Use the column header as site names in the final output
-    all_sites <- data[, 1]
-
     # Keep YEAR, WATERBODY
     year_waterBody <- data[, c("YEAR", "WATERBODY")]
-
-    # Combine all_sites with more information  - e.g. YEAR, WATERBODY
-    all_sites <- cbind(all_sites, year_waterBody)
 
     # Change all names to upper case for consistency
     names(data) <- toupper(names(data))
@@ -118,7 +111,8 @@ rict_classify <- function(data = NULL,
     # Create default bias value of 1.68 or 0 depending on area
     default_bias <- data.frame(
       "ni" = 0,
-      "gb" = 1.68
+      "gb" = 1.68,
+      "iom" = 1.68
     )
     # If user does not provide any bias value select default from values
     if (is.na(ubias_main) || ubias_main == -9) {

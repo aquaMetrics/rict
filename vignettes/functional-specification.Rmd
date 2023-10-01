@@ -175,7 +175,7 @@ as internal data tables and R software code functions.
 All the following files can be found within the rict package on
 [github](https://github.com/aquaMetrics/rict).
 
-The rict code  is automatically tested and compiled/built on every update to the
+The rict code is automatically tested and compiled/built on every update to the
 master branch on Github. This process is carried out by the Github actions
 website, which monitors repo for any changes and re-builds and tests the code
 on a Windows, Mac and Linux machine in the cloud. It then automatically deploys updates to the web app and/or documentation.
@@ -187,10 +187,24 @@ on a Windows, Mac and Linux machine in the cloud. It then automatically deploys 
 These files can be found in the inst/extdat folder within the rict package.
   
 **Model 1 specific:**
-  
-* `df-coeff-gb-685.DAT` – used for Discriminant score.
-* `df-mean-gb-685.DAT` - used for calculating Mahanalobis distance.
-  
+
+Files used in [calculate discriminant function scores](#calculate-discriminant-function-scores) section:
+
+* `df-coeff-gb-685.DAT` – GB 
+* `df-coeff-iom.DAT` - Isle of Man
+* `DFCOEFF_NI.DAT` - NI 
+
+Files used in [calculating Mahanalobis distance](#calculate-mahanalobis-distance) section:
+
+* `DFMEAN_NI_RALPH.DAT` - NI
+* `df-mean-gb-685.DAT` - GB 
+* `df-mean-iom.DAT` - IoM
+
+Files used for calculating proportion during prediction:
+* `endGrp-AssessScoresNI.csv` - NI
+* `end-grp-assess-scores.csv` - GB
+* `end-grp-assess-scores-iom.csv` - IoM
+
 **Model 44 specific:**
   
 * `discrimintant-function-coefficient-model-44.csv` - used for discriminant score.
@@ -198,8 +212,7 @@ These files can be found in the inst/extdat folder within the rict package.
 
 **For both models:**
   
-* `air-temp-grid.csv` – contains previously derived Environmental data values for the Mean Air Temperature (TEMPM) and Temperature range (TEMPR) for points in the centres of 5km interval grid squares. Values are used after converting the supplied NGR (or BNR) to latitude and longitude to identify the relevant values required. 
-* `end-grp-assess-scores.csv` used for calculating proportion during prediction.
+* `air-temp-grid.csv` – contains previously derived Environmental data values for the Mean Air Temperature (TEMPM) and Temperature range (TEMPR) for points in the centres of 5km interval grid squares. Values are used after converting the supplied NGR (or BNR) to latitude and longitude to identify the relevant values required. Not used for Isle of Man.
 * `TAXA_AB_APR_PRAB.csv` - containing abundance and probability of abundance category for each taxon used in predicting taxa. 
 * `x-103-end-group-means-formatted-jdb-17-dec-2019.csv` – combined data for sites considered to be of a similar biological composition the End Group table used in RICT is called
   
@@ -218,27 +231,17 @@ Prediction support functions are found:
   
 ## Classification
 
-### Files Supporting: 
-
-* `adjustParams_ntaxa_aspt.csv` - reference adjustment values.
-* `EndGrp_AssessScores.csv` - Excel csv used for adjusting the expected values during classification for calculating proportion.
-  
 **Note**, no classification is carried out on the 80 indices – carried out for Prediction only!
   
-A list of the tables and functions required for the NI model below:
+#### Classification Functions:
+
+* `classification-functions.R` - A large number of R code functions used in the [classification](#classification) section.
+
+#### Classification support files: 
   
-* `DFCOEFF_NI.DAT` file used for Discriminant score as described in section 7.5 of this document.
-* `DFMEAN_NI_RALPH.DAT` file used for calculating Mahanalobis distance as described in section 7.6 of this document.j
-* `EndGrp_AssessScores.csv` file used for calculating proportion during prediction.
-
-### Classification Functions:
-
-* `classification-functions.R` - A large number of R code functions used during the prediction process as described in Section 8.
-
-### Classification support files: 
-  
-* `adjustParams_ntaxa_aspt.csv` containing reference adjustment values which are used as described in Section 8.2.
-* `EndGrp_AssessScoresNI.csv` used for adjusting the expected values during classification as described in Section 8.2.
+* `adjustParams_ntaxa_aspt.csv` - reference adjustment values.
+* `adjustParams_ntaxa_aspt.csv` containing reference adjustment values which are used as described in [Adjust Expected Values](#adjust-expected-values) section.
+* `endGrp-AssessScoresNI.csv` & `end-grp-assess-scores.csv` & `end-grp-assess-scores-iom.csv` used for [Adjust Expected Values](#adjust-expected-values) section.
   
 All source code and support files can be downloaded into R environment for
 example Rstudio from Github for users who wish to amend and create their own
@@ -259,11 +262,11 @@ file to alter values for their own version)
 * Bias - Bias values can be provided in the input file by the user and will be
 used if provided. However, if no data values
 for Bias or "-9" has been entered in the input file, then the hard-coded default
-value of 1.62 (GB) or 0 (NI) will be used.
+value of 1.68 (GB + IoM) or 0 (NI) will be used.
   
-Note that 1.62 is the default value currently being used for Bias as this was
-input as the default value in the previous version of RICT as used in SEPA for
-BMWP NTAXA. However, the EA uses a value of 1.68 as the Bias value for WHPT
+Note that 1.62 value was used for Bias as this was the default input value in
+the previous version of RICT as used in SEPA for BMWP NTAXA. However, the EA
+uses a value of 1.68 as the Bias value for WHPT
 which was based on an audit of the analytical quality of Environment Agency
 laboratories. The Bias value for WHPT should be greater than the value for BMWP
 for the same level of analytical quality, because WHPT uses more taxa than BMWP.
@@ -634,7 +637,7 @@ The specific function code used within `calc-temperatures.R` is as below:
   
 where:  
   
-coordinates are the eastings and northings (lat, long) calculated values as described in Section 6.1 
+coordinates are the eastings and northings (lat, long) calculated values as described in [Calculate Air Temperature](#calculate-air-temperature) section.
 
 ```
 # R version originally written by by C. Laize CEH in early 2012
@@ -1169,7 +1172,7 @@ the inst/ext folder for GB in a file called DFCOEFF_GB685.
   
 For the GB model 44 with 17 EVs the DFs values can be found in the prediction
 support files folder for GB in a file called
-`discrimant-function-coefficients-model-44.csv` - see section 12 for additional
+`discrimant-function-coefficients-model-44.csv` - see section 14 for additional
 Model 44 information.
   
 For the NI model with 11 EVs, the DFs values can be found in the prediction
@@ -1693,8 +1696,8 @@ ExpIDX~Ref,i~ = ExpIDX~Adj,i~ / K
   
 Where:
   
-ExpIDX~Adj,i~ = the adjusted expected value which is calculated as described in section 8.2 above.  
-K = WFD conversion factor (i.e. WHPT NTAXA: K = 1.0049, and WHPT ASPT K = 0.9921 as described in section 8.3 above.  
+ExpIDX~Adj,i~ = value which is calculated as described in [Adjust Expected Values](#adjust-expected-values) section.  
+K = WFD conversion factor (i.e. WHPT NTAXA: K = 1.0049, and WHPT ASPT K = 0.9921 as described in [EQR conversion Factor](#eqr-conversion-factor) section.  
 IDX = do this for each Index, i.e. for WHPT NTAXA and WHPT ASPT  
 i = do this for each specific site  
   
@@ -1772,7 +1775,7 @@ of analytical error (measured by auditing) on the observed index values. This
 value is provided by the user completing the relevant data field in the input
 file as described in section 5 and Annex B of this document. RICT calculates
 bias for ASPT from bias for NTAXA and the observed NTAXA. If no input value for
-Bias is provided, RICT will use a default value of 1.62.
+Bias is provided, RICT will use a default value of 1.68.
   
 If bias correction is not wanted, users should enter a bias value of zero into
 the relevant data field in the input file. The zero value must be entered and
@@ -1795,7 +1798,7 @@ ObsIDX~ir~ = ObsIDX~i~ ZNorm~ir~ * SDObs~i~
   
 Where:
   
-ObsIDX~i~ = input value provided by the user for observed value for an index as described in section 8.6 above  
+ObsIDX~i~ = input value provided by the user for observed value for an index  
 ZNorm~ir~ = Random number deviate from a standard Normal distribution with a mean of 0.0 and SD of 1.0 for index i in simulation r  
 SDObs~i~ 	For single-year runs:  SDObs~i~    =  √( (SDRep~i~)^2^  +  (SDTSeas~i~)^2^)    
 Where values for SDRep = 0.269 and SDTSeas = 0.279  
@@ -1861,7 +1864,7 @@ The aim of this step is to use the values provided in the previous steps, add
 them together to give an overall calculated observed value corrected for Bias.
 Bias is a measure of the impact of laboratory error on the value of observed
 indices. It is calculated from audits of laboratory performance and is input by
-users as described in Section 8.6 above.
+users as described in [Calculate Bias Adjustment](#calculate-bias-adjustment) section above.
   
 The main algorithm used is:
   
@@ -1870,8 +1873,8 @@ ObsIDX~irB~ = ObsIDX~ir~ + Ubias~ir~
 Where:
   
 ObsIDX~irB~ 	= Bias corrected observed value    
-ObsIDX~ir~ 	= Simulated observed value from Section 8.7 above    
-Ubias~ir~		= Simulated Bias value from Section 8.8 above    
+ObsIDX~ir~ 	= Simulated observed value from [Simulate uncertainty in observed values](#simulate-uncertainty-in-observed-values) section above    
+Ubias~ir~		= Simulated Bias value from [Simulate variation in Bias](#simulate-variation-in-bias) section above    
 
 Within RICT, these calculations are done using functions which can be found in
 the ClassificationfunctionsV2 (within the classification support files folder).
@@ -1917,9 +1920,9 @@ Where:
   
 EQR~irB~ 		   = simulated bias-corrected EQR value for index i   
   
-ObsIDX~irB~ 	 = Bias-corrected observed value of index i for simulation r as calculated in section 8.9.  
+ObsIDX~irB~ 	 = Bias-corrected observed value of index i for simulation r as calculated in [Correct observed values for bias](#correct-observed-values-for-bias) section.  
   
-ExpIDX~Ref,ir~	= Reference-adjusted Expected value of index i in simulation r as calculated in section 8.5.  
+ExpIDX~Ref,ir~	= Reference-adjusted Expected value of index i in simulation r as calculated in [Convert adjusted expected to reference value](#convert-adjusted-expected-to-reference-value) section.  
 
 This calculation is done directly within RICT code and not via any function. 
   
@@ -1946,9 +1949,9 @@ Where:
   
 EQR~irB,SpSuAu~ = Season average EQR  
   
-EQR~irB,Sp~ 	  = EQR value for spring season as calculated in section 8.10  
+EQR~irB,Sp~ 	  = EQR value for spring season refer to [Calculate Environmental Quality Ratio (EQR)](#calculate-environmental-quality-ratio-eqr) section  
   
-EQR~irB,Au~ 	  = EQR value for autumn season as calculated in section 8.10 
+EQR~irB,Au~ 	  = EQR value for autumn season refer to [Calculate Environmental Quality Ratio (EQR)](#calculate-environmental-quality-ratio-eqr) section
   
 This is calculated in RICT using the `getAvgEQR_SpAut()` function found in the
 `classification-functions.R` (within the classification support files folder).
@@ -1994,9 +1997,17 @@ classes 1-5 with 1= ‘high’, 2=‘good’, 3=‘moderate’, 4=‘poor’ and
   
 There are a number of processes involved in this step as described below: 
   
-* The EQR values calculated in section 10 above are used within the `getClassarray_ntaxa()`  and `getClassarray_aspt()` function found in the `classification-functions.R` to find the class and relevant boundary limit values.
+* The EQR values calculated above are used within the `getClassarray_ntaxa()`  and `getClassarray_aspt()` function found in the `classification-functions.R` to find the class and relevant boundary limit values.
 * The `getMostProbableClass()` function found in the `classification-functions.R` is used to find the most probable class.  
 * The `getMINTA_ntaxa_aspt()` function found in the `classification-functions.R` is used to find the maximum of the two classes and which is the worst class. The worst class in then recorded in the output file and displayed in the MINTA column
+
+## All Season Outputs
+
+For Isle of Man classification, an additional output is calculated which includes an extra 19 columns for 'all seasons' outputs. This feature provides outputs for ASPT, NTAXA and Minta outputs for all seasons present in a particular row in the input file. For instance, if summer and autumn observations are in the first row of the input file, these will be classified in the 'all_seasons...' columns. Likewise, if Spring and Summer and in the next row of the input file, this will be combined in the 'all seasons...' output. If a single season is provide, this will also be reported in the 'all_seasons' columns. Additionally, if Spring, Summer and Autumn are provided. In other words, any combination season(s) observations provided in the input file will be reported in the 'all_seasons...' columns.
+
+See Annex B [All Seasons](#all-seasons) for example of the output.
+
+This provides the ability to classify different combinations of seasons not just Spring and Autumn as required for WFD classification. 
 
 ## Classification output
 
@@ -2091,8 +2102,8 @@ samples/sites and time periods.
 
 The first sample in a pair is known as result A and the second as result B.
   
-In each simulation r, independent simulated EQR values are calculated for each
-index i for each of the two results using the methods described in section 8.9
+In each simulation r, independent [simulated EQR values](#simulate-uncertainty-in-observed-values) are calculated for each
+index i for each of the two results.
 Correct observed values for bias. In this context, independent simulations means
 that the various random uncertainty terms are different and completely
 independent for the two simulated samples A and B for any simulation r.
@@ -2454,7 +2465,7 @@ guide](https://aquametrics.github.io/rict/).
 
 # Annex B: Output Files predict and classify
 
-#### Prediction outputs
+## Prediction outputs
 
 RICT predict and classify will produce two output files; one for prediction, one for classification
 
@@ -2467,20 +2478,33 @@ predict <- rict_predict(demo_observed_values[1, ])
 knitr::kable(t(predict))
 ```
 
-#### Classification
+## Classification
 
-Multiple year:
+### Multiple year:
 
 ```{r, message=FALSE}
 multi_class <- rict(demo_observed_values[1, ])
 knitr::kable(t(multi_class))
 ```
 
-Single year:
+### Single year:
 
 ```{r, message=FALSE}
 single_class <- rict(demo_observed_values[1, ], year_type = "single")
 knitr::kable(t(single_class))
+```
+
+### All Seasons
+
+Additional 'All Seasons' columns for Isle of Man outputs. See [All Season](all-seasons-outputs) section.
+
+NOTE: IoM outputs use 'E' for Excellent instead of High.
+
+```{r, message=FALSE}
+all_seasons <- rict(demo_iom_observed_values[1, ], year_type = "single")
+
+all_seasons <- all_seasons[, grep("all_seasons", names(all_seasons))] 
+knitr::kable(t(all_seasons))
 ```
 
 # Appendix C: Biotic included in all index prediction

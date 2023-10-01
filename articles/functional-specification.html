@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rict</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.1.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.1.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,8 +73,8 @@
                         <h4 data-toc-skip class="author">RICT Steering
 Group</h4>
             
-            <h4 data-toc-skip class="date">2023-09-05 version:
-3.1.5</h4>
+            <h4 data-toc-skip class="date">2023-10-01 version:
+3.1.6</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/aquaMetrics/rict/blob/HEAD/vignettes/functional-specification.Rmd" class="external-link"><code>vignettes/functional-specification.Rmd</code></a></small>
       <div class="d-none name"><code>functional-specification.Rmd</code></div>
@@ -238,13 +238,30 @@ Tables:<a class="anchor" aria-label="anchor" href="#support-tables"></a>
 <p>These files can be found in the inst/extdat folder within the rict
 package.</p>
 <p><strong>Model 1 specific:</strong></p>
+<p>Files used in <a href="#calculate-discriminant-function-scores">calculate discriminant
+function scores</a> section:</p>
 <ul>
 <li>
-<code>df-coeff-gb-685.DAT</code> – used for Discriminant score.</li>
+<code>df-coeff-gb-685.DAT</code> – GB</li>
 <li>
-<code>df-mean-gb-685.DAT</code> - used for calculating Mahanalobis
-distance.</li>
+<code>df-coeff-iom.DAT</code> - Isle of Man</li>
+<li>
+<code>DFCOEFF_NI.DAT</code> - NI</li>
 </ul>
+<p>Files used in <a href="#calculate-mahanalobis-distance">calculating
+Mahanalobis distance</a> section:</p>
+<ul>
+<li>
+<code>DFMEAN_NI_RALPH.DAT</code> - NI</li>
+<li>
+<code>df-mean-gb-685.DAT</code> - GB</li>
+<li>
+<code>df-mean-iom.DAT</code> - IoM</li>
+</ul>
+<p>Files used for calculating proportion during prediction: *
+<code>endGrp-AssessScoresNI.csv</code> - NI *
+<code>end-grp-assess-scores.csv</code> - GB *
+<code>end-grp-assess-scores-iom.csv</code> - IoM</p>
 <p><strong>Model 44 specific:</strong></p>
 <ul>
 <li>
@@ -261,10 +278,8 @@ calculating Mahanalobis distance.</li>
 Environmental data values for the Mean Air Temperature (TEMPM) and
 Temperature range (TEMPR) for points in the centres of 5km interval grid
 squares. Values are used after converting the supplied NGR (or BNR) to
-latitude and longitude to identify the relevant values required.</li>
-<li>
-<code>end-grp-assess-scores.csv</code> used for calculating
-proportion during prediction.</li>
+latitude and longitude to identify the relevant values required. Not
+used for Isle of Man.</li>
 <li>
 <code>TAXA_AB_APR_PRAB.csv</code> - containing abundance and
 probability of abundance category for each taxon used in predicting
@@ -294,60 +309,36 @@ the Environmental Variables validation</p>
 <h3 id="classification">
 <span class="header-section-number">3.2</span> Classification<a class="anchor" aria-label="anchor" href="#classification"></a>
 </h3>
-<div class="section level4" number="3.2.1">
-<h4 id="files-supporting">
-<span class="header-section-number">3.2.1</span> Files
-Supporting:<a class="anchor" aria-label="anchor" href="#files-supporting"></a>
-</h4>
+<p><strong>Note</strong>, no classification is carried out on the 80
+indices – carried out for Prediction only!</p>
+<div class="section level5" number="3.2.0.1">
+<h5 id="classification-functions">
+<span class="header-section-number">3.2.0.1</span> Classification
+Functions:<a class="anchor" aria-label="anchor" href="#classification-functions"></a>
+</h5>
+<ul>
+<li>
+<code>classification-functions.R</code> - A large number of R code
+functions used in the <a href="#classification">classification</a>
+section.</li>
+</ul>
+</div>
+<div class="section level5" number="3.2.0.2">
+<h5 id="classification-support-files">
+<span class="header-section-number">3.2.0.2</span> Classification
+support files:<a class="anchor" aria-label="anchor" href="#classification-support-files"></a>
+</h5>
 <ul>
 <li>
 <code>adjustParams_ntaxa_aspt.csv</code> - reference adjustment
 values.</li>
 <li>
-<code>EndGrp_AssessScores.csv</code> - Excel csv used for adjusting
-the expected values during classification for calculating
-proportion.</li>
-</ul>
-<p><strong>Note</strong>, no classification is carried out on the 80
-indices – carried out for Prediction only!</p>
-<p>A list of the tables and functions required for the NI model
-below:</p>
-<ul>
-<li>
-<code>DFCOEFF_NI.DAT</code> file used for Discriminant score as
-described in section 7.5 of this document.</li>
-<li>
-<code>DFMEAN_NI_RALPH.DAT</code> file used for calculating
-Mahanalobis distance as described in section 7.6 of this document.j</li>
-<li>
-<code>EndGrp_AssessScores.csv</code> file used for calculating
-proportion during prediction.</li>
-</ul>
-</div>
-<div class="section level4" number="3.2.2">
-<h4 id="classification-functions">
-<span class="header-section-number">3.2.2</span> Classification
-Functions:<a class="anchor" aria-label="anchor" href="#classification-functions"></a>
-</h4>
-<ul>
-<li>
-<code>classification-functions.R</code> - A large number of R code
-functions used during the prediction process as described in Section
-8.</li>
-</ul>
-</div>
-<div class="section level4" number="3.2.3">
-<h4 id="classification-support-files">
-<span class="header-section-number">3.2.3</span> Classification
-support files:<a class="anchor" aria-label="anchor" href="#classification-support-files"></a>
-</h4>
-<ul>
-<li>
 <code>adjustParams_ntaxa_aspt.csv</code> containing reference
-adjustment values which are used as described in Section 8.2.</li>
+adjustment values which are used as described in <a href="#adjust-expected-values">Adjust Expected Values</a> section.</li>
 <li>
-<code>EndGrp_AssessScoresNI.csv</code> used for adjusting the
-expected values during classification as described in Section 8.2.</li>
+<code>endGrp-AssessScoresNI.csv</code> &amp;
+<code>end-grp-assess-scores.csv</code> &amp;
+<code>end-grp-assess-scores-iom.csv</code> used for <a href="#adjust-expected-values">Adjust Expected Values</a> section.</li>
 </ul>
 <p>All source code and support files can be downloaded into R
 environment for example Rstudio from Github for users who wish to amend
@@ -374,17 +365,16 @@ function in this file to alter values for their own version)</li>
 <li>Bias - Bias values can be provided in the input file by the user and
 will be used if provided. However, if no data values for Bias or “-9”
 has been entered in the input file, then the hard-coded default value of
-1.62 (GB) or 0 (NI) will be used.</li>
+1.68 (GB + IoM) or 0 (NI) will be used.</li>
 </ul>
-<p>Note that 1.62 is the default value currently being used for Bias as
-this was input as the default value in the previous version of RICT as
-used in SEPA for BMWP NTAXA. However, the EA uses a value of 1.68 as the
-Bias value for WHPT which was based on an audit of the analytical
-quality of Environment Agency laboratories. The Bias value for WHPT
-should be greater than the value for BMWP for the same level of
-analytical quality, because WHPT uses more taxa than BMWP. Plus WHPT
-taxa also includes additional Diptera families which are less easy to
-identify.</p>
+<p>Note that 1.62 value was used for Bias as this was the default input
+value in the previous version of RICT as used in SEPA for BMWP NTAXA.
+However, the EA uses a value of 1.68 as the Bias value for WHPT which
+was based on an audit of the analytical quality of Environment Agency
+laboratories. The Bias value for WHPT should be greater than the value
+for BMWP for the same level of analytical quality, because WHPT uses
+more taxa than BMWP. Plus WHPT taxa also includes additional Diptera
+families which are less easy to identify.</p>
 </div>
 <div class="section level3" number="4.2">
 <h3 id="future-developments">
@@ -1968,7 +1958,8 @@ files folder.</p>
 <p><code>calculated_temps &lt;- calcTemps(coordinates)</code></p>
 <p>where:</p>
 <p>coordinates are the eastings and northings (lat, long) calculated
-values as described in Section 6.1</p>
+values as described in <a href="#calculate-air-temperature">Calculate
+Air Temperature</a> section.</p>
 <pre><code><span><span class="co"># R version originally written by by C. Laize CEH in early 2012</span></span>
 <span><span class="co"># Based on FORTRAN PROGRAM TEMPGRID</span></span>
 <span><span class="co"># For QC and traceability, followed the FORTRAN code as closely as possible; not necessarily best R code</span></span>
@@ -2645,7 +2636,7 @@ DFCOEFF_GB685.</p>
 <p>For the GB model 44 with 17 EVs the DFs values can be found in the
 prediction support files folder for GB in a file called
 <code>discrimant-function-coefficients-model-44.csv</code> - see section
-12 for additional Model 44 information.</p>
+14 for additional Model 44 information.</p>
 <p>For the NI model with 11 EVs, the DFs values can be found in the
 prediction support files folder for Northern Ireland in a file called
 <code>DFCOEFF_NI</code></p>
@@ -3274,10 +3265,10 @@ EQRs expected by the Water Framework Directive.</p>
 <p>Specifically, ExpIDXRef,i is calculated as:</p>
 <p>ExpIDX<sub>Ref,i</sub> = ExpIDX<sub>Adj,i</sub> / K</p>
 <p>Where:</p>
-<p>ExpIDX<sub>Adj,i</sub> = the adjusted expected value which is
-calculated as described in section 8.2 above.<br>
+<p>ExpIDX<sub>Adj,i</sub> = value which is calculated as described in <a href="#adjust-expected-values">Adjust Expected Values</a> section.<br>
 K = WFD conversion factor (i.e. WHPT NTAXA: K = 1.0049, and WHPT ASPT K
-= 0.9921 as described in section 8.3 above.<br>
+= 0.9921 as described in <a href="#eqr-conversion-factor">EQR conversion
+Factor</a> section.<br>
 IDX = do this for each Index, i.e. for WHPT NTAXA and WHPT ASPT<br>
 i = do this for each specific site</p>
 <p>This avoids the need for the intermediary step of calculating and
@@ -3361,7 +3352,7 @@ index values. This value is provided by the user completing the relevant
 data field in the input file as described in section 5 and Annex B of
 this document. RICT calculates bias for ASPT from bias for NTAXA and the
 observed NTAXA. If no input value for Bias is provided, RICT will use a
-default value of 1.62.</p>
+default value of 1.68.</p>
 <p>If bias correction is not wanted, users should enter a bias value of
 zero into the relevant data field in the input file. The zero value must
 be entered and not left blank or RICT will use a default value.</p>
@@ -3382,7 +3373,7 @@ status classification can be estimated.</p>
 SDObs<sub>i</sub></p>
 <p>Where:</p>
 <p>ObsIDX<sub>i</sub> = input value provided by the user for observed
-value for an index as described in section 8.6 above<br>
+value for an index<br>
 ZNorm<sub>ir</sub> = Random number deviate from a standard Normal
 distribution with a mean of 0.0 and SD of 1.0 for index i in simulation
 r<br>
@@ -3457,15 +3448,16 @@ values for bias<a class="anchor" aria-label="anchor" href="#correct-observed-val
 steps, add them together to give an overall calculated observed value
 corrected for Bias. Bias is a measure of the impact of laboratory error
 on the value of observed indices. It is calculated from audits of
-laboratory performance and is input by users as described in Section 8.6
+laboratory performance and is input by users as described in <a href="#calculate-bias-adjustment">Calculate Bias Adjustment</a> section
 above.</p>
 <p>The main algorithm used is:</p>
 <p>ObsIDX<sub>irB</sub> = ObsIDX<sub>ir</sub> + Ubias<sub>ir</sub></p>
 <p>Where:</p>
 <p>ObsIDX<sub>irB</sub> = Bias corrected observed value<br>
-ObsIDX<sub>ir</sub> = Simulated observed value from Section 8.7
-above<br>
-Ubias<sub>ir</sub> = Simulated Bias value from Section 8.8 above</p>
+ObsIDX<sub>ir</sub> = Simulated observed value from <a href="#simulate-uncertainty-in-observed-values">Simulate uncertainty in
+observed values</a> section above<br>
+Ubias<sub>ir</sub> = Simulated Bias value from <a href="#simulate-variation-in-bias">Simulate variation in Bias</a>
+section above</p>
 <p>Within RICT, these calculations are done using functions which can be
 found in the ClassificationfunctionsV2 (within the classification
 support files folder).</p>
@@ -3511,9 +3503,11 @@ needed to estimate probabilities of class.</p>
 <p>EQR<sub>irB</sub> = simulated bias-corrected EQR value for index
 i</p>
 <p>ObsIDX<sub>irB</sub> = Bias-corrected observed value of index i for
-simulation r as calculated in section 8.9.</p>
+simulation r as calculated in <a href="#correct-observed-values-for-bias">Correct observed values for
+bias</a> section.</p>
 <p>ExpIDX<sub>Ref,ir</sub> = Reference-adjusted Expected value of index
-i in simulation r as calculated in section 8.5.</p>
+i in simulation r as calculated in <a href="#convert-adjusted-expected-to-reference-value">Convert adjusted
+expected to reference value</a> section.</p>
 <p>This calculation is done directly within RICT code and not via any
 function.</p>
 </div>
@@ -3536,10 +3530,10 @@ simulation. The main algorithm is:</p>
 EQR<sub>irB,Au</sub>) / 2</p>
 <p>Where:</p>
 <p>EQR<sub>irB,SpSuAu</sub> = Season average EQR</p>
-<p>EQR<sub>irB,Sp</sub> = EQR value for spring season as calculated in
-section 8.10</p>
-<p>EQR<sub>irB,Au</sub> = EQR value for autumn season as calculated in
-section 8.10</p>
+<p>EQR<sub>irB,Sp</sub> = EQR value for spring season refer to <a href="#calculate-environmental-quality-ratio-eqr">Calculate
+Environmental Quality Ratio (EQR)</a> section</p>
+<p>EQR<sub>irB,Au</sub> = EQR value for autumn season refer to <a href="#calculate-environmental-quality-ratio-eqr">Calculate
+Environmental Quality Ratio (EQR)</a> section</p>
 <p>This is calculated in RICT using the <code>getAvgEQR_SpAut()</code>
 function found in the <code>classification-functions.R</code> (within
 the classification support files folder).</p>
@@ -3595,7 +3589,7 @@ RICT are coded as classes 1-5 with 1= ‘high’, 2=‘good’, 3=‘moderate’
 <p>There are a number of processes involved in this step as described
 below:</p>
 <ul>
-<li>The EQR values calculated in section 10 above are used within the
+<li>The EQR values calculated above are used within the
 <code>getClassarray_ntaxa()</code> and <code>getClassarray_aspt()</code>
 function found in the <code>classification-functions.R</code> to find
 the class and relevant boundary limit values.</li>
@@ -3610,8 +3604,31 @@ recorded in the output file and displayed in the MINTA column</li>
 </ul>
 </div>
 <div class="section level3" number="10.16">
+<h3 id="all-season-outputs">
+<span class="header-section-number">10.16</span> All Season
+Outputs<a class="anchor" aria-label="anchor" href="#all-season-outputs"></a>
+</h3>
+<p>For Isle of Man classification, an additional output is calculated
+which includes an extra 19 columns for ‘all seasons’ outputs. This
+feature provides outputs for ASPT, NTAXA and Minta outputs for all
+seasons present in a particular row in the input file. For instance, if
+summer and autumn observations are in the first row of the input file,
+these will be classified in the ‘all_seasons…’ columns. Likewise, if
+Spring and Summer and in the next row of the input file, this will be
+combined in the ‘all seasons…’ output. If a single season is provide,
+this will also be reported in the ‘all_seasons’ columns. Additionally,
+if Spring, Summer and Autumn are provided. In other words, any
+combination season(s) observations provided in the input file will be
+reported in the ‘all_seasons…’ columns.</p>
+<p>See Annex B <a href="#all-seasons">All Seasons</a> for example of the
+output.</p>
+<p>This provides the ability to classify different combinations of
+seasons not just Spring and Autumn as required for WFD
+classification.</p>
+</div>
+<div class="section level3" number="10.17">
 <h3 id="classification-output">
-<span class="header-section-number">10.16</span> Classification
+<span class="header-section-number">10.17</span> Classification
 output<a class="anchor" aria-label="anchor" href="#classification-output"></a>
 </h3>
 <p>An output file will be created to show the calculated data results
@@ -3722,12 +3739,12 @@ associated uncertainty for individual samples/sites and time
 periods.</p>
 <p>The first sample in a pair is known as result A and the second as
 result B.</p>
-<p>In each simulation r, independent simulated EQR values are calculated
-for each index i for each of the two results using the methods described
-in section 8.9 Correct observed values for bias. In this context,
-independent simulations means that the various random uncertainty terms
-are different and completely independent for the two simulated samples A
-and B for any simulation r.</p>
+<p>In each simulation r, independent <a href="#simulate-uncertainty-in-observed-values">simulated EQR values</a>
+are calculated for each index i for each of the two results. Correct
+observed values for bias. In this context, independent simulations means
+that the various random uncertainty terms are different and completely
+independent for the two simulated samples A and B for any simulation
+r.</p>
 <p>To compare results, the two input files into Compare must contain the
 same number of rows. The two files are then compared pair-wise, row to
 row for each result. For instance, if comparing a single upstream result
@@ -4606,11 +4623,11 @@ completed can be found within the <a href="https://aquametrics.github.io/rict/">
 <span class="header-section-number">17</span> Annex B: Output Files
 predict and classify<a class="anchor" aria-label="anchor" href="#annex-b-output-files-predict-and-classify"></a>
 </h2>
-<div class="section level5" number="17.0.0.1">
-<h5 id="prediction-outputs-1">
-<span class="header-section-number">17.0.0.1</span> Prediction
+<div class="section level3" number="17.1">
+<h3 id="prediction-outputs-1">
+<span class="header-section-number">17.1</span> Prediction
 outputs<a class="anchor" aria-label="anchor" href="#prediction-outputs-1"></a>
-</h5>
+</h3>
 <p>RICT predict and classify will produce two output files; one for
 prediction, one for classification</p>
 <p>Prediction Output file</p>
@@ -4972,12 +4989,15 @@ prediction, one for classification</p>
 </tbody>
 </table>
 </div>
-<div class="section level5" number="17.0.0.2">
-<h5 id="classification-2">
-<span class="header-section-number">17.0.0.2</span>
-Classification<a class="anchor" aria-label="anchor" href="#classification-2"></a>
-</h5>
-<p>Multiple year:</p>
+<div class="section level3" number="17.2">
+<h3 id="classification-2">
+<span class="header-section-number">17.2</span> Classification<a class="anchor" aria-label="anchor" href="#classification-2"></a>
+</h3>
+<div class="section level4" number="17.2.1">
+<h4 id="multiple-year">
+<span class="header-section-number">17.2.1</span> Multiple
+year:<a class="anchor" aria-label="anchor" href="#multiple-year"></a>
+</h4>
 <table class="table">
 <thead><tr class="header">
 <th align="left"></th>
@@ -5078,7 +5098,11 @@ Classification<a class="anchor" aria-label="anchor" href="#classification-2"></a
 </tr>
 </tbody>
 </table>
-<p>Single year:</p>
+</div>
+<div class="section level4" number="17.2.2">
+<h4 id="single-year">
+<span class="header-section-number">17.2.2</span> Single year:<a class="anchor" aria-label="anchor" href="#single-year"></a>
+</h4>
 <table class="table">
 <thead><tr class="header">
 <th align="left"></th>
@@ -5419,6 +5443,102 @@ Classification<a class="anchor" aria-label="anchor" href="#classification-2"></a
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section level4" number="17.2.3">
+<h4 id="all-seasons">
+<span class="header-section-number">17.2.3</span> All Seasons<a class="anchor" aria-label="anchor" href="#all-seasons"></a>
+</h4>
+<p>Additional ‘All Seasons’ columns for Isle of Man outputs. See <a href="all-seasons-outputs">All Season</a> section.</p>
+<p>NOTE: IoM outputs use ‘E’ for Excellent instead of High.</p>
+<table class="table">
+<thead><tr class="header">
+<th align="left"></th>
+<th align="left">1</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">all_seasons_aspt_E</td>
+<td align="left">99.69</td>
+</tr>
+<tr class="even">
+<td align="left">all_seasons_aspt_G</td>
+<td align="left">0.31</td>
+</tr>
+<tr class="odd">
+<td align="left">all_seasons_aspt_M</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">all_seasons_aspt_P</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">all_seasons_aspt_B</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">all_seasons_aspt_mostProb</td>
+<td align="left">E</td>
+</tr>
+<tr class="odd">
+<td align="left">all_seasons_aspt_EQR</td>
+<td align="left">1.07153228</td>
+</tr>
+<tr class="even">
+<td align="left">all_seasons_ntaxa_E</td>
+<td align="left">100</td>
+</tr>
+<tr class="odd">
+<td align="left">all_seasons_ntaxa_G</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">all_seasons_ntaxa_M</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">all_seasons_ntaxa_P</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">all_seasons_ntaxa_B</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">all_seasons_ntaxa_mostProb</td>
+<td align="left">E</td>
+</tr>
+<tr class="even">
+<td align="left">all_seasons_ntaxa_EQR</td>
+<td align="left">1.37490212</td>
+</tr>
+<tr class="odd">
+<td align="left">all_seasons_minta_E</td>
+<td align="left">99.99</td>
+</tr>
+<tr class="even">
+<td align="left">all_seasons_minta_G</td>
+<td align="left">0.01</td>
+</tr>
+<tr class="odd">
+<td align="left">all_seasons_minta_M</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">all_seasons_minta_P</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">all_seasons_minta_B</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">all_seasons_minta_mostProb</td>
+<td align="left">E</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 <div class="section level2" number="18">

@@ -477,6 +477,14 @@ testthat::expect_equal(
   round(test$all_seasons_ntaxa_EQR, 2),
   c(0.95, round(as.numeric(iom_test_results[108, 3:6]), 2))
   )
+# Test probability of class
+# Expect slight difference due to random noise
+testthat::expect_equal(
+  sum(round(as.numeric(test$all_seasons_ntaxa_E[1:5]), 0)) -
+  sum(c(round(as.numeric(iom_test_results[109, 2:6]), 0))),
+  1
+)
+
 
 # Test summer and autumn seasons work
 sum_autumn_input <- dplyr::select(iom_fortran_input, -starts_with("Spr"))

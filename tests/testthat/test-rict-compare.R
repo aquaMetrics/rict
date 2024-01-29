@@ -26,8 +26,8 @@ test_that("rict_compare matches test data", {
     check.names = FALSE
   )
 
-  a <- rict(test_data[1:2, ], year_type = "single", store_eqrs = TRUE)
-  b <- rict(test_data[13:14, ], year_type = "single", store_eqrs = TRUE)
+  a <- rict(test_data[1:2, ], year_type = "single", store_eqrs = TRUE, seed = FALSE)
+  b <- rict(test_data[13:14, ], year_type = "single", store_eqrs = TRUE, seed = FALSE)
   test <- rict_compare(a, b)
 
   test_rict_compare <-
@@ -62,7 +62,8 @@ test_that("Test missing seasons compare", {
   demo_observed_values$`Spr_TL2_WHPT_ASPT (AbW,DistFam)` <- NA
   demo_observed_values$`Spr_TL2_WHPT_NTaxa (AbW,DistFam)` <- NA
 
-  class <- rict(demo_observed_values, year_type = "single", store_eqrs = TRUE)
+  class <- rict(demo_observed_values, year_type = "single",
+                store_eqrs = TRUE, seed = FALSE)
 
   demo_observed_values <- rict::demo_observed_values[1, ]
   demo_observed_values$Aut_Season_ID <- NA
@@ -70,7 +71,8 @@ test_that("Test missing seasons compare", {
   demo_observed_values$`Aut_TL2_WHPT_ASPT (AbW,DistFam)` <- NA
   demo_observed_values$`Aut_TL2_WHPT_NTaxa (AbW,DistFam)` <- NA
 
-  class2 <- rict(demo_observed_values, year_type = "single", store_eqrs = TRUE)
+  class2 <- rict(demo_observed_values, year_type = "single",
+                 store_eqrs = TRUE, seed = FALSE)
 
   test <- rict_compare(class, class2)
 })
@@ -95,11 +97,13 @@ test_that("Test missing all seasons compare", {
 
   upstream <- rict(upstream,
                    store_eqrs = TRUE,
-                   year_type = "single"
+                   year_type = "single",
+                   seed = FALSE
   )
   downstream <- rict(downstream,
                    store_eqrs = TRUE,
-                   year_type = "single"
+                   year_type = "single",
+                   seed = FALSE
   )
 
 compare_output <- rict_compare(

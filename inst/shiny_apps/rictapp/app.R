@@ -116,7 +116,7 @@ server <- function(input, output) {
       return(HTML(
         '<h3 style="color:grey;">Upload a prepared .CSV input file or use the following:</h3></style>
         <h4 style="color:grey;">Template File</h4></style>
-          <p><a href="https://github.com/aquaMetrics/rict/raw/master/inst/extdat/input-file-template.xls" target="_blank">Validation Spreadsheet</a></p>
+          <p><a href="https://github.com/aquaMetrics/rict/raw/master/inst/extdat/input-file-template.xlsx" target="_blank">Validation Spreadsheet</a></p>
           <h4 style="color:grey;">Example Input Files</h4></style>
           <p style="color:grey;">Right-click and select "Save link as": </p></style>
           <p><a href="https://raw.githubusercontent.com/aquaMetrics/rict/master/inst/extdat/new-input-file-data-to-use-multi-year-1.csv" target="_blank">Great Britain</a></p>

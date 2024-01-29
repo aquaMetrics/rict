@@ -15,17 +15,18 @@ test_that("rict_predict for physical variables", {
 
   expected_predictions$SuitCode <- as.factor(expected_predictions$SuitCode)
   names(expected_predictions)[17] <- "belongs_to_end_grp"
-  expected_predictions$belongs_to_end_grp <- NULL
-  predictions$belongs_to_end_grp <- NULL
+  # expected_predictions$belongs_to_end_grp <- NULL
+  # predictions$belongs_to_end_grp <- NULL
 
   expected_predictions <- dplyr::arrange(expected_predictions, SITE, TL2_WHPT_NTAXA_AbW_DistFam_spr)
   predictions <- dplyr::arrange(predictions, SITE, TL2_WHPT_NTAXA_AbW_DistFam_spr)
   # correct mis-match in types before test:
   predictions$SuitCode <- as.numeric(predictions$SuitCode)
   expected_predictions$SuitCode <- as.numeric(expected_predictions$SuitCode)
-
+  # trim names to match names in expected file
+  predictions <- predictions[, names(predictions) %in% names(expected_predictions)]
   equal <- all.equal(
-    predictions[, names(predictions) %in% names(expected_predictions)],
+    predictions,
     expected_predictions
   )
 

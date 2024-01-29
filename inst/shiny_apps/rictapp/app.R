@@ -21,9 +21,7 @@ ui <- tagList(
     tabPanel(
       "Predict & Classify",
       sidebarPanel(
-        h4("This app is in TESTING"),
-        p(),
-        fileInput("dataset", "Choose CSV input file",
+       fileInput("dataset", "Choose CSV input file",
           accept = c(
             "text/csv",
             "text/comma-separated-values,text/plain",

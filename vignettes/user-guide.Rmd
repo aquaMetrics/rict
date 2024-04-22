@@ -214,7 +214,7 @@ Classification System). It is based on TWINSPAN grouping.
 
 More information about the specification of the models can be found in the
 [Functional
-Specifications](https://aquametrics.github.io/rict/articles/functional-specification.html#acceptance-and-validation-of-input-data).
+Specifications](https://aquametrics.github.io/rict/articles/functional-specification.html#background).
 
 ## Models and Areas
 
@@ -230,7 +230,7 @@ and the area your grid references are located in.
 
 ## Environmental Predictors
 
-General guidance on available data sources and use of predictor variables is outlined in sections below. More information regarding the units and exact definition of the input predictor variables for all models can be found in the [functional specification](https://aquametrics.github.io/rict/articles/user-guide.html).
+General guidance on available data sources and use of predictor variables is outlined in sections below. More information regarding the units and exact definition of the input predictor variables for all models can be found in the [functional specification](https://aquametrics.github.io/rict/articles/functional-specification.html#model-1-user-input-file).
 
 ### Model 1 Predictors
 

@@ -405,6 +405,7 @@ rict_predict <- function(data = NULL,
 
       for (k in seq_len(nrow(allUniqueSites))) { ## loop over these unique rows per SITE
         sitex <- groupSitesFunction(allUniqueSites, k, siteIndex, b1)
+        sitex$siteName <- final_predictors_try2$SITE[i]
         taxa_pred[[k]] <- sitex
       } # for k
       taxa_preds <- data.frame(do.call("rbind", taxa_pred))
@@ -421,6 +422,10 @@ rict_predict <- function(data = NULL,
       .data$Season_Code,
       .data$Furse_Code
     )
+    # In multi-year predictions there can be multiple rows with the same
+    # name/predictors. Therefore processing by row creates dups. Think about
+    # re-factoring this to only process unique rows.
+    taxa_predictions <- taxa_predictions[!duplicated(taxa_predictions), ]
     return(taxa_predictions)
   }
   if(taxa == TRUE && area == "iom") {

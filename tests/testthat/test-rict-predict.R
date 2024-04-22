@@ -110,6 +110,7 @@ test_that("taxa predictions work GB", {
   indices_prediction <- indices_prediction[, names(indices_prediction) %in% names(verified_predictions)]
   verified_predictions <- verified_predictions[, names(verified_predictions) %in% names(indices_prediction)]
   expect_equal(indices_prediction[, 11:18], verified_predictions[, 11:18]) # all probabilities the same
+  expect_equal(all(indices_prediction$siteName == "TST-GB-01-R"), TRUE)
 })
 
 test_that("All indices predictions work NI", {

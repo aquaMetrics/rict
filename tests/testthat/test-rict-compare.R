@@ -26,8 +26,8 @@ test_that("rict_compare matches test data", {
     check.names = FALSE
   )
 
-  a <- rict(test_data[1:2, ], year_type = "single", store_eqrs = TRUE)
-  b <- rict(test_data[13:14, ], year_type = "single", store_eqrs = TRUE)
+  a <- rict(test_data[1:2, ], year_type = "single", store_eqrs = TRUE, seed = FALSE)
+  b <- rict(test_data[13:14, ], year_type = "single", store_eqrs = TRUE, seed = FALSE)
   test <- rict_compare(a, b)
 
   test_rict_compare <-
@@ -62,7 +62,8 @@ test_that("Test missing seasons compare", {
   demo_observed_values$`Spr_TL2_WHPT_ASPT (AbW,DistFam)` <- NA
   demo_observed_values$`Spr_TL2_WHPT_NTaxa (AbW,DistFam)` <- NA
 
-  class <- rict(demo_observed_values, year_type = "single", store_eqrs = TRUE)
+  class <- rict(demo_observed_values, year_type = "single",
+                store_eqrs = TRUE, seed = FALSE)
 
   demo_observed_values <- rict::demo_observed_values[1, ]
   demo_observed_values$Aut_Season_ID <- NA
@@ -70,7 +71,79 @@ test_that("Test missing seasons compare", {
   demo_observed_values$`Aut_TL2_WHPT_ASPT (AbW,DistFam)` <- NA
   demo_observed_values$`Aut_TL2_WHPT_NTaxa (AbW,DistFam)` <- NA
 
-  class2 <- rict(demo_observed_values, year_type = "single", store_eqrs = TRUE)
+  class2 <- rict(demo_observed_values, year_type = "single",
+                 store_eqrs = TRUE, seed = FALSE)
 
   test <- rict_compare(class, class2)
+})
+
+
+test_that("Test missing all seasons compare", {
+  upstream <- utils::read.csv(
+    system.file("extdat/compare-data",
+                "rict-input-1-upstream-compare.csv",
+                package = "rict"
+    ),
+    check.names = FALSE
+  )
+
+  downstream <- utils::read.csv(
+    system.file("extdat/compare-data",
+                "rict-input-2-downstream-compare.csv",
+                package = "rict"
+    ),
+    check.names = FALSE
+  )
+
+  upstream <- rict(upstream,
+                   store_eqrs = TRUE,
+                   year_type = "single",
+                   seed = FALSE
+  )
+  downstream <- rict(downstream,
+                   store_eqrs = TRUE,
+                   year_type = "single",
+                   seed = FALSE
+  )
+
+compare_output <- rict_compare(
+  results_a = upstream,
+  results_b = downstream
+  )
+
+
+iom_fortran_input <- utils::read.csv(
+  system.file("extdat",
+              "input-file-to-test-iom-against-fortran-outputs.csv",
+              package = "rict"
+  ), check.names = FALSE)
+
+upstream <- rict(iom_fortran_input[1:2, ],
+                 store_eqrs = TRUE,
+                 year_type = "single", seed = TRUE
+)
+downstream <- rict(iom_fortran_input[13:14, ],
+                   store_eqrs = TRUE,
+                   year_type = "single", seed = TRUE
+)
+
+compare_output <- rict_compare(
+  results_a = upstream,
+  results_b = downstream
+)
+
+upstream <- rict(iom_fortran_input[1:2, ],
+                 store_eqrs = TRUE,
+                 year_type = "multi", seed = TRUE
+)
+downstream <- rict(iom_fortran_input[13:14, ],
+                   store_eqrs = TRUE,
+                   year_type = "multi", seed = TRUE
+)
+
+compare_output <- rict_compare(
+  results_a = upstream,
+  results_b = downstream
+)
+
 })

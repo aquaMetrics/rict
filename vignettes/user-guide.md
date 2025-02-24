@@ -1,7 +1,7 @@
 ---
 title: "User Guide"
 author: "River Invertebrate Classification Tool (RICT) Steering Group"
-date: "`r Sys.Date()` version: `r packageVersion('rict')`"
+date: "2023-09-10 version: 3.1.5"
 pkgdown:
   as_is: yes
 output:
@@ -18,19 +18,13 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r results="asis", echo=FALSE, message=FALSE, warning=FALSE}
-library(rict)
-library(knitr)
-# directly adding css to output html without ruining css style https://stackoverflow.com/questions/29291633/adding-custom-css-tags-to-an-rmarkdown-html-document
-cat("
+
 <style>
 img {
 border: 0px;
 outline: 0 ;
 }
 </style>
-")
-``` 
 
 
 <p align="center" width="100%">
@@ -46,7 +40,7 @@ Additionally, we explain how to classify status and compare results.
 
 # Quick Start
 
-Before you start, you need river macro-invertebrate data to process. If you do not have any data prepared, example data is provided in the  [validation template spreadsheet](https://github.com/aquaMetrics/rict/raw/master/inst/extdat/input-file-template.xlsx). However, if you are looking to run your own results, you will need the following:
+Before you start, you need river macro-invertebrate data to process. If you do not have any data prepared, example data is provided in the  [validation template spreadsheet](https://github.com/aquaMetrics/rict/raw/master/inst/extdat/input-file-template.xls). However, if you are looking to run your own results, you will need the following:
 
 1. WHPT (Walley, Hawkes, Paisley and Trigg) scores based on macro-invertebrate results. To calculate WHPT index scores, you can use the [WHPT spreadsheet calculator](https://www.fba.org.uk/s/WHPT-calculator-v38.xlsx). Your scores should be based on macro-invertebrate results collected and analysed following [standard techniques](#sampling).
 
@@ -214,7 +208,7 @@ Classification System). It is based on TWINSPAN grouping.
 
 More information about the specification of the models can be found in the
 [Functional
-Specifications](https://aquametrics.github.io/rict/articles/functional-specification.html#background).
+Specifications](https://aquametrics.github.io/rict/articles/functional-specification.html#acceptance-and-validation-of-input-data).
 
 ## Models and Areas
 
@@ -230,7 +224,7 @@ and the area your grid references are located in.
 
 ## Environmental Predictors
 
-General guidance on available data sources and use of predictor variables is outlined in sections below. More information regarding the units and exact definition of the input predictor variables for all models can be found in the [functional specification](https://aquametrics.github.io/rict/articles/functional-specification.html#model-1-user-input-file).
+General guidance on available data sources and use of predictor variables is outlined in sections below. More information regarding the units and exact definition of the input predictor variables for all models can be found in the [functional specification](https://aquametrics.github.io/rict/articles/user-guide.html).
 
 ### Model 1 Predictors
 
@@ -253,12 +247,7 @@ discharge category.
 
 ### Model 44 Predictors
 
-Download Model 44 input variables from [Defra GIS
-website](https://environment.data.gov.uk/explore/8d1422b3-c960-4ed9-a324-40eefb0c016e?download=true).
-Follow these
-[instructions](https://freshwaterbio.sharepoint.com/:p:/s/Website-Library/Ed2rp4zXpipIpFJq9QSgbrkBe-SBlFQKSP9Wa2BRkcFu7A?e=Hd3ZnG)
-explaining how to download and extract the relevant data into the input
-template.
+Input variables for Model 44 can be download from [Defra GIS website](https://environment.data.gov.uk/DefraDataDownload/?mapService=EA/RICT&mode=spatial). These can be copied and pasted into the corresponding columns on the Model 44 template.
 
 ### Alkalinity
 
@@ -563,10 +552,92 @@ missing season(s) empty.
 
 ### Single-Year Outputs
 
-```{r, message=FALSE, echo=FALSE}
-single_class <- rict(demo_observed_values[1, ], year_type = "single")
-knitr::kable(t(single_class))
-```
+
+|                                  |1              |
+|:---------------------------------|:--------------|
+|SITE                              |MYR-GB-01-R    |
+|YEAR                              |2016           |
+|WATERBODY                         |Waterbody name |
+|H_NTAXA_spr                       |86.41          |
+|G_NTAXA_spr                       |12.2           |
+|M_NTAXA_spr                       |1.36           |
+|P_NTAXA_spr                       |0.02           |
+|B_NTAXA_spr                       |0.01           |
+|mostProb_NTAXA_spr                |H              |
+|NTAXA_eqr_av_spr                  |0.9400951      |
+|H_NTAXA_aut                       |97.89          |
+|G_NTAXA_aut                       |2.05           |
+|M_NTAXA_aut                       |0.06           |
+|P_NTAXA_aut                       |0              |
+|B_NTAXA_aut                       |0              |
+|mostProb_NTAXA_aut                |H              |
+|NTAXA_eqr_av_aut                  |1.066254       |
+|H_NTAXA_spr_aut                   |98.91          |
+|G_NTAXA_spr_aut                   |1.08           |
+|M_NTAXA_spr_aut                   |0.01           |
+|P_NTAXA_spr_aut                   |0              |
+|B_NTAXA_spr_aut                   |0              |
+|mostProb_NTAXA_spr_aut            |H              |
+|NTAXA_aver_spr_aut                |1.003175       |
+|H_ASPT_spr                        |41.43          |
+|G_ASPT_spr                        |54.16          |
+|M_ASPT_spr                        |4.4            |
+|P_ASPT_spr                        |0.01           |
+|B_ASPT_spr                        |0              |
+|mostProb_ASPT_spr                 |G              |
+|ASPT_eqr_av_spr                   |0.9576179      |
+|H_ASPT_aut                        |60.43          |
+|G_ASPT_aut                        |37.95          |
+|M_ASPT_aut                        |1.62           |
+|P_ASPT_aut                        |0              |
+|B_ASPT_aut                        |0              |
+|mostProb_ASPT_aut                 |H              |
+|ASPT_eqr_av_aut                   |0.9868443      |
+|H_ASPT_spr_aut                    |52.19          |
+|G_ASPT_spr_aut                    |47.53          |
+|M_ASPT_spr_aut                    |0.28           |
+|P_ASPT_spr_aut                    |0              |
+|B_ASPT_spr_aut                    |0              |
+|mostProb_ASPT_spr_aut             |H              |
+|ASPT_aver_spr_aut                 |0.9722311      |
+|mintawhpt_spr_H                   |35.56          |
+|mintawhpt_spr_G                   |58.7           |
+|mintawhpt_spr_M                   |5.7            |
+|mintawhpt_spr_P                   |0.03           |
+|mintawhpt_spr_B                   |0.01           |
+|mintawhpt_spr_mostProb            |G              |
+|mintawhpt_aut_H                   |59.15          |
+|mintawhpt_aut_G                   |39.18          |
+|mintawhpt_aut_M                   |1.67           |
+|mintawhpt_aut_P                   |0              |
+|mintawhpt_aut_B                   |0              |
+|mintawhpt_aut_mostProb            |H              |
+|mintawhpt_spr_aut_H               |51.66          |
+|mintawhpt_spr_aut_G               |48.05          |
+|mintawhpt_spr_aut_M               |0.29           |
+|mintawhpt_spr_aut_P               |0              |
+|mintawhpt_spr_aut_B               |0              |
+|mintawhpt_spr_aut_mostProb_MINTA_ |H              |
+|eqr_av_sum_aspt                   |1.045473       |
+|H_ASPT_sum                        |88.94          |
+|G_ASPT_sum                        |11.01          |
+|M_ASPT_sum                        |0.05           |
+|P_ASPT_sum                        |0              |
+|B_ASPT_sum                        |0              |
+|mostProb_ASPT_sum                 |H              |
+|NTAXA_eqr_av_sum                  |1.141262       |
+|H_NTAXA_sum                       |99.39          |
+|G_NTAXA_sum                       |0.59           |
+|M_NTAXA_sum                       |0.02           |
+|P_NTAXA_sum                       |0              |
+|B_NTAXA_sum                       |0              |
+|mostProb_NTAXA_sum                |H              |
+|mintawhpt_sum_H                   |88.37          |
+|mintawhpt_sum_G                   |11.56          |
+|mintawhpt_sum_M                   |0.07           |
+|mintawhpt_sum_P                   |0              |
+|mintawhpt_sum_B                   |0              |
+|mintawhpt_sum_mostProb            |H              |
 
 ## Multi-year
 
@@ -592,10 +663,32 @@ data. Neither is philosophically correct, as explained [Development History](#de
 
 ### Multi-Year Outputs
 
-```{r, message=FALSE, echo=FALSE}
-multi_class <- rict(demo_observed_values[1, ])
-knitr::kable(t(multi_class))
-```
+
+|                                  |1              |
+|:---------------------------------|:--------------|
+|SITE                              |MYR-GB-01-R    |
+|YEAR                              |2016           |
+|WATERBODY                         |Waterbody name |
+|H_NTAXA_spr_aut                   |98.73          |
+|G_NTAXA_spr_aut                   |1.26           |
+|M_NTAXA_spr_aut                   |0.01           |
+|P_NTAXA_spr_aut                   |0              |
+|B_NTAXA_spr_aut                   |0              |
+|mostProb_NTAXA_spr_aut            |H              |
+|NTAXA_aver_spr_aut                |1.002402       |
+|H_ASPT_spr_aut                    |52.84          |
+|G_ASPT_spr_aut                    |46.79          |
+|M_ASPT_spr_aut                    |0.37           |
+|P_ASPT_spr_aut                    |0              |
+|B_ASPT_spr_aut                    |0              |
+|mostProb_ASPT_spr_aut             |H              |
+|ASPT_aver_spr_aut                 |0.9731396      |
+|mintawhpt_spr_aut_H_MINTA_        |52.21          |
+|mintawhpt_spr_aut_G_MINTA_        |47.41          |
+|mintawhpt_spr_aut_M_MINTA_        |0.38           |
+|mintawhpt_spr_aut_P_MINTA_        |0              |
+|mintawhpt_spr_aut_B_MINTA_        |0              |
+|mintawhpt_spr_aut_mostProb_MINTA_ |H              |
 
 ## Probabilities of class
 

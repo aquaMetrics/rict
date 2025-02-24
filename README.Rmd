@@ -4,7 +4,8 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# rict <img src='man/figures/rict_logo.png' align="right" width="33%" />
+# rict 
+<img src='https://github.com/aquaMetrics/rict/blob/master/man/figures/rict_logo.png?raw=true' align="right" width="300" />
 
 <!-- badges: start -->
 [![R build status](https://github.com/aquaMetrics/rict/workflows/R-CMD-check/badge.svg)](https://github.com/aquaMetrics/rict/actions)
@@ -14,7 +15,7 @@ output: github_document
 
 ## Overview
 
-An R package for calculating River Invertebrate Classification Tool (RICT) predictions
+An R package for calculating River Invertebrate Classification Tool (RICT) predictions. To use interactively via a [web app](https://rictapplications.shinyapps.io/rictapp/) - see the [User Guide](https://aquametrics.github.io/rict/articles/user-guide.html) for more details.
 
 ## Install
 

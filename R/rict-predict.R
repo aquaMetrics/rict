@@ -332,20 +332,14 @@ rict_predict <- function(data = NULL,
   suit_codes <- getSuitabilityCode(MahDist_min, chi_square, area, model)
   # Add suitability codes to the final data, using cbind
   final_predictors_try2 <- cbind(final_predictors_try1, suit_codes)
-  # Find max class group belongs to by getting the column name: use
-  # belongs_to_end_grp <- colnames(final_predictors_try2[,15:57])[apply(final_predictors_try2[,15:57], 1, which.max)]
-  # This sometimes returns a list, use unlist below to repair this
-  belongs_to_end_grp <- colnames(final_predictors_try2[, DistNames])[apply(
-    data.frame(matrix(unlist(final_predictors_try2[, DistNames]),
-      nrow = nrow(final_predictors_try2[, DistNames]),
-      byrow = TRUE
-    ),
-    stringsAsFactors = FALSE
-    ), 1, which.max
-  )]
+  # Find max class group belongs to by getting the column names
+  group_probabilities <- final_predictors_try2[, DistNames]
+  belongs_to_end_grp <- lapply(1:nrow(group_probabilities), function(n) {
+    return(which.max(group_probabilities[n, ]))
+  })
 
   # Replace p with EndGr
-  belongs_to_end_grp <- gsub("p", "EndGr", belongs_to_end_grp)
+  belongs_to_end_grp <- gsub("p", "EndGr", names(unlist(belongs_to_end_grp)))
   final_predictors_try3 <- cbind(final_predictors_try2, belongs_to_end_grp)
 
   # 4 Prediction: WE1.5 Algorithms for prediction of expected values of any index based on probability of end group
@@ -411,6 +405,7 @@ rict_predict <- function(data = NULL,
 
       for (k in seq_len(nrow(allUniqueSites))) { ## loop over these unique rows per SITE
         sitex <- groupSitesFunction(allUniqueSites, k, siteIndex, b1)
+        sitex$siteName <- final_predictors_try2$SITE[i]
         taxa_pred[[k]] <- sitex
       } # for k
       taxa_preds <- data.frame(do.call("rbind", taxa_pred))
@@ -427,6 +422,10 @@ rict_predict <- function(data = NULL,
       .data$Season_Code,
       .data$Furse_Code
     )
+    # In multi-year predictions there can be multiple rows with the same
+    # name/predictors. Therefore processing by row creates dups. Think about
+    # re-factoring this to only process unique rows.
+    taxa_predictions <- taxa_predictions[!duplicated(taxa_predictions), ]
     return(taxa_predictions)
   }
   if(taxa == TRUE && area == "iom") {

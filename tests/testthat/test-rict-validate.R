@@ -364,6 +364,8 @@ test_that("changes/formatting that shouldn't impact calculations", {
   # Additional columns added to IOM data will be ignored
   data <- demo_iom_observed_values
   data$silt <- 1
+  data$Discharge <- NA
+  data$Velocity <- NA
   test <- rict_validate(data)
   expect_equal(test$area, "iom")
 })

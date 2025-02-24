@@ -1,12 +1,11 @@
 pandoc: 3.1.11
-pkgdown: 2.0.9
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   functional-specification: functional-specification.html
   tech-demo-temperature-change: tech-demo-temperature-change.html
   user-guide: user-guide.html
-last_built: 2024-04-23T08:25Z
+last_built: 2025-02-24T10:54Z
 urls:
   reference: https://aquametrics.github.io/rict/reference
   article: https://aquametrics.github.io/rict/articles
-

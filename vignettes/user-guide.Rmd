@@ -254,7 +254,7 @@ discharge category.
 ### Model 44 Predictors
 
 Download Model 44 input variables from [Defra GIS
-website](https://environment.data.gov.uk/explore/8d1422b3-c960-4ed9-a324-40eefb0c016e?download=true).
+website](https://environment.data.gov.uk/explore/8d1422b3-c960-4ed9-a324-40eefb0c016e).
 Follow these
 [instructions](https://freshwaterbio.sharepoint.com/:p:/s/Website-Library/Ed2rp4zXpipIpFJq9QSgbrkBe-SBlFQKSP9Wa2BRkcFu7A?e=Hd3ZnG)
 explaining how to download and extract the relevant data into the input

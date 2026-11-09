@@ -92,100 +92,42 @@ getSuitabilityCode <- function(minMahDist, suitCodes, area, model) {
   return(suit_frame) # Return both message and log value
 }
 
-# This particular function is for all 80 indices, and removes unwanted
-# characters in column names
+# This function renames all 80 index columns using the internal index-name
+# mapping.
 rename_end_group_means <- function(data) {
+  index_names <- utils::read.csv(
+    system.file("extdat", "index-names.csv", package = "rict"),
+    stringsAsFactors = FALSE
+  )
+
+  index_names$rivpacs_db_label <- gsub("&", "", index_names$rivpacs_db_label)
+  index_names$rivpacs_db_label <- gsub("%", "perc", index_names$rivpacs_db_label)
+  index_names$rivpacs_db_label <- gsub("/", "", index_names$rivpacs_db_label)
+
   names(data) <- gsub("%", "perc", names(data))
   names(data) <- gsub("/", "", names(data))
   names(data) <- gsub("&", "", names(data))
 
-  data <-
-    data.frame(
-      "RIVPACS_Model" = data$`RIVPACS Model`,
-      "End_Group" = data$`End Group`,
-      "Season_Code" = data$`Season Code`,
-      "Season" = data$`Season`,
-      "TL1_BMWP" = data$`TL1 BMWP`,
-      "TL1_NTAXA" = data$`TL1 NTAXA`,
-      "TL1_ASPT" = data$`TL1 ASPT`,
-      "TL2_WHPT_Score_nonAb_DistFam" = data$`TL2 WHPT Score (nonAb,DistFam)`,
-      "TL2_WHPT_NTAXA_nonAb_DistFam" = data$`TL2 WHPT NTAXA (nonAb,DistFam)`,
-      "TL2_WHPT_ASPT_nonAb_DistFam" = data$`TL2 WHPT ASPT (nonAb,DistFam)`,
-      "TL2_WHPT_Score_nonAb_CompFam" = data$`TL2 WHPT Score (nonAb,CompFam)`,
-      "TL2_WHPT_NTAXA_nonAb_CompFam" = data$`TL2 WHPT NTAXA (nonAb,CompFam)`,
-      "TL2_WHPT_ASPT_nonAb_CompFam" = data$`TL2 WHPT ASPT (nonAb,CompFam)`,
-      "TL2_WHPT_Score_AbW_DistFam" = data$`TL2 WHPT Score (AbW,DistFam)`,
-      "TL2_WHPT_NTAXA_AbW_DistFam" = data$`TL2 WHPT NTAXA (AbW,DistFam)`,
-      "TL2_WHPT_ASPT_AbW_DistFam" = data$`TL2 WHPT ASPT (AbW,DistFam)`,
-      "TL2_WHPT_Score_AbW_CompFam" = data$`TL2 WHPT Score (AbW,CompFam)`,
-      "TL2_WHPT_NTAXA_AbW_CompFam" = data$`TL2 WHPT NTAXA (AbW,CompFam)`,
-      "TL2_WHPT_ASPT_AbW_CompFam" = data$`TL2 WHPT ASPT (AbW,CompFam)`,
-      "TL1_AWIC_Fam" = data$`TL1 AWIC(Fam)`,
-      "TL4_AWIC_Sp_Murphy" = data$`TL4 AWIC(Sp) Murphy`,
-      "TL5_AWIC_Sp_Murphy" = data$`TL5 AWIC(Sp) Murphy`,
-      "TL4_WFD_AWIC_Sp_McFarland" = data$`TL4 WFD AWIC(Sp) McFarland`,
-      "TL5_WFD_AWIC_Sp_McFarland" = data$`TL5 WFD AWIC(Sp) McFarland`,
-      "TL4_Raddum" = data$`TL4 Raddum`,
-      "TL5_Raddum" = data$`TL5 Raddum`,
-      "TL4_SEPA_per_Acid_Sensitive_Taxa" = data$`TL4 SEPA perc Acid Sensitive Taxa`,
-      "TL5_SEPA_perc_Acid_Sensitive_Taxa" = data$`TL5 SEPA perc Acid Sensitive Taxa`,
-      "TL4_MetTol" = data$`TL4 MetTol`,
-      "TL5_MetTol" = data$`TL5 MetTol`,
-      "TL1_2_LIFE_Fam_CompFam" = data$`TL12 LIFE(Fam) (CompFam)`,
-      "TL2_LIFE_Fam_DistFam" = data$`TL2 LIFE(Fam) (DistFam)`,
-      "TL3_LIFE_Fam_DistFam" = data$`TL3 LIFE(Fam) (DistFam)`,
-      "TL4_LIFE_Sp" = data$`TL4 LIFE(Sp)`,
-      "TL5_LIFE_Sp" = data$`TL5 LIFE(Sp)`,
-      "TL3_PSI_Fam" = data$`TL3 PSI(Fam)`,
-      "TL4_PSI_Sp" = data$`TL4 PSI(Sp)`,
-      "TL5_PSI_Sp" = data$`TL5 PSI(Sp)`,
-      "TL3_E_PSI_fam69" = data$`TL3 E-PSI(fam69)`,
-      "TL4_E_PSI_mixed_level" = data$`TL4 E-PSI(mixed level)`,
-      "TL5_E_PSI_mixed_level" = data$`TL5 E-PSI(mixed level)`,
-      "TL4_oFSIsp" = data$`TL4 oFSIsp`,
-      "TL5_oFSIsp" = data$`TL5 oFSIsp`,
-      "TL4_ToFSIsp" = data$`TL4 ToFSIsp`,
-      "TL5_ToFSIsp" = data$`TL5 ToFSIsp`,
-      "TL4_CoFSIsp" = data$`TL4 CoFSIsp`,
-      "TL5_CoFSIsp" = data$`TL5 CoFSIsp`,
-      "TL4_GSFI_FI05" = data$`TL4 GSFI FI05`,
-      "TL5_GSFI_FI05" = data$`TL5 GSFI FI05`,
-      "TL4_GSFI_FI09" = data$`TL4 GSFI FI09`,
-      "TL5_GSFI_FI09" = data$`TL5 GSFI FI09`,
-      "TL4_GSFI_FI091" = data$`TL4 GSFI FI091`,
-      "TL5_GSFI_FI091" = data$`TL5 GSFI FI091`,
-      "TL4_GSFI_FI091_K" = data$`TL4 GSFI FI091_K`,
-      "TL5_GSFI_FI091_K" = data$`TL5 GSFI FI091_K`,
-      "TL4_GSFI_FI092" = data$`TL4 GSFI FI092`,
-      "TL5_GSFI_FI092" = data$`TL5 GSFI FI092`,
-      "TL4_GSFI_FI11_12" = data$`TL4 GSFI FI11_12`,
-      "TL5_GSFI_FI11_12" = data$`TL5 GSFI FI11_12`,
-      "TL4_GSFI_FI14_16" = data$`TL4 GSFI FI14_16`,
-      "TL5_GSFI_FI14_16" = data$`TL5 GSFI FI14_16`,
-      "TL4_GSFI_FI15_17" = data$`TL4 GSFI FI15_17`,
-      "TL5_GSFI_FI15_17" = data$`TL5 GSFI FI15_17`,
-      "TL4_GSFI_FI152" = data$`TL4 GSFI FI152`,
-      "TL5_GSFI_FI152" = data$`TL5 GSFI FI152`,
-      "TL2_SPEAR_Fam_perc" = data$`TL2 SPEAR(Fam) perc`,
-      "TL4_SPEAR_Sp_perc" = data$`TL4 SPEAR(Sp) perc`,
-      "TL5_SPEAR_Sp_perc" = data$`TL5 SPEAR(Sp) perc`,
-      "SPEAR_pesticides_TL2_fam_Knillmann_2018" = data$`SPEAR(pesticides) TL2 fam Knillmann 2018`,
-      "SPEAR_refuge_TL2_fam_Knillmann_2018" = data$`SPEAR(refuge) TL2 fam Knillmann 2018`,
-      "SPEAR_pesticides_TL4_sp_Knillmann_2018" = data$`SPEAR(pesticides) TL4 sp Knillmann 2018`,
-      "SPEAR_refuge_TL4_sp_Knillmann_2018" = data$`SPEAR(refuge) TL4 sp Knillmann 2018`,
-      "SPEAR_pesticides_TL5_sp_Knillmann_2018" = data$`SPEAR(pesticides) TL5 sp Knillmann 2018`,
-      "SPEAR_refuge_TL5_sp_Knillmann_2018" = data$`SPEAR(refuge) TL5 sp Knillmann 2018`,
-      "TL4_CCI" = data$`TL4 CCI`,
-      "TL5_CCI" = data$`TL5 CCI`,
-      "TL2_08_Group_ARMI_NTaxa" = data$`TL2 08 Group ARMI NTaxa`,
-      "TL2_08_Group_ARMI_Score" = data$`TL2 08 Group ARMI Score`,
-      "TL2_33_Group_ARMI_NTaxa" = data$`TL2 33 Group ARMI NTaxa`,
-      "TL2_33_Group_ARMI_Score" = data$`TL2 33 Group ARMI Score`,
-      "TL2_33_Group_Flow_Silt_NTaxa" = data$`TL2 33 Group Flow  Silt NTaxa`,
-      "TL2_33_Group_Flow_Silt_Score" = data$`TL2 33 Group Flow  Silt Score`,
-      "TL2_14_Group_Urban_NTaxa" = data$`TL2 14 Group Urban NTaxa`,
-      "TL2_14_Group_Urban_Score" = data$`TL2 14 Group Urban Score`
-    )
+  source_names <- c(
+    "RIVPACS Model",
+    "End Group",
+    "Season Code",
+    "Season",
+    index_names$rivpacs_db_label
+  )
+
+  output_names <- c(
+    "RIVPACS_Model",
+    "End_Group",
+    "Season_Code",
+    "Season",
+    index_names$output_label
+  )
+
+  data <- data[, source_names, drop = FALSE]
+  names(data) <- output_names
+
+  data
 }
 
 # EndGrpProb_Replacemen): - function inputs x endgroups, any of 1-43, and

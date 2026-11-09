@@ -1,0 +1,81 @@
+rivpacs_db_label,output_label
+TL1 BMWP,TL1_BMWP
+TL1 NTAXA,TL1_NTAXA
+TL1 ASPT,TL1_ASPT
+"TL2 WHPT Score (nonAb,DistFam)",TL2_WHPT_Score_nonAb_DistFam
+"TL2 WHPT NTAXA (nonAb,DistFam)",TL2_WHPT_NTAXA_nonAb_DistFam
+"TL2 WHPT ASPT (nonAb,DistFam)",TL2_WHPT_ASPT_nonAb_DistFam
+"TL2 WHPT Score (nonAb,CompFam)",TL2_WHPT_Score_nonAb_CompFam
+"TL2 WHPT NTAXA (nonAb,CompFam)",TL2_WHPT_NTAXA_nonAb_CompFam
+"TL2 WHPT ASPT (nonAb,CompFam)",TL2_WHPT_ASPT_nonAb_CompFam
+"TL2 WHPT Score (AbW,DistFam)",TL2_WHPT_Score_AbW_DistFam
+"TL2 WHPT NTAXA (AbW,DistFam)",TL2_WHPT_NTAXA_AbW_DistFam
+"TL2 WHPT ASPT (AbW,DistFam)",TL2_WHPT_ASPT_AbW_DistFam
+"TL2 WHPT Score (AbW,CompFam)",TL2_WHPT_Score_AbW_CompFam
+"TL2 WHPT NTAXA (AbW,CompFam)",TL2_WHPT_NTAXA_AbW_CompFam
+"TL2 WHPT ASPT (AbW,CompFam)",TL2_WHPT_ASPT_AbW_CompFam
+TL1 AWIC(Fam),TL1_AWIC_Fam
+TL4 AWIC(Sp) Murphy,TL4_AWIC_Sp_Murphy
+TL5 AWIC(Sp) Murphy,TL5_AWIC_Sp_Murphy
+TL4 WFD AWIC(Sp) McFarland,TL4_WFD_AWIC_Sp_McFarland
+TL5 WFD AWIC(Sp) McFarland,TL5_WFD_AWIC_Sp_McFarland
+TL4 Raddum,TL4_Raddum
+TL5 Raddum,TL5_Raddum
+TL4 SEPA % Acid Sensitive Taxa,TL4_SEPA_per_Acid_Sensitive_Taxa
+TL5 SEPA % Acid Sensitive Taxa,TL5_SEPA_perc_Acid_Sensitive_Taxa
+TL4 MetTol,TL4_MetTol
+TL5 MetTol,TL5_MetTol
+TL1/2 LIFE(Fam) (CompFam),TL1_2_LIFE_Fam_CompFam
+TL2 LIFE(Fam) (DistFam),TL2_LIFE_Fam_DistFam
+TL3 LIFE(Fam) (DistFam),TL3_LIFE_Fam_DistFam
+TL4 LIFE(Sp),TL4_LIFE_Sp
+TL5 LIFE(Sp),TL5_LIFE_Sp
+TL3 PSI(Fam),TL3_PSI_Fam
+TL4 PSI(Sp),TL4_PSI_Sp
+TL5 PSI(Sp),TL5_PSI_Sp
+TL3 E-PSI(fam69),TL3_E_PSI_fam69
+TL4 E-PSI(mixed level),TL4_E_PSI_mixed_level
+TL5 E-PSI(mixed level),TL5_E_PSI_mixed_level
+TL4 oFSIsp,TL4_oFSIsp
+TL5 oFSIsp,TL5_oFSIsp
+TL4 ToFSIsp,TL4_ToFSIsp
+TL5 ToFSIsp,TL5_ToFSIsp
+TL4 CoFSIsp,TL4_CoFSIsp
+TL5 CoFSIsp,TL5_CoFSIsp
+TL4 GSFI FI05,TL4_GSFI_FI05
+TL5 GSFI FI05,TL5_GSFI_FI05
+TL4 GSFI FI09,TL4_GSFI_FI09
+TL5 GSFI FI09,TL5_GSFI_FI09
+TL4 GSFI FI091,TL4_GSFI_FI091
+TL5 GSFI FI091,TL5_GSFI_FI091
+TL4 GSFI FI091_K,TL4_GSFI_FI091_K
+TL5 GSFI FI091_K,TL5_GSFI_FI091_K
+TL4 GSFI FI092,TL4_GSFI_FI092
+TL5 GSFI FI092,TL5_GSFI_FI092
+TL4 GSFI FI11_12,TL4_GSFI_FI11_12
+TL5 GSFI FI11_12,TL5_GSFI_FI11_12
+TL4 GSFI FI14_16,TL4_GSFI_FI14_16
+TL5 GSFI FI14_16,TL5_GSFI_FI14_16
+TL4 GSFI FI15_17,TL4_GSFI_FI15_17
+TL5 GSFI FI15_17,TL5_GSFI_FI15_17
+TL4 GSFI FI152,TL4_GSFI_FI152
+TL5 GSFI FI152,TL5_GSFI_FI152
+TL2 SPEAR(Fam) %,TL2_SPEAR_Fam_perc
+TL4 SPEAR(Sp) %,TL4_SPEAR_Sp_perc
+TL5 SPEAR(Sp) %,TL5_SPEAR_Sp_perc
+SPEAR(pesticides) TL2 fam Knillmann 2018,SPEAR_pesticides_TL2_fam_Knillmann_2018
+SPEAR(refuge) TL2 fam Knillmann 2018,SPEAR_refuge_TL2_fam_Knillmann_2018
+SPEAR(pesticides) TL4 sp Knillmann 2018,SPEAR_pesticides_TL4_sp_Knillmann_2018
+SPEAR(refuge) TL4 sp Knillmann 2018,SPEAR_refuge_TL4_sp_Knillmann_2018
+SPEAR(pesticides) TL5 sp Knillmann 2018,SPEAR_pesticides_TL5_sp_Knillmann_2018
+SPEAR(refuge) TL5 sp Knillmann 2018,SPEAR_refuge_TL5_sp_Knillmann_2018
+TL4 CCI,TL4_CCI
+TL5 CCI,TL5_CCI
+TL2 08 Group ARMI NTaxa,TL2_08_Group_ARMI_NTaxa
+TL2 08 Group ARMI Score,TL2_08_Group_ARMI_Score
+TL2 33 Group ARMI NTaxa,TL2_33_Group_ARMI_NTaxa
+TL2 33 Group ARMI Score,TL2_33_Group_ARMI_Score
+TL2 33 Group Flow & Silt NTaxa,TL2_33_Group_Flow_Silt_NTaxa
+TL2 33 Group Flow & Silt Score,TL2_33_Group_Flow_Silt_Score
+TL2 14 Group Urban NTaxa,TL2_14_Group_Urban_NTaxa
+TL2 14 Group Urban Score,TL2_14_Group_Urban_Score

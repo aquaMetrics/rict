@@ -196,3 +196,26 @@ test_that("Isle of Man suitcodes correct", {
                                        ">5%", "<0.1%", "<5%", "<5%", "<5%",
                                        ">5%", ">5%"))
 })
+
+test_that("index names are read from internal data file", {
+  index_names <- utils::read.csv(
+    system.file("extdat", "index-names.csv", package = "rict"),
+    stringsAsFactors = FALSE
+  )
+
+  expect_equal(nrow(index_names), 80)
+  expect_equal(
+    names(rename_end_group_means(
+      utils::read.csv(
+        system.file(
+          "extdat",
+          "x-103-end-group-means-formatted-jdb-17-dec-2019.csv",
+          package = "rict"
+        ),
+        check.names = FALSE
+      )
+    ))[5:84],
+    index_names$output_label
+  )
+}
+)
